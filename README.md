@@ -1,13 +1,11 @@
 # INFOXXXX - Deep Learning
 
-Lectures slides on Deep Learning.
-
-Gilles Louppe ([g.louppe@uliege.be](mailto:g.louppe@uliege.be))
+Lectures slides on Deep Learning, Gilles Louppe ([g.louppe@uliege.be](mailto:g.louppe@uliege.be))
 
 These materials were given as part of:
 - INFO8004 - Advanced Machine Learning, ULiège, Spring 2018.
 
-The content of these lectures is under development. 
+The content of these lectures is under development.
 
 ## Slides
 
