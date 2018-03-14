@@ -1,0 +1,185 @@
+/*
+  Simple Grid
+  Project Page - http://thisisdallas.github.com/Simple-Grid/
+  Author - Dallas Bass
+  Site - http://dallasbass.com
+*/
+
+
+[class*='grid'],
+[class*='kol-'],
+.grid:after {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+[class*='kol-'] {
+	float: left;
+  	min-height: 1px;
+	padding-right: 20px; /* column-space */
+}
+
+[class*='kol-']:last-child {
+	padding-right: 0px;
+}
+
+.grid {
+	width: 100%;
+	margin: 0 auto;
+	overflow: hidden;
+}
+
+.grid-half {
+    width: 50%;
+}
+
+.grid:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+.grid-pad {
+	padding-top: 20px;
+	padding-left: 20px; /* grid-space to left */
+	padding-right: 0; /* grid-space to right: (grid-space-left - column-space) e.g. 20px-20px=0 */
+}
+
+.push-left {
+    float: left;
+}
+
+.push-right {
+    float: right;
+}
+
+.grid img {
+    width: 100%;
+    height: auto;
+}
+
+/* Content Columns */
+
+.kol-1-1 {
+	width: 100%;
+}
+.kol-2-3, .kol-8-12 {
+	width: 66.66%;
+}
+
+.kol-1-2, .kol-6-12 {
+	width: 50%;
+}
+
+.kol-1-3, .kol-4-12 {
+	width: 33.33%;
+}
+
+.kol-1-4, .kol-3-12 {
+	width: 25%;
+}
+
+.kol-1-5 {
+	width: 20%;
+}
+
+.kol-1-6, .kol-2-12 {
+	width: 16.667%;
+}
+
+.kol-1-7 {
+	width: 14.28%;
+}
+
+.kol-1-8 {
+	width: 12.5%;
+}
+
+.kol-1-9 {
+	width: 11.1%;
+}
+
+.kol-1-10 {
+	width: 10%;
+}
+
+.kol-1-11 {
+	width: 9.09%;
+}
+
+.kol-1-12 {
+	width: 8.33%
+}
+
+/* Layout Columns */
+
+.kol-11-12 {
+	width: 91.66%
+}
+
+.kol-10-12 {
+	width: 83.333%;
+}
+
+.kol-9-12, .kol-3-4 {
+	width: 75%;
+}
+
+.kol-5-12 {
+	width: 41.66%;
+}
+
+.kol-7-12 {
+	width: 58.33%
+}
+
+/* Pushing blocks */
+
+.push-2-3, .push-8-12 {
+	margin-left: 66.66%;
+}
+
+.push-1-2, .push-6-12 {
+	margin-left: 50%;
+}
+
+.push-1-3, .push-4-12 {
+	margin-left: 33.33%;
+}
+
+.push-1-4, .push-3-12 {
+	margin-left: 25%;
+}
+
+.push-1-5 {
+	margin-left: 20%;
+}
+
+.push-1-6, .push-2-12 {
+	margin-left: 16.667%;
+}
+
+.push-1-7 {
+	margin-left: 14.28%;
+}
+
+.push-1-8 {
+	margin-left: 12.5%;
+}
+
+.push-1-9 {
+	margin-left: 11.1%;
+}
+
+.push-1-10 {
+	margin-left: 10%;
+}
+
+.push-1-11 {
+	margin-left: 9.09%;
+}
+
+.push-1-12 {
+	margin-left: 8.33%
+}
