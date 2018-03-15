@@ -17,7 +17,7 @@ Goals: Learn models of the data itself.
 - Generative models (lecture 3)
 - Variational inference (lecture 3)
 - Variational auto-encoders (lecture 3)
-- **Generative adversarial networks** 
+- **Generative adversarial networks**
 
 .center.width-70[![](figures/lec4/generative-model.png)]
 
@@ -295,11 +295,16 @@ appropriately.
 A **transposed convolution** is a convolution where the implementation of the forward and backward passes
 are swapped.
 
+Therefore, a transposed convolution can be seen as the gradient of some
+convolution with respect to its input.
+
 Given a convolutional kernel $\mathbf{u}$,
 - the forward pass is implemented as $v(\mathbf{h}) = \mathbf{U}^T v(\mathbf{x})$ with appropriate reshaping, thereby effectively up-sampling an input $v(\mathbf{x})$ into a larger one;
 - the backward pass is computed by multiplying the loss by $\mathbf{U}$ instead of $\mathbf{U}^T$.
 
 Transposed convolutions are also referred to as fractionally-stride convolutions or deconvolutions (mistakenly).
+
+---
 
 .center.width-70[![](figures/lec4/convolution-linear-transposed.png)]
 
