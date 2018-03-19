@@ -8,6 +8,11 @@ Lecture 1: Deep Learning Essentials
 
 .bold[Gilles Louppe]
 
+???
+
+R: lego analogy: from simple blocks to complex stuff
+   deep learning is the same
+
 ---
 
 # Outline
