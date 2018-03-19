@@ -2,7 +2,7 @@ class: middle, center, title-slide
 
 # Deep Learning
 
-Lecture 3: Variational auto-encoders
+Lecture 3: Convolutional networks
 
 <br><br>
 
@@ -10,530 +10,423 @@ Lecture 3: Variational auto-encoders
 
 ???
 
-http://www.deeplearningindaba.com/uploads/1/0/2/6/102657286/deep_generative_models.pdf
-
----
-
-# Outline
-
-Goals: Learn models of the data itself.
-
-- Generative models
-- Variational inference
-- Variational auto-encoders
-- Generative adversarial networks (lecture 4)
+R: check https://github.com/m2dsupsdlclass/lectures-labs/blob/master/slides/04_conv_nets/index.html
+R: check http://www.deeplearningindaba.com/uploads/1/0/2/6/102657286/indaba_convolutional.pdf
 
 ---
 
 class: middle
 
-# Generative models
-
-.italic[Slides adapted from "[Tutorial on Deep Generative Models](http://auai.org/uai2017/media/tutorials/shakir.pdf)"<br>
-        (Shakir Mohamed and Danilo Rezende, UAI 2017).]
+# Convolutional networks
 
 ---
 
-# Generative models
+# Cooking recipe
 
-A generative model is a probabilistic model $p$ that can be used as **a simulator of the data**.
-Its purpose is to generate synthetic but realistic high-dimension data
-$$\mathbf{x} \sim p(\mathbf{x};\theta),$$
-that is as close as possible from the true but unknown data distribution $p\_r(\mathbf{x})$.
+- Get data (loads of them).
+- Get good hardware.
+- Define the neural network architecture as a composition of differentiable functions.
+    - Stick to non-saturating activation function to avoid vanishing gradients.
+    - Prefer deep over shallow architectures.
+    - **In this lecture, we augment our set of differentiable functions with components tailored for spatial data (images, sequences, etc).**
+- Optimize with (variants of) stochastic gradient descent.
+    - Evaluate gradients with automatic differentiation.
+---
 
-Goals:
-- Learn $p(\mathbf{x};\theta)$ (i.e., go beyond estimating $p(y|\mathbf{x})$).
-- Understand and imagine how the world evolves.
-- Recognize objects in the world and their factors of variation.
-- Establish concepts for reasoning and decision making.
+# Motivation
+
+Suppose we want to train a fully connected network that takes $200 \times 200$ RGB images as input.
+
+.center.width-50[![](figures/lec3/fc-layer1.png)]
+
+What are the problems with this first layer?
+- Too many parameters: $200 \times 200 \times 3 \times 1000 = 120M$.
+- What if the object in the image shifts a little?
 
 ---
 
-class: middle
+# Fully connected layer
 
-.center[
-.width-100[![](figures/lec3/why-gm.png)]
-]
-.center[Generative models have a role in many important problems]
+.center.width-40[![](figures/lec3/fc.png)]
 
----
+In a **fully connected layer**, each hidden unit $h\_j = \sigma(\mathbf{w}\_j^T \mathbf{x}+b\_j)$ is connected to the entire image.
+- Looking for activations that depend on pixels that are spatially far away is supposedly a waste of time and resources.
+- Long range correlations can be dealt with in the higher layers.
 
-# Drug design and response prediction
-
-Generative models for proposing candidate molecules and for improving prediction through semi-supervised learning.
-
-.center[
-.width-100[![](figures/lec3/generative-drug.png)]
-
-(Gomez-Bombarelli et al, 2016)
-]
 
 ---
 
-# Locating celestial bodies
+# Locally connected layer
 
-Generative models for applications in astronomy and high-energy physics.
+.center.width-40[![](figures/lec3/lc.png)]
 
-.center[
-.width-100[![](figures/lec3/generative-space.png)]
-
-(Regier et al, 2015)
-]
-
----
-
-# Image super-resolution
-
-Photo-realistic single image super-resolution.
-
-.center[
-.width-100[![](figures/lec3/generative-superres.png)]
-
-(Ledig et al, 2016)
-]
+In a **locally connected layer**, each hidden unit $h\_j$ is connected to only a patch of the image.
+- Weights are specialized locally and functionally.
+- Reduce the number of parameters.
+- What if the object in the image shifts a little?
 
 ---
 
-# Text-to-speech synthesis
+# Convolutional layer
 
-Generating audio conditioned on text.
+.center.width-40[![](figures/lec3/conv-layer.png)]
 
-.center[
-.width-100[![](figures/lec3/generative-text-to-speech.png)]
-
-(Oord et al, 2016)
-]
-
----
-
-# Image and content generation
-
-Generating images and video content.
-
-.center[
-.width-100[![](figures/lec3/generative-content.png)]
-
-(Gregor et al, 2015; Oord et al, 2016; Dumoulin et al, 2016)
-]
+In a **convolutional layer**, each hidden unit $h\_j$ is connected
+to only a patch of the image, and **share** its weights with the other units $h\_i$.
+- Weights are specialized functionally, regardless of spatial location.
+- Reduce the number of parameters.
 
 ---
 
-# Communication and compression
+# Convolution
 
-Hierarchical compression of images and other data.
-
-.center[
-.width-100[![](figures/lec3/generative-compression.png)]
-
-(Gregor et al, 2016)
-]
-
----
-
-# One-shot generalization
-
-Rapid generalization of novel concepts.
-
-.center[
-.width-100[![](figures/lec3/generative-oneshot.png)]
-
-(Gregor et al, 2016)
-]
-
----
-
-# Visual concept learning
-
-Understanding the factors of variation and invariances.
-
-.center[
-.width-100[![](figures/lec3/generative-factors.png)]
-
-(Higgins et al, 2017)
-]
-
----
-
-# Future simulation
-
-Simulate future trajectories of environments based on actions for planning.
-
-.center[
-.width-40[![](figures/lec3/robot1.gif)] .width-40[![](figures/lec3/robot2.gif)]
-
-(Finn et al, 2016)
-]
-
----
-
-# Scene understanding
-
-Understanding the components of scenes and their interactions.
-
-.center[
-.width-100[![](figures/lec3/generative-scene.png)]
-
-(Wu et al, 2017)
-]
-
----
-
-class: middle
-
-# Variational inference
-
----
-
-# Latent variable model
-
-.center.width-10[![](figures/lec3/latent-model.png)]
-
-Consider for now a **prescribed latent variable model** that relates a set of observable variables $\mathbf{x} \in \mathcal{X}$ to a set of unobserved variables $\mathbf{z} \in \mathcal{Z}$.
-
-This model is given and motivated by domain knowledge assumptions.
-
-Examples:
-- Linear discriminant analysis (see previous lecture)
-- Bayesian networks
-- Hidden Markov models
-- Probabilistic programs
-
----
-
-The probabilistic model defines a joint probability distribution $p(\mathbf{x}, \mathbf{z})$, which decomposes as
-$$p(\mathbf{x}, \mathbf{z}) = p(\mathbf{x}|\mathbf{z}) p(\mathbf{z}).$$
-If we interpret $\mathbf{z}$ as causal factors for the high-dimension representations $\mathbf{x}$, then
-sampling from $p(\mathbf{x}|\mathbf{z})$ can be interpreted as **a stochastic generating process** from $\mathcal{Z}$ to $\mathcal{X}$.
-
-For a given model $p(\mathbf{x}, \mathbf{z})$, inference consists in computing the posterior
-$$p(\mathbf{z}|\mathbf{x}) = \frac{p(\mathbf{x}|\mathbf{z}) p(\mathbf{z})}{p(\mathbf{x})}.$$
-
-For most interesting cases, this is usually intractable since it requires evaluating the evidence
-$$p(\mathbf{x}) = \int p(\mathbf{x}|\mathbf{z})p(\mathbf{z}) d\mathbf{z}.$$
-
----
-
-class: middle
-
-.center.width-70[![](figures/lec3/vae.png)]
-
-.footnote[Credits: [Francois Fleuret, EE559 Deep Learning, EPFL, 2018.](https://documents.epfl.ch/users/f/fl/fleuret/www/dlc/dlc-slides-9-autoencoders.pdf)]
-
----
-
-# Variational inference
-
-**Variational inference** turns posterior inference into an optimization problem.
-
-Consider a family of distributions $q(\mathbf{z}|\mathbf{x}; \nu)$ that approximate the posterior $p(\mathbf{z}|\mathbf{x})$, where the
-variational parameters $\nu$ index the family of distributions.
-
-The parameters $\nu$ are fit to minimize the KL divergence between $p(\mathbf{z}|\mathbf{x})$ and the approximation $q(\mathbf{z}|\mathbf{x};\nu)$:
+For one-dimensional tensors, given an input vector $\mathbf{x} \in \mathbb{R}^W$ and a convolutional kernel $\mathbf{u} \in \mathbb{R}^w$,
+the discrete **convolution** $\mathbf{x} \star \mathbf{u}$ is a vector of size $W - w + 1$ such that
 $$\begin{aligned}
-KL(q\(\mathbf{z}|\mathbf{x};\nu) || p(\mathbf{z}|\mathbf{x})) &= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[\log \frac{q(\mathbf{z}|\mathbf{x} ; \nu)}{p(\mathbf{z}|\mathbf{x})}\right] \\\\
-&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log q(\mathbf{z}|\mathbf{x};\nu) - \log p(\mathbf{x},\mathbf{z}) \right] + \log p(\mathbf{x})
-\end{aligned}$$
-For the same reason as before, the KL divergence cannot be directly minimized because
-of the $\log p(\mathbf{x})$ term.
-
----
-
-However, we can write
-$$
-\log p(\mathbf{x}) = \underbrace{\mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log p(\mathbf{x},\mathbf{z}) - \log q(\mathbf{z}|\mathbf{x};\nu) \right]}\_{\text{ELBO}(\mathbf{x};\nu)} + KL(q(\mathbf{z}|\mathbf{x};\nu) || p(\mathbf{z}|\mathbf{x})),
-$$
-where $\text{ELBO}(\mathbf{x};\nu)$ is called the **evidence lower bound objective**.
-
-Since $\log p(\mathbf{x})$ does not depend on $\nu$, it can be considered as a constant, and minimizing the KL divergence is equivalent to maximizing the evidence lower bound, while being computationally tractable.
-
-Finally, given a dataset $\mathbf{d} = \\\{\mathbf{x}\_i|i=1, ..., N\\\}$, the final objective is the sum $\sum\_{\\\{\mathbf{x}\_i \in \mathbf{d}\\\}} \text{ELBO}(\mathbf{x}\_i;\nu)$.
-
----
-
-Remark that
-$$\begin{aligned}
-\text{ELBO}(\mathbf{x};\nu) &= \mathbb{E}\_{q(\mathbf{z};|\mathbf{x}\nu)}\left[ \log p(\mathbf{x},\mathbf{z}) - \log q(\mathbf{z}|\mathbf{x};\nu) \right] \\\\
-&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log p(\mathbf{x}|\mathbf{z}) p(\mathbf{z}) - \log q(\mathbf{z}|\mathbf{x};\nu) \right] \\\\
-&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log p(\mathbf{x}|\mathbf{z})\right] - KL(q(\mathbf{z}|\mathbf{x};\nu) || p(\mathbf{z}))
-\end{aligned}$$
-Therefore, maximizing the ELBO:
-- encourages distributions to place their mass on configurations of latent variables that explain the observed data (first term);
-- encourages distributions close to the prior (second term).
-
----
-
-class: middle, center
-
-.width-100[![](figures/lec3/vi.png)]
-
-Variational inference
-
----
-
-How do we optimize the parameters $\nu$? We want
-
-$$\begin{aligned}
-\nu^{\*} &= \arg \max\_\nu \text{ELBO}(\mathbf{x};\nu) \\\\
-&= \arg \max\_\nu \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log p(\mathbf{x},\mathbf{z}) - \log q(\mathbf{z}|\mathbf{x};\nu) \right]
-\end{aligned}$$
-
-We can proceed by gradient ascent, provided we can evaluate $\nabla\_\nu \text{ELBO}(\mathbf{x};\nu)$.
-
-In general,
-this gradient is difficult to compute because the expectation is unknown and the parameters $\nu$,
-with respect to which we compute the gradient, are of the distribution $q(\mathbf{z}|\mathbf{x};\nu)$ we integrate over.
-
-Solutions:
-- Score function estimators:
-$$\nabla\_\nu \text{ELBO}(\mathbf{x};\nu) = \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)} \left[ \nabla\_\nu \log q(\mathbf{z}|\mathbf{x};\nu) \left( \log p(\mathbf{x},\mathbf{z}) - \log q(\mathbf{z}|\mathbf{x};\nu) \right)\right]$$
-- Elliptical standardization (Kucukelbir et al, 2016).
-
----
-
-class: middle
-
-# Variational auto-encoders
-
----
-
-# Variational auto-encoders
-
-So far we assumed a prescribed probabilistic model motivated by domain knowledge.
-We will now directly learn a stochastic generating process with a neural network.
-
-A variational auto-encoder is a deep latent variable model where:
-- The likelihood $p(\mathbf{x}|\mathbf{z};\theta)$ is parameterized with a **generative network** $\text{NN}\_\theta$
-(or decoder) that takes as input $\mathbf{z}$ and outputs parameters $\phi = \text{NN}\_\theta(\mathbf{z})$ to the data distribution. E.g.,
-$$\begin{aligned}
-\mu, \sigma &= \text{NN}\_\theta(\mathbf{z}) \\\\
-p(\mathbf{x}|\mathbf{z};\theta) &= \mathcal{N}(\mathbf{x}; \mu, \sigma^2\mathbf{I})
-\end{aligned}$$
-- The approximate posterior $q(\mathbf{z}|\mathbf{x};\varphi)$ is parameterized
-with an **inference network** $\text{NN}\_\varphi$ (or encoder) that takes as input $\mathbf{x}$ and
-outputs parameters $\nu = \text{NN}\_\varphi(\mathbf{x})$ to the approximate posterior. E.g.,
-$$\begin{aligned}
-\mu, \sigma &= \text{NN}\_\varphi(\mathbf{x}) \\\\
-q(\mathbf{z}|\mathbf{x};\varphi) &= \mathcal{N}(\mathbf{z}; \mu, \sigma^2\mathbf{I})
-\end{aligned}$$
-
-
----
-
-class: middle
-
-.center.width-70[![](figures/lec3/vae.png)]
-
-.footnote[Credits: [Francois Fleuret, EE559 Deep Learning, EPFL, 2018.](https://documents.epfl.ch/users/f/fl/fleuret/www/dlc/dlc-slides-9-autoencoders.pdf)]
-
----
-
-As before, we can use variational inference, but to jointly optimize the generative and the inference networks parameters $\theta$ and $\varphi$.
-
-We want:
-$$\begin{aligned}
-\theta^{\*}, \varphi^{\*} &= \arg \max\_{\theta,\varphi} \text{ELBO}(\mathbf{x};\theta,\varphi) \\\\
-&= \arg \max\_{\theta,\varphi} \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi)\right] \\\\
-&= \arg \max\_{\theta,\varphi} \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x}|\mathbf{z};\theta)\right] - KL(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z}))
-\end{aligned}$$
-
-- Given some generative network $\theta$, we want to put the mass of the latent variables, by adjusting $\varphi$, such that they explain the observed data, while remaining close to the prior.
-- Given some inference network $\varphi$, we want to put the mass of the observed variables, by adjusting $\theta$, such that
-they are well explained by the latent variables.
-
----
-
-Unbiased gradients of the ELBO with respect to the generative model parameters $\theta$ are simple to obtain:
-$$\begin{aligned}
-\nabla\_\theta \text{ELBO}(\mathbf{x};\theta,\varphi) &= \nabla\_\theta \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi)\right] \\\\
-&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \nabla\_\theta ( \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi) ) \right] \\\\
-&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \nabla\_\theta \log p(\mathbf{x},\mathbf{z};\theta) \right],
-\end{aligned}$$
-which can be estimated with Monte Carlo integration.
-
-However, gradients with respect to the inference model parameters $\varphi$ are
-more difficult to obtain:
-$$\begin{aligned}
-\nabla\_\varphi \text{ELBO}(\mathbf{x};\theta,\varphi) &= \nabla\_\varphi \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi)\right] \\\\
-&\neq \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \nabla\_\varphi ( \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi) ) \right]
-\end{aligned}$$
-
----
-
-Let us abbreviate
-$$\begin{aligned}
-\text{ELBO}(\mathbf{x};\theta,\varphi) &= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi)\right] \\\\
-&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ f(\mathbf{x}, \mathbf{z}; \varphi) \right].
-\end{aligned}$$
-
-We have
-.center.width-50[![](figures/lec3/reparam-original.png)]
-
-We cannot backpropagate through the stochastic node $\mathbf{z}$ to compute $\nabla\_\varphi f$.
-
----
-
-# Reparameterization trick
-
-The **reparameterization trick** consists in re-expressing the variable $\mathbf{z} \sim q(\mathbf{z}|\mathbf{x};\varphi)$ as some differentiable and invertible transformation
-of another random variable $\epsilon$, given $\mathbf{x}$ and $\varphi$,
-$$\mathbf{z} = g(\varphi, \mathbf{x}, \epsilon),$$
-and where the distribution of $\epsilon$ is independent of $\mathbf{x}$ or $\varphi$.
-
-For example, if $q(\mathbf{z}|\mathbf{x};\varphi) = \mathcal{N}(\mathbf{z}; \mu(\mathbf{x};\varphi), \sigma^2(\mathbf{x};\varphi))$, where $\mu(\mathbf{x};\varphi)$ and $\sigma^2(\mathbf{x};\varphi)$
-are the outputs of the inference network $NN\_\varphi$, then a common reparameterization is:
-$$\begin{aligned}
-p(\epsilon) &= \mathcal{N}(\epsilon; \mathbf{0}, \mathbf{I}) \\\\
-\mathbf{z} &= \mu(\mathbf{x};\varphi) + \sigma(\mathbf{x};\varphi) \odot \epsilon
-\end{aligned}$$
-
----
-
-class: middle
-
-.center.width-60[![](figures/lec3/reparam-reparam.png)]
-
----
-
-Given such a change of variable, the ELBO can be rewritten as:
-$$\begin{aligned}
-\text{ELBO}(\mathbf{x};\theta,\varphi) &= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ f(\mathbf{x}, \mathbf{z}; \varphi) \right]\\\\
-&= \mathbb{E}\_{p(\epsilon)} \left[ f(\mathbf{x}, g(\varphi,\mathbf{x},\epsilon); \varphi) \right]
-\end{aligned}$$
-Therefore,
-$$\begin{aligned}
-\nabla\_\varphi \text{ELBO}(\mathbf{x};\theta,\varphi) &= \nabla\_\varphi \mathbb{E}\_{p(\epsilon)} \left[  f(\mathbf{x}, g(\varphi,\mathbf{x},\epsilon); \varphi) \right] \\\\
-&= \mathbb{E}\_{p(\epsilon)} \left[ \nabla\_\varphi  f(\mathbf{x}, g(\varphi,\mathbf{x},\epsilon); \varphi) \right],
-\end{aligned}$$
-which we can now estimate with Monte Carlo integration.
-
-The last required ingredient is the evaluation of the likelihood $q(\mathbf{z}|\mathbf{x};\varphi)$ given the change of variable $g$. As long as $g$ is invertible, we have:
-$$\log q(\mathbf{z}|\mathbf{x};\varphi) = \log p(\epsilon) - \log \left| \det\left( \frac{\partial \mathbf{z}}{\partial \epsilon} \right) \right|$$
-
----
-
-# Example
-
-Consider the following setup:
-- Generative model:
-$$\begin{aligned}
-\mathbf{z} &\in \mathbb{R}^J \\\\
-p(\mathbf{z}) &= \mathcal{N}(\mathbf{z}; \mathbf{0},\mathbf{I})\\\\
-p(\mathbf{x}|\mathbf{z};\theta) &= \mathcal{N}(\mathbf{x};\mu(\mathbf{z};\theta), \sigma^2(\mathbf{z};\theta)\mathbf{I}) \\\\
-\mu(\mathbf{z};\theta) &= \mathbf{W}\_2^T\mathbf{h} + \mathbf{b}\_2 \\\\
-\log \sigma^2(\mathbf{z};\theta) &= \mathbf{W}\_3^T\mathbf{h} + \mathbf{b}\_3 \\\\
-\mathbf{h} &= \text{ReLU}(\mathbf{W}\_1^T \mathbf{z} + \mathbf{b}\_1)\\\\
-\theta &= \\\{ \mathbf{W}\_1, \mathbf{b}\_1, \mathbf{W}\_2, \mathbf{b}\_2, \mathbf{W}\_3, \mathbf{b}\_3 \\\}
-\end{aligned}$$
-
----
-
-- Inference model:
-$$\begin{aligned}
-q(\mathbf{z}|\mathbf{x};\varphi) &=  \mathcal{N}(\mathbf{z};\mu(\mathbf{x};\varphi), \sigma^2(\mathbf{x};\varphi)\mathbf{I}) \\\\
-p(\epsilon) &= \mathcal{N}(\epsilon; \mathbf{0}, \mathbf{I}) \\\\
-\mathbf{z} &= \mu(\mathbf{x};\varphi) + \sigma(\mathbf{x};\varphi) \odot \epsilon \\\\
-\mu(\mathbf{x};\varphi) &= \mathbf{W}\_5^T\mathbf{h} + \mathbf{b}\_5 \\\\
-\log \sigma^2(\mathbf{x};\varphi) &= \mathbf{W}\_6^T\mathbf{h} + \mathbf{b}\_6 \\\\
-\mathbf{h} &= \text{ReLU}(\mathbf{W}\_4^T \mathbf{x} + \mathbf{b}\_4)\\\\
-\varphi &= \\\{ \mathbf{W}\_4, \mathbf{b}\_4, \mathbf{W}\_5, \mathbf{b}\_5, \mathbf{W}\_6, \mathbf{b}\_6 \\\}
-\end{aligned}$$
-
-Note that there is no restriction on the generative and inference network architectures.
-They could as well be arbitrarily complex convolutional networks.
-
----
-
-Plugging everything together, the objective can be expressed as:
-$$\begin{aligned}
-\text{ELBO}(\mathbf{x};\theta,\varphi) &= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi)\right] \\\\
-&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)} \left[ \log p(\mathbf{x}|\mathbf{z};\theta) \right] - KL(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z})) \\\\
-&= \mathbb{E}\_{p(\epsilon)} \left[  \log p(\mathbf{x}|\mathbf{z}=g(\varphi,\mathbf{x},\epsilon);\theta) \right] - KL(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z}))
+(\mathbf{x} \star \mathbf{u})\_i &= \sum\_{m=0}^{w-1} x\_{i+m} u\_m .
 \end{aligned}
 $$
-where the KL divergence can be expressed  analytically as
-$$KL(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z})) = \frac{1}{2} \sum\_{j=1}^J \left( 1 + \log(\sigma\_j^2(\mathbf{x};\varphi)) - \mu\_j^2(\mathbf{x};\varphi) - \sigma\_j^2(\mathbf{x};\varphi)\right),$$
-which allows to evaluate its derivative without approximation.
+
+Technically, $\star$ denotes the cross-correlation operator. However, most machine learning
+libraries call it convolution.
 
 ---
 
 class: middle
 
-Consider as data $\mathbf{d}$ the MNIST digit dataset:
+.center[![](figures/lec3/1d-conv.gif)]
 
-.center.width-100[![](figures/lec3/mnist.png)]
+.footnote[Credits: [Francois Fleuret, EE559 Deep Learning, EPFL, 2018.](https://documents.epfl.ch/users/f/fl/fleuret/www/dlc/dlc-slides-4a-dag-autograd-conv.pdf)]
 
 ---
 
-class: middle, center
+Convolutions generalize to multi-dimensional tensors:
+- In its most usual form, a convolution takes as input a 3D tensor $\mathbf{x} \in \mathbb{R}^{C \times H \times W}$, called the input feature map.
+- A kernel $\mathbf{u} \in \mathbb{R}^{C \times h \times w}$ slides across the input feature map, along its height and width. The size $h \times w$ is called the receptive field.
+- At each location,  the element-wise product between the kernel and the input elements it overlaps is computed and the results are summed up.
 
-.width-100[![](figures/lec3/vae-samples.png)]
+---
 
-(Kingma and Welling, 2013)
+- The final output $\mathbf{o}$ is a 2D tensor of size $(H-h+1) \times (W-w+1)$ called the output feature map and such that:
+$$\begin{aligned}
+\mathbf{o}\_{j,i} &= \mathbf{b}\_{j,i} + \sum\_{c=0}^{C-1} (\mathbf{x}\_c \star \mathbf{u}\_c)\_{j,i} = \mathbf{b}\_{j,i} + \sum\_{c=0}^{C-1}  \sum\_{n=0}^{h-1} \sum\_{m=0}^{w-1}  \mathbf{x}\_{c,j+n,i+m} \mathbf{u}\_{c,n,m}
+\end{aligned}$$
+where $\mathbf{u}$ and $\mathbf{b}$ are shared parameters to learn.
+- $D$ convolutions can be applied in the same way to produce a $D \times (H-h+1) \times (W-w+1)$ feature map,
+where $D$ is the depth.
+---
+
+class: middle
+
+.center[![](figures/lec3/3d-conv.gif)]
+
+.footnote[Credits: [Francois Fleuret, EE559 Deep Learning, EPFL, 2018.](https://documents.epfl.ch/users/f/fl/fleuret/www/dlc/dlc-slides-4a-dag-autograd-conv.pdf)]
+
+---
+
+In addition to the depth $D$, the size of the output feature map can be controlled through the stride and with zero-padding.
+
+- The stride $S$ specifies the size of the step the kernel slides with.
+- Zero-padding specifies whether the input volume is pad with zeroes around the border.
+  This makes it possible to produce an output volume of the same size as the input. A hyper-parameter $P$ controls the amount of padding.
 
 ---
 
 class: middle
 
-To get an intuition of the learned latent representation, we can pick two samples $\mathbf{x}$ and $\mathbf{x}'$ at random and interpolate samples along the line in the latent space.
-
-.center.width-70[![](figures/lec3/interpolation.png)]
-
-.footnote[Credits: [Francois Fleuret, EE559 Deep Learning, EPFL, 2018.](https://documents.epfl.ch/users/f/fl/fleuret/www/dlc/dlc-slides-9-autoencoders.pdf)]
-
----
-
-class: middle, center
-
-.width-100[![](figures/lec3/vae-interpolation.png)]
-
-(Kingma and Welling, 2013)
-
----
-
-# Some further examples
-
-.center[
-
-<iframe width="640" height="480" src="https://www.youtube.com/embed/XNZIN7Jh3Sg?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
-
-Random walks in latent space.
-
+.grid.center[
+.kol-1-6[]
+.kol-1-3[![](figures/lec3/no_padding_no_strides.gif)]
+.kol-1-3[![](figures/lec3/padding_strides.gif)]
+]
+.grid.center[
+.kol-1-6[]
+.kol-1-3[
+No padding ($P=0$),<br> no strides ($S=1$).]
+.kol-1-3[
+Padding ($P=1$),<br> strides ($S=2$).]
 ]
 
 ---
 
-class: middle
+# Equivariance
 
-.center.width-80[![](figures/lec3/vae-smile.png)]
+A function $f$ is **equivariant** to $g$ if $f(g(\mathbf{x})) = g(f(\mathbf{x}))$.
+- Parameter sharing used in a convolutional layer causes the layer to be equivariant to translation.
+- That is, if $g$ is any function that translates the input, the convolution function is equivariant to $g$.
+    - E.g., if we move an object in the image, its representation will move the same amount in the output.
+- This property is useful when we know some local function is useful everywhere (e.g., edge detectors).
+- However, convolutions are not equivariant to other operations such as change in scale or rotation.
 
-.center[(White, 2016)]
+---
+
+# Pooling
+
+When the input volume is large, **pooling layers** can be used to reduce the input dimension while
+preserving its global structure, in a way similar to a down-scaling operation.
+
+Consider a pooling area of size $h \times w$ and a 3D input tensor $\mathbf{x} \in \mathbb{R}^{C\times(rh)\times(sw)}$.
+- Max-pooling produces a tensor $\mathbf{o} \in \mathbb{R}^{C \times r \times s}$
+such that
+$$\mathbf{o}\_{c,j,i} = \max\_{n < h, m < w} \mathbf{x}_{c,rj+n,si+m}.$$
+- Average pooling produces a tensor $\mathbf{o} \in \mathbb{R}^{C \times r \times s}$ such that
+$$\mathbf{o}\_{c,j,i} = \frac{1}{hw} \sum\_{n=0}^{h-1} \sum\_{m=0}^{w-1} \mathbf{x}_{c,rj+n,si+m}.$$
+
+Pooling is very similar in its formulation to convolution. Similarly, a pooling layer can be parameterized in terms of its receptive field, a stride $S$ and a zero-padding $P$.
 
 ---
 
 class: middle
 
-.center.width-60[![](figures/lec3/vae-text1.png)]
+.center[![](figures/lec3/pooling.gif)]
 
-.center[(Bowman et al, 2015)]
+.footnote[Credits: [Francois Fleuret, EE559 Deep Learning, EPFL, 2018.](https://documents.epfl.ch/users/f/fl/fleuret/www/dlc/dlc-slides-4a-dag-autograd-conv.pdf)]
 
 ---
 
-class: middle
+# Invariance
+
+A function $f$ is **invariant** to $g$ if $f(g(\mathbf{x})) = f(\mathbf{x})$.
+- Pooling layers can be used for building inner activations that are (slightly) invariant to small translations of the input.
+- Invariance to local translation is helpful if we care more about the presence of a pattern rather than its exact position.
+
+---
+
+# Layer patterns
+
+A **convolutional network** can often be defined as a composition of convolutional layers ($\texttt{CONV}$), pooling layers ($\texttt{POOL}$), linear rectifiers ($\texttt{RELU}$) and fully connected layers ($\texttt{FC}$).
+
+<br>
+.center.width-90[![](figures/lec3/convnet-pattern.png)]
+
+---
+
+The most common convolutional network architecture follows the pattern:
+
+$$\texttt{INPUT} \to [[\texttt{CONV} \to \texttt{RELU}]\texttt{\*}N \to \texttt{POOL?}]\texttt{\*}M \to [\texttt{FC} \to \texttt{RELU}]\texttt{\*}K \to \texttt{FC}$$
+
+where:
+- $\texttt{\*}$ indicates repetition;
+- $\texttt{POOL?}$ indicates an optional pooling layer;
+- $N \geq 0$ (and usually $N \leq 3$), $M \geq 0$, $K \geq 0$ (and usually $K < 3$);
+- the last fully connected layer holds the output (e.g., the class scores).
+
+---
+
+Some common architectures for convolutional networks following this pattern include:
+- $\texttt{INPUT} \to \texttt{FC}$, which implements a linear classifier ($N=M=K=0$).
+- $\texttt{INPUT} \to [\texttt{FC} \to \texttt{RELU}]{\*K} \to \texttt{FC}$, which implements a $K$-layer MLP.
+- $\texttt{INPUT} \to \texttt{CONV} \to \texttt{RELU} \to \texttt{FC}$.
+- $\texttt{INPUT} \to [\texttt{CONV} \to \texttt{RELU} \to \texttt{POOL}]\texttt{\*2} \to \texttt{FC} \to \texttt{RELU} \to \texttt{FC}$.
+- $\texttt{INPUT} \to [[\texttt{CONV} \to \texttt{RELU}]\texttt{\*2} \to \texttt{POOL}]\texttt{\*3} \to [\texttt{FC} \to \texttt{RELU}]\texttt{\*2} \to \texttt{FC}$.
+
+Note that for the last architecture, two $\texttt{CONV}$ layers are stacked before every $\texttt{POOL}$ layer. This is generally a good idea for larger and deeper networks, because multiple stacked $\texttt{CONV}$  layers can develop more complex features of the input volume before the destructive pooling operation.
+
+---
+
+class: center, middle
+
+.width-100[![](figures/lec3/convnet.gif)]
+
+---
+
+# LeNet-1
 
 .center[
 
-<iframe width="320" height="240" src="https://int8.io/wp-content/uploads/2016/12/output.mp4" frameborder="0" volume="0" allowfullscreen></iframe>
+<iframe width="640" height="480" src="https://www.youtube.com/embed/FwFduRA_L6Q?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
 
-Impersonation by encoding-decoding an unknown face.
 ]
+
+.center[(LeCun et al, 1993)]
+
+---
+
+# LeNet-5
+
+<br><br><br>
+
+.center.width-100[![](figures/lec3/lenet.png)]
+.center[(LeCun et al, 1998)]
+
+---
+
+# AlexNet
+
+<br><br>
+
+.center.width-100[![](figures/lec3/alexnet.png)]
+.center[(Krizhevsky et al, 2012)]
+
+
+---
+
+# GoogLeNet
+
+<br><br><br><br>
+
+.center.width-100[![](figures/lec3/googlenet.png)]
+.center[(Szegedy et al, 2014)]
+
+---
+
+# VGGNet
+
+<br><br>
+
+.center.width-70[![](figures/lec3/vgg16.png)]
+.center[(Simonyan and Zisserman, 2014)]
+
+---
+
+# ResNet
+
+<br><br><br><br><br><br>
+
+.center.width-100[![](figures/lec3/resnet.png)]
+.center[(He et al, 2015)]
+
+---
+
+# Object recognition
+
+.grid[
+.kol-1-2[![](figures/lec3/imagenet-validation1.png)]
+.kol-1-2[![](figures/lec3/imagenet-validation.jpg)]
+]
+
+The ImageNet challenge:
+- $1000$ object classes
+- $1200000$ training examples
+- $100000$ test examples
 
 ---
 
 class: middle
 
-.center.width-100[![](figures/lec3/bombarelli.jpeg)]
+.center.width-100[![](figures/lec3/imagenet.png)]
 
-.center[Design of new molecules with desired chemical properties.<br> (Gomez-Bombarelli et al, 2016)]
+---
+
+class: middle
+
+| &nbsp;&nbsp;&nbsp;Model | Size&nbsp;&nbsp;&nbsp; | Top-1 Accuracy&nbsp;&nbsp;&nbsp; | Top-5 Accuracy&nbsp;&nbsp;&nbsp; | Parameters&nbsp;&nbsp;&nbsp; | Depth&nbsp;&nbsp;&nbsp; |
+| :----- | ----: | --------------: | --------------: | ----------: | -----: |
+| Xception | 88 MB | 0.790 | 0.945| 22,910,480 | 126 |
+| VGG16 | 528 MB| 0.715 | 0.901 | 138,357,544 | 23
+| VGG19 | 549 MB | 0.727 | 0.910 | 143,667,240 | 26
+| ResNet50 | 99 MB | 0.759 | 0.929 | 25,636,712 | 168
+| InceptionV3 | 92 MB | 0.788 | 0.944 | 23,851,784 | 159 |
+| InceptionResNetV2 | 215 MB | 0.804 | 0.953 | 55,873,736 | 572 |
+| MobileNet | 17 MB | 0.665 | 0.871 | 4,253,864 | 88
+| DenseNet121 | 33 MB | 0.745 | 0.918 | 8,062,504 | 121
+| DenseNet169 | 57 MB | 0.759 | 0.928 | 14,307,880 | 169
+| DenseNet201 | 80 MB | 0.770 | 0.933 | 20,242,984 | 201
+
+.footnote[Credits: [Keras documentation](https://keras.io/applications/)]
+
+---
+
+# Maximum response samples
+
+What does a convolutional network see?
+
+Convolutional networks can be inspected by looking for input images $\mathbf{x}$ that maximize the activation $\mathbf{h}\_{\ell,d}(\mathbf{x})$ of a chosen convolutional kernel $\mathbf{u}$ at layer $\ell$ and index $d$ in the layer filter bank.
+
+Such images can be found by gradient ascent on the input space:
+$$\begin{aligned}
+\mathcal{L}\_{\ell,d}(\mathbf{x}) &= ||\mathbf{h}\_{\ell,d}(\mathbf{x})||\_2\\\\
+\mathbf{x}\_0 &\sim U[0,1]^{C \times H \times W } \\\\
+\mathbf{x}\_{t+1} &= \mathbf{x}\_t + \gamma \nabla\_{\mathbf{x}} \mathcal{L}\_{\ell,d}(\mathbf{x}\_t)
+\end{aligned}$$
+
+---
+
+class: middle
+
+.width-100[![](figures/lec3/vgg16-conv1.jpg)]
+
+.center[VGG16, convolutional layer 1-1, a few of the 64 filters]
+
+.footnote[Credits: [How convolutional neural networks see the world](https://blog.keras.io/how-convolutional-neural-networks-see-the-world.html)]
+
+---
+
+class: middle
+
+.width-100[![](figures/lec3/vgg16-conv2.jpg)]
+
+.center[VGG16, convolutional layer 2-1, a few of the 128 filters]
+
+.footnote[Credits: [How convolutional neural networks see the world](https://blog.keras.io/how-convolutional-neural-networks-see-the-world.html)]
+
+---
+
+class: middle
+
+.width-100[![](figures/lec3/vgg16-conv3.jpg)]
+
+.center[VGG16, convolutional layer 3-1, a few of the 256 filters]
+
+.footnote[Credits: [How convolutional neural networks see the world](https://blog.keras.io/how-convolutional-neural-networks-see-the-world.html)]
+
+---
+
+class: middle
+
+.width-100[![](figures/lec3/vgg16-conv4.jpg)]
+
+.center[VGG16, convolutional layer 4-1, a few of the 512 filters]
+
+.footnote[Credits: [How convolutional neural networks see the world](https://blog.keras.io/how-convolutional-neural-networks-see-the-world.html)]
+
+---
+
+class: middle
+
+.width-100[![](figures/lec3/vgg16-conv5.jpg)]
+
+.center[VGG16, convolutional layer 5-1, a few of the 512 filters]
+
+.footnote[Credits: [How convolutional neural networks see the world](https://blog.keras.io/how-convolutional-neural-networks-see-the-world.html)]
+
+---
+
+Some observations:
+- The first layers appear to encode direction and color.
+- The direction and color filters get combined into grid and spot textures.
+- These textures gradually get combined into increasingly complex patterns.
+
+In other words, the network appears to learn a hierarchical composition of patterns.
+
+<br>
+.width-70.center[![](figures/lec3/lecun-filters.png)]
+
+---
+
+What if we build images that maximize the activation of a chosen class output?
+
+<br><br>
+
+.center[
+.width-40[![](figures/lec3/magpie.jpg)] .width-40[![](figures/lec3/magpie2.jpg)]
+]
+
+.center.italic[The left image is predicted with 99.9% confidence as a magpie.]
+
+.footnote[Credits: [How convolutional neural networks see the world](https://blog.keras.io/how-convolutional-neural-networks-see-the-world.html)]
+
+---
+
+# Deep Dream
+
+Start from an image $\mathbf{x}\_t$, offset the image by a random jitter, enhance some layer activation at multiple scales, zoom in, repeat on the produced image $\mathbf{x}\_{t+1}$.
+
+.center[
+
+<iframe width="600" height="400" src="https://www.youtube.com/embed/SCE-QeDfXtA?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
+
+]
 
 ---
 
@@ -545,14 +438,19 @@ class: middle
 
 # References
 
-- [Tutorial on Deep Generative Models](http://auai.org/uai2017/media/tutorials/shakir.pdf) (Mohamed and Rezende, UAI 2017)
-- [Variational inference: Foundations and modern methods](https://media.nips.cc/Conferences/2016/Slides/6199-Slides.pdf) (Blei et al, 2016)
-- [Auto-Encoding Variational Bayes](https://arxiv.org/pdf/1312.6114.pdf) (Kingma and Welling, 2013)
+- [CS231n Convolutional networks](https://cs231n.github.io/convolutional-networks/) (Fei-Fei Li et al, Stanford)
+- [EE-559 Deep learning](https://documents.epfl.ch/users/f/fl/fleuret/www/dlc/) (Francois Fleuret, EPFL)
+
+Further readings:
+- [Feature Visualization](https://distill.pub/2017/feature-visualization/) (Olah et al, 2017)
+- [The Building Blocks of Interpretability](https://distill.pub/2018/building-blocks/) (Olah et al, 2018)
 
 ---
 
 # Quiz
 
-- Explain how variational inference could be used for Bayesian inference.
-- What is the reparameterization trick?
-- What are generative models used for?
+- Explain how backpropagation works in the case of a convolutional layer with shared weights.
+- What is a convolution with a receptive field of size $1 \times 1$?
+- Explain how fully connected and convolutional layers are related. Is one a special case of the other?
+- How does average pooling relate to a convolutional layer?
+- Why is depth important in a convolutional network?
