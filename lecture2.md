@@ -6,7 +6,8 @@ Lecture 2: Neural networks
 
 <br><br>
 
-.bold[Gilles Louppe]
+.bold[Gilles Louppe]<br>
+[g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
 ???
 
@@ -79,7 +80,7 @@ $$f(\mathbf{x}) = \sigma(\mathbf{w}^T \mathbf{x} + b).$$
 
 # Linear discriminant analysis
 
-Consider training data $(\mathbf{x}, y) \sim P_{X,Y}$, with
+Consider training data $(\mathbf{x}, y) \sim P(X,Y)$, with
 - $\mathbf{x} \in \mathbb{R}^p$,
 - $y \in \\\{0,1\\\}$.
 

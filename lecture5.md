@@ -6,7 +6,8 @@ Lecture 5: Generative adversarial networks
 
 <br><br>
 
-.bold[Gilles Louppe]
+.bold[Gilles Louppe]<br>
+[g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
 ---
 
