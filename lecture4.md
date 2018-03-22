@@ -22,7 +22,7 @@ Goals: Learn models of the data itself.
 - Generative models
 - Variational inference
 - Variational auto-encoders
-- Generative adversarial networks (lecture 4)
+- Generative adversarial networks (lecture 5)
 
 ---
 
@@ -542,9 +542,10 @@ class: middle
 
 ---
 
-class: middle
+class: end-slide, center
+count: false
 
-# References
+The end.
 
 ---
 
@@ -553,11 +554,3 @@ class: middle
 - [Tutorial on Deep Generative Models](http://auai.org/uai2017/media/tutorials/shakir.pdf) (Mohamed and Rezende, UAI 2017)
 - [Variational inference: Foundations and modern methods](https://media.nips.cc/Conferences/2016/Slides/6199-Slides.pdf) (Blei et al, 2016)
 - [Auto-Encoding Variational Bayes](https://arxiv.org/pdf/1312.6114.pdf) (Kingma and Welling, 2013)
-
----
-
-# Quiz
-
-- Explain how variational inference could be used for Bayesian inference.
-- What is the reparameterization trick?
-- What are generative models used for?

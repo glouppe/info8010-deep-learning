@@ -528,6 +528,7 @@ Typically,
 ---
 
 class: end-slide, center
+count: false
 
 The end.
 

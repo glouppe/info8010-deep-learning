@@ -432,9 +432,10 @@ Start from an image $\mathbf{x}\_t$, offset the image by a random jitter, enhanc
 
 ---
 
-class: middle
+class: end-slide, center
+count: false
 
-# References
+The end.
 
 ---
 
@@ -446,13 +447,3 @@ class: middle
 Further readings:
 - [Feature Visualization](https://distill.pub/2017/feature-visualization/) (Olah et al, 2017)
 - [The Building Blocks of Interpretability](https://distill.pub/2018/building-blocks/) (Olah et al, 2018)
-
----
-
-# Quiz
-
-- Explain how backpropagation works in the case of a convolutional layer with shared weights.
-- What is a convolution with a receptive field of size $1 \times 1$?
-- Explain how fully connected and convolutional layers are related. Is one a special case of the other?
-- How does average pooling relate to a convolutional layer?
-- Why is depth important in a convolutional network?

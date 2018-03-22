@@ -15,9 +15,9 @@ Lecture 5: Generative adversarial networks
 
 Goals: Learn models of the data itself.
 
-- Generative models (lecture 3)
-- Variational inference (lecture 3)
-- Variational auto-encoders (lecture 3)
+- Generative models (lecture 4)
+- Variational inference (lecture 4)
+- Variational auto-encoders (lecture 4)
 - **Generative adversarial networks**
 
 .center.width-70[![](figures/lec5/generative-model.png)]
@@ -778,9 +778,10 @@ class: middle
 
 ---
 
-class: middle
+class: end-slide, center
+count: false
 
-# References
+The end.
 
 ---
 

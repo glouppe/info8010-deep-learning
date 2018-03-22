@@ -910,6 +910,13 @@ a  **Gaussian process**.
 
 ---
 
+class: end-slide, center
+count: false
+
+The end.
+
+---
+
 # References
 
 Materials from the first part of the lecture are inspired from the **excellent** Deep Learning Course by Francois Fleuret (EPFL, 2018).
@@ -917,17 +924,6 @@ Materials from the first part of the lecture are inspired from the **excellent**
 - [Lecture 3b: Multi-layer perceptron](https://documents.epfl.ch/users/f/fl/fleuret/www/dlc/dlc-slides-3b-mlp.pdf)
 
 Further references:
-- [Introduction to ML and Stochastic optimization](https://perso.telecom-paristech.fr/rgower/pdf/optimization_I-expanded.pdf)
-- [Why are deep neural networks hard to train?](http://neuralnetworksanddeeplearning.com/chap5.html)
-- [Automatic differentiation in machine learning: a survey](https://arxiv.org/abs/1502.05767)
-
----
-
-# Quiz
-
-- Explain the model assumptions behind the sigmoid activation function.
-- Why is stochastic gradient descent a good algorithm for learning? (despite being a poor optimization procedure in general)
-- What is automatic differentiation?
-- Why is training deep network with saturating activation functions difficult?
-- Study the importance of weight initialization.
-- What is the universal approximation theorem?
+- [Introduction to ML and Stochastic optimization](https://perso.telecom-paristech.fr/rgower/pdf/optimization_I-expanded.pdf) (Gower, 2017)
+- [Why are deep neural networks hard to train?](http://neuralnetworksanddeeplearning.com/chap5.html) (Nielsen, 2017)
+- [Automatic differentiation in machine learning: a survey](https://arxiv.org/abs/1502.05767) (Baydin, 2015)

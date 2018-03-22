@@ -251,9 +251,10 @@ examples are much more difficult to detect than previously recognized."
 
 ---
 
-class: middle
+class: end-slide, center
+count: false
 
-# References
+The end.
 
 ---
 
