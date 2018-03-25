@@ -123,7 +123,9 @@ $(\mathbf{x}\_i, y\_i) \sim P(X,Y) \Leftrightarrow \omega\_i \sim P\_\Omega$, $\
 
 class: middle
 
-Alternatively, the joint distribution $$P(X,Y) = P(X|Y)P(Y) = P(Y|X)P(X)$$ can be interpreted as a two-step generative process such that
+Alternatively, the joint distribution can be interpreted as a two-step generative process such that
+ $$P(X,Y) = P(X|Y)P(Y) = P(Y|X)P(X)$$
+where
 - for $P(X|Y)P(Y)$:
     - first, we draw $y\sim P(Y)$
     - then, generate $\mathbf{x} \sim P(X|Y=y)$.
@@ -418,7 +420,7 @@ No model $f$ can perform better than $f\_B$.
 
 class: middle
 
-The **capacity** of a learning algorithm and of its hypothesis space intuitively represents the ability to
+The **capacity** of an hypothesis space induced by a learning algorithm intuitively represents the ability to
 find a good model $f \in \mathcal{F}$ for any function, regardless of its complexity.
 
 - If the capacity of $\mathcal{F}$ is low, then $f\_B \notin \mathcal{F}$ and $R(f) - R\_B$ is large for any $f \in \mathcal{F}$, including $f\_\*$ and $f\_\*^{\mathbf{d}}$. Such models $f$ are said to **underfit** the data.
@@ -432,7 +434,7 @@ In this situation, $f\_\*^{\mathbf{d}}$ is said to **overfit** the data.
 
 class: middle
 
-Therefore, our goal is to adjust the capacity of the learning algorithm/hypothesis space such that
+Therefore, our goal is to adjust the capacity of the hypothesis space such that
 the expected risk of the empirical risk minimizer gets as low as possible.
 
 .center[![](figures/lec1/underoverfitting.png)]
@@ -441,7 +443,7 @@ the expected risk of the empirical risk minimizer gets as low as possible.
 
 class: middle
 
-In practice, the capacity of the learning algorithm/hypothesis space can be controlled through hyper-parameters. For example:
+In practice, the capacity of the hypothesis space can be controlled through hyper-parameters of the learning algorithm. For example:
 - The degree of polynomials;
 - The number of layers in a neural network;
 - The number of training iterations;
