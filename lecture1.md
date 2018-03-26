@@ -17,9 +17,9 @@ Theory:
 - Lecture 1: Fundamentals of machine learning
 - Lecture 2: Neural networks
 - Lecture 3: Convolutional networks
-- Lecture 4: Variational auto-encoders
-- Lecture 5: Generative adversarial networks
-- Lecture 6: Adversarial attacks and defenses
+- Lecture 4: Adversarial attacks and defenses
+- Lecture 5: Variational auto-encoders
+- Lecture 6: Generative adversarial networks
 
 Practice:
 - Building and training neural networks with PyTorch

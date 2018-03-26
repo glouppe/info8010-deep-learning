@@ -704,6 +704,10 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 
 .center[![](figures/lec2/ua-0.png)]
 
+???
+
+R: explain how to fit the components.
+
 ---
 
 count: false
