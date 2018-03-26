@@ -11,6 +11,21 @@ Lecture 1: Fundamentals of machine learning
 
 ---
 
+# Course outline
+
+Theory:
+- Lecture 1: Fundamentals of machine learning
+- Lecture 2: Neural networks
+- Lecture 3: Convolutional networks
+- Lecture 4: Variational auto-encoders
+- Lecture 5: Generative adversarial networks
+- Lecture 6: Adversarial attacks and defenses
+
+Practice:
+- Building and training neural networks with PyTorch
+
+---
+
 # Outline
 
 Goal: Set the fundamentals of machine learning.

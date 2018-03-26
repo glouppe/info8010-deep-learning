@@ -468,10 +468,15 @@ $$\begin{aligned}
 &= \nabla \mathcal{L}(\theta\_t)
 \end{aligned}$$
 then the formal convergence of SGD can be proved, under appropriate assumptions (see references).
-- When decomposing the excess error in terms of approximation, estimation and optimization errors,
+- Interestingly, if training examples $\mathbf{x}\_i, y\_i \sim P\_{X,Y}$ are received and used in an online fashion, then SGD directly minimizes the **expected** risk.
+
+---
+
+class: middle
+
+When decomposing the excess error in terms of approximation, estimation and optimization errors,
 stochastic algorithms yield the best generalization performance (in terms of **expected** risk) despite being
 the worst optimization algorithms (in terms of *empirical risk*) (Bottou, 2011).
-- Interestingly, if training examples $\mathbf{x}\_i, y\_i \sim P\_{X,Y}$ are received and used in an online fashion, then SGD directly minimizes the **expected** risk.
 
 ???
 
