@@ -9,6 +9,10 @@ Lecture 1: Fundamentals of machine learning
 .bold[Gilles Louppe]<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+R: add train/test datasets discussion
+
 ---
 
 # Course outline

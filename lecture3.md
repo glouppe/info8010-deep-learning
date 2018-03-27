@@ -14,6 +14,7 @@ Lecture 3: Convolutional networks
 R: check https://github.com/m2dsupsdlclass/lectures-labs/blob/master/slides/04_conv_nets/index.html
 R: check http://www.deeplearningindaba.com/uploads/1/0/2/6/102657286/indaba_convolutional.pdf
 R: capsule networks to fix the issue of only detecting the presence of stuff. Capsules also detect their composition.
+R: add neocognitron story
 
 ---
 
