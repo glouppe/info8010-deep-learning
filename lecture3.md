@@ -43,6 +43,11 @@ Suppose we want to train a fully connected network that takes $200 \times 200$ R
 .center.width-50[![](figures/lec3/fc-layer1.png)]
 
 What are the problems with this first layer?
+
+--
+
+count: false
+
 - Too many parameters: $200 \times 200 \times 3 \times 1000 = 120M$.
 - What if the object in the image shifts a little?
 
@@ -99,7 +104,7 @@ class: middle
 
 .center[![](figures/lec3/1d-conv.gif)]
 
-.footnote[Credits: [Francois Fleuret, EE559 Deep Learning, EPFL, 2018.](https://documents.epfl.ch/users/f/fl/fleuret/www/dlc/dlc-slides-4a-dag-autograd-conv.pdf)]
+.footnote[Credits: [EE559 Deep Learning](https://documents.epfl.ch/users/f/fl/fleuret/www/dlc/dlc-slides-4a-dag-autograd-conv.pdf) (Fleuret, 2018)]
 
 ---
 
@@ -123,7 +128,7 @@ class: middle
 
 .center[![](figures/lec3/3d-conv.gif)]
 
-.footnote[Credits: [Francois Fleuret, EE559 Deep Learning, EPFL, 2018.](https://documents.epfl.ch/users/f/fl/fleuret/www/dlc/dlc-slides-4a-dag-autograd-conv.pdf)]
+.footnote[Credits: [EE559 Deep Learning](https://documents.epfl.ch/users/f/fl/fleuret/www/dlc/dlc-slides-4a-dag-autograd-conv.pdf) (Fleuret, 2018)]
 
 ---
 
@@ -183,7 +188,7 @@ class: middle
 
 .center[![](figures/lec3/pooling.gif)]
 
-.footnote[Credits: [Francois Fleuret, EE559 Deep Learning, EPFL, 2018.](https://documents.epfl.ch/users/f/fl/fleuret/www/dlc/dlc-slides-4a-dag-autograd-conv.pdf)]
+.footnote[Credits: [EE559 Deep Learning](https://documents.epfl.ch/users/f/fl/fleuret/www/dlc/dlc-slides-4a-dag-autograd-conv.pdf) (Fleuret, 2018)]
 
 ---
 
