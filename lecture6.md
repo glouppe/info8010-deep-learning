@@ -307,6 +307,8 @@ Transposed convolutions are also referred to as fractionally-stride convolutions
 
 ---
 
+class: middle
+
 .center.width-70[![](figures/lec6/convolution-linear-transposed.png)]
 
 ---
