@@ -176,6 +176,23 @@ we want to estimate $$\mathbb{E}\left[ Y|X=\mathbf{x} \right].$$
 
 ---
 
+class: middle, center
+
+![](figures/lec1/classification.png)
+
+Classification consists in identifying<br>
+a decision boundary between objects of distinct classes.
+
+---
+
+class: middle, center
+
+![](figures/lec1/regression.png)
+
+Regression aims at estimating relationships among variables.
+
+---
+
 class: middle
 
 The boundary between these inference problems is fuzzy, as one often reduces to the other.
@@ -444,7 +461,7 @@ find a good model $f \in \mathcal{F}$ for any function, regardless of its comple
 
 - If the capacity of $\mathcal{F}$ is low, then $f\_B \notin \mathcal{F}$ and $R(f) - R\_B$ is large for any $f \in \mathcal{F}$, including $f\_\*$ and $f\_\*^{\mathbf{d}}$. Such models $f$ are said to **underfit** the data.
 - If the capacity of $\mathcal{F}$  is high, then $f\_B \in \mathcal{F}$ or $R(f\_\*) - R\_B$ is small.<br>
-However, because of the high capacity of the hypothesis space, the empirical risk minimizer $f\_\*^{\mathbf{d}}$ could fit the training data arbitrarily well such that $$R\_B \geq \hat{R}(f\_\*^{\mathbf{d}}, \mathbf{d}) \geq 0.$$
+However, because of the high capacity of the hypothesis space, the empirical risk minimizer $f\_\*^{\mathbf{d}}$ could fit the training data arbitrarily well such that $$R(f) \geq R\_B \geq \hat{R}(f\_\*^{\mathbf{d}}, \mathbf{d}) \geq 0.$$
 In this situation, $f\_\*^{\mathbf{d}}$ becomes too complex with respect to the true data generating process and a large reduction of the empirical risk (often) comes at the price
 of an increase of the  expected risk of the empirical risk minimizer $R(f\_\*^{\mathbf{d}})$.
 In this situation, $f\_\*^{\mathbf{d}}$ is said to **overfit** the data.
@@ -467,6 +484,21 @@ In practice, the capacity of the hypothesis space can be controlled through hype
 - The number of layers in a neural network;
 - The number of training iterations;
 - Regularization terms.
+
+---
+
+class: middle
+
+
+When overfitting,
+$$R(f) \geq R\_B \geq \hat{R}(f\_\*^{\mathbf{d}}, \mathbf{d}) \geq 0.$$
+
+This indicates that the empirical risk $\hat{R}(f\_\*^{\mathbf{d}}, \mathbf{d})$ is a poor estimator of the expected risk $R(f\_\*^{\mathbf{d}})$.
+
+Nevertheless, an unbiased estimate of the expected risk can be obtained by evaluating $f\_\*^{\mathbf{d}}$ on data $\mathbf{d}\_\text{test}$ independent from the training samples $\mathbf{d}$:
+$$\hat{R}(f\_\*^{\mathbf{d}}, \mathbf{d}\_\text{test}) =  \frac{1}{N} \sum\_{(\mathbf{x}\_i, y\_i) \in \mathbf{d}\_\text{test}} \ell(y\_i, f\_\*^{\mathbf{d}}(\mathbf{x}\_i))$$
+
+This **test error** estimate can be used to evaluate the actual performance of model. However, it should not be used, at the same time, for model selection.
 
 ---
 
