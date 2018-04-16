@@ -108,6 +108,86 @@ However, one can write a program that **learns** the task of extracting semantic
 
 class: middle
 
+# Applications
+
+---
+
+class: middle, center
+
+.width-70[![](figures/lec1/cifar10.png)]
+
+Classification
+
+---
+
+class: middle, center
+
+.width-80[![](figures/lec1/regression-app.png)]
+
+Regression
+
+---
+
+class: middle, center
+
+.width-70[![](figures/lec1/segmentation.png)]
+
+Object detection and segmentation (He et al, 2017)
+
+---
+
+class: middle, center
+
+.width-70[![](figures/lec1/pose.png)]
+
+Human pose estimation (Chen et al, 2017)
+
+---
+
+class: middle, center
+
+.width-70[![](figures/lec1/bedrooms.png)]
+
+Data generation (Arjovsky et al, 2017)
+
+---
+
+class: middle, center
+
+.width-90[![](figures/lec6/caption1.png)]
+
+.width-90[![](figures/lec6/caption2.png)]
+
+.center[Auto-captioning (Shetty et al, 2017)]
+
+---
+
+class: middle, center
+
+.width-90[![](figures/lec1/rl.png)]
+
+Learning to play at super-human level (Mnih, 2013)
+
+---
+
+class: middle, center
+
+.width-100[![](figures/lec1/translation.png)]
+
+Translation (Bahdanau et al, 2014)
+
+---
+
+class: middle, center
+
+.width-100[![](figures/lec1/qa.png)]
+
+Question answering (Ren et al, 2015)
+
+---
+
+class: middle
+
 # Learning from data
 
 ---
