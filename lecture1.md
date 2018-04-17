@@ -11,7 +11,10 @@ Lecture 1: Fundamentals of machine learning
 
 ???
 
-R: add train/test datasets discussion
+R: add train/test datasets discussion  <-- even more!
+R: in particular, test set as a way to estimate R(f)
+R: better connect the discussion of the bias-variance decomposition
+R: l2 construction <=> want to minimize the MLE for a linear Gaussian model
 
 ---
 
@@ -543,7 +546,7 @@ find a good model $f \in \mathcal{F}$ for any function, regardless of its comple
 
 - If the capacity of $\mathcal{F}$ is low, then $f\_B \notin \mathcal{F}$ and $R(f) - R\_B$ is large for any $f \in \mathcal{F}$, including $f\_\*$ and $f\_\*^{\mathbf{d}}$. Such models $f$ are said to **underfit** the data.
 - If the capacity of $\mathcal{F}$  is high, then $f\_B \in \mathcal{F}$ or $R(f\_\*) - R\_B$ is small.<br>
-However, because of the high capacity of the hypothesis space, the empirical risk minimizer $f\_\*^{\mathbf{d}}$ could fit the training data arbitrarily well such that $$R(f) \geq R\_B \geq \hat{R}(f\_\*^{\mathbf{d}}, \mathbf{d}) \geq 0.$$
+However, because of the high capacity of the hypothesis space, the empirical risk minimizer $f\_\*^{\mathbf{d}}$ could fit the training data arbitrarily well such that $$R(f\_\*^{\mathbf{d}}) \geq R\_B \geq \hat{R}(f\_\*^{\mathbf{d}}, \mathbf{d}) \geq 0.$$
 In this situation, $f\_\*^{\mathbf{d}}$ becomes too complex with respect to the true data generating process and a large reduction of the empirical risk (often) comes at the price
 of an increase of the  expected risk of the empirical risk minimizer $R(f\_\*^{\mathbf{d}})$.
 In this situation, $f\_\*^{\mathbf{d}}$ is said to **overfit** the data.
@@ -573,7 +576,7 @@ class: middle
 
 
 When overfitting,
-$$R(f) \geq R\_B \geq \hat{R}(f\_\*^{\mathbf{d}}, \mathbf{d}) \geq 0.$$
+$$R(f\_\*^{\mathbf{d}}) \geq R\_B \geq \hat{R}(f\_\*^{\mathbf{d}}, \mathbf{d}) \geq 0.$$
 
 This indicates that the empirical risk $\hat{R}(f\_\*^{\mathbf{d}}, \mathbf{d})$ is a poor estimator of the expected risk $R(f\_\*^{\mathbf{d}})$.
 

@@ -65,6 +65,8 @@ $$f(\mathbf{x}) = \begin{cases}
 
 ---
 
+class: middle
+
 Let us define the **activation** function:
 
 $$\sigma(x) = \begin{cases}
@@ -110,6 +112,8 @@ $$P(Y=1|\mathbf{x}) = \sigma\left(\log \frac{P(\mathbf{x}|Y=1)}{P(\mathbf{x}|Y=0
 
 ---
 
+class: middle
+
 Therefore,
 
 $$\begin{aligned}
@@ -143,6 +147,8 @@ class: middle, center
 
 ---
 
+class: middle
+
 Note that the **sigmoid** function
 $$\sigma(x) = \frac{1}{1 + \exp(-x)}$$
 looks like a soft heavyside:
@@ -154,6 +160,8 @@ $f(\mathbf{x};\mathbf{w},b) =  \sigma(\mathbf{w}^T \mathbf{x} + b)$
 is very similar to the perceptron.
 
 ---
+
+class: middle
 
 In terms of **tensor operations**, the computational graph of $f$ can be represented as:
 
@@ -178,6 +186,8 @@ But,
 
 ---
 
+class: middle
+
 We have,
 
 $$\begin{aligned}
@@ -190,6 +200,8 @@ $$\begin{aligned}
 This loss is an instance of the **cross-entropy** $$H(p,q) = \mathbb{E}_p[-\log q]$$ for  $p=Y|\mathbf{x}\_i$ and $q=\hat{Y}|\mathbf{x}\_i$.
 
 ---
+
+class: middle
 
 When $Y$ takes values in $\\{-1,1\\}$, a similar derivation yields the **logistic loss** $$\mathcal{L}(\mathbf{w}, b) = -\sum_{\mathbf{x}\_i, y\_i \in \mathbf{d}} \log \sigma\left(y\_i (\mathbf{w}^T \mathbf{x}\_i + b))\right).$$
 
@@ -210,6 +222,8 @@ For $\theta\_0 \in \mathbb{R}^d$, a first-order approximation around $\theta\_0$
 $$\hat{\mathcal{L}}(\theta\_0 + \epsilon) = \mathcal{L}(\theta\_0) + \epsilon^T\nabla\_\theta \mathcal{L}(\theta\_0) + \frac{1}{2\gamma}||\epsilon||^2.$$
 
 ---
+
+class: middle
 
 A minimizer of the approximation $\hat{\mathcal{L}}(\theta\_0 + \epsilon)$ is given for
 $$\begin{aligned}
@@ -458,6 +472,8 @@ Stochastic gradient descent
 
 ---
 
+class: middle
+
 Why is stochastic gradient descent still a good idea?
 - Informally, averaging the update
 $$\theta\_{t+1} = \theta\_t - \gamma \nabla \ell(y\_{i(t+1)}, f(\mathbf{x}\_{i(t+1)}; \theta\_t)) $$
@@ -478,9 +494,11 @@ When decomposing the excess error in terms of approximation, estimation and opti
 stochastic algorithms yield the best generalization performance (in terms of **expected** risk) despite being
 the worst optimization algorithms (in terms of *empirical risk*) (Bottou, 2011).
 
-???
-
-R: expand bottou result in a slide
+$$\begin{aligned}
+&\mathbb{E}\left[ R(\tilde{f}\_\*^\mathbf{d}) - R(f\_B) \right] \\\\
+&= \mathbb{E}\left[ R(f\_\*) - R(f\_B) \right] + \mathbb{E}\left[ R(f\_\*^\mathbf{d}) - R(f\_\*) \right] + \mathbb{E}\left[ R(\tilde{f}\_\*^\mathbf{d}) - R(f\_\*^\mathbf{d}) \right]  \\\\
+&= \mathcal{E}\_\text{app} + \mathcal{E}\_\text{est} + \mathcal{E}\_\text{opt}
+\end{aligned}$$
 
 ---
 
@@ -520,6 +538,8 @@ class: middle, center
 .width-100[![](figures/lec2/graphs/mlp.png)]
 
 ---
+
+class: middle
 
 To minimize $\mathcal{L}(\theta)$ with stochastic gradient descent, we need the gradient $\nabla_\theta \mathcal{\ell}(\theta_t)$.
 
@@ -572,6 +592,8 @@ $$\begin{aligned}
 
 ---
 
+class: middle
+
 - This algorithm is known as **reverse-mode automatic differentiation**, also called **backpropagation**.
 - An equivalent procedure can be defined to evaluate the derivatives in *forward mode*, from inputs to outputs.
 - Automatic differentiation generalizes to $N$ inputs and $M$ outputs.
@@ -593,6 +615,8 @@ Training deep MLPs with many layers has for long (pre-2011) been very difficult 
 
 ---
 
+class: middle
+
 Consider a simplified 3-layer MLP, with $x, w\_1, w\_2, w\_3 \in\mathbb{R}$, such that
 $$f(x; w\_1, w\_2, w\_3) = \sigma\left(w\_3\sigma\left( w\_2 \sigma\left( w\_1 x \right)\right)\right). $$
 
@@ -612,6 +636,8 @@ $$\begin{aligned}\frac{\text{d}\hat{y}}{\text{d}w\_1} &= \frac{\partial \hat{y}}
 
 ---
 
+class: middle
+
 The derivative of the sigmoid activation function $\sigma$ is:
 
 .center[![](figures/lec2/activation-grad-sigmoid.png)]
@@ -621,6 +647,8 @@ $$\frac{\text{d} \sigma}{\text{d} x}(x) = \sigma(x)(1-\sigma(x))$$
 Notice that $0 \leq \frac{\text{d} \sigma}{\text{d} x}(x) \leq \frac{1}{4}$ for all $x$.
 
 ---
+
+class: middle
 
 Assume that weights $w\_1, w\_2, w\_3$ are initialized randomly from a Gaussian with zero-mean and  small variance, such that with high probability $-1 \leq w\_i \leq 1$.
 
@@ -648,6 +676,8 @@ $$\text{ReLU}(x) = \max(0, x)$$
 
 ---
 
+class: middle
+
 Note that the derivative of the ReLU function is
 
 $$\frac{\text{d}}{\text{d}x} \text{ReLU}(x) = \begin{cases}
@@ -659,6 +689,8 @@ $$\frac{\text{d}}{\text{d}x} \text{ReLU}(x) = \begin{cases}
 For $x=0$, the derivative is undefined. In practice, it is set to zero.
 
 ---
+
+class: middle
 
 Therefore,
 
@@ -698,6 +730,8 @@ where $N$ is the number of training points, $q$ is the number of neurons, $p$ is
 
 ---
 
+class: middle
+
 Consider the 1-layer MLP
 $$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
 This model can approximate any smooth 1D function, provided enough hidden units.
@@ -710,6 +744,7 @@ R: explain how to fit the components.
 
 ---
 
+class: middle
 count: false
 
 Consider the 1-layer MLP
@@ -720,6 +755,7 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 
 ---
 
+class: middle
 count: false
 
 Consider the 1-layer MLP
@@ -730,6 +766,7 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 
 ---
 
+class: middle
 count: false
 
 Consider the 1-layer MLP
@@ -740,6 +777,7 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 
 ---
 
+class: middle
 count: false
 
 Consider the 1-layer MLP
@@ -750,6 +788,7 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 
 ---
 
+class: middle
 count: false
 
 Consider the 1-layer MLP
@@ -760,6 +799,7 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 
 ---
 
+class: middle
 count: false
 
 Consider the 1-layer MLP
@@ -770,6 +810,7 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 
 ---
 
+class: middle
 count: false
 
 Consider the 1-layer MLP
@@ -780,6 +821,7 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 
 ---
 
+class: middle
 count: false
 
 Consider the 1-layer MLP
@@ -790,6 +832,7 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 
 ---
 
+class: middle
 count: false
 
 Consider the 1-layer MLP
@@ -800,6 +843,7 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 
 ---
 
+class: middle
 count: false
 
 Consider the 1-layer MLP
@@ -810,6 +854,7 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 
 ---
 
+class: middle
 count: false
 
 Consider the 1-layer MLP
@@ -820,6 +865,7 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 
 ---
 
+class: middle
 count: false
 
 Consider the 1-layer MLP
@@ -844,6 +890,8 @@ h\_j(x) &= \sigma\left(a\_j + \sum\_{i=1}^p u\_{i,j}x\_i\right)
 Assume Gaussian priors $v\_j \sim \mathcal{N}(0, \sigma\_v^2)$, $b \sim \mathcal{N}(0, \sigma\_b^2)$, $u\_{i,j} \sim \mathcal{N}(0, \sigma\_u^2)$ and $a\_j \sim \mathcal{N}(0, \sigma\_a^2)$.
 
 ---
+
+class: middle
 
 For a fixed value $x^{(1)}$, let us consider the prior distribution of $f(x^{(1)})$ implied by
 the prior distributions for the weights and biases.
