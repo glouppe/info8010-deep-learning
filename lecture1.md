@@ -47,17 +47,19 @@ class: middle
 
 ---
 
+class: middle
+
+.center[![](figures/lec1/mushrooms.png)]
+
+---
+
+class: middle
+
 The automatic extraction of **semantic information** from raw signal is at the
 core of many applications (e.g., object recognition, speech processing, natural
 language processing, planning, etc).
 
 Can we write a computer program that does that?
-
-<br>
-
-.center[![](figures/lec1/mushrooms.png)]
-
-.center[(ImageNet)]
 
 ---
 
