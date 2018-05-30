@@ -16,6 +16,18 @@ R: lego analogy: from simple blocks to complex stuff
 
 ---
 
+# Cooking recipe
+
+- Get data (loads of them).
+- Get good hardware.
+- Define the neural network architecture as a composition of differentiable functions.
+    - Stick to non-saturating activation function to avoid vanishing gradients.
+    - Prefer deep over shallow architectures.
+- Optimize with (variants of) stochastic gradient descent.
+    - Evaluate gradients with automatic differentiation.
+
+---
+
 # Outline
 
 Goal: explain and motivate the basic constructs of neural networks.

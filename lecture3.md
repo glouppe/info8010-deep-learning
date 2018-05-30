@@ -259,13 +259,26 @@ class: center, middle
 
 ---
 
+# Object recognition challenge
+
+.grid[
+.kol-1-2[![](figures/lec3/imagenet-validation1.png)]
+.kol-1-2[![](figures/lec3/imagenet-validation.jpg)]
+]
+
+The ImageNet-1000 dataset:
+- $1000$ object classes
+- $1200000$ training examples
+- $100000$ test examples
+
+---
+
 # AlexNet
 
 <br><br>
 
 .center.width-100[![](figures/lec3/alexnet.png)]
 .center[(Krizhevsky et al, 2012)]
-
 
 ---
 
@@ -293,20 +306,6 @@ class: center, middle
 
 .center.width-100[![](figures/lec3/resnet.png)]
 .center[(He et al, 2015)]
-
----
-
-# Object recognition
-
-.grid[
-.kol-1-2[![](figures/lec3/imagenet-validation1.png)]
-.kol-1-2[![](figures/lec3/imagenet-validation.jpg)]
-]
-
-The ImageNet challenge:
-- $1000$ object classes
-- $1200000$ training examples
-- $100000$ test examples
 
 ---
 

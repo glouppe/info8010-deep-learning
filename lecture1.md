@@ -15,6 +15,7 @@ R: add train/test datasets discussion  <-- even more!
 R: in particular, test set as a way to estimate R(f)
 R: better connect the discussion of the bias-variance decomposition
 R: l2 construction <=> want to minimize the MLE for a linear Gaussian model
+R: extend to structural risk minimization, to take into account the complexity of the model?
 
 ---
 
