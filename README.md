@@ -6,6 +6,7 @@ These materials (in one form or the other) were given as part of:
 - INFO8004 - Advanced Machine Learning, ULiège, Spring 2018.
 - SMATM130 - Deep Learning, UNamur, Spring 2018.
 - 1st EWSB Spring School, Maratea, Italy, Spring 2018.
+- IN2P3 School Of Statistics, Toulon, France, Spring 2018.
 
 The content of these lectures is under development.
 
