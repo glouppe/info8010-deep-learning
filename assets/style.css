@@ -12,6 +12,17 @@ body {
   position: absolute;
   bottom: 3em;
   font-size: 0.5em;
+  opacity: 0.75;
+}
+
+
+.footnote a{
+    color: #20707e;
+}
+
+.footnote:before {
+    content: "\2015\2015\2015\A";
+    display: block;
 }
 
 .red {
