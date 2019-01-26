@@ -1,19 +1,32 @@
-# INFOXXXX - Deep Learning
+# INFO8010 - Deep Learning
 
-Lectures slides on Deep Learning, Gilles Louppe ([g.louppe@uliege.be](mailto:g.louppe@uliege.be))
+Lectures for INFO8010 - Deep Learning, ULiège, Spring 2019.
 
-These materials (in one form or the other) were given as part of:
-- INFO8004 - Advanced Machine Learning, ULiège, Spring 2018.
-- SMATM130 - Deep Learning, UNamur, Spring 2018.
-- 1st EWSB Spring School, Maratea, Italy, Spring 2018.
-
-The content of these lectures is under development.
+- Instructor: Gilles Louppe ([g.louppe@uliege.be](mailto:g.louppe@uliege.be))
+- Teaching assistants:
+    - Antoine Wehenkel ([antoine.wehenkel@uliege.be](antoine.wehenkel@uliege.be))
+    - Joeri Hermans ([joeri.hermans@doct.uliege.be](mailto:joeri.hermans@doct.uliege.be))
+    - Matthia Sabatelli ([m.sabatelli@uliege.be](mailto:m.sabatelli@uliege.be)).
+- When: Sprint 2019, Friday 9:00AM.
+- Classroom: [B28/R7](https://www.campus.uliege.be/cms/c_5119631/fr/r7-montefiore)
 
 ## Slides
 
-- Lecture 1: [Fundamentals of machine learning](https://glouppe.github.io/infoxxxx-deep-learning/?p=lecture1.md)
-- Lecture 2: [Neural networks](https://glouppe.github.io/infoxxxx-deep-learning/?p=lecture2.md)
-- Lecture 3: [Convolutional networks](https://glouppe.github.io/infoxxxx-deep-learning/?p=lecture3.md)
-- Lecture 4: [Adversarial attacks and defenses](https://glouppe.github.io/infoxxxx-deep-learning/?p=lecture4.md)
-- Lecture 5: [Variational auto-encoders](https://glouppe.github.io/infoxxxx-deep-learning/?p=lecture5.md)
-- Lecture 6: [Generative adversarial networks](https://glouppe.github.io/infoxxxx-deep-learning/?p=lecture6.md)
+- [Outline](https://glouppe.github.io/info8010-deep-learning/?p=outline.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/outline.pdf)]
+- Lecture 1 (February 8): Fundamentals of machine learning
+- Lecture 2 (February 15): Neural networks
+- Lecture 3 (February 22): Convolutional neural networks
+- Lecture 4 (March 1): Training neural networks
+- Lecture 5 (March 8): Recurrent neural networks
+- Lecture 6 (March 15): Differentiable inference and generative models (part 1)
+- Lecture 7 (March 22): Differentiable inference and generative models (part 2)
+- Lecture 8 (March 29): Bayesian deep learning
+- Lecture 9 (April 5): Theory of deep learning
+
+## Project
+
+TBD.
+
+## Reading assignment
+
+TBD.

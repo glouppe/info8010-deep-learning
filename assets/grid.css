@@ -54,10 +54,10 @@
     float: right;
 }
 
-.grid img {
+/*.grid img {
     width: 100%;
     height: auto;
-}
+}*/
 
 /* Content Columns */
 
@@ -131,7 +131,19 @@
 }
 
 .kol-7-12 {
-	width: 58.33%
+	width: 58.33%;
+}
+
+.kol-2-5 {
+	width: 40%;
+}
+
+.kol-3-5 {
+	width: 60%;
+}
+
+.kol-4-5 {
+	width: 80%;
 }
 
 /* Pushing blocks */
