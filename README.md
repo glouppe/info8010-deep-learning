@@ -22,6 +22,7 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2019.
 - Lecture 7 (March 22): Differentiable inference and generative models (part 2)
 - Lecture 8 (March 29): Bayesian deep learning
 - Lecture 9 (April 5): Theory of deep learning
+- Lecture 10 (April 26): Applications
 
 ## Project
 

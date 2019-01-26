@@ -52,9 +52,7 @@ Slides are available at [github.com/glouppe/info8010-deep-learning](https://gith
 
 Some lessons are partially adapted from "[EE-559 Deep Learning](https://fleuret.org/ee559)" by Francois Fleuret (EPFL).
 
-???
-
-.center.width-80[![](figures/outline/slides.png)]
+.center.width-80[![](figures/outline/github.png)]
 
 
 ---
@@ -91,6 +89,7 @@ None!
 - Lecture 7: Differentiable inference and generative models (part 2)
 - Lecture 8: Bayesian deep learning
 - Lecture 9: Theory of deep learning
+- Lecture 10: Applications
 
 ---
 

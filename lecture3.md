@@ -5,9 +5,8 @@ class: middle, center, title-slide
 Lecture 3: Convolutional networks
 
 <br><br>
-
-.bold[Gilles Louppe]<br>
-[g.louppe@uliege.be](mailto:g.louppe@uliege.be)
+Prof. Gilles Louppe<br>
+[g.louppe@uliege.be](g.louppe@uliege.be)
 
 ???
 

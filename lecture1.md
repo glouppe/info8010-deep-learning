@@ -5,9 +5,8 @@ class: middle, center, title-slide
 Lecture 1: Fundamentals of machine learning
 
 <br><br>
-
-.bold[Gilles Louppe]<br>
-[g.louppe@uliege.be](mailto:g.louppe@uliege.be)
+Prof. Gilles Louppe<br>
+[g.louppe@uliege.be](g.louppe@uliege.be)
 
 ???
 
@@ -16,21 +15,6 @@ R: in particular, test set as a way to estimate R(f)
 R: better connect the discussion of the bias-variance decomposition
 R: l2 construction <=> want to minimize the MLE for a linear Gaussian model
 R: extend to structural risk minimization, to take into account the complexity of the model?
-
----
-
-# Course outline
-
-Theory:
-- Lecture 1: Fundamentals of machine learning
-- Lecture 2: Neural networks
-- Lecture 3: Convolutional networks
-- Lecture 4: Adversarial attacks and defenses
-- Lecture 5: Variational auto-encoders
-- Lecture 6: Generative adversarial networks
-
-Practice:
-- Building and training neural networks with PyTorch
 
 ---
 
