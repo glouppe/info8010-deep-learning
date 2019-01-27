@@ -80,6 +80,8 @@ None!
 
 # Outline
 
+(Tentative and subject to change!)
+
 - Lecture 1: Fundamentals of machine learning
 - Lecture 2: Neural networks
 - Lecture 3: Convolutional neural networks
@@ -97,7 +99,7 @@ None!
 
 ## Reading assignment
 
-Read, summarize and criticize a major scientific paper in Deep Learning.
+Read, summarize and criticize a major scientific paper in deep learning.
 (Paper to be announced later.)
 
 .center.width-40[![](figures/outline/alphago-paper.png)]
@@ -106,15 +108,9 @@ Read, summarize and criticize a major scientific paper in Deep Learning.
 
 class: middle
 
-## Programming project
+## Project
 
-TBD.
-
-???
-
-xxx
-
-jetson
+Ambitious project of your choosing. Details to be announced soon.
 
 ---
 
@@ -122,9 +118,9 @@ jetson
 
 - Exam (50%)
 - Reading assignment (10%)
-- Programming project (40%)
+- Project (40%)
 
-The reading assignment and the programming project are **mandatory** for presenting the exam.
+The reading assignment and the project are **mandatory** for presenting the exam.
 
 ---
 

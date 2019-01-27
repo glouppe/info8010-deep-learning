@@ -12,6 +12,8 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2019.
 
 ## Slides
 
+(Tentative and subject to change!)
+
 - [Outline](https://glouppe.github.io/info8010-deep-learning/?p=outline.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/outline.pdf)]
 - Lecture 1 (February 8): Fundamentals of machine learning
 - Lecture 2 (February 15): Neural networks
