@@ -11,6 +11,7 @@ Prof. Gilles Louppe<br>
 ???
 
 R: proper protocol?
+R: cleanup code
 
 ---
 
@@ -746,8 +747,8 @@ class: middle
 
 ## Bias-variance trade-off
 
-- Reducing the capacity makes $f$ fit the data less on average, which increases the bias term.
-- Increasing the capacity makes $f$ vary a lot with the training data, which increases the variance term.
+- Reducing the capacity makes $f\_\*^\mathbf{d}$ fit the data less on average, which increases the bias term.
+- Increasing the capacity makes $f\_\*^\mathbf{d}$ vary a lot with the training data, which increases the variance term.
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
