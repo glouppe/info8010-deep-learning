@@ -10,10 +10,7 @@ Prof. Gilles Louppe<br>
 
 ???
 
-R: add train/test datasets discussion  <-- even more!
-R: in particular, test set as a way to estimate R(f)
-R: better connect the discussion of the bias-variance decomposition
-R: l2 construction <=> want to minimize the MLE for a linear Gaussian model
+R: proper protocol?
 
 ---
 
@@ -23,7 +20,8 @@ Goal: Set the fundamentals of machine learning.
 
 - Why learning?
 - Applications and success
-- Learning from data
+- Statistical learning
+    - Data
     - Empirical risk minimization
     - Under-fitting and over-fitting
     - Bias-variance dilemma
@@ -63,10 +61,14 @@ Chihuahua or muffin?
 class: middle
 
 The automatic extraction of **semantic information** from raw signal is at the
-core of many applications, such as image recognition, speech processing, natural
-language processing or robotic control.
+core of many applications, such as
+- image recognition
+- speech processing
+- natural language processing
+- robotic control
+- ... and many others.
 
-Can we *write a computer program* that implements this mechanism?
+How can we *write a computer program* that implements this mechanism?
 
 ---
 
@@ -296,11 +298,11 @@ class: middle
 
 class: middle
 
-# Learning from data
+# Statistical learning
 
 ---
 
-# Data
+# Statistical learning
 
 Consider an unknown joint probability distribution $P(X,Y)$.
 
@@ -319,40 +321,7 @@ with $\mathbf{x}\_i \in \mathcal{X}$, $y \in \mathcal{Y}$, $i=1, ..., N$.
 
 class: middle
 
-.center.width-70[![](figures/lec1/data-generation.png)]
-
-.center[Probability space and random variables interpretation<br> of the data generative process.
-
-$(\mathbf{x}\_i, y\_i) \sim P(X,Y) \Leftrightarrow \omega\_i \sim P\_\Omega$, $\mathbf{x}\_i = X(\omega\_i)$, $y\_i = Y(\omega\_i)$
-]
-
----
-
-class: middle
-
-Alternatively, the joint distribution can be interpreted as a two-step generative process such that
- $$P(X,Y) = P(X|Y)P(Y) = P(Y|X)P(X)$$
-where
-- for $P(X|Y)P(Y)$:
-    - first, we draw $y\sim P(Y)$
-    - then, generate $\mathbf{x} \sim P(X|Y=y)$.
-- for $P(Y|X)P(X)$:
-    - first, we draw $\mathbf{x} \sim P(X)$
-    - then, generate $y \sim P(Y|X=\mathbf{x})$.
-
----
-
-class: middle
-
-.center.width-60[![](figures/lec1/data-generation-two.png)]
-
-.center[Two-step generative interpretation of $P(X,Y)$ as $P(X)P(Y|X)$.]
-
-.center[e.g., $\mathbf{x} \sim P(X), y = f(\mathbf{x}) + \epsilon$ for $\epsilon \sim \mathcal{N}$.]
-
----
-
-# Inference
+## Inference
 
 Supervised learning is usually concerned with the two following inference problems:
 - **Classification**:
@@ -388,23 +357,31 @@ Regression aims at estimating relationships among variables.
 
 Consider a function $f : \mathcal{X} \to \mathcal{Y}$ produced by some learning algorithm. The predictions
 of this function can be evaluated through a loss
-$$\ell : \mathcal{Y} \times  \mathcal{Y} \to \mathbb{R}$$
+$$\ell : \mathcal{Y} \times  \mathcal{Y} \to \mathbb{R},$$
 such that $\ell(y, f(\mathbf{x})) \geq 0$ measures how close is the prediction $f(\mathbf{x})$ from $y$.
 
-For example,
-- for classification: $$\ell(y,f(\mathbf{x})) = \mathbf{1}\_{y \neq f(\mathbf{x})}$$
-- for regression: $$\ell(y,f(\mathbf{x})) = (y - f(\mathbf{x}))^2$$
+<br>
+## Examples of loss functions
+
+.grid[
+.kol-1-3[Classification:]
+.kol-2-3[$\ell(y,f(\mathbf{x})) = \mathbf{1}\_{y \neq f(\mathbf{x})}$]
+]
+.grid[
+.kol-1-3[Regression:]
+.kol-2-3[$\ell(y,f(\mathbf{x})) = (y - f(\mathbf{x}))^2$]
+]
 
 ---
 
 class: middle
 
-Let us denote as $\mathcal{F}$ the hypothesis space, i.e. the set of all functions $f$ than can be produced by the chosen learning algorithm.
+Let $\mathcal{F}$ denote the hypothesis space, i.e. the set of all functions $f$ than can be produced by the chosen learning algorithm.
 
 We are looking for a function $f \in \mathcal{F}$ with a small **expected risk** (or generalization error)
 $$R(f) = \mathbb{E}\_{(\mathbf{x},y)\sim P(X,Y)}\left[ \ell(y, f(\mathbf{x})) \right].$$
 
-This means that for a given data generating distribution and for a given hypothesis space,
+This means that for a given data generating distribution $P(X,Y)$ and for a given hypothesis space $\mathcal{F}$,
 the optimal model is
 $$f\_\* = \arg \min\_{f \in \mathcal{F}} R(f).$$
 
@@ -415,19 +392,18 @@ class: middle
 Unfortunately, since $P(X,Y)$ is unknown, the expected risk cannot be evaluated and the optimal
 model cannot be determined.
 
-However, given training data $\mathbf{d} = \\\{(\mathbf{x}\_i, y\_i) | i=1,\ldots,N\\\}$, we can
+However, if we have i.i.d. training data $\mathbf{d} = \\\{(\mathbf{x}\_i, y\_i) | i=1,\ldots,N\\\}$, we can
 compute an estimate, the **empirical risk** (or training error)
 $$\hat{R}(f, \mathbf{d}) = \frac{1}{N} \sum\_{(\mathbf{x}\_i, y\_i) \in \mathbf{d}} \ell(y\_i, f(\mathbf{x}\_i)).$$
 
-This estimate can be used for finding a good enough approximation of $f\_\*$, giving rise
-to the **empirical risk minimization principle**:
+This estimate is *unbiased* and can be used for finding a good enough approximation of $f\_\*$. This results into the **empirical risk minimization principle**:
 $$f\_\*^{\mathbf{d}} = \arg \min\_{f \in \mathcal{F}} \hat{R}(f, \mathbf{d})$$
 
 ---
 
 class: middle
 
-Most machine learning algorithms, including neural networks, implement empirical risk minimization.
+Most machine learning algorithms, including **neural networks**, implement empirical risk minimization.
 
 Under regularity assumptions, empirical risk minimizers converge:
 
@@ -463,7 +439,7 @@ class: middle
 
 For this regression problem, we use the squared error loss
 $$\ell(y, f(x;\mathbf{w})) = (y - f(x;\mathbf{w}))^2$$
-to measure how wrong are the predictions.
+to measure how wrong are the predictions..
 
 Therefore, our goal is to find the best value $\mathbf{w}\_\*$ such
 $$\begin{aligned}
@@ -616,6 +592,14 @@ count: false
 
 ---
 
+class: middle, center
+
+![](figures/lec1/training-error.png)
+
+Degree of the polynomials VS. error.
+
+---
+
 class: middle
 
 Let $\mathcal{Y}^{\mathcal X}$ be the set of all functions $f : \mathcal{X} \to \mathcal{Y}$.
@@ -633,6 +617,16 @@ class: middle
 The **capacity** of an hypothesis space induced by a learning algorithm intuitively represents the ability to
 find a good model $f \in \mathcal{F}$ for any function, regardless of its complexity.
 
+In practice, capacity can be controlled through hyper-parameters of the learning algorithm. For example:
+- The degree of polynomials;
+- The number of layers in a neural network;
+- The number of training iterations;
+- Regularization terms.
+
+---
+
+class: middle
+
 - If the capacity of $\mathcal{F}$ is low, then $f\_B \notin \mathcal{F}$ and $R(f) - R\_B$ is large for any $f \in \mathcal{F}$, including $f\_\*$ and $f\_\*^{\mathbf{d}}$. Such models $f$ are said to **underfit** the data.
 - If the capacity of $\mathcal{F}$  is high, then $f\_B \in \mathcal{F}$ or $R(f\_\*) - R\_B$ is small.<br>
 However, because of the high capacity of the hypothesis space, the empirical risk minimizer $f\_\*^{\mathbf{d}}$ could fit the training data arbitrarily well such that $$R(f\_\*^{\mathbf{d}}) \geq R\_B \geq \hat{R}(f\_\*^{\mathbf{d}}, \mathbf{d}) \geq 0.$$
@@ -642,26 +636,12 @@ In this situation, $f\_\*^{\mathbf{d}}$ is said to **overfit** the data.
 
 ---
 
-plots from elements of sl
-
----
-
 class: middle
 
 Therefore, our goal is to adjust the capacity of the hypothesis space such that
 the expected risk of the empirical risk minimizer gets as low as possible.
 
 .center[![](figures/lec1/underoverfitting.png)]
-
----
-
-class: middle
-
-In practice, the capacity of the hypothesis space can be controlled through hyper-parameters of the learning algorithm. For example:
-- The degree of polynomials;
-- The number of layers in a neural network;
-- The number of training iterations;
-- Regularization terms.
 
 ---
 
@@ -677,6 +657,14 @@ Nevertheless, an unbiased estimate of the expected risk can be obtained by evalu
 $$\hat{R}(f\_\*^{\mathbf{d}}, \mathbf{d}\_\text{test}) =  \frac{1}{N} \sum\_{(\mathbf{x}\_i, y\_i) \in \mathbf{d}\_\text{test}} \ell(y\_i, f\_\*^{\mathbf{d}}(\mathbf{x}\_i))$$
 
 This **test error** estimate can be used to evaluate the actual performance of model. However, it should not be used, at the same time, for model selection.
+
+---
+
+class: middle, center
+
+![](figures/lec1/training-test-error.png)
+
+Degree of the polynomials VS. error.
 
 ---
 
@@ -752,13 +740,16 @@ This decomposition is known as the **bias-variance** decomposition.
 - The bias term measures the discrepancy between the average model and the Bayes model.
 - The variance term quantities the variability of the predictions.
 
-Typically,
-- Models of low capacity have low variance but high bias.
-- Models of high capacity how high variance but low bias.
-
 ---
 
-# Structural risk minimization
+class: middle
+
+## Bias-variance trade-off
+
+- Reducing the capacity makes $f$ fit the data less on average, which increases the bias term.
+- Increasing the capacity makes $f$ vary a lot with the training data, which increases the variance term.
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
 ---
 
