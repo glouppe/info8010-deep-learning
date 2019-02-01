@@ -14,7 +14,6 @@ R: add train/test datasets discussion  <-- even more!
 R: in particular, test set as a way to estimate R(f)
 R: better connect the discussion of the bias-variance decomposition
 R: l2 construction <=> want to minimize the MLE for a linear Gaussian model
-R: extend to structural risk minimization, to take into account the complexity of the model?
 
 ---
 
@@ -23,9 +22,11 @@ R: extend to structural risk minimization, to take into account the complexity o
 Goal: Set the fundamentals of machine learning.
 
 - Why learning?
+- Applications and success
 - Learning from data
-- Empirical risk minimization
-- Bias-variance dilemma
+    - Empirical risk minimization
+    - Under-fitting and over-fitting
+    - Bias-variance dilemma
 
 ---
 
@@ -35,29 +36,46 @@ class: middle
 
 ---
 
-class: middle
+class: middle, center
 
-.center[![](figures/lec1/mushrooms.png)]
+.width-80[![](figures/lec1/mushrooms.png)]
+
+What do you see? How do we do that?!
+
+---
+
+class: middle, center
+
+.width-70[![](figures/lec1/dog1.jpg)]
+
+Sheepdog or mop?
+
+---
+
+class: middle, center
+
+.width-70[![](figures/lec1/dog2.jpg)]
+
+Chihuahua or muffin?
 
 ---
 
 class: middle
 
 The automatic extraction of **semantic information** from raw signal is at the
-core of many applications (e.g., object recognition, speech processing, natural
-language processing, planning, etc).
+core of many applications, such as image recognition, speech processing, natural
+language processing or robotic control.
 
-Can we write a computer program that does that?
+Can we *write a computer program* that implements this mechanism?
 
 ---
 
 class: middle
 
-The (human) brain is so good at interpreting visual information that the gap between raw
+The (human) brain is so good at interpreting visual information that the **gap** between raw
 data and its semantic interpretation is difficult to assess intuitively:
 
 <br>
-
 .center[
 ![](figures/lec1/mushroom-small.png)
 
@@ -66,113 +84,213 @@ This is a mushroom.
 
 ---
 
-class: middle
+class: middle, center
 
-.center.width-70[![](figures/lec1/mushroom-big.png)]
+.width-70[![](figures/lec1/mushroom-big.png)]
 
-.center[This is a mushroom.]
+This is a mushroom.
+
+---
+
+class: middle, center
+
+.width-30[![](figures/lec1/mushroom-rgb0.png)] +
+.width-30[![](figures/lec1/mushroom-rgb1.png)] +
+.width-30[![](figures/lec1/mushroom-rgb2.png)]
+
+
+This is a mushroom.
+
+---
+
+class: middle, center
+
+.width-100[![](figures/lec1/mushroom-small-nb.png)]
+
+This is a mushroom.
 
 ---
 
 class: middle
 
-.center.width-100[![](figures/lec1/mushroom-small-nb.png)]
+Extracting semantic information requires models of **high complexity**, which cannot be designed by hand.
 
-.center[This is a mushroom.]
+However, one can write a program that *learns* the task of extracting semantic information.
 
----
-
-Extracting semantic information requires models of **high complexity**.
-Therefore one cannot write by hand a computer program that reproduces this process.
-
-However, one can write a program that **learns** the task of extracting semantic information. A common strategy to solve this issue consists in:
+Techniques used in practice consist of:
 - defining a parametric model with high capacity,
 - optimizing its parameters, by "making it work" on the training data.
 
-<br>
-.center.width-50[![](figures/lec1/knobs.jpg)]
-
-.center[Learning $\approx$ tuning the many parameters of a model.]
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
 ---
 
 class: middle
 
-# Applications
+This is similar to *biological systems* for which the model (e.g. brain structure) is
+DNA-encoded, and parameters (e.g. synaptic weights) are tuned through
+experiences.
+
+Deep learning encompasses software technologies to **scale-up** to billions of
+model parameters and as many training examples.
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
 ---
 
-class: middle, center
+class: middle
 
-.width-70[![](figures/lec1/cifar10.png)]
-
-Classification
+# Applications and success
 
 ---
 
-class: middle, center
+class: middle, center, black-slide
 
-.width-80[![](figures/lec1/regression-app.png)]
+<iframe width="600" height="450" src="https://www.youtube.com/embed/qWl9idsCuLQ" frameborder="0" allowfullscreen></iframe>
 
-Regression
-
----
-
-class: middle, center
-
-.width-70[![](figures/lec1/segmentation.png)]
-
-Object detection and segmentation (He et al, 2017)
+Segmentation (Hengshuang et al, 2017)
 
 ---
 
-class: middle, center
+class: middle, center, black-slide
 
-.width-70[![](figures/lec1/pose.png)]
+<iframe width="600" height="450" src="https://www.youtube.com/embed/pW6nZXeWlGM" frameborder="0" allowfullscreen></iframe>
 
-Human pose estimation (Chen et al, 2017)
-
----
-
-class: middle, center
-
-.width-70[![](figures/lec1/bedrooms.png)]
-
-Data generation (Arjovsky et al, 2017)
+Pose estimation (Cao et al, 2017)
 
 ---
 
-class: middle, center
+class: middle, center, black-slide
 
-.width-90[![](figures/lec6/caption1.png)]
+<iframe width="600" height="450" src="https://www.youtube.com/embed/V1eYniJ0Rnk" frameborder="0" allowfullscreen></iframe>
 
-.width-90[![](figures/lec6/caption2.png)]
-
-.center[Auto-captioning (Shetty et al, 2017)]
+Reinforcement learning (Mnih et al, 2014)
 
 ---
 
-class: middle, center
+class: middle, center, black-slide
 
-.width-90[![](figures/lec1/rl.png)]
+<iframe width="600" height="450" src="https://www.youtube.com/embed/HcZ48JDamyk" frameborder="0" allowfullscreen></iframe>
 
-Learning to play at super-human level (Mnih, 2013)
-
----
-
-class: middle, center
-
-.width-100[![](figures/lec1/translation.png)]
-
-Translation (Bahdanau et al, 2014)
+Strategy games (Deepmind, 2016-2018)
 
 ---
 
-class: middle, center
+class: middle, center, black-slide
 
-.width-100[![](figures/lec1/qa.png)]
+<iframe width="600" height="450" src="https://www.youtube.com/embed/qhUvQiKec2U" frameborder="0" allowfullscreen></iframe>
 
-Question answering (Ren et al, 2015)
+Autonomous cars (NVIDIA, 2016)
+
+---
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/Nu-nlQqFCKg?start=471" frameborder="0" allowfullscreen></iframe>
+
+Speech recognition, translation and synthesis (Microsoft, 2012)
+
+---
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/8BFzu9m52sc" frameborder="0" allowfullscreen></iframe>
+
+Auto-captioning (2015)
+
+---
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/7gh6_U7Nfjs" frameborder="0" allowfullscreen></iframe>
+
+Speech synthesis and question answering (Google, 2018)
+
+---
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/kSLJriaOumA" frameborder="0" allowfullscreen></iframe>
+
+Image generation (Karras et al, 2018)
+
+---
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/egJ0PTKQp4U?start=223" frameborder="0" allowfullscreen></iframe>
+
+Music composition (NVIDIA, 2017)
+
+---
+
+# Why does it work now?
+
+.center.grid[
+.kol-1-2[
+Algorithms<br><br>
+.width-90[![](figures/lec1/skip-connection.png)]
+]
+.center.kol-1-2[
+Data<br><br>
+.width-50[![](figures/lec1/imagenet.jpeg)]
+]
+]
+
+.center.grid[
+.kol-1-2[
+Software<br>
+.width-90[![](figures/lec1/software.png)]
+]
+.kol-1-2[
+Compute engines<br><br>
+.width-50[![](figures/lec1/titan.jpg)]
+]
+]
+
+---
+
+class: middle
+
+Five decades of research in machine learning provided
+- a taxonomy of ML concepts (classification, generative models, clustering, kernels, linear embeddings, etc.),
+- a sound statistical formalization (Bayesian estimation, PAC),
+- a clear picture of fundamental issues (bias/variance dilemma, VC
+dimension, generalization bounds, etc.),
+- a good understanding of optimization issues,
+- efficient large-scale algorithms.
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+From a practical perspective, deep learning
+- lessens the need for a deep mathematical grasp,
+- makes the design of large learning architectures a system/software development task,
+- allows to leverage modern hardware (clusters of GPUs),
+- does not plateau when using more data,
+- makes large trained networks a commodity.
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+.center.width-70[![](figures/lec1/flops.png)]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+
+class: middle
+
+.center.width-90[![](figures/lec1/op-vs-acc.png)]
+
+.footnote[Image credits: Canziani et al, 2016, arXiv:[1605.07678](https://arxiv.org/abs/1605.07678).]
 
 ---
 
@@ -182,16 +300,16 @@ class: middle
 
 ---
 
-# Data generative model
+# Data
 
-Consider an unknown joint probability distribution $P(X,Y)$ over observations or values of interest.
+Consider an unknown joint probability distribution $P(X,Y)$.
 
-Assume training data drawn from this distribution:
+Assume training data
 $$(\mathbf{x}\_i,y\_i) \sim P(X,Y),$$
 with $\mathbf{x}\_i \in \mathcal{X}$, $y \in \mathcal{Y}$, $i=1, ..., N$.
 
 - In most cases,
-    - $\mathbf{x}\_i$ is a $p$-dimensional vector of *features* or *descriptors*,
+    - $\mathbf{x}\_i$ is a $p$-dimensional vector of features or descriptors,
     - $y$ is a scalar (e.g., a category or a real value).
 - The training data is generated i.i.d.
 - The training data can be of any finite size $N$.
@@ -236,13 +354,16 @@ class: middle
 
 # Inference
 
-In supervised learning, we are usually interested in the two following inference problems:
-- **Classification**:<br>
+Supervised learning is usually concerned with the two following inference problems:
+- **Classification**:
 Given $(\mathbf{x}, y) \in \mathcal{X}\times\mathcal{Y} = \mathbb{R}^p \times \\\{1, ..., C\\\}$,
 we want to estimate $$\arg \max\_y P(Y=y|X=\mathbf{x}).$$
-- **Regression**:<br>
+- **Regression**:
 Given $(\mathbf{x}, y) \in \mathcal{X}\times\mathcal{Y} =  \mathbb{R}^p \times \mathbb{R}$,
 we want to estimate $$\mathbb{E}\left[ Y|X=\mathbf{x} \right].$$
+
+Or more generally, we want to estimate
+$$P(Y=y|X=\mathbf{x}).$$
 
 ---
 
@@ -260,17 +381,6 @@ class: middle, center
 ![](figures/lec1/regression.png)
 
 Regression aims at estimating relationships among variables.
-
----
-
-class: middle
-
-The boundary between these inference problems is fuzzy, as one often reduces to the other.
-
-- Regression enables classification through class scores.
-- Classification can be viewed as discretized regression.
-
-These inference problems also closely relate to the more general (conditional) density estimation problem.
 
 ---
 
@@ -447,12 +557,6 @@ count: false
 
 ---
 
-class: middle
-
-# Under-fitting and over-fitting
-
----
-
 # Under-fitting and over-fitting
 
 What if we consider a hypothesis space $\mathcal{F}$ in which candidate functions $f$ are either too "simple" or too "complex" with respect to the true data generating process?
@@ -535,6 +639,10 @@ However, because of the high capacity of the hypothesis space, the empirical ris
 In this situation, $f\_\*^{\mathbf{d}}$ becomes too complex with respect to the true data generating process and a large reduction of the empirical risk (often) comes at the price
 of an increase of the  expected risk of the empirical risk minimizer $R(f\_\*^{\mathbf{d}})$.
 In this situation, $f\_\*^{\mathbf{d}}$ is said to **overfit** the data.
+
+---
+
+plots from elements of sl
 
 ---
 
@@ -650,6 +758,10 @@ Typically,
 
 ---
 
+# Structural risk minimization
+
+---
+
 class: end-slide, center
 count: false
 
@@ -659,5 +771,4 @@ The end.
 
 # References
 
-- [EE-559 Deep learning](https://documents.epfl.ch/users/f/fl/fleuret/www/dlc/) (Francois Fleuret, EPFL)
-- [Understanding Random Forests: From Theory to Practice](http://arxiv.org/abs/1407.7502) (Louppe, 2014)
+xxx

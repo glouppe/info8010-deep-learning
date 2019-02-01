@@ -12,6 +12,9 @@ Prof. Gilles Louppe<br>
 
 R: lego analogy: from simple blocks to complex stuff
    deep learning is the same
+R: sgd -> check /doc/
+R: check fleuret history, relations to bio
+R: DL = generalization and composition of graph (see fleuret 1-1 17)
 
 ---
 
