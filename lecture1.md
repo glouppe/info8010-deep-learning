@@ -440,7 +440,7 @@ class: middle
 
 For this regression problem, we use the squared error loss
 $$\ell(y, f(x;\mathbf{w})) = (y - f(x;\mathbf{w}))^2$$
-to measure how wrong are the predictions..
+to measure how wrong the predictions are.
 
 Therefore, our goal is to find the best value $\mathbf{w}\_\*$ such
 $$\begin{aligned}
