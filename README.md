@@ -4,10 +4,10 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2019.
 
 - Instructor: Gilles Louppe ([g.louppe@uliege.be](mailto:g.louppe@uliege.be))
 - Teaching assistants:
-    - Antoine Wehenkel ([antoine.wehenkel@uliege.be](antoine.wehenkel@uliege.be))
     - Joeri Hermans ([joeri.hermans@doct.uliege.be](mailto:joeri.hermans@doct.uliege.be))
-    - Matthia Sabatelli ([m.sabatelli@uliege.be](mailto:m.sabatelli@uliege.be)).
-- When: Sprint 2019, Friday 9:00AM.
+    - Matthia Sabatelli ([m.sabatelli@uliege.be](mailto:m.sabatelli@uliege.be))
+    - Antoine Wehenkel ([antoine.wehenkel@uliege.be](antoine.wehenkel@uliege.be))
+- When: Spring 2019, Friday 9:00AM.
 - Classroom: [B28/R7](https://www.campus.uliege.be/cms/c_5119631/fr/r7-montefiore)
 
 ## Slides

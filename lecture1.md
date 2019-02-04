@@ -39,7 +39,9 @@ class: middle, center
 
 .width-80[![](figures/lec1/mushrooms.png)]
 
-What do you see? How do we do that?!
+What do you see?
+
+.italic[How do we do that?!]
 
 ---
 
@@ -69,7 +71,7 @@ core of many applications, such as
 - robotic control
 - ... and many others.
 
-How can we *write a computer program* that implements this mechanism?
+How can we *write a computer program* that implements that?
 
 ---
 
@@ -108,7 +110,7 @@ This is a mushroom.
 
 class: middle, center
 
-.width-100[![](figures/lec1/mushroom-small-nb.png)]
+.width-80[![](figures/lec1/mushroom-small-nb.png)]
 
 This is a mushroom.
 
@@ -130,8 +132,8 @@ Techniques used in practice consist of:
 
 class: middle
 
-This is similar to *biological systems* for which the model (e.g. brain structure) is
-DNA-encoded, and parameters (e.g. synaptic weights) are tuned through
+This is similar to *biological systems* for which the model (e.g., brain structure) is
+DNA-encoded, and parameters (e.g., synaptic weights) are tuned through
 experiences.
 
 Deep learning encompasses software technologies to **scale-up** to billions of
@@ -231,11 +233,11 @@ Music composition (NVIDIA, 2017)
 
 .center.grid[
 .kol-1-2[
-Algorithms<br><br>
+New algorithms<br><br>
 .width-90[![](figures/lec1/skip-connection.png)]
 ]
 .center.kol-1-2[
-Data<br><br>
+More data<br><br>
 .width-50[![](figures/lec1/imagenet.jpeg)]
 ]
 ]
@@ -246,7 +248,7 @@ Software<br>
 .width-90[![](figures/lec1/software.png)]
 ]
 .kol-1-2[
-Compute engines<br><br>
+Faster compute engines<br><br>
 .width-50[![](figures/lec1/titan.jpg)]
 ]
 ]
@@ -254,6 +256,8 @@ Compute engines<br><br>
 ---
 
 class: middle
+
+## Building on the shoulders of giants
 
 Five decades of research in machine learning provided
 - a taxonomy of ML concepts (classification, generative models, clustering, kernels, linear embeddings, etc.),
@@ -268,6 +272,8 @@ dimension, generalization bounds, etc.),
 ---
 
 class: middle
+
+## Deep learning
 
 From a practical perspective, deep learning
 - lessens the need for a deep mathematical grasp,
@@ -303,17 +309,17 @@ class: middle
 
 ---
 
-# Statistical learning
+# Supervised learning
 
 Consider an unknown joint probability distribution $P(X,Y)$.
 
 Assume training data
 $$(\mathbf{x}\_i,y\_i) \sim P(X,Y),$$
-with $\mathbf{x}\_i \in \mathcal{X}$, $y \in \mathcal{Y}$, $i=1, ..., N$.
+with $\mathbf{x}\_i \in \mathcal{X}$, $y\_i \in \mathcal{Y}$, $i=1, ..., N$.
 
 - In most cases,
     - $\mathbf{x}\_i$ is a $p$-dimensional vector of features or descriptors,
-    - $y$ is a scalar (e.g., a category or a real value).
+    - $y\_i$ is a scalar (e.g., a category or a real value).
 - The training data is generated i.i.d.
 - The training data can be of any finite size $N$.
 - In general, we do not have any prior information about $P(X,Y)$.
@@ -326,14 +332,19 @@ class: middle
 
 Supervised learning is usually concerned with the two following inference problems:
 - **Classification**:
-Given $(\mathbf{x}, y) \in \mathcal{X}\times\mathcal{Y} = \mathbb{R}^p \times \\\{1, ..., C\\\}$,
-we want to estimate $$\arg \max\_y P(Y=y|X=\mathbf{x}).$$
+Given $(\mathbf{x}\_i, y\_i) \in \mathcal{X}\times\mathcal{Y} = \mathbb{R}^p \times \\\{1, ..., C\\\}$, for $i=1, ..., N$,
+we want to estimate for any new $\mathbf{x}$, $$\arg \max\_y P(Y=y|X=\mathbf{x}).$$
 - **Regression**:
-Given $(\mathbf{x}, y) \in \mathcal{X}\times\mathcal{Y} =  \mathbb{R}^p \times \mathbb{R}$,
-we want to estimate $$\mathbb{E}\left[ Y|X=\mathbf{x} \right].$$
+Given $(\mathbf{x}\_i, y\_i) \in \mathcal{X}\times\mathcal{Y} =  \mathbb{R}^p \times \mathbb{R}$, for $i=1, ..., N$,
+we want to estimate for any new $\mathbf{x}$, $$\mathbb{E}\left[ Y|X=\mathbf{x} \right].$$
 
-Or more generally, we want to estimate
-$$P(Y=y|X=\mathbf{x}).$$
+---
+
+class: middle
+
+Or more generally, inference is concerned with the conditional estimation
+$$P(Y=y|X=\mathbf{x})$$
+for any new $(\mathbf{x},y)$.
 
 ---
 
@@ -350,7 +361,7 @@ class: middle, center
 
 ![](figures/lec1/regression.png)
 
-Regression aims at estimating relationships among variables.
+Regression aims at estimating relationships among (usually continuous) variables.
 
 ---
 
@@ -359,7 +370,7 @@ Regression aims at estimating relationships among variables.
 Consider a function $f : \mathcal{X} \to \mathcal{Y}$ produced by some learning algorithm. The predictions
 of this function can be evaluated through a loss
 $$\ell : \mathcal{Y} \times  \mathcal{Y} \to \mathbb{R},$$
-such that $\ell(y, f(\mathbf{x})) \geq 0$ measures how close is the prediction $f(\mathbf{x})$ from $y$.
+such that $\ell(y, f(\mathbf{x})) \geq 0$ measures how close the prediction $f(\mathbf{x})$ from $y$ is.
 
 <br>
 ## Examples of loss functions
@@ -422,7 +433,7 @@ This is why tuning the parameters of the model to make it work on the training d
 
 Consider the joint probability distribution $P(X,Y)$ induced by the data generating
 process
-$$x,y \sim P(X,Y) \Leftrightarrow x \sim U[-10;10], \epsilon \sim \mathcal{N}(0, \sigma^2), y = g(x) + \epsilon$$
+$$(x,y) \sim P(X,Y) \Leftrightarrow x \sim U[-10;10], \epsilon \sim \mathcal{N}(0, \sigma^2), y = g(x) + \epsilon$$
 where $x \in \mathbb{R}$, $y\in\mathbb{R}$ and $g$ is an unknown polynomial of degree 3.
 
 ---
@@ -493,7 +504,7 @@ $$\mathbf{w}\_\*^{\mathbf{d}} = (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf
 
 class: middle
 
-The expected risk minimizer within our hypothesis space is $g$ itself.
+The expected risk minimizer $\mathbf{w}\_\*$ within our hypothesis space is $g$ itself.
 
 Therefore, on this toy problem, we can verify that
 $f(x;\mathbf{w}\_\*^{\mathbf{d}}) \to f(x;\mathbf{w}\_\*) = g(x)$ as $N \to \infty$.
@@ -597,7 +608,7 @@ class: middle, center
 
 ![](figures/lec1/training-error.png)
 
-Degree of the polynomials VS. error.
+Degree $d$ of the polynomial VS. error.
 
 ---
 
@@ -619,7 +630,7 @@ The **capacity** of an hypothesis space induced by a learning algorithm intuitiv
 find a good model $f \in \mathcal{F}$ for any function, regardless of its complexity.
 
 In practice, capacity can be controlled through hyper-parameters of the learning algorithm. For example:
-- The degree of polynomials;
+- The degree of the family of polynomials;
 - The number of layers in a neural network;
 - The number of training iterations;
 - Regularization terms.
@@ -628,10 +639,10 @@ In practice, capacity can be controlled through hyper-parameters of the learning
 
 class: middle
 
-- If the capacity of $\mathcal{F}$ is low, then $f\_B \notin \mathcal{F}$ and $R(f) - R\_B$ is large for any $f \in \mathcal{F}$, including $f\_\*$ and $f\_\*^{\mathbf{d}}$. Such models $f$ are said to **underfit** the data.
-- If the capacity of $\mathcal{F}$  is high, then $f\_B \in \mathcal{F}$ or $R(f\_\*) - R\_B$ is small.<br>
+- If the capacity of $\mathcal{F}$ is too low, then $f\_B \notin \mathcal{F}$ and $R(f) - R\_B$ is large for any $f \in \mathcal{F}$, including $f\_\*$ and $f\_\*^{\mathbf{d}}$. Such models $f$ are said to **underfit** the data.
+- If the capacity of $\mathcal{F}$  is too high, then $f\_B \in \mathcal{F}$ or $R(f\_\*) - R\_B$ is small.<br>
 However, because of the high capacity of the hypothesis space, the empirical risk minimizer $f\_\*^{\mathbf{d}}$ could fit the training data arbitrarily well such that $$R(f\_\*^{\mathbf{d}}) \geq R\_B \geq \hat{R}(f\_\*^{\mathbf{d}}, \mathbf{d}) \geq 0.$$
-In this situation, $f\_\*^{\mathbf{d}}$ becomes too complex with respect to the true data generating process and a large reduction of the empirical risk (often) comes at the price
+In this situation, $f\_\*^{\mathbf{d}}$ becomes too specialized with respect to the true data generating process and a large reduction of the empirical risk (often) comes at the price
 of an increase of the  expected risk of the empirical risk minimizer $R(f\_\*^{\mathbf{d}})$.
 In this situation, $f\_\*^{\mathbf{d}}$ is said to **overfit** the data.
 
@@ -657,7 +668,7 @@ This indicates that the empirical risk $\hat{R}(f\_\*^{\mathbf{d}}, \mathbf{d})$
 Nevertheless, an unbiased estimate of the expected risk can be obtained by evaluating $f\_\*^{\mathbf{d}}$ on data $\mathbf{d}\_\text{test}$ independent from the training samples $\mathbf{d}$:
 $$\hat{R}(f\_\*^{\mathbf{d}}, \mathbf{d}\_\text{test}) =  \frac{1}{N} \sum\_{(\mathbf{x}\_i, y\_i) \in \mathbf{d}\_\text{test}} \ell(y\_i, f\_\*^{\mathbf{d}}(\mathbf{x}\_i))$$
 
-This **test error** estimate can be used to evaluate the actual performance of model. However, it should not be used, at the same time, for model selection.
+This **test error** estimate can be used to evaluate the actual performance of the model. However, it should not be used, at the same time, for model selection.
 
 ---
 
@@ -665,7 +676,43 @@ class: middle, center
 
 ![](figures/lec1/training-test-error.png)
 
-Degree of the polynomials VS. error.
+Degree $d$ of the polynomial VS. error.
+
+---
+
+class: middle
+
+## (Proper) evaluation protocol
+
+.center[![](figures/lec1/protocol1.png)]
+
+There may be over-fitting, but it does not bias the final performance evaluation.
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+.center[![](figures/lec1/protocol2.png)]
+
+.center[This should be **avoided** at all costs!]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+.center[![](figures/lec1/protocol3.png)]
+
+.center[Instead, keep a separate validation set for tuning the hyper-parameters.]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+???
+
+Comment on the comparison of algorithms from one paper to the other.
 
 ---
 
@@ -763,4 +810,4 @@ The end.
 
 # References
 
-xxx
+- Vapnik, V. (1992). Principles of risk minimization for learning theory. In Advances in neural information processing systems (pp. 831-838).

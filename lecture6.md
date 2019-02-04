@@ -13,6 +13,7 @@ Prof. Gilles Louppe<br>
 http://www.deeplearningindaba.com/uploads/1/0/2/6/102657286/deep_generative_models.pdf
 
 R: vae are not ae: http://paulrubenstein.co.uk/variational-autoencoders-are-not-autoencoders/
+https://arxiv.org/pdf/1901.05534.pdf
 
 ---
 

@@ -19,9 +19,9 @@ https://www.cs.toronto.edu/~duvenaud/courses/csc2541/index.html projects
 This course is given by:
 - Theory: Prof. Gilles Louppe ([g.louppe@uliege.be](mailto:g.louppe@uliege.be))
 - Projects and guidance:
-    - Antoine Wehenkel ([antoine.wehenkel@uliege.be](antoine.wehenkel@uliege.be))
     - Joeri Hermans ([joeri.hermans@doct.uliege.be](mailto:joeri.hermans@doct.uliege.be))
     - Matthia Sabatelli ([m.sabatelli@uliege.be](mailto:m.sabatelli@uliege.be))
+    - Antoine Wehenkel ([antoine.wehenkel@uliege.be](antoine.wehenkel@uliege.be))
 
 Feel free to contact any of us for help!
 
@@ -29,9 +29,9 @@ Feel free to contact any of us for help!
 
 .center[
 .circle[![](figures/outline/gilles.jpg)] &nbsp;
-.circle[![](figures/outline/antoine.jpg)] &nbsp;
 .circle[![](figures/outline/joeri.jpg)] &nbsp;
-.circle[![](figures/outline/matthia.jpg)]
+.circle[![](figures/outline/matthia.jpg)] &nbsp;
+.circle[![](figures/outline/antoine.jpg)]
 ]
 
 ---
@@ -60,6 +60,13 @@ Some lessons are partially adapted from "[EE-559 Deep Learning](https://fleuret.
 # Textbook
 
 None!
+
+---
+
+# Resources
+
+- [Awesome Deep Learning](https://github.com/ChristosChristofidis/awesome-deep-learning)
+- [Awesome Deep Learning papers](https://github.com/terryum/awesome-deep-learning-papers)
 
 ---
 
@@ -100,9 +107,14 @@ None!
 ## Reading assignment
 
 Read, summarize and criticize a major scientific paper in deep learning.
-(Paper to be announced later.)
 
-.center.width-40[![](figures/outline/alphago-paper.png)]
+Pick one of the following three papers:
+
+- He, K., Zhang, X., Ren, S., & Sun, J. (2016). Deep residual learning for image recognition. arXiv:[1512.03385](https://arxiv.org/abs/1512.03385).
+- Andrychowicz, M., Denil, M., Gomez, S., Hoffman, M. W., Pfau, D., Schaul, T., ... & De Freitas, N. (2016). Learning to learn by gradient descent by gradient descent. arXiv:[1606.04474](https://arxiv.org/abs/1606.04474).
+- Zhang, C., Bengio, S., Hardt, M., Recht, B., & Vinyals, O. (2016). Understanding deep learning requires rethinking generalization. arXiv:[1611.03530](https://arxiv.org/abs/1611.03530).
+
+Further instructions will be announced soon.
 
 ---
 
