@@ -10,19 +10,19 @@ Prof. Gilles Louppe<br>
 
 ???
 
-R: proper protocol?
+R: P(X,Y) or density p(x,y)?
 R: cleanup code
 
 ---
 
-# Outline
+# Today
 
-Goal: Set the fundamentals of machine learning.
+Set the fundamentals of machine learning.
 
 - Why learning?
 - Applications and success
 - Statistical learning
-    - Data
+    - Supervised learning
     - Empirical risk minimization
     - Under-fitting and over-fitting
     - Bias-variance dilemma
@@ -146,6 +146,14 @@ model parameters and as many training examples.
 class: middle
 
 # Applications and success
+
+---
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/MPU2HistivI" frameborder="0" allowfullscreen></iframe>
+
+Real-time object detection (Redmon and Farhadi, 2018)
 
 ---
 
@@ -292,6 +300,10 @@ class: middle
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
+???
+
+Same story for storage, which allows for larger dataset.
+
 ---
 
 
@@ -323,6 +335,10 @@ with $\mathbf{x}\_i \in \mathcal{X}$, $y\_i \in \mathcal{Y}$, $i=1, ..., N$.
 - The training data is generated i.i.d.
 - The training data can be of any finite size $N$.
 - In general, we do not have any prior information about $P(X,Y)$.
+
+???
+
+In most cases, x is a vector, but it could be an image, a piece of text or a sample of sound.
 
 ---
 
@@ -410,6 +426,12 @@ $$\hat{R}(f, \mathbf{d}) = \frac{1}{N} \sum\_{(\mathbf{x}\_i, y\_i) \in \mathbf{
 
 This estimate is *unbiased* and can be used for finding a good enough approximation of $f\_\*$. This results into the **empirical risk minimization principle**:
 $$f\_\*^{\mathbf{d}} = \arg \min\_{f \in \mathcal{F}} \hat{R}(f, \mathbf{d})$$
+
+???
+
+What does unbiased mean?
+
+=> The expected empirical risk estimate (over d) is the expected risk.
 
 ---
 
@@ -610,6 +632,10 @@ class: middle, center
 
 Degree $d$ of the polynomial VS. error.
 
+???
+
+Why shouldn't we pick the largest $d$?
+
 ---
 
 class: middle
@@ -655,6 +681,10 @@ the expected risk of the empirical risk minimizer gets as low as possible.
 
 .center[![](figures/lec1/underoverfitting.png)]
 
+???
+
+Comment that for deep networks, training error may goes to 0 while the generalization error may not necessarily go up!
+
 ---
 
 class: middle
@@ -677,6 +707,12 @@ class: middle, center
 ![](figures/lec1/training-test-error.png)
 
 Degree $d$ of the polynomial VS. error.
+
+???
+
+What value of $d$ shall you select?
+
+But then how good is this selected model?
 
 ---
 
@@ -742,6 +778,10 @@ If $\mathbf{d} \sim P(X,Y)$ is itself considered as a random variable, then $f\_
 class: middle
 
 .center[![](figures/lec1/poly-avg-degree-1.png)]
+
+???
+
+What do you observe?
 
 ---
 
