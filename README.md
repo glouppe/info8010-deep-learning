@@ -32,4 +32,17 @@ TBD.
 
 ## Reading assignment
 
-TBD.
+Your task is to read and summarize a major scientific paper in the field of deep learning. You are free to select one among the following three papers:
+
+> - He, K., Zhang, X., Ren, S., & Sun, J. (2016). Deep residual learning for image recognition. arXiv:[1512.03385](https://arxiv.org/abs/1512.03385).
+> - Andrychowicz, M., Denil, M., Gomez, S., Hoffman, M. W., Pfau, D., Schaul, T., ... & De Freitas, N. (2016). Learning to learn by gradient descent by gradient descent. arXiv:[1606.04474](https://arxiv.org/abs/1606.04474).
+> - Zhang, C., Bengio, S., Hardt, M., Recht, B., & Vinyals, O. (2016). Understanding deep learning requires rethinking generalization. arXiv:[1611.03530](https://arxiv.org/abs/1611.03530).
+
+You should produce a report that summarizes the problem that is tackled by the paper and explains why it is challenging or important. The report should outline the main contributions and results with respect to the problem that is addressed. It should also include a critical discussion of the advantages and shortcomings of the contributions of the paper.
+
+Constraints:
+- English
+- 2 pages (excluding references, if any)
+- Formatted using the LaTeX template [`template-report-reading-assignment.tex`](https://glouppe.github.io/info8010-deep-learning/template-report-reading-assignment.tex)
+
+Your report should be submitted  by **April 5, 2019 at 23:59** on the [submission platform](https://submit.montefiore.ulg.ac.be/). This is a **hard** deadline.

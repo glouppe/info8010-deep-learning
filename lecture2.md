@@ -34,7 +34,7 @@ R: DL = generalization and composition of graph (see fleuret 1-1 17)
 
 Goal: explain and motivate the basic constructs of neural networks.
 
-- From linear discriminant analysis to logistic regresion
+- From linear discriminant analysis to logistic regression
 - Stochastic gradient descent
 - From logistic regression to the multi-layer perceptron
 - Vanishing gradients and rectified networks

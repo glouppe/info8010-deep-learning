@@ -8,6 +8,10 @@ Lecture 9: Theory of deep learning
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](g.louppe@uliege.be)
 
+???
+
+R: shallow models vs deep
+
 ---
 
 TBD.

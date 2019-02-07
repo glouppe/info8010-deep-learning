@@ -50,7 +50,7 @@ Slides are available at [github.com/glouppe/info8010-deep-learning](https://gith
 - In HTML and in PDFs.
 - Posted online the day before the lesson (hopefully).
 
-Some lessons are partially adapted from "[EE-559 Deep Learning](https://fleuret.org/ee559)" by Francois Fleuret (EPFL).
+Some lessons are partially adapted from "[EE-559 Deep Learning](https://fleuret.org/ee559)" by Francois Fleuret at EPFL.
 
 .center.width-80[![](figures/outline/github.png)]
 
@@ -73,7 +73,7 @@ None!
 # Philosophy
 
 ## Thorough and detailed
-- Understand the landscape of deep learning.
+- Understand the foundations and the landscape of deep learning.
 - Be able to write from scratch, debug and run (some) deep learning algorithms.
 
 ## State-of-the-art
@@ -114,7 +114,7 @@ Pick one of the following three papers:
 - Andrychowicz, M., Denil, M., Gomez, S., Hoffman, M. W., Pfau, D., Schaul, T., ... & De Freitas, N. (2016). Learning to learn by gradient descent by gradient descent. arXiv:[1606.04474](https://arxiv.org/abs/1606.04474).
 - Zhang, C., Bengio, S., Hardt, M., Recht, B., & Vinyals, O. (2016). Understanding deep learning requires rethinking generalization. arXiv:[1611.03530](https://arxiv.org/abs/1611.03530).
 
-Further instructions will be announced soon.
+Deadline: **April 5, 2019 at 23:59**.
 
 ---
 
