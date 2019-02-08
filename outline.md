@@ -70,18 +70,19 @@ None!
 
 ---
 
-# Philosophy
+# AI at ULiège
 
-## Thorough and detailed
-- Understand the foundations and the landscape of deep learning.
-- Be able to write from scratch, debug and run (some) deep learning algorithms.
+This course is part of the many other courses available at ULiège and related to AI, including:
 
-## State-of-the-art
-- Introduction to materials new from research ($\leq$ 5 years old).
-- Understand some of the open questions and challenges in the field.
-
-## Practical
-- Fun and challenging course project.
+- INFO8006: Introduction to Artificial Intelligence
+- ELEN0062: Introduction to Machine Learning
+- INFO8004: Advanced Machine Learning
+- **INFO8010: Deep Learning $\leftarrow$ you are there**
+- INFO8003: Optimal decision making for complex problems
+- INFO0948: Introduction to Intelligent Robotics
+- INFO0049: Knowledge representation
+- ELEN0016: Computer vision
+- DROI8031: Introduction to the law of robots
 
 ---
 
@@ -99,6 +100,21 @@ None!
 - Lecture 8: Bayesian deep learning
 - Lecture 9: Theory of deep learning
 - Lecture 10: Applications
+
+---
+
+# Philosophy
+
+## Thorough and detailed
+- Understand the foundations and the landscape of deep learning.
+- Be able to write from scratch, debug and run (some) deep learning algorithms.
+
+## State-of-the-art
+- Introduction to materials new from research ($\leq$ 5 years old).
+- Understand some of the open questions and challenges in the field.
+
+## Practical
+- Fun and challenging course project.
 
 ---
 
