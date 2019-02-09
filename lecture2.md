@@ -10,12 +10,8 @@ Prof. Gilles Louppe<br>
 
 ???
 
-R: lego analogy: from simple blocks to complex stuff
-   deep learning is the same
 R: sgd -> check /doc/
-R: check fleuret history, relations to bio
-R: DL = generalization and composition of graph (see fleuret 1-1 17)
-R: more formalism on backprop
+R: more formalism on backprop?
 
 ---
 
@@ -66,6 +62,10 @@ Therefore, any Boolean function can be built which such units.
 
 ---
 
+xxx networks of TLUs
+
+---
+
 # Perceptron
 
 The perceptron (Rosenblatt, 1957) is very similar, except that the inputs are real:
@@ -84,17 +84,45 @@ class: middle, center
 
 .width-100[![](figures/lec2/perceptron.jpg)]
 
+???
+
+A perceptron is a signal transmission network
+consisting of sensory units (S units), association units
+(A units), and output or response units (R units). The
+‘retina’ of the perceptron is an array of sensory
+elements (photocells). An S-unit produces a binary
+output depending on whether or not it is excited. A
+randomly selected set of retinal cells is connected to
+the next level of the network, the A units. As originally
+proposed there were extensive connections among the
+A units, the R units, and feedback between the R units
+and the A units.
+
 ---
 
 class: middle, center, black-slide
 
-.width-100[![](figures/lec2/perceptron2.jpg)]
+.grid[
+.kol-1-2[.width-100[![](figures/lec2/perceptron2.jpg)]]
+.kol-1-2[<br><br>.width-100[![](figures/lec2/perceptron3.jpg)]]
+]
+
+The Mark I Percetron (Frank Rosenblatt).
+
+---
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/cNxadbrN_aI" frameborder="0" allowfullscreen></iframe>
+
+The Perceptron
+
 
 ---
 
 class: middle
 
-Let us define the **activation** function:
+Let us define the (non-linear) **activation** function:
 
 $$\sigma(x) = \begin{cases}
    1 &\text{if } x \geq 0  \\\\
@@ -104,6 +132,14 @@ $$\sigma(x) = \begin{cases}
 
 Therefore, the perceptron classification rule can be rewritten as
 $$f(\mathbf{x}) = \sigma(\mathbf{w}^T \mathbf{x} + b).$$
+
+---
+
+xxx representation
+
+---
+
+xxx tensor representation
 
 ---
 
@@ -191,9 +227,11 @@ is very similar to the perceptron.
 
 class: middle
 
+xxx update
+
 In terms of **tensor operations**, the computational graph of $f$ can be represented as:
 
-.center.width-70[![](figures/lec2/graphs/logistic-neuron.png)]
+.center.width-70[![](figures/lec2/graphs/logistic-neuron.svg)]
 
 where
 - white nodes correspond to inputs and outputs;
@@ -539,7 +577,7 @@ $$\mathbf{h} = \sigma(\mathbf{W}^T \mathbf{x} + \mathbf{b})$$
 where  $\mathbf{h} \in \mathbb{R}^q$, $\mathbf{x} \in \mathbb{R}^p$, $\mathbf{W} \in \mathbb{R}^{p\times q}$, $b \in \mathbb{R}^q$ and where $\sigma(\cdot)$ is upgraded to the element-wise sigmoid function.
 
 <br>
-.center.width-70[![](figures/lec2/graphs/layer.png)]
+.center.width-70[![](figures/lec2/graphs/layer.svg)]
 
 
 ---
@@ -563,7 +601,7 @@ where $\theta$ denotes the model parameters $\\{ \mathbf{W}\_k, \mathbf{b}\_k, .
 
 class: middle, center
 
-.width-100[![](figures/lec2/graphs/mlp.png)]
+.width-100[![](figures/lec2/graphs/mlp.svg)]
 
 ---
 
@@ -597,6 +635,10 @@ recursively over its computational graph.
 
 ---
 
+class: middle
+
+xxx update graph to svg
+
 As a guiding example, let us consider a simplified 2-layer MLP and the following loss function:
 $$\begin{aligned}
 f(\mathbf{x}; \mathbf{W}\_1, \mathbf{W}\_2) &= \sigma\left( \mathbf{W}\_2^T \sigma\left( \mathbf{W}\_1^T \mathbf{x} \right)\right) \\\\
@@ -604,11 +646,13 @@ f(\mathbf{x}; \mathbf{W}\_1, \mathbf{W}\_2) &= \sigma\left( \mathbf{W}\_2^T \sig
 \end{aligned}$$
 for $\mathbf{x} \in \mathbb{R^p}$, $y \in \mathbb{R}$, $\mathbf{W}\_1 \in \mathbb{R}^{p \times q}$ and $\mathbf{W}\_2 \in \mathbb{R}^q$.
 
---
-
 .width-100[![](figures/lec2/graphs/backprop1.png)]
 
 ---
+
+class: middle
+
+xxx update graph to svg
 
 The total derivative $\frac{\text{d} \ell}{\text{d} \mathbf{W}\_1}$ can be computed **backward**, by walking through all paths from $\ell$ to $\mathbf{W}\_1$ in the computational graph and accumulating the terms:
 $$\begin{aligned}
@@ -748,6 +792,8 @@ $$\sup\_{x \in I\_p} |f(x) - F(x)| < \epsilon.$$
 - The universal approximation theorem generalizes to any non-polynomial (possibly unbounded) activation function, including the ReLU (Leshno, 1993).
 
 ---
+
+class: middle
 
 .bold[Theorem] (Barron, 1992) The mean integrated square error between the estimated network $\hat{F}$ and the target function $f$ is bounded by
 $$O\left(\frac{C^2\_f}{q} + \frac{qp}{N}\log N\right)$$
@@ -916,15 +962,9 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 
 ---
 
-# Cooking recipe
+# Deep learning
 
-- Get data (loads of them).
-- Get good hardware.
-- Define the neural network architecture as a composition of differentiable functions.
-    - Stick to non-saturating activation function to avoid vanishing gradients.
-    - Prefer deep over shallow architectures.
-- Optimize with (variants of) stochastic gradient descent.
-    - Evaluate gradients with automatic differentiation.
+xxx 1-1 16+17; composition
 
 ---
 
@@ -937,11 +977,4 @@ The end.
 
 # References
 
-Materials from the first part of the lecture are inspired from the **excellent** Deep Learning Course by Francois Fleuret (EPFL, 2018).
-- [Lecture 3a: Linear classifiers, perceptron](https://documents.epfl.ch/users/f/fl/fleuret/www/dlc/dlc-slides-3a-linear.pdf)
-- [Lecture 3b: Multi-layer perceptron](https://documents.epfl.ch/users/f/fl/fleuret/www/dlc/dlc-slides-3b-mlp.pdf)
-
-Further references:
-- [Introduction to ML and Stochastic optimization](https://perso.telecom-paristech.fr/rgower/pdf/optimization_I-expanded.pdf) (Gower, 2017)
-- [Why are deep neural networks hard to train?](http://neuralnetworksanddeeplearning.com/chap5.html) (Nielsen, 2017)
-- [Automatic differentiation in machine learning: a survey](https://arxiv.org/abs/1502.05767) (Baydin, 2015)
+xxx
