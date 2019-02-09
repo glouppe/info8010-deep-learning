@@ -45,19 +45,27 @@ What do you see?
 
 ---
 
-class: middle, center
+class: middle
 
+.center[
 .width-70[![](figures/lec1/dog1.jpg)]
 
 Sheepdog or mop?
+]
+
+.footnote[Credits: [Karen Zack](https://twitter.com/teenybiscuit), 2016.]
 
 ---
 
-class: middle, center
+class: middle
 
+.center[
 .width-70[![](figures/lec1/dog2.jpg)]
 
 Chihuahua or muffin?
+]
+
+.footnote[Credits: [Karen Zack](https://twitter.com/teenybiscuit). 2016.]
 
 ---
 

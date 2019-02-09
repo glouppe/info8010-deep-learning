@@ -19,6 +19,18 @@ R: more formalism on backprop
 
 ---
 
+# Today
+
+Explain and motivate the basic constructs of neural networks.
+
+- From linear discriminant analysis to logistic regression
+- Stochastic gradient descent
+- From logistic regression to the multi-layer perceptron
+- Vanishing gradients and rectified networks
+- Universal approximation theorem
+
+---
+
 # Cooking recipe
 
 - Get data (loads of them).
@@ -28,18 +40,6 @@ R: more formalism on backprop
     - Prefer deep over shallow architectures.
 - Optimize with (variants of) stochastic gradient descent.
     - Evaluate gradients with automatic differentiation.
-
----
-
-# Outline
-
-Goal: explain and motivate the basic constructs of neural networks.
-
-- From linear discriminant analysis to logistic regression
-- Stochastic gradient descent
-- From logistic regression to the multi-layer perceptron
-- Vanishing gradients and rectified networks
-- Universal approximation theorem
 
 ---
 
@@ -80,6 +80,18 @@ $$f(\mathbf{x}) = \begin{cases}
 
 ---
 
+class: middle, center
+
+.width-100[![](figures/lec2/perceptron.jpg)]
+
+---
+
+class: middle, center, black-slide
+
+.width-100[![](figures/lec2/perceptron2.jpg)]
+
+---
+
 class: middle
 
 Let us define the **activation** function:
@@ -107,6 +119,7 @@ $$P(\mathbf{x}|y) = \frac{1}{\sqrt{(2\pi)^p |\Sigma|}} \exp \left(-\frac{1}{2}(\
 
 ---
 
+<br>
 Using the Bayes' rule, we have:
 
 $$\begin{aligned}
@@ -465,6 +478,8 @@ More importantly, since the empirical risk is already an approximation of the ex
 
 ---
 
+<br><br>
+
 Instead, **stochastic** gradient descent uses as update rule:
 $$\theta\_{t+1} = \theta\_t - \gamma \nabla \ell(y\_{i(t+1)}, f(\mathbf{x}\_{i(t+1)}; \theta\_t))$$
 
@@ -473,13 +488,11 @@ $$\theta\_{t+1} = \theta\_t - \gamma \nabla \ell(y\_{i(t+1)}, f(\mathbf{x}\_{i(t
 
 --
 
-<br>
-
 .grid.center.italic[
-.kol-1-2[![](figures/lec2/bgd.png)
+.kol-1-2[.width-100[![](figures/lec2/bgd.png)]
 
 Batch gradient descent]
-.kol-1-2[![](figures/lec2/sgd.png)
+.kol-1-2[.width-100[![](figures/lec2/sgd.png)]
 
 Stochastic gradient descent
 ]
@@ -888,77 +901,6 @@ $$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$
 This model can approximate any smooth 1D function, provided enough hidden units.
 
 .center[![](figures/lec2/ua-12.png)]
-
----
-
-# (Bayesian) Infinite networks
-
-What if $q \to \infty$?
-
-Consider the 1-layer MLP with a hidden layer of size $q$ and a bounded activation function $\sigma$:
-
-$$\begin{aligned}
-f(x) &= b + \sum\_{j=1}^q v\_j h\_j(x)\\\\
-h\_j(x) &= \sigma\left(a\_j + \sum\_{i=1}^p u\_{i,j}x\_i\right)
-\end{aligned}$$
-
-Assume Gaussian priors $v\_j \sim \mathcal{N}(0, \sigma\_v^2)$, $b \sim \mathcal{N}(0, \sigma\_b^2)$, $u\_{i,j} \sim \mathcal{N}(0, \sigma\_u^2)$ and $a\_j \sim \mathcal{N}(0, \sigma\_a^2)$.
-
----
-
-class: middle
-
-For a fixed value $x^{(1)}$, let us consider the prior distribution of $f(x^{(1)})$ implied by
-the prior distributions for the weights and biases.
-
-We have
-$$\mathbb{E}[v\_j h\_j(x^{(1)})] = \mathbb{E}[v\_j] \mathbb{E}[h\_j(x^{(1)})] = 0,$$
-since $v\_j$ and $h\_j(x^{(1)})$ are statistically independent and $v\_j$ has zero mean by hypothesis.
-
-The variance of the contribution of each hidden unit $h\_j$ is
-$$\begin{aligned}
-\mathbb{V}[v\_j h\_j(x^{(1)})] &= \mathbb{E}[(v\_j h\_j(x^{(1)}))^2] - \mathbb{E}[v\_j h\_j(x^{(1)})]^2 \\\\
-&= \mathbb{E}[v\_j^2] \mathbb{E}[h\_j(x^{(1)})^2] \\\\
-&= \sigma\_v^2 \mathbb{E}[h\_j(x^{(1)})^2],
-\end{aligned}$$
-which must be finite since $h\_j$ is bounded by its activation function.
-
-We define $V(x^{(1)}) = \mathbb{E}[h\_j(x^{(1)})^2]$, and is the same for all $j$.
-
----
-
-By the Central Limit Theorem, as $q \to \infty$, the total contribution
-of the hidden units, $\sum\_{j=1}^q v\_j h\_j(x)$, to the value of $f(x^{(1)})$ becomes a Gaussian with variance $q \sigma_v^2 V(x^{(1)})$.
-
-The bias $b$ is also Gaussian, of variance $\sigma\_b^2$, so for large $q$, the prior
-distribution $f(x^{(1)})$ is a Gaussian of variance $\sigma\_b^2 + q \sigma_v^2 V(x^{(1)})$.
-
-Accordingly, for $\sigma\_v = \omega\_v q^{-\frac{1}{2}}$, for some fixed $\omega\_v$, the prior $f(x^{(1)})$ converges to a Gaussian of mean zero and variance $\sigma\_b^2 + \omega\_v^2 \sigma_v^2 V(x^{(1)})$ as $q \to \infty$.
-
-For two or more fixed values $x^{(1)}, x^{(2)}, ...$, a similar argument shows that,
-as $q \to \infty$, the joint distribution of the outputs converges to a multivariate Gaussian
-with means of zero and covariances of
-$$\begin{aligned}
-\mathbb{E}[f(x^{(1)})f(x^{(2)})] &= \sigma\_b^2 + \sum\_{j=1}^q \sigma\_v^2 \mathbb{E}[h\_j(x^{(1)}) h\_j(x^{(2)})] \\\\
-&= \sigma\_b^2 + \omega_v^2 C(x^{(1)}, x^{(2)})
-\end{aligned}$$
-where $C(x^{(1)}, x^{(2)}) = \mathbb{E}[h\_j(x^{(1)}) h\_j(x^{(2)})]$ and is the same for all $j$.
-
----
-
-This result states that for any set of fixed points $x^{(1)}, x^{(2)}, ...$,
-the joint distribution of $f(x^{(1)}), f(x^{(2)}), ...$ is a multivariate
-Gaussian.
-
-In other words,  the infinitely wide 1-layer MLP converges towards
-a  **Gaussian process**.
-
-<br>
-
-.center.width-80[![](figures/lec2/in.png)]
-
-.center[(Neal, 1995)]
-
 
 ---
 
