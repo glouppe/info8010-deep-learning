@@ -12,6 +12,7 @@ Prof. Gilles Louppe<br>
 
 R: sgd -> check /doc/
 R: more formalism on backprop?
+R: add all due credits
 
 ---
 
@@ -62,7 +63,12 @@ Therefore, any Boolean function can be built which such units.
 
 ---
 
-xxx networks of TLUs
+class: middle
+
+.center.width-40[![](figures/lec2/tlu.png)]
+
+.footnote[Credits: McCulloch and Pitts, [A logical calculus of ideas immanent in nervous activity](http://www.cse.chalmers.se/~coquand/AUTOMATA/mcp.pdf), 1943.]
+
 
 ---
 
@@ -75,14 +81,15 @@ $$f(\mathbf{x}) = \begin{cases}
    0 &\text{otherwise}
 \end{cases}$$
 
-- This model was originally motivated by biology, with $w_i$ being synaptic weights and $x_i$ and $f$ firing rates.
-- This is a **cartoonesque** biological model.
+This model was originally motivated by biology, with $w_i$ being synaptic weights and $x_i$ and $f$ firing rates.
 
 ---
 
-class: middle, center
+class: middle
 
-.width-100[![](figures/lec2/perceptron.jpg)]
+.center.width-100[![](figures/lec2/perceptron.jpg)]
+
+.footnote[Credits: Frank Rosenblatt, [Mark I Perceptron operators' manual](https://apps.dtic.mil/dtic/tr/fulltext/u2/236965.pdf), 1960.]
 
 ???
 
@@ -124,22 +131,41 @@ class: middle
 
 Let us define the (non-linear) **activation** function:
 
-$$\sigma(x) = \begin{cases}
+$$\text{sign}(x) = \begin{cases}
    1 &\text{if } x \geq 0  \\\\
    0 &\text{otherwise}
 \end{cases}$$
 .center[![](figures/lec2/activation-sign.png)]
 
-Therefore, the perceptron classification rule can be rewritten as
-$$f(\mathbf{x}) = \sigma(\mathbf{w}^T \mathbf{x} + b).$$
+The perceptron classification rule can be rewritten as
+$$f(\mathbf{x}) = \text{sign}(\sum\_i w\_i x\_i  + b).$$
 
 ---
 
-xxx representation
+class: middle
+
+## Computational graphs
+
+.grid[
+.kol-3-5[.width-90[![](figures/lec2/graphs/perceptron.svg)]]
+.kol-2-5[
+The computation of
+$$f(\mathbf{x}) = \text{sign}(\sum\_i w\_i x\_i  + b)$$ can be represented as a **computational graph** where
+- white nodes correspond to inputs and outputs;
+- red nodes correspond to model parameters;
+- blue nodes correspond to intermediate operations.
+]
+]
 
 ---
 
-xxx tensor representation
+class: middle
+
+In terms of **tensor operations**, $f$ can be rewritten as
+$$f(\mathbf{x}) = \text{sign}(\mathbf{w}^T  \mathbf{x} + b),$$
+for which the corresponding computational graph of $f$ is:
+
+.center.width-70[![](figures/lec2/graphs/perceptron-neuron.svg)]
 
 ---
 
@@ -225,20 +251,11 @@ is very similar to the perceptron.
 
 ---
 
-class: middle
-
-xxx update
-
-In terms of **tensor operations**, the computational graph of $f$ can be represented as:
+class: middle, center
 
 .center.width-70[![](figures/lec2/graphs/logistic-neuron.svg)]
 
-where
-- white nodes correspond to inputs and outputs;
-- red nodes correspond to model parameters;
-- blue nodes correspond to intermediate operations, which themselves produce intermediate output values (not represented).
-
-This unit is the *core component* all neural networks!
+This unit is the **lego brick** of all neural networks!
 
 ---
 
@@ -273,6 +290,10 @@ When $Y$ takes values in $\\{-1,1\\}$, a similar derivation yields the **logisti
 
 .center[![](figures/lec2/logistic_loss.png)]
 
+---
+
+class: middle
+
 - In general, the cross-entropy and the logistic losses do not admit a minimizer that can be expressed analytically in closed form.
 - However, a minimizer can be found numerically, using a general minimization technique such as **gradient descent**.
 
@@ -287,6 +308,8 @@ To minimize $\mathcal{L}(\theta)$, **gradient descent** uses local linear inform
 For $\theta\_0 \in \mathbb{R}^d$, a first-order approximation around $\theta\_0$ can be defined as
 $$\hat{\mathcal{L}}(\theta\_0 + \epsilon) = \mathcal{L}(\theta\_0) + \epsilon^T\nabla\_\theta \mathcal{L}(\theta\_0) + \frac{1}{2\gamma}||\epsilon||^2.$$
 
+.center.width-60[![](figures/lec2/gd-good-0.png)]
+
 ---
 
 class: middle
@@ -298,10 +321,9 @@ $$\begin{aligned}
 \end{aligned}$$
 which results in the best improvement for the step $\epsilon = -\gamma \nabla\_\theta \mathcal{L}(\theta\_0)$.
 
-Therefore, model parameters can be updated iteratively using the update rule:
-$$\theta\_{t+1} = \theta\_t -\gamma \nabla\_\theta \mathcal{L}(\theta\_t)$$
-
-Notes:
+Therefore, model parameters can be updated iteratively using the update rule
+$$\theta\_{t+1} = \theta\_t -\gamma \nabla\_\theta \mathcal{L}(\theta\_t),$$
+where
 - $\theta_0$ are the initial parameters of the model;
 - $\gamma$ is the **learning rate**;
 - both are critical for the convergence of the update rule.
@@ -590,12 +612,11 @@ $$\begin{aligned}
 \mathbf{h}\_1 &= \sigma(\mathbf{W}\_1^T \mathbf{h}\_0 + \mathbf{b}\_1) \\\\
 ... \\\\
 \mathbf{h}\_L &= \sigma(\mathbf{W}\_L^T \mathbf{h}\_{L-1} + \mathbf{b}\_L) \\\\
-f(\mathbf{x}; \theta) &= \mathbf{h}\_L
+f(\mathbf{x}; \theta) = \hat{y} &= \mathbf{h}\_L
 \end{aligned}$$
 where $\theta$ denotes the model parameters $\\{ \mathbf{W}\_k, \mathbf{b}\_k, ... | k=1, ..., L\\}$.
 
-- This model is the **multi-layer perceptron**, also known as the fully connected feedforward network.
-- Optionally, the last activation $\sigma$ can be skipped to produce unbounded output values $\hat{y} \in \mathbb{R}$.
+This model is the **multi-layer perceptron**, also known as the fully connected feedforward network.
 
 ---
 
@@ -607,6 +628,22 @@ class: middle, center
 
 class: middle
 
+## Regression
+
+The last activation $\sigma$ can be skipped to produce unbounded output values $\hat{y} \in \mathbb{R}$.
+
+---
+
+class: middle
+
+## Multi-class classification
+
+For classification problems where $\mathcal{Y} = \\{1, ..., C\\}$ and $C>2$,  ... XXX
+
+---
+
+# Automatic differentiation
+
 To minimize $\mathcal{L}(\theta)$ with stochastic gradient descent, we need the gradient $\nabla_\theta \mathcal{\ell}(\theta_t)$.
 
 Therefore, we require the evaluation of the (total) derivatives
@@ -617,29 +654,46 @@ These derivatives can be evaluated automatically from the *computational graph* 
 
 ---
 
-# Automatic differentiation
+class: middle
 
-Consider a 1-dimensional output composition $f \circ g$, such that
+## Chain rule
+
+.center.width-60[![](figures/lec2/graphs/ad-example.svg)]
+
+Let us consider a 1-dimensional output composition $f \circ g$, such that
 $$\begin{aligned}
 y &= f(\mathbf{u}) \\\\
 \mathbf{u} &= g(x) = (g\_1(x), ..., g\_m(x)).
 \end{aligned}$$
-The **chain rule** of total derivatives states that
-$$\frac{\text{d} y}{\text{d} x} = \sum\_{k=1}^m \frac{\partial y}{\partial u\_k} \underbrace{\frac{\text{d} u\_k}{\text{d} x}}\_{\text{recursive case}}$$
-
-- Since a neural network is a composition of differentiable functions, the total
-derivatives of the loss can be evaluated by applying the chain rule
-recursively over its computational graph.
-- The implementation of this procedure is called (reverse) **automatic differentiation** (AD).
-- AD is not numerical differentiation, nor symbolic differentiation.
 
 ---
 
 class: middle
 
-xxx update graph to svg
+The **chain rule** states that $(f \circ g)' = (f' \circ g) g'.$
 
-As a guiding example, let us consider a simplified 2-layer MLP and the following loss function:
+For the total derivative, the chain rule generalizes to
+$$
+\begin{aligned}
+\frac{\text{d} y}{\text{d} x} &= \sum\_{k=1}^m \frac{\partial y}{\partial u\_k} \underbrace{\frac{\text{d} u\_k}{\text{d} x}}\_{\text{recursive case}}
+\end{aligned}$$
+
+---
+
+class: middle
+
+## Reverse automatic differentiation
+
+- Since a neural network is a **composition of differentiable functions**, the total
+derivatives of the loss can be evaluated backward, by applying the chain rule
+recursively over its computational graph.
+- The implementation of this procedure is called reverse *automatic differentiation*.
+
+---
+
+class: middle
+
+Let us consider a simplified 2-layer MLP and the following loss function:
 $$\begin{aligned}
 f(\mathbf{x}; \mathbf{W}\_1, \mathbf{W}\_2) &= \sigma\left( \mathbf{W}\_2^T \sigma\left( \mathbf{W}\_1^T \mathbf{x} \right)\right) \\\\
 \mathcal{\ell}(y, \hat{y}; \mathbf{W}\_1, \mathbf{W}\_2) &= \text{cross\\\_ent}(y, \hat{y}) + \lambda \left( ||\mathbf{W}_1||\_2 + ||\mathbf{W}\_2||\_2 \right)
@@ -651,8 +705,6 @@ for $\mathbf{x} \in \mathbb{R^p}$, $y \in \mathbb{R}$, $\mathbf{W}\_1 \in \mathb
 ---
 
 class: middle
-
-xxx update graph to svg
 
 The total derivative $\frac{\text{d} \ell}{\text{d} \mathbf{W}\_1}$ can be computed **backward**, by walking through all paths from $\ell$ to $\mathbf{W}\_1$ in the computational graph and accumulating the terms:
 $$\begin{aligned}
@@ -666,12 +718,9 @@ $$\begin{aligned}
 
 class: middle
 
-- This algorithm is known as **reverse-mode automatic differentiation**, also called **backpropagation**.
+- This algorithm is also known as **backpropagation**.
 - An equivalent procedure can be defined to evaluate the derivatives in *forward mode*, from inputs to outputs.
-- Automatic differentiation generalizes to $N$ inputs and $M$ outputs.
-    - if $N \gg M$, reverse-mode automatic differentiation is computationally more efficient.
-    - otherwise, if $M \gg N$, forward automatic differentiation is better.
-- Since differentiation is a linear operator, AD can be implemented efficiently in terms of matrix operations.
+- Since differentiation is a linear operator, automatic differentiation can be implemented efficiently in terms of tensor operations.
 
 ---
 
@@ -689,7 +738,7 @@ Training deep MLPs with many layers has for long (pre-2011) been very difficult 
 
 class: middle
 
-Consider a simplified 3-layer MLP, with $x, w\_1, w\_2, w\_3 \in\mathbb{R}$, such that
+Let us consider a simplified 3-layer MLP, with $x, w\_1, w\_2, w\_3 \in\mathbb{R}$, such that
 $$f(x; w\_1, w\_2, w\_3) = \sigma\left(w\_3\sigma\left( w\_2 \sigma\left( w\_1 x \right)\right)\right). $$
 
 Under the hood, this would be evaluated as
@@ -806,7 +855,7 @@ where $N$ is the number of training points, $q$ is the number of neurons, $p$ is
 
 class: middle
 
-Consider the 1-layer MLP
+Let us consider the 1-layer MLP
 $$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
 This model can approximate any smooth 1D function, provided enough hidden units.
 
@@ -821,7 +870,7 @@ R: explain how to fit the components.
 class: middle
 count: false
 
-Consider the 1-layer MLP
+Let us consider the 1-layer MLP
 $$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
 This model can approximate any smooth 1D function, provided enough hidden units.
 
@@ -832,7 +881,7 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 class: middle
 count: false
 
-Consider the 1-layer MLP
+Let us consider the 1-layer MLP
 $$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
 This model can approximate any smooth 1D function, provided enough hidden units.
 
@@ -843,7 +892,7 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 class: middle
 count: false
 
-Consider the 1-layer MLP
+Let us consider the 1-layer MLP
 $$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
 This model can approximate any smooth 1D function, provided enough hidden units.
 
@@ -854,7 +903,7 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 class: middle
 count: false
 
-Consider the 1-layer MLP
+Let us consider the 1-layer MLP
 $$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
 This model can approximate any smooth 1D function, provided enough hidden units.
 
@@ -865,7 +914,7 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 class: middle
 count: false
 
-Consider the 1-layer MLP
+Let us consider the 1-layer MLP
 $$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
 This model can approximate any smooth 1D function, provided enough hidden units.
 
@@ -876,7 +925,7 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 class: middle
 count: false
 
-Consider the 1-layer MLP
+Let us consider the 1-layer MLP
 $$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
 This model can approximate any smooth 1D function, provided enough hidden units.
 
@@ -887,7 +936,7 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 class: middle
 count: false
 
-Consider the 1-layer MLP
+Let us consider the 1-layer MLP
 $$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
 This model can approximate any smooth 1D function, provided enough hidden units.
 
@@ -898,7 +947,7 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 class: middle
 count: false
 
-Consider the 1-layer MLP
+Let us consider the 1-layer MLP
 $$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
 This model can approximate any smooth 1D function, provided enough hidden units.
 
@@ -909,7 +958,7 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 class: middle
 count: false
 
-Consider the 1-layer MLP
+Let us consider the 1-layer MLP
 $$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
 This model can approximate any smooth 1D function, provided enough hidden units.
 
@@ -920,7 +969,7 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 class: middle
 count: false
 
-Consider the 1-layer MLP
+Let us consider the 1-layer MLP
 $$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
 This model can approximate any smooth 1D function, provided enough hidden units.
 
@@ -931,7 +980,7 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 class: middle
 count: false
 
-Consider the 1-layer MLP
+Let us consider the 1-layer MLP
 $$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
 This model can approximate any smooth 1D function, provided enough hidden units.
 
@@ -942,7 +991,7 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 class: middle
 count: false
 
-Consider the 1-layer MLP
+Let us consider the 1-layer MLP
 $$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
 This model can approximate any smooth 1D function, provided enough hidden units.
 
@@ -952,13 +1001,12 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 
 # Effect of depth
 
+.center.width-80[![](figures/lec2/folding.png)]
+
 .bold[Theorem] (Montúfar et al, 2014) A rectifier neural network with $p$ input units and $L$ hidden layers of width $q \geq p$ can compute functions that have $\Omega((\frac{q}{p})^{(L-1)p} q^p)$ linear regions.
 
 - That is, the number of linear regions of deep models grows **exponentially** in $L$ and polynomially in $q$.
 - Even for small values of $L$ and $q$, deep rectifier models are able to produce substantially more linear regions than shallow rectifier models.
-
-<br>
-.center.width-80[![](figures/lec2/folding.png)]
 
 ---
 
