@@ -192,6 +192,8 @@ P(Y=1|\mathbf{x}) &= \frac{P(\mathbf{x}|Y=1) P(Y=1)}{P(\mathbf{x})} \\\\
 
 --
 
+count: false
+
 It follows that with
 
 $$\sigma(x) = \frac{1}{1 + \exp(-x)},$$
@@ -628,17 +630,23 @@ class: middle, center
 
 class: middle
 
-## Regression
+## Classification
 
-The last activation $\sigma$ can be skipped to produce unbounded output values $\hat{y} \in \mathbb{R}$.
+- For binary classification, the width $q$ of the last layer $L$ is set to $1$, which results in a single output $h\_L \in [0,1]$ that models the probability $P(Y=1|\mathbf{x})$.
+- For multi-class classification, the sigmoid action $\sigma$ in the last layer can be generalized to produce a (normalized) vector $\mathbf{h}\_L \in [0,1]^C$ of probability estimates $P(Y=i|\mathbf{x})$.
+<br><br>
+This activation is the $\text{Softmax}$ function, where its $i$-th output is defined as
+$$\text{Softmax}(\mathbf{z})\_i = \frac{\exp(z\_i)}{\sum\_{j=1}^C \exp(z\_j)},$$
+for $i=1, ..., C$.
+
 
 ---
 
 class: middle
 
-## Multi-class classification
+## Regression
 
-For classification problems where $\mathcal{Y} = \\{1, ..., C\\}$ and $C>2$,  ... XXX
+The last activation $\sigma$ can be skipped to produce unbounded output values $h\_L \in \mathbb{R}$.
 
 ---
 
@@ -1012,7 +1020,33 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 
 # Deep learning
 
-xxx 1-1 16+17; composition
+Recent advances and model architectures in deep learning are built on a natural generalization of a neural network: **a graph of tensor operators**, taking advantage of
+- the chain rule
+- stochastic gradient descent
+- convolutions
+- parallel operations on GPUs.
+
+This does not differ much from networks from the 90s, as covered in Today's lecture.
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+This generalization allows to **compose** and design complex networks of operators, possibly dynamically, dealing with images, sound, text, sequences, etc. and to train them *end-to-end*.
+
+.center.width-90[![](figures/lec2/architecture.png)]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL; Rahmatizadeh et al, 2017, arXiv:[1707.02920](https://arxiv.org/abs/1707.02920).]
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec2/architecture2.png)]
+
+.footnote[Credits: Zhou et al, 2017, arXiv:[1606.04621](https://arxiv.org/abs/1606.04621).]
 
 ---
 
@@ -1025,4 +1059,8 @@ The end.
 
 # References
 
-xxx
+- Rosenblatt, F. (1958). The perceptron: a probabilistic model for information storage and organization in the brain. Psychological review, 65(6), 386.
+- Bottou, L., & Bousquet, O. (2008). The tradeoffs of large scale learning. In Advances in neural information processing systems (pp. 161-168).
+- Rumelhart, D. E., Hinton, G. E., & Williams, R. J. (1986). Learning representations by back-propagating errors. nature, 323(6088), 533.
+- Cybenko, G. (1989). Approximation by superpositions of a sigmoidal function. Mathematics of control, signals and systems, 2(4), 303-314.
+- Montufar, G. F., Pascanu, R., Cho, K., & Bengio, Y. (2014). On the number of linear regions of deep neural networks. In Advances in neural information processing systems (pp. 2924-2932).
