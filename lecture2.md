@@ -59,7 +59,7 @@ This unit can implement:
 - $\text{and}(a,b) = 1\_{\\\{a+b - 1.5 \geq 0\\\}}$
 - $\text{not}(a) = 1\_{\\\{-a + 0.5 \geq 0\\\}}$
 
-Therefore, any Boolean function can be built which such units.
+Therefore, any Boolean function can be built with such units.
 
 ---
 
