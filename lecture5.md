@@ -2,7 +2,7 @@ class: middle, center, title-slide
 
 # Deep Learning
 
-Lecture 5: Recurrent neural networks
+Lecture 5: Initialization, regularization and normalization
 
 <br><br>
 Prof. Gilles Louppe<br>

@@ -8,6 +8,11 @@ Lecture 4: Training neural networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](g.louppe@uliege.be)
 
+???
+
+- gradient descent: why minimizing the proxy is good (antoine)
+- cs231b winter 2016 lecture 5 part 2 -> when does training fail, how to fix the activations
+
 ---
 
 TBD.

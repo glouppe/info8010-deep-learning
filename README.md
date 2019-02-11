@@ -19,27 +19,28 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2019.
 - Lecture 2 (February 15): [Neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture2.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec2.pdf)]
 - Lecture 3 (February 22): Convolutional neural networks
 - Lecture 4 (March 1): Training neural networks
-- Lecture 5 (March 8): Recurrent neural networks
-- Lecture 6 (March 15): Differentiable inference and generative models (part 1)
-- Lecture 7 (March 22): Differentiable inference and generative models (part 2)
-- Lecture 8 (March 29): Bayesian deep learning
+- Lecutre 5 (March 8): Initialization, regularization and normalization
+- Lecture 6 (March 15): Recurrent neural networks
+- Lecture 7 (March 22): Differentiable inference and generative models (part 1)
+- Lecture 8 (March 29): Differentiable inference and generative models (part 2)
 - Lecture 9 (April 5): Theory of deep learning
 - Lecture 10 (April 26): Applications
 
 ## Project
 
-The course project is an opportunity for you to apply what you have learned in class to a problem of your interest. Potential projects usually fall into these two tracks:
+The course project is an opportunity for you to apply what you have learned in class to a problem of your interest. Potential projects fall into two tracks:
 - *Applications*: Pick a real-world problem and apply deep networks to solve it.
 - *Models*: Build a new model or algorithm, or a variant of existing models, and apply it to a task. This track might be more challenging, but could lead to a publishable piece of work.
+
+Be creative and ambitious!
 
 #### Instructions
 
 - Students can work in groups of maximum 3 students.
-- Each group must write a short (1-2 pages) research project proposal It should include a description of a minimum viable project, some nice-to-haves if time allows, and a short review of related work.
-- Towards the end of the class you will submit a project report (around 4 to 8 pages), in the format of a machine learning conference paper.
+- Each group must write a short (1-2 pages) research project proposal. It should include a description of a minimum viable project, some nice-to-haves if time allows, and a short review of related work.
+- Towards the end of the class, you will submit a project report (around 4 to 8 pages), in the format of a machine learning conference paper.
 - At the end of the course everyone will present their project to the class.
-- You may consult any papers, books, online references, or publicly available implementations for ideas and code that you want to incorporate into your project, so long as you clearly cite your sources.
-- The grade will depend on the ideas, how well you present them in the report, how clearly you position your work relative to existing literature, how illuminating your experiments are, and well-supported your conclusions are.
+- The grade will depend on the ideas, how well you present them in the report, how clearly you position your work relative to existing literature, how illuminating your experiments are, and how well-supported your conclusions are.
 - Both the project proposal and the project report should follow the LaTex template [`template-report.tex`](https://glouppe.github.io/info8010-deep-learning/template-report.tex).
 
 #### Agenda
@@ -82,12 +83,17 @@ Theory:
 - Theoretical investigation of deep learning
 - Interpretability of deep networks
 
-More inspiration:
+... some more inspiration:
 - [Stanford CS231n Project reports (Spring 2017)](http://cs231n.stanford.edu/2017/reports.html)
 - [Stanford CS231n Project reports (Winter 2016)](http://cs231n.stanford.edu/2016/reports.html)
-- [Stanford CS231n Project reports (Winter 2016)](http://cs231n.stanford.edu/2015/reports.html)
+- [Stanford CS231n Project reports (Winter 2015)](http://cs231n.stanford.edu/2015/reports.html)
 - [Stanford CS229 Projects](http://cs229.stanford.edu/projects.html)
 
+#### Evaluation guidelines
+
+TBD.
+
+Credits: projects instructions adapted from [Stanford CS231](http://cs231n.stanford.edu/project.html) and [University of Toronto CSC 2541](https://www.cs.toronto.edu/~duvenaud/courses/csc2541/index.html).
 
 ## Reading assignment
 
@@ -100,8 +106,9 @@ Your task is to read and summarize a major scientific paper in the field of deep
 You should produce a report that summarizes the problem that is tackled by the paper and explains why it is challenging or important. The report should outline the main contributions and results with respect to the problem that is addressed. It should also include a critical discussion of the advantages and shortcomings of the contributions of the paper.
 
 Constraints:
-- English
-- 2 pages (excluding references, if any)
-- Formatted using the LaTeX template [`template-report.tex`](https://glouppe.github.io/info8010-deep-learning/template-report.tex)
+- You can work in groups of maximum 3 students.
+- You report must be written in English.
+- 2 pages (excluding references, if any).
+- Formatted using the LaTeX template [`template-report.tex`](https://glouppe.github.io/info8010-deep-learning/template-report.tex).
 
 Your report should be submitted  by **April 5, 2019 at 23:59** on the [submission platform](https://submit.montefiore.ulg.ac.be/). This is a **hard** deadline.

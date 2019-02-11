@@ -724,6 +724,14 @@ $$\begin{aligned}
 
 ---
 
+xxx
+
+Explicit some of the terms.
+- forward to remember stuff
+- backward to compute derivatives from this stuff
+
+---
+
 class: middle
 
 - This algorithm is also known as **backpropagation**.
@@ -816,6 +824,10 @@ $$\frac{\text{d}}{\text{d}x} \text{ReLU}(x) = \begin{cases}
 .center[![](figures/lec2/activation-grad-relu.png)]
 
 For $x=0$, the derivative is undefined. In practice, it is set to zero.
+
+???
+
+R: subgradient
 
 ---
 
