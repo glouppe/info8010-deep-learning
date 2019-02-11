@@ -8,12 +8,6 @@ Lecture 2: Neural networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](g.louppe@uliege.be)
 
-???
-
-R: sgd -> check /doc/
-R: more formalism on backprop?
-R: add all due credits
-
 ---
 
 # Today
@@ -708,27 +702,41 @@ f(\mathbf{x}; \mathbf{W}\_1, \mathbf{W}\_2) &= \sigma\left( \mathbf{W}\_2^T \sig
 \end{aligned}$$
 for $\mathbf{x} \in \mathbb{R^p}$, $y \in \mathbb{R}$, $\mathbf{W}\_1 \in \mathbb{R}^{p \times q}$ and $\mathbf{W}\_2 \in \mathbb{R}^q$.
 
-.width-100[![](figures/lec2/graphs/backprop1.png)]
+---
+
+class: middle
+
+In the *forward pass*, intermediate values are all computed from inputs to outputs, which results in the annotated computational graph below:
+
+.width-100[![](figures/lec2/graphs/backprop.svg)]
 
 ---
 
 class: middle
 
-The total derivative $\frac{\text{d} \ell}{\text{d} \mathbf{W}\_1}$ can be computed **backward**, by walking through all paths from $\ell$ to $\mathbf{W}\_1$ in the computational graph and accumulating the terms:
+The total derivative can be computed through a **backward pass**, by walking through all paths from outputs to parameters in the computational graph and accumulating the terms. For example, for $\frac{\text{d} \ell}{\text{d} \mathbf{W}\_1}$  we have:
 $$\begin{aligned}
 \frac{\text{d} \ell}{\text{d} \mathbf{W}\_1} &= \frac{\partial \ell}{\partial u\_8}\frac{\text{d} u\_8}{\text{d} \mathbf{W}\_1} + \frac{\partial \ell}{\partial u\_4}\frac{\text{d} u\_4}{\text{d} \mathbf{W}\_1} \\\\
 \frac{\text{d} u\_8}{\text{d} \mathbf{W}\_1} &= ...
 \end{aligned}$$
 
-.width-100[![](figures/lec2/graphs/backprop2.png)]
+.width-100[![](figures/lec2/graphs/backprop2.svg)]
 
 ---
 
-xxx
+class: middle
 
-Explicit some of the terms.
-- forward to remember stuff
-- backward to compute derivatives from this stuff
+.width-100[![](figures/lec2/graphs/backprop3.svg)]
+
+Let us zoom in on the computation of the network output $\hat{y}$ and of its derivative with respect to $\mathbf{W}\_1$.
+
+- *Forward pass*: values $u\_1$, $u\_2$, $u\_3$ and $\hat{y}$ are computed by traversing the graph from inputs to outputs given $\mathbf{x}$, $\mathbf{W}\_1$ and $\mathbf{W}\_2$.
+- **Backward pass**: by the chain rule we have
+$$\begin{aligned}
+\frac{\text{d} \hat{y}}{\text{d} \mathbf{W}\_1} &= \frac{\partial \hat{y}}{\partial u\_3} \frac{\partial u\_3}{\partial u\_2} \frac{\partial u\_2}{\partial u\_1} \frac{\partial u\_1}{\partial \mathbf{W}\_1} \\\\
+&= \frac{\partial \sigma(u\_3)}{\partial u\_3} \frac{\partial \mathbf{W}\_2^T u\_2}{\partial u\_2} \frac{\partial \sigma(u\_1)}{\partial u\_1} \frac{\partial \mathbf{W}\_1^T u\_1}{\partial \mathbf{W}\_1}
+\end{aligned}$$
+Note how evaluating the partial derivatives requires the intermediate values computed forward.
 
 ---
 
@@ -747,8 +755,7 @@ Training deep MLPs with many layers has for long (pre-2011) been very difficult 
 - This results in a limited capacity of learning.
 
 .width-100[![](figures/lec2/vanishing-gradient.png)]
-
-.center[Backpropagated gradients normalized histograms (Glorot and Bengio, 2010).<br> Gradients for layers far from the output vanish to zero. ]
+.caption[Backpropagated gradients normalized histograms (Glorot and Bengio, 2010).<br> Gradients for layers far from the output vanish to zero. ]
 
 ---
 
@@ -825,10 +832,6 @@ $$\frac{\text{d}}{\text{d}x} \text{ReLU}(x) = \begin{cases}
 
 For $x=0$, the derivative is undefined. In practice, it is set to zero.
 
-???
-
-R: subgradient
-
 ---
 
 class: middle
@@ -880,10 +883,6 @@ $$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$
 This model can approximate any smooth 1D function, provided enough hidden units.
 
 .center[![](figures/lec2/ua-0.png)]
-
-???
-
-R: explain how to fit the components.
 
 ---
 
@@ -1051,14 +1050,6 @@ This generalization allows to **compose** and design complex networks of operato
 .center.width-90[![](figures/lec2/architecture.png)]
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL; Rahmatizadeh et al, 2017, arXiv:[1707.02920](https://arxiv.org/abs/1707.02920).]
-
----
-
-class: middle
-
-.center.width-100[![](figures/lec2/architecture2.png)]
-
-.footnote[Credits: Zhou et al, 2017, arXiv:[1606.04621](https://arxiv.org/abs/1606.04621).]
 
 ---
 
