@@ -12,6 +12,8 @@ Prof. Gilles Louppe<br>
 
 - gradient descent: why minimizing the proxy is good (antoine)
 - cs231b winter 2016 lecture 5 part 2 -> when does training fail, how to fix the activations
+- include init, normalization, reg
+- https://sif-dlv.github.io/slides/opt.pdf
 
 ---
 

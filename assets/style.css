@@ -75,8 +75,12 @@ body {
     bottom: 2em;
 }
 
-.smaller {
-    font-size: 1.2em;
+.smaller-x {
+    font-size: 0.75em;
+}
+
+.smaller-xx {
+    font-size: 0.5em;
 }
 
 a {

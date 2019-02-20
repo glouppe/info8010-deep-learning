@@ -99,6 +99,8 @@ proposed there were extensive connections among the
 A units, the R units, and feedback between the R units
 and the A units.
 
+In essence an association unit is also an MCP neuron which is 1 if a single specific pattern of inputs is received, and it is 0 for all other possible patterns of  inputs. Each association unit will have a certain number of inputs which are selected from all the inputs to the perceptron.  So the number of inputs to a particular association unit does not have to be the same as the total number of inputs to the perceptron, but clearly the number of inputs to an association unit  must be less than or equal to the total number of inputs to the perceptron.  Each association unit's output then becomes the input to a single MCP neuron, and the output from this single MCP neuron is the output of the perceptron.  So a perceptron consists of a "layer" of MCP neurons, and all of these neurons send their output to a single MCP neuron.
+
 ---
 
 class: middle, center, black-slide
@@ -150,6 +152,10 @@ $$f(\mathbf{x}) = \text{sign}(\sum\_i w\_i x\_i  + b)$$ can be represented as a 
 - blue nodes correspond to intermediate operations.
 ]
 ]
+
+???
+
+Note that some intermediate nodes are not represented.
 
 ---
 

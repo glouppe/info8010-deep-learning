@@ -17,12 +17,12 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2019.
 - [Outline](https://glouppe.github.io/info8010-deep-learning/?p=outline.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/outline.pdf)]
 - Lecture 1 (February 8): [Fundamentals of machine learning](https://glouppe.github.io/info8010-deep-learning/?p=lecture1.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec1.pdf)]
 - Lecture 2 (February 15): [Neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture2.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec2.pdf)]
-- Lecture 3 (February 22): Convolutional neural networks
+- Lecture 3 (February 22): [Convolutional neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture3.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec3.pdf)]
 - Lecture 4 (March 1): Training neural networks
-- Lecutre 5 (March 8): Initialization, regularization and normalization
-- Lecture 6 (March 15): Recurrent neural networks
+- Lecture 5 (March 8): Recurrent neural networks
+- Lecture 6 (March 15): Unsupervised Learning
 - Lecture 7 (March 22): Differentiable inference and generative models (part 1)
-- Lecture 8 (March 29): Differentiable inference and generative models (part 2)
+- Lecture 8 (March 29): Differentiable inference and generative models (part 2) [Room change: B7a A300]
 - Lecture 9 (April 5): Theory of deep learning
 - Lecture 10 (April 26): Applications
 

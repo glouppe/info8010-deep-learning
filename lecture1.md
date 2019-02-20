@@ -8,11 +8,6 @@ Lecture 1: Fundamentals of machine learning
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](g.louppe@uliege.be)
 
-???
-
-R: P(X,Y) or density p(x,y)?
-R: cleanup code
-
 ---
 
 # Today
