@@ -13,12 +13,14 @@ Prof. Gilles Louppe<br>
 R: Beyond classification?
 R: e.g., UNet for segmentation
 R: pre-trained models
+R: comparison plot of architectures
+R: https://cs.nyu.edu/~fergus/papers/zeilerECCV2014.pdf
 
 ---
 
 # Today
 
-How to apply neural networks to spatially/temporally structured data.
+How to **make neural networks see**?
 
 - A little history
 - Convolutions
@@ -124,7 +126,7 @@ class: middle
 
 ## AI winter (Minsky and Papert, 1969+)
 
-- Minsky and Papert Redefine the perceptron as a linear classifier,
+- Minsky and Papert redefine the perceptron as a linear classifier,
 - Then they prove a series of impossiblity results. **AI winter** follows.
 
 .footnote[Credits: Minsky and Papert, Perceptrons: an Introduction to Computational Geometry, 1969.]
@@ -165,7 +167,7 @@ Convolutions]
 Feature hierarchy]
 ]
 
-- Build upon **convolutions** and enables the composition of a *feature hierarchy*.
+- Built upon **convolutions** and enables the composition of a *feature hierarchy*.
 - Biologically-inspired training algorithm, which proves to be largely inefficient.
 
 .footnote[Credits: Kunihiko Fukushima, [Neocognitron: A Self-organizing Neural Network Model](https://www.rctn.org/bruno/public/papers/Fukushima1980.pdf), 1980.]
@@ -447,7 +449,7 @@ class: middle
 .kol-1-2[
 ## Padding
 
-- **Padding** specifies whether the input volume is pad artificially around its border.
+- **Padding** specifies whether the input volume is padded artificially around its border.
 - This parameter is useful to keep spatial dimensions constant across filters.
 - Zero-padding is the default mode.
 
@@ -932,9 +934,47 @@ Estimated Total Size (MB): 384.62
 
 ---
 
-class: middle, center
+class: middle
 
-Finding the optimal neural network architecture remains an *active area of research*.
+.center.width-100[![](figures/lec3/model-comparison.png)]
+
+.center[Finding the optimal neural network architecture remains an *active area of research*.]
+
+.footnote[Credits: Canziani et al, [An Analysis of Deep Neural Network Models for Practical Applications](https://arxiv.org/abs/1605.07678), 2016.]
+
+---
+
+# Pre-trained models
+
+- Training a model on natural images, from scratch, takes **days or weeks**.
+- Many models trained on ImageNet are publicly available for download. These models can be used as *feature extractors* or for smart *initialization*.
+
+---
+
+class: middle
+
+## Transfer learning
+
+- Take a pre-trained network, remove the last layer(s) and then treat the rest of the the network as a **fixed** feature extractor.
+- Train a model from these features on a new task.
+- Often better than handcrafted feature extraction for natural images, or better than training from data of the new task only.
+
+## Fine tuning
+
+- Same as for transfer learning, but also *fine-tune* the weights of the pre-trained network by continuing backpropagation.
+- All or only some of the layers can be tuned.
+
+---
+
+class: middle
+
+In the case of models pre-trained on ImageNet, this often works even when input images for the new task are not photographs of objects or animals, such as biomedical images, satellite images or paintings.
+
+<br>
+
+.center.width-100[![](figures/lec3/feature-extractor.png)]
+
+.footnote[Credits: Mormont et al, [Comparison of deep transfer learning strategies for digital pathology](http://hdl.handle.net/2268/222511), 2018.]
 
 ---
 
@@ -1052,10 +1092,10 @@ class: middle, black-slide
 
 .center.width-80[![](figures/lec3/bio.png)]
 
-"Deep hierarchical neural networks are beginning to transform
+.italic["Deep hierarchical neural networks are beginning to transform
 neuroscientists’ ability to produce quantitatively accurate computational
 models of the sensory systems, especially in higher cortical areas
-where neural response properties had previously been enigmatic."
+where neural response properties had previously been enigmatic."]
 
 .footnote[Credits: Yamins et al, Using goal-driven deep learning models to understand
 sensory cortex, 2016.]
@@ -1071,6 +1111,7 @@ The end.
 
 # References
 
-xxx fleuret
-
-xxx dlv
+- Francois Fleuret, Deep Learning Course, [4.4. Convolutions](https://fleuret.org/ee559/ee559-slides-4-4-convolutions.pdf), EPFL, 2018.
+- Yannis Avrithis, Deep Learning for Vision, [Lecture 1: Introduction](https://sif-dlv.github.io/slides/intro.pdf), University of Rennes 1, 2018.
+- Yannis Avrithis, Deep Learning for Vision, [Lecture 7: Convolution and network architectures ](https://sif-dlv.github.io/slides/conv.pdf), University of Rennes 1, 2018.
+- Olivier Grisel and Charles Ollion, Deep Learning, [Lecture 4: Convolutional Neural Networks for Image Classification ](https://m2dsupsdlclass.github.io/lectures-labs/slides/04_conv_nets/index.html#1), Université Paris-Saclay, 2018.
