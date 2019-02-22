@@ -49,6 +49,8 @@ Be creative and ambitious!
 - Project code and report, due by **April 26, 2019 at 23:59**.
 - Project presentations on May 3, 10 and 17, 2019.
 
+Projects should be submitted through the [Montefiore submission platform](https://submit.montefiore.ulg.ac.be).
+
 #### Project ideas
 
 General applications:

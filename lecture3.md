@@ -13,6 +13,10 @@ Prof. Gilles Louppe<br>
 R: Beyond classification?
 R: e.g., UNet for segmentation
 
+R: highlight and emphasize this idea that is applied over and over:
+- detection of patterns (convolution)
+- detection of the presence of these patterns (regardless of the position) (pooling)
+
 ---
 
 # Today
