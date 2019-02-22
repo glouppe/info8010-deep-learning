@@ -12,9 +12,6 @@ Prof. Gilles Louppe<br>
 
 R: Beyond classification?
 R: e.g., UNet for segmentation
-R: pre-trained models
-R: comparison plot of architectures
-R: https://cs.nyu.edu/~fergus/papers/zeilerECCV2014.pdf
 
 ---
 

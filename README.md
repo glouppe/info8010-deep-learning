@@ -91,7 +91,16 @@ Theory:
 
 #### Evaluation guidelines
 
-TBD.
+Report:
+1) Clarity: quality of the abstract and introduction with a clear formulation of the research question, is there a proper related-work section and explanation of the experimental setup? Are the results of the report overall scientifically sound and replicable?  
+
+2) Writing style: is the paper properly formatted and structured? does it not contain language errors? are the figures and tables properly captioned and interpretable?
+
+3) Results: do the results support the original research question? why/why not? Are they clearly presented and convincing?
+
+4) Development: are the contributions of the group to the development of the project well defined? what has been implemented with respect to the original research questions, what has been re-used from existing coding directories?
+
+---
 
 Credits: projects instructions adapted from [Stanford CS231](http://cs231n.stanford.edu/project.html) and [University of Toronto CSC 2541](https://www.cs.toronto.edu/~duvenaud/courses/csc2541/index.html).
 
