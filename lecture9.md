@@ -11,6 +11,7 @@ Prof. Gilles Louppe<br>
 ???
 
 R: shallow models vs deep
+R: check generalization from https://m2dsupsdlclass.github.io/lectures-labs/slides/08_expressivity_optimization_generalization/index.html#87
 
 ---
 

@@ -8,6 +8,11 @@ Lecture 8: Differentiable inference and generative models (part 2)
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](g.louppe@uliege.be)
 
+???
+
+- biggan https://openreview.net/pdf?id=B1xsqj09Fm
+- stylegan
+
 ---
 
 # Outline
