@@ -30,7 +30,6 @@ How to **make neural networks see**?
 - A little history
 - Convolutions
 - Convolutional network architectures
-- Beyond classification
 - What is really happening?
 
 ---

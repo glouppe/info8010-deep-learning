@@ -10,16 +10,12 @@ Prof. Gilles Louppe<br>
 
 ???
 
-- gradient descent: why minimizing the proxy is good (antoine)
 - cs231b winter 2016 lecture 5 part 2 -> when does training fail, how to fix the activations
-- include init, normalization, reg
-- https://sif-dlv.github.io/slides/opt.pdf
 
-R: have a coded example!!
-
+https://sif-dlv.github.io/slides/opt.pdf
 https://ttic.uchicago.edu/~shubhendu/Pages/Files/Lecture6_pauses.pdf
-
 https://distill.pub/2017/momentum/
+https://github.com/ilguyi/optimizers.numpy
 
 ---
 
@@ -28,7 +24,6 @@ https://distill.pub/2017/momentum/
 How to *optimize parameters* efficiently?
 
 - Optimizers
-- Regularization
 - Initialization
 - Normalization
 
@@ -40,65 +35,397 @@ class: middle
 
 ---
 
-# Batch gradient descent
+# Gradient descent
 
-xxx
-
----
-
-illustration
-
----
-
-# Stochastic gradient descent
-
-xxx
-
----
-
-## Learning rate schedule
-
----
-
-## Mini-batching
-
----
-
-illustration
-
----
-
-# Momentum
-
----
-
-# Adaptive learning rate
-
----
-
-## AdaGrad
-
----
-
-## RMSProp
-
----
-
-## Adam
-
----
-
-xxx check newer methods
+To minimize a loss $\mathcal{L}(\theta)$ of the form
+$$\mathcal{L}(\theta) = \frac{1}{N} \sum\_{n=1}^N \ell(y\_n, f(\mathbf{x}\_n; \theta)),$$
+standard **batch gradient descent** (GD) consists in applying the update rule
+$$\begin{aligned}
+g\_t &= \frac{1}{N} \sum\_{n=1}^N \nabla\_\theta \ell(y\_n, f(\mathbf{x}\_n; \theta\_t)) \\\\
+\theta\_{t+1} &= \theta\_t - \gamma g\_t,
+\end{aligned}$$
+where $\gamma$ is the learning rate.
 
 ---
 
 class: middle
 
-# Regularization
+.center[
+<video loop autoplay controls preload="auto" height="600" width="600">
+  <source src="./figures/lec4/opt-gd.mp4" type="video/mp4">
+</video>
+]
 
 ---
 
-xxx
+class: middle
+
+While it makes sense in principle to compute the gradient exactly,
+- it takes time to compute and becomes inefficient for large $N$,
+- it is an empirical estimation of an hidden quantity (the expected risk), and any partial sum is also an unbiased estimate, although of greater variance.
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+To illustrate how partial sums are good estimates, consider an ideal case where the training set is the same set of $M \ll N$ samples replicated $K$ times. Then,
+$$\begin{aligned}
+\mathcal{L}(\theta) &= \frac{1}{N} \sum\_{i=n}^N \ell(y\_n, f(\mathbf{x}\_n; \theta)) \\\\
+&=\frac{1}{N} \sum\_{k=1}^K \sum\_{m=1}^M \ell(y\_m, f(\mathbf{x}\_m; \theta)) \\\\
+&=\frac{1}{N} K \sum\_{m=1}^M \ell(y\_m, f(\mathbf{x}\_m; \theta)).
+\end{aligned}$$
+Then, instead of summing over all the samples and moving by $\gamma$, we can visit only $M=N/K$ samples and move by $K\gamma$, which would cut the computation by $K$.
+
+Although this is an ideal case, there is redundancy in practice that results in similar behaviors.
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+## Stochastic gradient descent
+
+To reduce the computational complexity, **stochastic gradient descent** (SGD) consists in updating the parameters after every sample
+$$\begin{aligned}
+g\_t &= \nabla\_\theta \ell(y\_{n(t)}, f(\mathbf{x}\_{n(t)}; \theta\_t)), \\\\
+\theta\_{t+1} &= \theta\_t - \gamma g\_t.
+\end{aligned}$$
+
+---
+
+class: middle
+
+.center[
+<video loop autoplay controls preload="auto" height="600" width="600">
+  <source src="./figures/lec4/opt-sgd.mp4" type="video/mp4">
+</video>
+]
+
+---
+
+class: middle
+
+When decomposing the excess error in terms of approximation, estimation and optimization errors,
+stochastic algorithms yield the best generalization performance (in terms of **expected** risk) despite being
+the worst optimization algorithms (in terms of *empirical risk*) (Bottou, 2011).
+
+$$\begin{aligned}
+&\mathbb{E}\left[ R(\tilde{f}\_\*^\mathbf{d}) - R(f\_B) \right] \\\\
+&= \mathbb{E}\left[ R(f\_\*) - R(f\_B) \right] + \mathbb{E}\left[ R(f\_\*^\mathbf{d}) - R(f\_\*) \right] + \mathbb{E}\left[ R(\tilde{f}\_\*^\mathbf{d}) - R(f\_\*^\mathbf{d}) \right]  \\\\
+&= \mathcal{E}\_\text{app} + \mathcal{E}\_\text{est} + \mathcal{E}\_\text{opt}
+\end{aligned}$$
+
+---
+
+class: middle
+
+Nevertheless,
+- gradient estimates used by SGD can be *very noisy*,
+- SGD does not benefit from the speed-up of **batch-processing**.
+
+---
+
+class: middle
+
+## Mini-batching
+
+Instead, **mini-batch** SGD consists of visiting the samples in mini-batches and updating the parameters each time
+$$
+\begin{aligned}
+g\_t &= \frac{1}{B} \sum\_{b=1}^B \nabla\_\theta \ell(y\_{n(t,b)}, f(\mathbf{x}\_{n(t,b)}; \theta\_t)), \\\\
+\theta\_{t+1} &= \theta\_t - \gamma g\_t,
+\end{aligned}
+$$
+where the order ${n(t,b)}$ to visit the samples can be either sequential or random.
+
+The stochastic behavior of this procedure* helps evade local minima*.
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+## Limitations of gradient descent
+
+The gradient descent method makes strong assumptions about
+- the magnitude of the local curvature to set the step size,
+- the isotropy of the curvature, so that the same step size $\gamma$ makes sense in all directions.
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+.center[
+<video loop autoplay controls preload="auto" height="550" width="550">
+  <source src="./figures/lec4/opt-gd-easy-0.01.mp4" type="video/mp4">
+</video>
+<br>$\gamma=0.01$
+]
+
+---
+
+class: middle
+
+.center[
+<video loop autoplay controls preload="auto" height="550" width="550">
+  <source src="./figures/lec4/opt-gd-difficult-0.01.mp4" type="video/mp4">
+</video>
+<br>$\gamma=0.01$
+]
+
+---
+
+class: middle
+
+.center[
+<video loop autoplay controls preload="auto" height="550" width="550">
+  <source src="./figures/lec4/opt-gd-difficult-0.1.mp4" type="video/mp4">
+</video>
+<br>$\gamma=0.1$
+]
+
+---
+
+class: middle
+
+.center[
+<video loop autoplay controls preload="auto" height="550" width="550">
+  <source src="./figures/lec4/opt-gd-difficult-0.4.mp4" type="video/mp4">
+</video>
+<br>$\gamma=0.4$
+]
+
+---
+
+class: middle
+
+## Wolfe conditions
+
+Let us consider a function $f$ to minimize along $x$, following a direction of descent $p$.
+
+For $0 < c\_1 < c\_2 < 1$, the Wolfe conditions on the step size $\gamma$ are as follows:
+- Sufficient decrease condition:
+$$f(x + \gamma p) \leq f(x) + c\_1 \gamma p^T \nabla f(x)$$
+- Curvature condition:
+$$c\_2 p^T \nabla f(x) \leq p^T \nabla f(x + \gamma p)$$
+
+---
+
+class: middle
+
+.center[
+.width-100[![](figures/lec4/wolfe-i.png)]
+The sufficient decrease condition ensures that $f$ decreases sufficiently.<br>
+($\alpha$ is the step size.)
+]
+
+.footnote[Credits: Wikipedia, [Wolfe conditions](https://en.wikipedia.org/wiki/Wolfe_conditions).]
+
+---
+
+class: middle
+
+.center[
+.width-100[![](figures/lec4/wolfe-ii.png)]
+The curvature condition ensures that the slope has been reduced sufficiently.
+]
+
+.footnote[Credits: Wikipedia, [Wolfe conditions](https://en.wikipedia.org/wiki/Wolfe_conditions).]
+
+---
+
+class: middle
+
+The Wolfe conditions can be used to design **line search** algorithms to automatically determine a step size $\gamma\_t$.
+
+However, in deep learning,
+- these algorithms are impractical because of the size of the parameter space and the overhead it would induce,
+- they might lead to overfitting when the empirical risk is minimized too well.
+
+---
+
+# Momentum
+
+.center.width-80[![](figures/lec4/floor.png)]
+
+In the situation of small but consistent gradients, as through valley floors, gradient descent moves **very slowly**.
+
+---
+
+class: middle
+
+
+
+An improvement to gradient descent is to use **momentum** to add inertia in the choice of the step direction, that is
+
+$$\begin{aligned}
+u\_t  &= \alpha u\_{t-1} - \gamma g\_t \\\\
+\theta\_{t+1} &= \theta\_t + u\_t.
+\end{aligned}$$
+
+.grid[
+.kol-2-3[
+- The new variable $u\_t$ is the velocity. It corresponds to the direction and speed by which the parameters move as the learning dynamics progresses, modeled as an exponentially decaying moving average of negative gradients.
+- Gradient descent with momentum has three nice properties:
+    - it can go through local barriers,
+    - it accelerates if the gradient does not change much,
+    - it dampens oscillations in narrow valleys.
+]
+.kol-1-3[
+.center.width-100[![](figures/lec4/momentum.svg)]
+]
+]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+The hyper-parameter $\alpha$ controls how recent gradients affect the current update.
+- Usually, $\alpha=0.9$, with $\alpha > \gamma$.
+- If at each update we observed $g$, the step would (eventually) be
+$$u = -\frac{\gamma}{1-\alpha} g.$$
+- Therefore, for $\alpha=0.9$, it is like multiplying the maximum speed by $10$ relative to the current direction.
+
+---
+
+class: middle
+
+.center[
+<video loop autoplay controls preload="auto" height="600" width="600">
+  <source src="./figures/lec4/opt-momentum.mp4" type="video/mp4">
+</video>
+]
+
+---
+
+class: middle
+
+## Nesterov momentum
+
+An alternative consists in simulating a step in the direction of the velocity, then calculate the gradient and make a correction.
+
+$$
+\begin{aligned}
+g\_t &= \frac{1}{N} \sum\_{n=1}^N \nabla\_\theta \ell(y\_n, f(\mathbf{x}\_n; \theta\_t + \alpha u\_{t-1}))\\\\
+u\_t &= \alpha u\_{t-1} - \gamma g\_t \\\\
+\theta\_{t+1} &= \theta\_t + u\_t
+\end{aligned}$$
+
+.center.width-30[![](figures/lec4/nesterov.svg)]
+
+---
+
+class: middle
+
+.center[
+<video loop autoplay controls preload="auto" height="600" width="600">
+  <source src="./figures/lec4/opt-nesterov.mp4" type="video/mp4">
+</video>
+]
+
+---
+
+# Adaptive learning rate
+
+Vanilla gradient descent assumes the isotropy of the curvature, so that the same step size $\gamma$ applies to all parameters.
+
+.center[
+.width-48[![](figures/lec4/isotropic.png)]
+.width-48[![](figures/lec4/anisotropic.png)]
+
+Isotropic vs. Anistropic
+]
+
+
+---
+
+class: middle
+
+## AdaGrad
+
+Per-parameter downscale by square-root of sum of squares of all its historical values.
+
+$$\begin{aligned}
+r\_t  &=  r\_{t-1} + g\_t \odot g\_t \\\\
+\theta\_{t+1} &= \theta\_t - \frac{\gamma}{\delta + \sqrt{r\_t}} \odot g\_t.
+\end{aligned}$$
+
+- AdaGrad eliminates the need to manually tune the learning rate.
+  Most implementation use $\gamma=0.01$ as default.
+- It is good when the objective is convex.
+- $r_t$ grows unboundedly during training, which may cause the step size to shrink and eventually become infinitesimally small.
+
+---
+
+class: middle
+
+## RMSProp
+
+Same as AdaGrad but accumulate an exponentially decaying average of the gradient.
+
+$$\begin{aligned}
+r\_t  &=  \rho r\_{t-1} + (1-\rho) g\_t \odot g\_t \\\\
+\theta\_{t+1} &= \theta\_t - \frac{\gamma}{\delta + \sqrt{r\_t}} \odot g\_t.
+\end{aligned}$$
+
+- Perform better in non-convex settings.
+- Does not grow unboundedly.
+
+---
+
+class: middle
+
+## Adam
+
+Finally, Adam is like RMSProp with momentum, but with bias correction terms for the first and second moments.
+
+$$\begin{aligned}
+s\_t  &=  \rho\_1 s\_{t-1} + (1-\rho\_1) g\_t \\\\
+\hat{s}\_t &= \frac{s\_t}{1-\rho\_1^t} \\\\
+r\_t  &=  \rho\_2 r\_{t-1} + (1-\rho\_2) g\_t \odot g\_t \\\\
+\hat{r}\_t &= \frac{s\_t}{1-\rho\_2^t} \\\\
+\theta\_{t+1} &= \theta\_t - \gamma \frac{\hat{s}\_t}{\delta+\sqrt{\hat{r}\_t}}
+\end{aligned}$$
+
+- Good defaults are $\rho\_1=0.9$ and $\rho\_2=0.999$.
+- Adam is one of the **default optimizers** in deep learning, along with SGD with momentum.
+
+
+---
+
+.center[
+<video loop autoplay controls preload="auto" height="600" width="600">
+  <source src="./figures/lec4/opt-adaptive.mp4" type="video/mp4">
+</video>
+]
+
+---
+
+xxx some real loss curves
+
+---
+
+# Scheduling
+
+Despite per-parameter adaptive learning rate methods, it is usually helpful to *anneal* the learning rate $\gamma$ over time.
+
+- Step decay: reduce the learning rate by some factor every few epochs
+  (e.g, by half every 10 epochs).
+- Exponential decay: $\gamma\_t = \gamma\_0 \exp(-kt)$ where $\gamma\_0$ and $k$ are hyper-parameters.
+- $1/t$ decay: $\gamma\_t = \gamma\_0 / (1+kt)$ where $\gamma\_0$ and $k$ are hyper-parameters.
+
+.center[
+.width-50[![](figures/lec4/resnet.png)]<br>
+Step decay scheduling for training ResNets.
+]
 
 ---
 
@@ -118,7 +445,19 @@ class: middle
 
 ---
 
-xxx
+# Batch normalization
+
+https://fleuret.org/ee559/ee559-slides-6-4-batch-normalization.pdf
+
+---
+
+# Weight normalization
+
+http://mlexplained.com/2018/01/13/weight-normalization-and-layer-normalization-explained-normalization-in-deep-learning-part-2/
+
+---
+
+# Layer normalization
 
 ---
 
