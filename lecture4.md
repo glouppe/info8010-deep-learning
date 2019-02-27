@@ -10,12 +10,7 @@ Prof. Gilles Louppe<br>
 
 ???
 
-- cs231b winter 2016 lecture 5 part 2 -> when does training fail, how to fix the activations
-
-https://sif-dlv.github.io/slides/opt.pdf
-https://ttic.uchicago.edu/~shubhendu/Pages/Files/Lecture6_pauses.pdf
-https://distill.pub/2017/momentum/
-https://github.com/ilguyi/optimizers.numpy
+R: add regularization -> dropout, dropconnect
 
 ---
 
@@ -90,7 +85,7 @@ class: middle
 
 To reduce the computational complexity, **stochastic gradient descent** (SGD) consists in updating the parameters after every sample
 $$\begin{aligned}
-g\_t &= \nabla\_\theta \ell(y\_{n(t)}, f(\mathbf{x}\_{n(t)}; \theta\_t)), \\\\
+g\_t &= \nabla\_\theta \ell(y\_{n(t)}, f(\mathbf{x}\_{n(t)}; \theta\_t)) \\\\
 \theta\_{t+1} &= \theta\_t - \gamma g\_t.
 \end{aligned}$$
 
@@ -108,21 +103,7 @@ class: middle
 
 class: middle
 
-When decomposing the excess error in terms of approximation, estimation and optimization errors,
-stochastic algorithms yield the best generalization performance (in terms of **expected** risk) despite being
-the worst optimization algorithms (in terms of *empirical risk*) (Bottou, 2011).
-
-$$\begin{aligned}
-&\mathbb{E}\left[ R(\tilde{f}\_\*^\mathbf{d}) - R(f\_B) \right] \\\\
-&= \mathbb{E}\left[ R(f\_\*) - R(f\_B) \right] + \mathbb{E}\left[ R(f\_\*^\mathbf{d}) - R(f\_\*) \right] + \mathbb{E}\left[ R(\tilde{f}\_\*^\mathbf{d}) - R(f\_\*^\mathbf{d}) \right]  \\\\
-&= \mathcal{E}\_\text{app} + \mathcal{E}\_\text{est} + \mathcal{E}\_\text{opt}
-\end{aligned}$$
-
----
-
-class: middle
-
-Nevertheless,
+While being faster than batch gradient descent,
 - gradient estimates used by SGD can be *very noisy*,
 - SGD does not benefit from the speed-up of **batch-processing**.
 
@@ -135,13 +116,14 @@ class: middle
 Instead, **mini-batch** SGD consists of visiting the samples in mini-batches and updating the parameters each time
 $$
 \begin{aligned}
-g\_t &= \frac{1}{B} \sum\_{b=1}^B \nabla\_\theta \ell(y\_{n(t,b)}, f(\mathbf{x}\_{n(t,b)}; \theta\_t)), \\\\
+g\_t &= \frac{1}{B} \sum\_{b=1}^B \nabla\_\theta \ell(y\_{n(t,b)}, f(\mathbf{x}\_{n(t,b)}; \theta\_t)) \\\\
 \theta\_{t+1} &= \theta\_t - \gamma g\_t,
 \end{aligned}
 $$
 where the order ${n(t,b)}$ to visit the samples can be either sequential or random.
 
-The stochastic behavior of this procedure* helps evade local minima*.
+- Increasing the batch-size reduces the variance of the gradient estimates and enables the speed-up of batch processing.
+- The stochastic behavior of this procedure *helps evade local minima*.
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
@@ -149,7 +131,7 @@ The stochastic behavior of this procedure* helps evade local minima*.
 
 class: middle
 
-## Limitations of gradient descent
+## Limitations
 
 The gradient descent method makes strong assumptions about
 - the magnitude of the local curvature to set the step size,
@@ -247,6 +229,22 @@ The Wolfe conditions can be used to design **line search** algorithms to automat
 However, in deep learning,
 - these algorithms are impractical because of the size of the parameter space and the overhead it would induce,
 - they might lead to overfitting when the empirical risk is minimized too well.
+
+---
+
+class: middle
+
+## The tradeoffs of learning
+
+When decomposing the excess error in terms of approximation, estimation and optimization errors,
+stochastic algorithms yield the best generalization performance (in terms of **expected** risk) despite being
+the worst optimization algorithms (in terms of *empirical risk*) (Bottou, 2011).
+
+$$\begin{aligned}
+&\mathbb{E}\left[ R(\tilde{f}\_\*^\mathbf{d}) - R(f\_B) \right] \\\\
+&= \mathbb{E}\left[ R(f\_\*) - R(f\_B) \right] + \mathbb{E}\left[ R(f\_\*^\mathbf{d}) - R(f\_\*) \right] + \mathbb{E}\left[ R(\tilde{f}\_\*^\mathbf{d}) - R(f\_\*^\mathbf{d}) \right]  \\\\
+&= \mathcal{E}\_\text{app} + \mathcal{E}\_\text{est} + \mathcal{E}\_\text{opt}
+\end{aligned}$$
 
 ---
 
@@ -385,7 +383,7 @@ class: middle
 
 ## Adam
 
-Finally, Adam is like RMSProp with momentum, but with bias correction terms for the first and second moments.
+Similar to RMSProp with momentum, but with bias correction terms for the first and second moments.
 
 $$\begin{aligned}
 s\_t  &=  \rho\_1 s\_{t-1} + (1-\rho\_1) g\_t \\\\
@@ -409,13 +407,17 @@ r\_t  &=  \rho\_2 r\_{t-1} + (1-\rho\_2) g\_t \odot g\_t \\\\
 
 ---
 
-xxx some real loss curves
+class: middle
+
+.center.width-60[![](figures/lec4/adam-plots.png)]
+
+.footnote[Credits: Kingma and Ba, [Adam: A Method for Stochastic Optimization](https://arxiv.org/abs/1412.6980), 2014.]
 
 ---
 
 # Scheduling
 
-Despite per-parameter adaptive learning rate methods, it is usually helpful to *anneal* the learning rate $\gamma$ over time.
+Despite per-parameter adaptive learning rate methods, it is usually helpful to **anneal the learning rate** $\gamma$ over time.
 
 - Step decay: reduce the learning rate by some factor every few epochs
   (e.g, by half every 10 epochs).
@@ -423,8 +425,9 @@ Despite per-parameter adaptive learning rate methods, it is usually helpful to *
 - $1/t$ decay: $\gamma\_t = \gamma\_0 / (1+kt)$ where $\gamma\_0$ and $k$ are hyper-parameters.
 
 .center[
-.width-50[![](figures/lec4/resnet.png)]<br>
-Step decay scheduling for training ResNets.
+<br>
+.width-40[![](figures/lec4/resnet.png)]<br>
+.caption[Step decay scheduling for training ResNets.]
 ]
 
 ---
@@ -435,7 +438,116 @@ class: middle
 
 ---
 
-xxx
+class: middle
+
+- In convex problems, provided a good learning rate $\gamma$, convergence is guaranteed regardless of the *initial parameter values*.
+- In the non-convex regime, initialization is **much more important**!
+- Little is known on the mathematics of initialization strategies.
+    - What is known: initialization should break symmetry.
+    - What is known: the scale of weights is important.
+
+---
+
+class: middle
+
+## Controlling for the variance in the forward pass
+
+A first strategy is to initialize the network parameters such that activations preserve the **same variance across layers**, hence ensuring that the information keeps flowing during the *forward pass*.
+
+Let us assume that
+- we are in a linear regime (e.g., the positive part of a ReLU) at initialization,
+- weights $w\_{ij}^l$ are initialized independently,
+- biases $b\_l$ are initialized to be 0,
+- input feature variances are the same, which we denote as $\mathbb{V}[x]$.
+
+---
+
+class: middle
+
+Then, the variance of the activation $h\_i^l$ of unit $i$ in layer $l$ is
+$$
+\begin{aligned}
+\mathbb{V}\left[h\_i^l\right] &= \mathbb{V}\left[ \sum\_{j=0}^{q\_{l-1}-1} w\_{ij}^l h\_j^{l-1} \right] \\\\
+&= \sum\_{j=0}^{q\_{l-1}-1} \mathbb{V}\left[ w\_{ij}^l \right] \mathbb{V}\left[ h\_j^{l-1} \right]
+\end{aligned}
+$$
+where $q\_l$ is the width of layer $l$ and $h^0_j = x_j$ for all $j=0,..., p-1$.
+
+If we further assume that weights $w\_{ij}^l$ at layer $l$ share the same variance $\mathbb{V}\left[ w^l \right]$ and that the variance of the activations in the previous layer are the same, then we can drop the indices and write
+$$\mathbb{V}\left[h^l\right] = q\_{l-1} \mathbb{V}\left[ w^l \right] \mathbb{V}\left[ h^{l-1} \right].$$
+
+---
+
+class: middle
+
+Therefore, the variance of the activations is preserved across layers when
+$$\mathbb{V}\left[ w^l \right] = \frac{1}{q\_{l-1}} \quad \forall l.$$
+
+This condition is enforced in **LeCun's uniform initialization**, which is defined as
+$$w\_{ij}^l \sim \mathcal{U}\left[-\sqrt{\frac{3}{q\_{l-1}}}, \sqrt{\frac{3}{q\_{l-1}}}\right].$$
+
+---
+
+class: middle
+
+## Controlling for the variance in the backward pass
+
+A similar idea can be applied to ensure that the gradients flow in the *backward pass* (without vanishing nor exploding), by maintaining the variance of the gradient with respect to the activations fixed across layers.
+
+Under the same assumptions as before,
+$$\begin{aligned}
+\mathbb{V}\left[ \frac{\text{d}\hat{y}}{\text{d} h\_i^l} \right] &= \mathbb{V}\left[ \sum\_{j=0}^{q\_{l+1}-1} \frac{\text{d} \hat{y}}{\text{d} h\_j^{l+1}} \frac{\partial h\_j^{l+1}}{\partial h\_i^l} \right] \\\\
+&= \mathbb{V}\left[ \sum\_{j=0}^{q\_{l+1}-1} \frac{\text{d} \hat{y}}{\text{d} h\_j^{l+1}} w\_{j,i}^{l+1} \right] \\\\
+&= \sum\_{j=0}^{q\_{l+1}-1} \mathbb{V}\left[\frac{\text{d} \hat{y}}{\text{d} h\_j^{l+1}}\right] \mathbb{V}\left[ w\_{ji}^{l+1} \right]
+\end{aligned}$$
+
+---
+
+class: middle
+
+If we further assume that
+- the gradients of the activations at layer $l$ share the same variance
+- the weights at layer $l+1$ share the same variance $\mathbb{V}\left[ w^{l+1} \right]$,
+
+then we can drop the indices and write
+$$
+\mathbb{V}\left[ \frac{\text{d}\hat{y}}{\text{d} h^l} \right] = q\_{l+1} \mathbb{V}\left[ \frac{\text{d}\hat{y}}{\text{d} h^{l+1}} \right] \mathbb{V}\left[ w^{l+1} \right].
+$$
+
+Therefore, the variance of the gradients with respect to the activations is preserved across layers when
+$$\mathbb{V}\left[ w^{l} \right] = \frac{1}{q\_{l}} \quad \forall l.$$
+
+---
+
+class: middle
+
+## Xavier initialization
+
+We have derived two different conditions on the variance of $w^l$,
+- $\mathbb{V}\left[w^l\right] = \frac{1}{q\_{l-1}}$
+- $\mathbb{V}\left[w^l\right] = \frac{1}{q\_{l}}$.
+
+A compromise is the **Xavier initialization**, which initializes $w^l$ randomly from a distribution with variance
+$$\mathbb{V}\left[w^l\right] = \frac{1}{\frac{q\_{l-1}+q\_l}{2}} = \frac{2}{q\_{l-1}+q\_l}.$$
+
+For example, *normalized initialization* is defined as
+$$w\_{ij}^l \sim \mathcal{U}\left[-\sqrt{\frac{6}{q\_{l-1}+q\_l}}, \sqrt{\frac{6}{q\_{l-1}+q\_l}}\right].$$
+
+---
+
+class: middle
+
+.center.width-70[![](figures/lec4/xavier1.png)]
+
+.footnote[Credits: Glorot and Bengio, [Understanding the difficulty of training deep feedforward neural networks](http://proceedings.mlr.press/v9/glorot10a.html), 2010.]
+
+---
+
+class: middle
+
+.center.width-70[![](figures/lec4/xavier2.png)]
+
+.footnote[Credits: Glorot and Bengio, [Understanding the difficulty of training deep feedforward neural networks](http://proceedings.mlr.press/v9/glorot10a.html), 2010.]
 
 ---
 
@@ -445,15 +557,28 @@ class: middle
 
 ---
 
-# Batch normalization
+# Data normalization
 
-https://fleuret.org/ee559/ee559-slides-6-4-batch-normalization.pdf
+The analysis for the weight initialization relies on preserving the activation variance constant across layers, under the initial assumption that the input feature variances are the same. That is,
+$$\mathbb{V}\left[x\_i\right] = \mathbb{V}\left[x\_j\right] \triangleq \mathbb{V}\left[x\right]$$
+for all pairs of features $i,j$.
+
+In general, this constraint is not satisfied but can be enforced by **standardizing** the input data feature-wise:
+$$x'\_i = \frac{x\_i - \hat{\mu}\_i}{\hat{\sigma}\_i}$$
+where
+$$
+\begin{aligned}
+\hat{\mu}\_i = \frac{1}{N} \sum\_{\mathbf{x} \in \mathbf{d}} x\_i \quad\quad\quad \hat{\sigma}^2\_i = \frac{1}{N} \sum\_{\mathbf{x} \in \mathbf{d}} (x\_i - \hat{\mu}\_i)^2.
+\end{aligned}
+$$
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
 ---
 
-# Weight normalization
+# Batch normalization
 
-http://mlexplained.com/2018/01/13/weight-normalization-and-layer-normalization-explained-normalization-in-deep-learning-part-2/
+https://fleuret.org/ee559/ee559-slides-6-4-batch-normalization.pdf
 
 ---
 
