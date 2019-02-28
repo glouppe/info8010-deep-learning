@@ -10,6 +10,7 @@ Prof. Gilles Louppe<br>
 
 ???
 
+R: why do we want the information to flow?
 R: add regularization -> dropout, dropconnect
 
 ---
@@ -452,17 +453,19 @@ class: middle
 
 ## Controlling for the variance in the forward pass
 
-A first strategy is to initialize the network parameters such that activations preserve the **same variance across layers**, hence ensuring that the information keeps flowing during the *forward pass*.
+A first strategy is to initialize the network parameters such that activations preserve the **same variance across layers**.
 
-Let us assume that
-- we are in a linear regime (e.g., the positive part of a ReLU) at initialization,
-- weights $w\_{ij}^l$ are initialized independently,
-- biases $b\_l$ are initialized to be 0,
-- input feature variances are the same, which we denote as $\mathbb{V}[x]$.
+Intuitively, this ensures that the information keeps flowing during the *forward pass*, without reducing or magnifying the magnitude of input signals exponentially.
 
 ---
 
 class: middle
+
+Let us assume that
+- we are in a linear regime at initialization (e.g., the positive part of a ReLU or the middle of a sigmoid),
+- weights $w\_{ij}^l$ are initialized independently,
+- biases $b\_l$ are initialized to be $0$,
+- input feature variances are the same, which we denote as $\mathbb{V}[x]$.
 
 Then, the variance of the activation $h\_i^l$ of unit $i$ in layer $l$ is
 $$
@@ -473,12 +476,12 @@ $$
 $$
 where $q\_l$ is the width of layer $l$ and $h^0_j = x_j$ for all $j=0,..., p-1$.
 
-If we further assume that weights $w\_{ij}^l$ at layer $l$ share the same variance $\mathbb{V}\left[ w^l \right]$ and that the variance of the activations in the previous layer are the same, then we can drop the indices and write
-$$\mathbb{V}\left[h^l\right] = q\_{l-1} \mathbb{V}\left[ w^l \right] \mathbb{V}\left[ h^{l-1} \right].$$
-
 ---
 
 class: middle
+
+If we further assume that weights $w\_{ij}^l$ at layer $l$ share the same variance $\mathbb{V}\left[ w^l \right]$ and that the variance of the activations in the previous layer are the same, then we can drop the indices and write
+$$\mathbb{V}\left[h^l\right] = q\_{l-1} \mathbb{V}\left[ w^l \right] \mathbb{V}\left[ h^{l-1} \right].$$
 
 Therefore, the variance of the activations is preserved across layers when
 $$\mathbb{V}\left[ w^l \right] = \frac{1}{q\_{l-1}} \quad \forall l.$$
@@ -559,30 +562,121 @@ class: middle
 
 # Data normalization
 
-The analysis for the weight initialization relies on preserving the activation variance constant across layers, under the initial assumption that the input feature variances are the same. That is,
+Previous weight initialization strategies rely on preserving the activation variance constant across layers, under the initial assumption that the **input feature variances are the same**.
+
+That is,
 $$\mathbb{V}\left[x\_i\right] = \mathbb{V}\left[x\_j\right] \triangleq \mathbb{V}\left[x\right]$$
 for all pairs of features $i,j$.
-
-In general, this constraint is not satisfied but can be enforced by **standardizing** the input data feature-wise:
-$$x'\_i = \frac{x\_i - \hat{\mu}\_i}{\hat{\sigma}\_i}$$
-where
-$$
-\begin{aligned}
-\hat{\mu}\_i = \frac{1}{N} \sum\_{\mathbf{x} \in \mathbf{d}} x\_i \quad\quad\quad \hat{\sigma}^2\_i = \frac{1}{N} \sum\_{\mathbf{x} \in \mathbf{d}} (x\_i - \hat{\mu}\_i)^2.
-\end{aligned}
-$$
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
 ---
 
-# Batch normalization
+class: middle
 
-https://fleuret.org/ee559/ee559-slides-6-4-batch-normalization.pdf
+In general, this constraint is not satisfied but can be enforced by **standardizing** the input data feature-wise,
+$$\mathbf{x}' = (\mathbf{x} - \hat{\mu}) \odot \frac{1}{\hat{\sigma}},$$
+where
+$$
+\begin{aligned}
+\hat{\mu} = \frac{1}{N} \sum\_{\mathbf{x} \in \mathbf{d}} \mathbf{x} \quad\quad\quad \hat{\sigma}^2 = \frac{1}{N} \sum\_{\mathbf{x} \in \mathbf{d}} (\mathbf{x} - \hat{\mu})^2.
+\end{aligned}
+$$
+
+.center.width-100[![](figures/lec4/scaling.png)]
+
+.footnote[Credits: Scikit-Learn, [Compare the effect of different scalers on data with outliers](https://scikit-learn.org/stable/auto_examples/preprocessing/plot_all_scaling.html#standardscaler).]
 
 ---
 
-# Layer normalization
+# Batch normalization
+
+Maintaining proper statistics of the activations and derivatives is critical for training neural networks.
+- This constraint can be enforced explicitly during the forward pass by re-normalizing them.
+- **Batch normalization** was the first method introducing this idea.
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec4/bn.png)]
+
+.footnote[Credits: Ioffe and Szegedy, [Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift](https://arxiv.org/abs/1502.03167), 2015.]
+
+---
+
+class: middle
+
+- During training, batch normalization shifts and rescales according to the mean and variance estimated on the batch.
+- During test, it shifts and rescales according to the empirical moments estimated during training.
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+.center.width-50[![](figures/lec4/bn.svg)]
+
+Let us consider a given minibatch of samples at training, for which $\mathbf{u}\_b \in \mathbb{R}^q$, $b=1, ..., B$, are intermediate values computed at some location in the computational graph.
+
+In batch normalization following the node $\mathbf{u}$, the per-component mean and variance are first computed on the batch
+$$
+\hat{\mu}\_\text{batch} = \frac{1}{B} \sum\_{b=1}^B \mathbf{u}\_b \quad\quad\quad \hat{\sigma}^2\_\text{batch} = \frac{1}{B} \sum\_{b=1}^B (\mathbf{u}\_b - \hat{\mu}\_\text{batch})^2,
+$$
+from the which the standardized $\mathbf{u}'\_b \in \mathbb{R}^q$ are computed such that
+$$
+\begin{aligned}
+\mathbf{u}'\_b &= \gamma\odot (\mathbf{u}\_b - \hat{\mu}\_\text{batch}) \odot \frac{1}{\hat{\sigma}\_\text{batch} + \epsilon} + \beta
+\end{aligned}
+$$
+where $\gamma, \beta \in \mathbb{R}^q$ are parameters to optimize.
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+.center[Exercise: How does batch normalization combine with backpropagation?]
+
+---
+
+class: middle
+
+During inference, batch normalization shifts and rescales each component according to the empirical moments estimated during training:
+$$\mathbf{u}' = \gamma \odot (\mathbf{u} - \hat{\mu}) \odot \frac{1}{\hat{\sigma}} + \beta.$$
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec4/bn-results.png)]
+
+.footnote[Credits: Ioffe and Szegedy, [Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift](https://arxiv.org/abs/1502.03167), 2015.]
+
+---
+
+class: middle
+
+The position of batch normalization relative to the non-linearity is not clear.
+
+.center.width-50[![](figures/lec4/bn2.png)]
+
+.footnote[Credits: Ioffe and Szegedy, [Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift](https://arxiv.org/abs/1502.03167), 2015.]
+
+---
+
+class: middle
+
+## Layer normalization
+
+Given a single input sample $\mathbf{x}$, a similar approach can be applied
+ to standardize the activations $\mathbf{u}$ across a layer instead of doing it over the batch.
 
 ---
 
@@ -590,9 +684,3 @@ class: end-slide, center
 count: false
 
 The end.
-
----
-
-# References
-
-xxx
