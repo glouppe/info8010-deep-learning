@@ -11,7 +11,8 @@ Prof. Gilles Louppe<br>
 ???
 
 R: why do we want the information to flow?
-R: add regularization -> dropout, dropconnect
+R: add regularization chapter -> dropout, dropconnect, others?
+R: 1d plot of the proxy when the step size is too large? (wider proxy)
 
 ---
 
@@ -104,7 +105,9 @@ class: middle
 
 class: middle
 
-While being faster than batch gradient descent,
+The stochastic behavior of SGD helps **evade local minima**.
+
+While being computationally faster than batch gradient descent,
 - gradient estimates used by SGD can be *very noisy*,
 - SGD does not benefit from the speed-up of **batch-processing**.
 
@@ -123,8 +126,8 @@ g\_t &= \frac{1}{B} \sum\_{b=1}^B \nabla\_\theta \ell(y\_{n(t,b)}, f(\mathbf{x}\
 $$
 where the order ${n(t,b)}$ to visit the samples can be either sequential or random.
 
-- Increasing the batch-size reduces the variance of the gradient estimates and enables the speed-up of batch processing.
-- The stochastic behavior of this procedure *helps evade local minima*.
+- Increasing the batch size $B$ reduces the variance of the gradient estimates and enables the speed-up of batch processing.
+- The interplay between $B$ and $\gamma$ is still unclear.
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
@@ -225,7 +228,7 @@ The curvature condition ensures that the slope has been reduced sufficiently.
 
 class: middle
 
-The Wolfe conditions can be used to design **line search** algorithms to automatically determine a step size $\gamma\_t$.
+The Wolfe conditions can be used to design **line search** algorithms to automatically determine a step size $\gamma\_t$, hence *ensuring convergence* towards a local minima.
 
 However, in deep learning,
 - these algorithms are impractical because of the size of the parameter space and the overhead it would induce,
@@ -443,7 +446,7 @@ class: middle
 
 - In convex problems, provided a good learning rate $\gamma$, convergence is guaranteed regardless of the *initial parameter values*.
 - In the non-convex regime, initialization is **much more important**!
-- Little is known on the mathematics of initialization strategies.
+- Little is known on the mathematics of initialization strategies of neural networks.
     - What is known: initialization should break symmetry.
     - What is known: the scale of weights is important.
 
@@ -475,6 +478,12 @@ $$
 \end{aligned}
 $$
 where $q\_l$ is the width of layer $l$ and $h^0_j = x_j$ for all $j=0,..., p-1$.
+
+???
+
+Use
+- V(AB) = V(A)V(B)+V(A)E(B)+V(B)E(A)
+- V(A+B) = V(A)+V(B)+Cov(A,B)
 
 ---
 
@@ -626,7 +635,7 @@ In batch normalization following the node $\mathbf{u}$, the per-component mean a
 $$
 \hat{\mu}\_\text{batch} = \frac{1}{B} \sum\_{b=1}^B \mathbf{u}\_b \quad\quad\quad \hat{\sigma}^2\_\text{batch} = \frac{1}{B} \sum\_{b=1}^B (\mathbf{u}\_b - \hat{\mu}\_\text{batch})^2,
 $$
-from the which the standardized $\mathbf{u}'\_b \in \mathbb{R}^q$ are computed such that
+from which the standardized $\mathbf{u}'\_b \in \mathbb{R}^q$ are computed such that
 $$
 \begin{aligned}
 \mathbf{u}'\_b &= \gamma\odot (\mathbf{u}\_b - \hat{\mu}\_\text{batch}) \odot \frac{1}{\hat{\sigma}\_\text{batch} + \epsilon} + \beta

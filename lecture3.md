@@ -14,12 +14,14 @@ R: Beyond classification?
 R: e.g., UNet for segmentation
 
 R: highlight and emphasize this idea that is applied over and over:
-- detection of patterns (convolution)
+- detection of patterns at specific locations (convolution)
 - detection of the presence of these patterns (regardless of the position) (pooling)
 R: analyze in more details the role of skip connections
 R: LeCun depart's from Nature's imitation -> backprop
    analogy with bat planes
    https://twitter.com/zacharylipton/status/1098996661030920194?s=03
+
+R: picture of the electrode in cat's eye + picture of the cat (somewhere in a youtube video)
 
 ---
 
