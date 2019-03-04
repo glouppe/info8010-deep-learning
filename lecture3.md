@@ -10,8 +10,7 @@ Prof. Gilles Louppe<br>
 
 ???
 
-R: Beyond classification?
-R: e.g., UNet for segmentation
+R: Beyond classification -> e.g., UNet for segmentation
 
 R: highlight and emphasize this idea that is applied over and over:
 - detection of patterns at specific locations (convolution)
@@ -1076,9 +1075,11 @@ The left image is predicted **with 99.9% confidence** as a magpie!
 .kol-1-2.center[![](figures/lec3/magpie2.jpg)]
 ]
 
-
-
 .footnote[Credits: Francois Chollet, [How convolutional neural networks see the world](https://blog.keras.io/how-convolutional-neural-networks-see-the-world.html), 2016.]
+
+???
+
+R: Split in order not to spoil the surprise.
 
 ---
 
