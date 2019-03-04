@@ -27,7 +27,7 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2019.
 - Lecture 9 (April 26): Applications
 - Lecture 10 (May 3): Student presentations 1
 - Lecture 11 (May 10): Student presentations 2
-- Lecture 17 (May 17): Student presentations 3
+- Lecture 12 (May 17): Student presentations 3
 
 ## Project
 
