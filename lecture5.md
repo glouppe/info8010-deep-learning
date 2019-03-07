@@ -72,7 +72,7 @@ In the rest of the slides, we consider only time-indexed signal, although it gen
 
 One of the simplest approach to sequence processing is to use **temporal convolutional networks** (TCNs).
 - TCNs correspond to standard 1D convolutional networks.
-- They process input sequences as sequences of the *maximum possible length*.
+- They process input sequences as fixed-size vectors of the *maximum possible length*.
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
@@ -107,7 +107,7 @@ class: middle
 
 class: middle
 
-When the input is a sequence $\mathbf{x} \in S(\mathbb{R}^p)$ of variable length $T(\mathbf{x})$, a standard approach is to use a recurrent model which maintains a **recurrent state** $\mathbf{h}\_t \in \mathbb{R}^q$ updated at each time step $t$.
+When the input is a sequence $\mathbf{x} \in S(\mathbb{R}^p)$ of *variable* length $T(\mathbf{x})$, a standard approach is to use a recurrent model which maintains a **recurrent state** $\mathbf{h}\_t \in \mathbb{R}^q$ updated at each time step $t$.
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
@@ -123,7 +123,7 @@ where $\phi : \mathbb{R}^p \times \mathbb{R}^q \to \mathbb{R}^q$ and $\mathbf{h}
 
 Predictions can be computed at any time step $t$ from the recurrent state,
 $$y\_t = \psi(\mathbf{h}\_t;\theta),$$
-with $\phi : \mathbb{R}^q \to \mathbb{R}^C$.
+with $\psi : \mathbb{R}^q \to \mathbb{R}^C$.
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
@@ -169,7 +169,9 @@ class: middle
 
 # Elman networks
 
-Elman networks consist of $\phi$ and $\psi$ defined as primitive neuron units, such as logistic regression units. That is,
+Elman networks consist of $\phi$ and $\psi$ defined as primitive neuron units, such as logistic regression units.
+
+That is,
 
 $$
 \begin{aligned}
@@ -231,7 +233,7 @@ class: middle
 .center[Sequence length vs. cross-entropy.]
 
 Note that the network was trained on sequences of size 10 or lower.<br>
-It does not appear to generalize outside the range.
+It does not appear to generalize outside of the range.
 
 ---
 
@@ -279,6 +281,9 @@ Computing the recurrent states forward in time does not make use of future input
 When unfolded through time, the resulting network can grow very deep, and training it involves dealing with **vanishing gradients**.
 - A critical component in the design of RNN cells is to add in a *pass-through*, or additive paths, so that the recurrent state does not go repeatedly through a squashing non-linearity.
 - This is very similar to skip connections in ResNets.
+
+<br><br><br>
+.center.width-60[![](figures/lec5/skip.svg)]
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
