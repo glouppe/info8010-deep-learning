@@ -8,6 +8,10 @@ Lecture 5: Recurrent neural networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](g.louppe@uliege.be)
 
+???
+
+R: add https://ai.googleblog.com/2018/05/duplex-ai-system-for-natural-conversation.html
+
 ---
 
 # Today
@@ -673,10 +677,26 @@ class: middle
 
 class: middle
 
-Demos
-- [Obama-RNN](https://medium.com/@samim/obama-rnn-machine-generated-political-speeches-c8abd18a2ea0): machine generated political speeches
-- [Harry Potter](https://medium.com/deep-writing/harry-potter-written-by-artificial-intelligence-8a9431803da6) (written by AI)
-- [@lexiconjure](https://github.com/rossgoodwin/lexiconjure): artificial word definitions
+.center[
+.width-80[![](figures/lec5/textgenrnn_console.gif)]
+
+[Open](https://drive.google.com/file/d/1mMKGnVxirJnqDViH7BDJxFqWrsXlPSoK/view?usp=sharing) in Google Colab.
+]
+
+---
+
+class: middle
+
+The same generative architecture applies to any kind of sequences.
+
+Say, sketches defined as sequences of strokes?
+
+.grid[
+.kol-2-3.center[
+<br>[`sketch-rnn-demo`](https://magenta.tensorflow.org/assets/sketch_rnn_demo/index.html)
+]
+.kol-1-3.width-100[![](figures/lec5/sketch-rnn.png)]
+]
 
 ---
 
