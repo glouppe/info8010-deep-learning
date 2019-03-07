@@ -231,6 +231,10 @@ td {
     width: 90%;
 }
 
+.width-95 * {
+    width: 95%;
+}
+
 .width-100 * {
     width: 100%;
 }
