@@ -22,6 +22,7 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2019.
 - Lecture 5 (March 8): [Recurrent neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture5.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec5.pdf)]
 - Tutorial (March 8): Tensorflow [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/tutorial-tensorflow.pdf)]
 - Lecture 6 (March 15): [Auto-encoders and generative models](https://glouppe.github.io/info8010-deep-learning/?p=lecture6.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec6.pdf)]
+- Tutorial (March 15): Pytorch [[Notebook](https://github.com/glouppe/info8010-deep-learning/blob/master/code/pytorch-tutorial.ipynb)]
 - *No class on March 22.*
 - Lecture 7 (March 29): Generative adversarial networks [Room change: B7a A300]
 - Lecture 8 (April 5): Unsupervised Learning
