@@ -139,7 +139,7 @@ Given a convolutional kernel $\mathbf{u}$,
 - the forward pass is implemented as $v(\mathbf{h}) = \mathbf{U}^T v(\mathbf{x})$ with appropriate reshaping, thereby effectively up-sampling an input $v(\mathbf{x})$ into a larger one;
 - the backward pass is computed by multiplying the loss by $\mathbf{U}$ instead of $\mathbf{U}^T$.
 
-Transposed convolutions are also referred to as fractionally-stride convolutions or deconvolutions (mistakenly).
+Transposed convolutions are also referred to as fractionally-strided convolutions or deconvolutions (mistakenly).
 
 .center.width-70[![](figures/lec6/transposed-convolution.svg)]
 
@@ -279,7 +279,7 @@ class: middle
 
 class: middle
 
-These results not satisfactory because the density model on the latent space is too simple and inadequate.
+These results are not satisfactory because the density model on the latent space is **too simple and inadequate**.
 
 Building a good model amounts to our original problem of modeling an empirical distribution, although it may now be in a lower dimension space.
 
@@ -300,7 +300,7 @@ class: middle
 A **generative model** is a probabilistic model $p$ that can be used as *a simulator of the data*.
 Its purpose is to generate synthetic but realistic high-dimensional data
 $$\mathbf{x} \sim p(\mathbf{x};\theta),$$
-that is as close as possible from the true but unknown data distribution $p(\mathbf{x})$, but from which we have empirical samples.
+that is as close as possible from the true but unknown data distribution $p(\mathbf{x})$, but for which we have empirical samples.
 
 ## Motivation
 
@@ -793,7 +793,7 @@ class: middle, center
 
 class: middle
 
-# Applications of VAEs
+# Applications of (variational) AEs
 
 ---
 
@@ -804,6 +804,8 @@ class: middle, black-slide
 <iframe width="640" height="400" src="https://www.youtube.com/embed/XNZIN7Jh3Sg?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
 
 Random walks in latent space.
+
+(Alex Radford, 2015)
 
 ]
 
@@ -816,6 +818,20 @@ class: middle, black-slide
 <iframe width="500" height="200" src="https://int8.io/wp-content/uploads/2016/12/output.mp4" frameborder="0" volume="0" allowfullscreen></iframe>
 
 Impersonation by encoding-decoding an unknown face.
+
+(Kamil Czarnogórski, 2016)
+]
+
+---
+
+class: middle, black-slide
+
+.center[
+
+<iframe width="640" height="400" src="https://www.youtube.com/embed/Wd-1WU8emkw?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
+
+(Inoue et al, 2017)
+
 ]
 
 
@@ -825,7 +841,7 @@ class: middle
 
 .center.width-80[![](figures/lec6/vae-smile.png)]
 
-.center[(White, 2016)]
+.center[(Tom White, 2016)]
 
 ---
 
