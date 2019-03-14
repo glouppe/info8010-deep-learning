@@ -76,9 +76,9 @@ This course is part of the many other courses available at ULiège and related t
 
 - INFO8006: Introduction to Artificial Intelligence
 - ELEN0062: Introduction to Machine Learning
-- INFO8004: Advanced Machine Learning
 - **INFO8010: Deep Learning $\leftarrow$ you are there**
 - INFO8003: Optimal decision making for complex problems
+- INFO8004: Advanced Machine Learning
 - INFO0948: Introduction to Intelligent Robotics
 - INFO0049: Knowledge representation
 - ELEN0016: Computer vision
@@ -95,11 +95,10 @@ This course is part of the many other courses available at ULiège and related t
 - Lecture 3: Convolutional neural networks
 - Lecture 4: Training neural networks
 - Lecture 5: Recurrent neural networks
-- Lecture 6: Differentiable inference and generative models (part 1)
-- Lecture 7: Differentiable inference and generative models (part 2)
+- Lecture 6: Auto-encoders and generative models
+- Lecture 7: Generative adversarial networks
 - Lecture 8: Bayesian deep learning
-- Lecture 9: Theory of deep learning
-- Lecture 10: Applications
+- Lecture 9: Applications
 
 ---
 

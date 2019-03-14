@@ -10,8 +10,10 @@ Prof. Gilles Louppe<br>
 
 ???
 
-- biggan https://openreview.net/pdf?id=B1xsqj09Fm
+- biggan https://openreview.net/pdf?id=B1xsqj09Fm + https://arxiv.org/pdf/1903.02271.pdf
 - stylegan
+
+https://gandissect.csail.mit.edu/
 
 ---
 
