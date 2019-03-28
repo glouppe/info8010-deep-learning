@@ -136,6 +136,10 @@ class: middle
 
 .footnote[Credits: Minsky and Papert, Perceptrons: an Introduction to Computational Geometry, 1969.]
 
+???
+
+R: check connectedness slide https://leon.bottou.org/slides/2challenges/2challenges.pdf
+
 ---
 
 class: middle

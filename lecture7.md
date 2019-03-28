@@ -10,23 +10,37 @@ Prof. Gilles Louppe<br>
 
 ???
 
-- biggan https://openreview.net/pdf?id=B1xsqj09Fm + https://arxiv.org/pdf/1903.02271.pdf
-- stylegan
 
-https://gandissect.csail.mit.edu/
+https://arxiv.org/pdf/1801.04406.pdf
+
+
+add refs as footnotes
 
 ---
 
-# Outline
+class: middle, center
 
-Goals: Learn models of the data itself.
+.width-80[![](figures/lec7/turing-award.png)]
 
-- Generative models (lecture 5)
-- Variational inference (lecture 5)
-- Variational auto-encoders (lecture 5)
-- **Generative adversarial networks**
+.italic["ACM named .bold[Yoshua Bengio], .bold[Geoffrey Hinton], and .bold[Yann LeCun] recipients of the .bold[2018 ACM A.M. Turing Award] for conceptual and engineering breakthroughs that have made deep neural networks a critical component of computing."]
 
-.center.width-70[![](figures/lec7/generative-model.png)]
+---
+
+# Today
+
+.grid[
+.kol-2-3[
+Learn a model of the data.
+
+- Generative adversarial networks
+- Wasserstein GANs
+- Convergence of GANs
+- State of the art
+- Applications
+]
+.kol-1-3.width-100[![](figures/lec7/christies.jpg)]
+]
+
 
 
 ---
@@ -37,52 +51,76 @@ class: middle
 
 ---
 
-class: middle
+# GANs
 
+<br>
 .center.width-80[![](figures/lec7/catch-me.jpg)]
 
 ---
 
-# Generative adversarial networks
+class: middle
 
-The main idea of **generative adversarial networks** (GANs) is to express the task of learning a generative model as a two-player zero-sum game between two networks.
+## A two-player game
 
-- The first network is a generator  $g(\cdot;\theta) : \mathcal{Z} \to \mathcal{X}$, mapping a latent space equipped with a prior distribution $p(\mathbf{z})$ to the data space, thereby inducing a distribution
-$$\mathbf{x} \sim p(\mathbf{x};\theta) \Leftrightarrow \mathbf{z} \sim p(\mathbf{z}), \mathbf{x} = g(\mathbf{z};\theta).$$
-- The second network $d(\cdot; \phi) : \mathcal{X} \to [0,1]$ is a classifier trained to distinguish between true samples $\mathbf{x} \sim p\_r(\mathbf{x})$ and generated samples $\mathbf{x} \sim p(\mathbf{x};\theta)$.
+In **generative adversarial networks** (GANs), the task of learning a generative model is expressed as a two-player zero-sum game between two networks.
 
-The central mechanism will be to use supervised learning to guide the learning of the generative model.
+- The first network is a *generator*  $g(\cdot;\theta) : \mathcal{Z} \to \mathcal{X}$, mapping a latent space equipped with a prior distribution $p(\mathbf{z})$ to the data space, thereby inducing a distribution
+$$\mathbf{x} \sim q(\mathbf{x};\theta) \Leftrightarrow \mathbf{z} \sim p(\mathbf{z}), \mathbf{x} = g(\mathbf{z};\theta).$$
+- The second network $d(\cdot; \phi) : \mathcal{X} \to [0,1]$ is a *classifier* trained to distinguish between true samples $\mathbf{x} \sim p(\mathbf{x})$ and generated samples $\mathbf{x} \sim q(\mathbf{x};\theta)$.
 
+The central mechanism consists in using supervised learning to guide the learning of the generative model.
 
 ---
 
 class: middle
 
 .center.width-100[![](figures/lec7/gan.png)]
+<br>
+
+$$\arg \min\_\theta \max\_\phi \underbrace{\mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ \log d(\mathbf{x};\phi) \right] + \mathbb{E}\_{\mathbf{z} \sim p(\mathbf{z})}\left[ \log (1-d(g(\mathbf{z};\theta);\phi)) \right]}\_{V(\phi, \theta)}$$
 
 ---
 
-# Game analysis
+class: middle
 
-Consider a generator $g$ fixed at $\theta$. Given a set of observations
-$$\mathbf{x}\_i \sim p\_r(\mathbf{x}), i=1, ..., N,$$
-we can generate a two-class dataset
-$$\mathbf{d} = \\\{ (\mathbf{x}\_1, 1), ..., (\mathbf{x}\_N,1), (g(\mathbf{z}\_1;\theta), 0), ..., (g(\mathbf{z}\_N;\theta), 0)) \\\}.$$
+## Learning process
 
-The best classifier $d$ is obtained by minimizing
-the cross-entropy
-$$\begin{aligned}
-\mathcal{L}(\phi) &= -\frac{1}{2N} \left( \sum\_{i=1}^N \left[ \log d(\mathbf{x}\_i;\phi) \right] + \sum\_{i=1}^N\left[ \log (1-d(g(\mathbf{z}\_i;\theta);\phi)) \right] \right) \\\\
-&\approx -\frac{1}{2} \left( \mathbb{E}\_{\mathbf{x} \sim p\_r(\mathbf{x})}\left[ \log d(\mathbf{x};\phi) \right] + \mathbb{E}\_{\mathbf{z} \sim p(\mathbf{z})}\left[ \log (1-d(g(\mathbf{z};\theta);\phi)) \right] \right)
-\end{aligned}$$
-with respect to $\phi$.
+In practice, the minimax solution is approximated using *alternating* stochastic gradient descent:
+$$
+\begin{aligned}
+\theta &\leftarrow \theta - \gamma \nabla\_\theta V(\phi, \theta) \\\\
+\phi &\leftarrow \phi + \gamma \nabla\_\phi V(\phi, \theta),
+\end{aligned}
+$$
+where gradients are estimated with Monte Carlo integration.
+
+- For one step on $\theta$, we can optionally take $k$ steps on $\phi$, since we need the classifier to remain near optimal.
+- Note that to compute $\nabla\_\theta V(\phi, \theta)$, it is necessary to backprop all the way through $d$ before computing the partial derivatives with respect to $g$'s internals.
 
 ---
 
-Following Goodfellow et al (2014), let us define the **value function**
-$$V(\phi, \theta) =  \mathbb{E}\_{\mathbf{x} \sim p\_r(\mathbf{x})}\left[ \log d(\mathbf{x};\phi) \right] + \mathbb{E}\_{\mathbf{z} \sim p(\mathbf{z})}\left[ \log (1-d(g(\mathbf{z};\theta);\phi)) \right].$$
+class: middle
 
-Then,
+.center.width-100[![](figures/lec7/learning.png)]
+
+.center[(Goodfellow et al, 2014)]
+
+---
+
+class: middle, center
+
+.width-100[![](figures/lec7/ganlab.png)]
+
+Demo: [GAN Lab](https://poloclub.github.io/ganlab)
+
+---
+
+class: middle
+
+## Game analysis
+
+Let us consider **value function** $V(\phi, \theta)$.
+
 - $V(\phi, \theta)$ is high if $d$ is good at recognizing true from generated samples.
 
 - If $d$ is the best classifier given $g$, and if $V$ is high, then this implies that
@@ -95,305 +133,57 @@ $$\theta^\* = \arg \min\_\theta \max\_\phi V(\phi, \theta).$$
 
 ---
 
+class: middle
+
 For a generator $g$ fixed at $\theta$, the classifier $d$ with parameters $\phi^\*\_\theta$ is optimal if and only if
-$$\forall \mathbf{x}, d(\mathbf{x};\phi^\*\_\theta) = \frac{p\_r(\mathbf{x})}{p(\mathbf{x};\theta) + p\_r(\mathbf{x})}.$$
+$$\forall \mathbf{x}, d(\mathbf{x};\phi^\*\_\theta) = \frac{p(\mathbf{x})}{q(\mathbf{x};\theta) + p(\mathbf{x})}.$$
+
+---
+
+class: middle
 
 Therefore,
 $$\begin{aligned}
 &\min\_\theta \max\_\phi V(\phi, \theta) = \min\_\theta V(\phi^\*\_\theta, \theta) \\\\
-&= \min\_\theta \mathbb{E}\_{\mathbf{x} \sim p\_r(\mathbf{x})}\left[ \log \frac{p\_r(\mathbf{x})}{p(\mathbf{x};\theta) + p\_r(\mathbf{x})} \right] + \mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x};\theta)}\left[ \log \frac{p(\mathbf{x};\theta)}{p(\mathbf{x};\theta) + p\_r(\mathbf{x})} \right] \\\\
-&= \min\_\theta \text{KL}\left(p\_r(\mathbf{x}) || \frac{p\_r(\mathbf{x}) + p(\mathbf{x};\theta)}{2}\right) \\\\
-&\quad\quad\quad+ \text{KL}\left(p(\mathbf{x};\theta) || \frac{p\_r(\mathbf{x}) + p(\mathbf{x};\theta)}{2}\right) -\log 4\\\\
-&= \min\_\theta 2\, \text{JSD}(p\_r(\mathbf{x}) || p(\mathbf{x};\theta)) - \log 4
+&= \min\_\theta \mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ \log \frac{p(\mathbf{x})}{q(\mathbf{x};\theta) + p(\mathbf{x})} \right] + \mathbb{E}\_{\mathbf{x} \sim q(\mathbf{x};\theta)}\left[ \log \frac{q(\mathbf{x};\theta)}{q(\mathbf{x};\theta) + p(\mathbf{x})} \right] \\\\
+&= \min\_\theta \text{KL}\left(p(\mathbf{x}) || \frac{p(\mathbf{x}) + q(\mathbf{x};\theta)}{2}\right) \\\\
+&\quad\quad\quad+ \text{KL}\left(q(\mathbf{x};\theta) || \frac{p(\mathbf{x}) + q(\mathbf{x};\theta)}{2}\right) -\log 4\\\\
+&= \min\_\theta 2\, \text{JSD}(p(\mathbf{x}) || q(\mathbf{x};\theta)) - \log 4
 \end{aligned}$$
 where $\text{JSD}$ is the Jensen-Shannon divergence.
 
 ---
 
-In summary, solving the minimax problem
-$$\theta^\* = \arg \min\_\theta \max\_\phi V(\phi, \theta)$$
-is equivalent to  
-$$\theta^\* = \arg \min\_\theta \text{JSD}(p\_r(\mathbf{x}) || p(\mathbf{x};\theta)).$$
-
-Since $\text{JSD}(p\_r(\mathbf{x}) || p(\mathbf{x};\theta))$ is minimum if and only if
-$p\_r(\mathbf{x}) = p(\mathbf{x};\theta)$, this proves that the minimax solution
-corresponds to a generative model that perfectly reproduces the true data distribution.
-
----
-
-# Learning process
-
-<br><br>
-
-.center.width-100[![](figures/lec7/learning.png)]
-
-.center[(Goodfellow et al, 2014)]
-
----
-
-# Alternating SGD
-
-In practice, the minimax solution is approximated using **alternating stochastic gradient descent**, for
-which gradients
-$$\begin{aligned}
-\nabla\_\phi V(\phi, \theta) &= \mathbb{E}\_{\mathbf{x} \sim p\_r(\mathbf{x})}\left[ \nabla\_\phi \log d(\mathbf{x};\phi) \right] + \mathbb{E}\_{\mathbf{z} \sim p(\mathbf{z})}\left[  \nabla\_\phi \log (1-d(g(\mathbf{z};\theta);\phi)) \right], \\\\
-\nabla\_\theta V(\phi, \theta) &= \mathbb{E}\_{\mathbf{z} \sim p(\mathbf{z})}\left[  \nabla\_\theta \log (1-d(g(\mathbf{z};\theta);\phi)) \right],
-\end{aligned}$$
-are approximated using Monte Carlo integration.
-
-These noisy estimates can in turn be used alternatively
-to do gradient descent on $\theta$ and gradient ascent on $\phi$.
-
-- For one step on $\theta$, we can optionally take $k$ steps on $\phi$, since we need the classifier to remain near optimal.
-- Note that to compute $\nabla\_\theta V(\phi, \theta)$, it is necessary to backprop all the way through $d$ before computing the partial derivatives with respect to $g$'s internals.
-
----
-
 class: middle
 
-.center.width-100[![](figures/lec7/gan-algo.png)]
-
-.center[(Goodfellow et al, 2014)]
-
----
-
-class: middle
-
-.center.width-80[![](figures/lec7/gan-gallery.png)]
-
-.center[(Goodfellow et al, 2014)]
-
----
-
-# Open problems
-
-Training a standard GAN often results in **pathological behaviors**:
-
-- Oscillations without convergence: contrary to standard loss minimization,
-  alternating stochastic gradient descent has no guarantee of convergence.
-- Vanishing gradient: when the classifier $d$ is too good, the value function saturates
-  and we end up with no gradient to update the generator (more on this later).
-- Mode collapse: the generator $g$ models very well a small sub-population,
-  concentrating on a few modes of the data distribution.
-
-Performance is also difficult to assess in practice.
-
-<br>
-
-.center.width-100[![](figures/lec7/mode-collapse.png)]
-
-.center[Mode collapse (Metz et al, 2016)]
-
----
-
-class: middle, center
-
-# Deep convolutional GAN
-
----
-
-class: middle
-
-.center.width-50[![](figures/lec7/g-rabbit.png)]
-
-Deep generative architectures require layers that increase the input dimension,
-i.e., that go from $\mathbf{z} \in \mathbb{R}^q$ to $\mathbf{x}=g(\mathbf{z}) \in \mathbb{R}^p$, with $p \gg q$.
-
-- This is the opposite of what we did so far with feedforward networks, in which we reduced the dimension of the input to a few values.
-- Fully connected layers could be used for that purpose but would face the same limitations as before (spatial specialization, too many parameters).
-- Ideally, we would like layers that implement the inverse of convolutional
- and pooling layers.
-
----
-
-# Convolution
-
-For $\mathbf{x} \in \mathbb{R}^{H \times W}$ and convolutional kernel $\mathbf{u} \in \mathbb{R}^{h \times w}$, we defined the discrete convolution $\mathbf{x} \star \mathbf{u}$ as a 2D tensor of size $(H-h+1) \times (W-w+1)$ such that
-$$(\mathbf{x} \star \mathbf{u})\_{j,i} = \sum\_{n=0}^{h-1} \sum\_{m=0}^{w-1}  \mathbf{x}\_{j+n,i+m} \mathbf{u}\_{n,m}.$$
-
-For example,
-$$\begin{pmatrix}
-4 & 5 & 8 & 7 \\\\
-1 & 8 & 8 & 8 \\\\
-3 & 6 & 6 & 4 \\\\
-6 & 5 & 7 & 8
-\end{pmatrix} \star
-\begin{pmatrix}
-1 & 4 & 1 \\\\
-1 & 4 & 3 \\\\
-3 & 3 & 1
-\end{pmatrix} =
-\begin{pmatrix}
-122 & 148 \\\\
-126 & 134
-\end{pmatrix}$$
-
----
-
-class: middle
-
-.center.width-40[![](figures/lec7/convolution.png)]
-
----
-
-The convolution operation can be equivalently re-expressed as a single matrix multiplication.
-
-Following the previous example,
-- the convolutional kernel $\mathbf{u}$ is rearranged as a sparse Toeplitz circulant matrix, called the convolution matrix:
-$$\mathbf{U} = \begin{pmatrix}
-1 & 4 & 1 & 0 & 1 & 4 & 3 & 0 & 3 & 3 & 1 & 0 & 0 & 0 & 0 & 0 \\\\
-0 & 1 & 4 & 1 & 0 & 1 & 4 & 3 & 0 & 3 & 3 & 1 & 0 & 0 & 0 & 0 \\\\
-0 & 0 & 0 & 0 & 1 & 4 & 1 & 0 & 1 & 4 & 3 & 0 & 3 & 3 & 1 & 0 \\\\
-0 & 0 & 0 & 0 & 0 & 1 & 4 & 1 & 0 & 1 & 4 & 3 & 0 & 3 & 3 & 1
-\end{pmatrix}$$
-- the input $\mathbf{x}$ is flattened row by row, from top to bottom:
-$$v(\mathbf{x}) =
-\begin{pmatrix}
-4 & 5 & 8 & 7 & 1 & 8 & 8 & 8 & 3 & 6 & 6 & 4 & 6 & 5 & 7 & 8
-\end{pmatrix}^T$$
-
-Then,
-$$\mathbf{U}v(\mathbf{x}) =
-\begin{pmatrix}
-122 & 148 & 126 & 134
-\end{pmatrix}^T$$
-which we can reshape to a $2 \times 2$ matrix to obtain $\mathbf{x} \star \mathbf{u}$.
-
-???
-
-Make diagram to obtain $U$.
-
----
-
-The same procedure generalizes to $\mathbf{x} \in \mathbb{R}^{H \times W}$ and convolutional kernel $\mathbf{u} \in \mathbf{R}^{h \times w}$, such that:
-- the convolutional kernel is rearranged as a sparse Toeplitz circulant matrix $\mathbf{U}$ of shape $(H-h+1)(W-w+1) \times HW$ where
-    - each row $i$ identifies an element of the output feature map,
-    - each column $j$ identifies an element of the input feature map,
-    - the value $\mathbf{U}\_{i,j}$ corresponds to the kernel value the element $j$ is multiplied with in output $i$;
-- the input $\mathbf{x}$ is flattened into a column vector $v(\mathbf{x})$ of shape $HW \times 1$;
-- the output feature map $\mathbf{x} \star \mathbf{u}$ is obtained by reshaping the $(H-h+1)(W-w+1) \times 1$ column vector $\mathbf{U}v(\mathbf{x})$ as a $(H-h+1) \times (W-w+1)$ matrix.
-
-Therefore, a convolutional layer is a special case of a fully
-connected layer: $$\mathbf{h} = \mathbf{x} \star \mathbf{u} \Leftrightarrow v(\mathbf{h}) = \mathbf{U}v(\mathbf{x}) \Leftrightarrow  v(\mathbf{h}) = \mathbf{W}^T v(\mathbf{x})$$
-
----
-
-class: middle
-
-.center.width-70[![](figures/lec7/convolution-linear.png)]
-
----
-
-In a fully connected layer $\mathbf{h} = \mathbf{W}^T \mathbf{x}$, the partial derivatives with respect to the layer inputs are
-$$\frac{\partial \mathbf{h}}{\partial \mathbf{x}} = \mathbf{W}.$$
-
-Since a convolutional layer $\mathbf{h} = \mathbf{x} \star \mathbf{u}$ can be expressed as a fully connected layer $v(\mathbf{h}) = \mathbf{U}v(\mathbf{x})$, the partial derivatives with respect to its inputs are
-$$\frac{\partial v(\mathbf{h})}{\partial v(\mathbf{x})} = \mathbf{U}^T.$$
-The backward pass of convolutional layer therefore amounts to multiplying the loss with $\mathbf{U}^T$ and reshaping
-appropriately.
-
-- The backward pass takes some $q$-dimensional vector as input and produces some $p$-dimensional vector as output, with $q < p$.
-- It does so while keeping a connectivity pattern that is compatible with $\mathbf{U}$, by construction.
-
----
-
-# Transposed convolution
-
-A **transposed convolution** is a convolution where the implementation of the forward and backward passes
-are swapped.
-
-Therefore, a transposed convolution can be seen as the gradient of some
-convolution with respect to its input.
-
-Given a convolutional kernel $\mathbf{u}$,
-- the forward pass is implemented as $v(\mathbf{h}) = \mathbf{U}^T v(\mathbf{x})$ with appropriate reshaping, thereby effectively up-sampling an input $v(\mathbf{x})$ into a larger one;
-- the backward pass is computed by multiplying the loss by $\mathbf{U}$ instead of $\mathbf{U}^T$.
-
-Transposed convolutions are also referred to as fractionally-stride convolutions or deconvolutions (mistakenly).
-
----
-
-class: middle
-
-.center.width-70[![](figures/lec7/convolution-linear-transposed.png)]
-
----
-
-class: middle
-
+In summary,
 $$
 \begin{aligned}
-\mathbf{U}^T v(\mathbf{x}) &= v(\mathbf{h}) \\\\
-\begin{pmatrix}
-1 & 0 & 0 & 0 \\\\
-4 & 1 & 0 & 0 \\\\
-1 & 4 & 0 & 0 \\\\
-0 & 1 & 0 & 0 \\\\
-1 & 0 & 1 & 0 \\\\
-4 & 1 & 4 & 1 \\\\
-3 & 4 & 1 & 4 \\\\
-0 & 3 & 0 & 1 \\\\
-3 & 0 & 1 & 0 \\\\
-3 & 3 & 4 & 1 \\\\
-1 & 3 & 3 & 4 \\\\
-0 & 1 & 0 & 3 \\\\
-0 & 0 & 3 & 0 \\\\
-0 & 0 & 3 & 3 \\\\
-0 & 0 & 1 & 3 \\\\
-0 & 0 & 0 & 1
-\end{pmatrix}
-\begin{pmatrix}
-2 \\\\
-1 \\\\
-4 \\\\
-4
-\end{pmatrix} &=
-\begin{pmatrix}
-2 \\\\
-9 \\\\
-6 \\\\
-1 \\\\
-6 \\\\
-29 \\\\
-30 \\\\
-7 \\\\
-10 \\\\
-29 \\\\
-33 \\\\
-13 \\\\
-12 \\\\
-24 \\\\
-16 \\\\
-4
-\end{pmatrix}
+\theta^\* &= \arg \min\_\theta \max\_\phi V(\phi, \theta) \\\\
+&= \arg \min\_\theta \text{JSD}(p(\mathbf{x}) || q(\mathbf{x};\theta)).
 \end{aligned}$$
 
----
+Since $\text{JSD}(p(\mathbf{x}) || q(\mathbf{x};\theta))$ is minimum if and only if
+$$p(\mathbf{x}) = q(\mathbf{x};\theta)$$ for all $\mathbf{x}$, this proves that the minimax solution
+corresponds to a generative model that perfectly reproduces the true data distribution.
 
-class: middle, center
-
-.width-30[![](figures/lec7/no_padding_no_strides_transposed.gif)]
-
-.center[Transposed convolution (no padding, no stride)]
 
 ---
 
-# Deep convolutional GAN
+class: middle
 
-Given transposed convolutional layers, we are now equipped for building
-deep convolutional generative models.
+.center.width-90[![](figures/lec7/gan-gallery.png)]
 
-Radford et al (2015) identify the following guidelines to ensure stable training:
-
-.center.width-100[![](figures/lec7/dcgan-guidelines.png)]
+.center[(Goodfellow et al, 2014)]
 
 ---
 
-class: middle, center
+# DCGANs
 
+<br><br><br>
 .center.width-100[![](figures/lec7/dcgan.png)]
 
-.center[The DCGAN generator architecture (Radford et al, 2015)]
+.center[(Radford et al, 2015)]
 
 ---
 
@@ -417,39 +207,41 @@ class: middle, center
 
 .center.width-100[![](figures/lec7/arithmetic.png)]
 
-.center[Vector arithmetic in $\mathcal{Z}$-space (Radford et al, 2015)]
+.center[Vector arithmetic in latent space (Radford et al, 2015)]
 
 ---
 
-# Progressive growing of GANs
+# Open problems
 
-<br><br>
+Training a standard GAN often results in pathological behaviors:
 
-.center.width-100[![](figures/lec7/progressive-gan.png)]
+- *Oscillations* without convergence: contrary to standard loss minimization,
+  alternating stochastic gradient descent has no guarantee of convergence.
+- **Vanishing gradients**: when the classifier $d$ is too good, the value function saturates
+  and we end up with no gradient to update the generator (more on this later).
+- *Mode collapse*: the generator $g$ models very well a small sub-population,
+  concentrating on a few modes of the data distribution.
+- Performance is also difficult to assess in practice.
 
-.center[(Karras et al, 2017)]
+<br>
+.center.width-100[![](figures/lec7/mode-collapse.png)]
+
+.center[Mode collapse (Metz et al, 2016)]
 
 ---
 
 class: middle
 
-.center[
+## Cabinet of curiosities
 
-<iframe width="640" height="480" src="https://www.youtube.com/embed/XOxxPcy5Gr4?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
-
-.center[(Karras et al, 2017)]
-
-]
+While early results (2014-2016) were already impressive, a close inspection of the fake samples distribution $q(\mathbf{x};\theta)$ often revealed fundamental issues highlighting architectural limitations.
 
 ---
 
-# Cabinet of curiosities
+class: middle
 
-While state-of-the-art results are impressive, a close inspection of the fake samples distribution $p(\mathbf{x};\theta)$ often reveals fundamental issues highlighting architectural limitations.
+.center.width-100[![](figures/lec7/curiosity-cherrypicks.png)]
 
-These issues remain an open research problem.
-
-.center.width-80[![](figures/lec7/curiosity-cherrypicks.png)]
 .center[Cherry-picks (Goodfellow, 2016)]
 
 ---
@@ -478,26 +270,32 @@ class: middle
 
 ---
 
-class: center, middle
+class: middle
 
-# Wasserstein GAN
+# Wasserstein GANs
 
 ---
 
-# Vanishing gradients
+# Return of the Vanishing Gradients
 
-For most non-toy data distributions, the fake samples $\mathbf{x} \sim p(\mathbf{x};\theta)$
+For most non-toy data distributions, the fake samples $\mathbf{x} \sim q(\mathbf{x};\theta)$
 may be so bad initially that the response of $d$ saturates.
+
 At the limit, when $d$ is perfect given the current generator $g$,
 $$\begin{aligned}
-d(\mathbf{x};\phi) &= 1, \forall \mathbf{x} \sim p\_r(\mathbf{x}), \\\\
-d(\mathbf{x};\phi) &= 0, \forall \mathbf{x} \sim p(\mathbf{x};\theta).
+d(\mathbf{x};\phi) &= 1, \forall \mathbf{x} \sim p(\mathbf{x}), \\\\
+d(\mathbf{x};\phi) &= 0, \forall \mathbf{x} \sim q(\mathbf{x};\theta).
 \end{aligned}$$
 Therefore,
-$$V(\phi, \theta) =  \mathbb{E}\_{\mathbf{x} \sim p\_r(\mathbf{x})}\left[ \log d(\mathbf{x};\phi) \right] + \mathbb{E}\_{\mathbf{z} \sim p(\mathbf{z})}\left[ \log (1-d(g(\mathbf{z};\theta);\phi)) \right] = 0$$
-and $\nabla\_\theta V(\phi,\theta) = 0$, thereby halting gradient descent.
+$$V(\phi, \theta) =  \mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ \log d(\mathbf{x};\phi) \right] + \mathbb{E}\_{\mathbf{z} \sim p(\mathbf{z})}\left[ \log (1-d(g(\mathbf{z};\theta);\phi)) \right] = 0$$
+and $\nabla\_\theta V(\phi,\theta) = 0$, thereby **halting** gradient descent.
 
-Dilemma:
+---
+
+class: middle
+
+## Dilemma
+
 - If $d$ is bad, then $g$ does not have accurate feedback and the loss function cannot represent the reality.
 - If $d$ is too good, the gradients drop to 0, thereby slowing down or even halting the optimization.
 
@@ -514,6 +312,8 @@ where
 .center[![](figures/lec7/jsd.gif)]
 
 ---
+
+class: middle
 
 Notice how the Jensen-Shannon divergence poorly accounts for the metric structure of the space.
 
@@ -538,10 +338,11 @@ the other.
 Then,
 $$\text{W}\_1(p,q) = 4\times\frac{1}{4} + 2\times\frac{1}{4} + 3\times\frac{1}{2}=3$$
 
-
-.footnote[Credits: [EE559 Deep Learning](https://documents.epfl.ch/users/f/fl/fleuret/www/dlc/dlc-slides-10-gans.pdf) (Fleuret, 2018)]
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
 ---
+
+class: middle
 
 The Earth mover's distance is also known as the Wasserstein-1 distance and is defined as:
 $$\text{W}\_1(p, q) = \inf\_{\gamma \in \Pi(p,q)} \mathbb{E}\_{(x,y)\sim \gamma} \left[||x-y||\right]$$
@@ -558,6 +359,8 @@ class: middle
 
 ---
 
+class: middle
+
 Notice how the $\text{W}\_1$ distance does not saturate. Instead, it
  increases monotonically with the distance between modes:
 
@@ -571,19 +374,21 @@ For any two distributions $p$ and $q$,
 
 ---
 
-# Wasserstein GAN
+# Wasserstein GANs
 
 Given the attractive properties of the Wasserstein-1 distance, Arjovsky et al (2017) propose
 to learn a generative model by solving instead:
-$$\theta^\* = \arg \min\_\theta \text{W}\_1(p\_r(\mathbf{x})||p(\mathbf{x};\theta))$$
+$$\theta^\* = \arg \min\_\theta \text{W}\_1(p(\mathbf{x})||q(\mathbf{x};\theta))$$
 Unfortunately, the definition of $\text{W}\_1$ does not provide with an operational way of estimating it because of the intractable $\inf$.
 
 On the other hand, the Kantorovich-Rubinstein duality tells us that
-$$\text{W}\_1(p\_r(\mathbf{x})||p(\mathbf{x};\theta)) = \sup\_{||f||\_L \leq 1} \mathbb{E}\_{\mathbf{x} \sim p\_r(\mathbf{x})}\left[ f(\mathbf{x}) \right] - \mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x};\theta)} \left[f(\mathbf{x})\right]$$
+$$\text{W}\_1(p(\mathbf{x})||q(\mathbf{x};\theta)) = \sup\_{||f||\_L \leq 1} \mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ f(\mathbf{x}) \right] - \mathbb{E}\_{\mathbf{x} \sim q(\mathbf{x};\theta)} \left[f(\mathbf{x})\right]$$
 where the supremum is over all the 1-Lipschitz functions $f:\mathcal{X} \to \mathbb{R}$. That is, functions $f$ such that
 $$||f||\_L = \max\_{\mathbf{x},\mathbf{x}'} \frac{||f(\mathbf{x}) - f(\mathbf{x}')||}{||\mathbf{x} - \mathbf{x}'||} \leq 1.$$
 
 ---
+
+class: middle
 
 .center.width-80[![](figures/lec7/kr-duality.png)]
 
@@ -591,18 +396,19 @@ For $p = \frac{1}{4}\mathbf{1}\_{[1,2]} + \frac{1}{4}\mathbf{1}\_{[3,4]} + \frac
 and $q = \mathbf{1}\_{[5,7]}$,
 $$\begin{aligned}
 \text{W}\_1(p,q) &= 4\times\frac{1}{4} + 2\times\frac{1}{4} + 3\times\frac{1}{2}=3 \\\\
-&= \underbrace{\left(3\times \frac{1}{4} + 1\times\frac{1}{4}+2\times\frac{1}{2}\right)}\_{\mathbb{E}\_{\mathbf{x} \sim p\_r(\mathbf{x})}\left[ f(\mathbf{x}) \right]} - \underbrace{\left(-1\times\frac{1}{2}-1\times\frac{1}{2}\right)}\_{\mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x};\theta)}\left[f(\mathbf{x})\right]} = 3
+&= \underbrace{\left(3\times \frac{1}{4} + 1\times\frac{1}{4}+2\times\frac{1}{2}\right)}\_{\mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ f(\mathbf{x}) \right]} - \underbrace{\left(-1\times\frac{1}{2}-1\times\frac{1}{2}\right)}\_{\mathbb{E}\_{\mathbf{x} \sim q(\mathbf{x};\theta)}\left[f(\mathbf{x})\right]} = 3
 \end{aligned}
 $$
 
-
-.footnote[Credits: [EE559 Deep Learning](https://documents.epfl.ch/users/f/fl/fleuret/www/dlc/dlc-slides-10-gans.pdf) (Fleuret, 2018)]
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
 ---
 
+class: middle
+
 Using this result, the Wasserstein GAN algorithm consists in solving the minimax problem:
-$$\theta^\* = \arg \min\_\theta \max\_{\phi:||d(\cdot;\phi)||\_L \leq 1}  \mathbb{E}\_{\mathbf{x} \sim p\_r(\mathbf{x})}\left[ d(\mathbf{x};\phi) \right] - \mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x};\theta)} \left[d(\mathbf{x};\phi)\right]$$$$
-Note that this formulation is very close to the original GAN, except that:
+$$\theta^\* = \arg \min\_\theta \max\_{\phi:||d(\cdot;\phi)||\_L \leq 1}  \mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ d(\mathbf{x};\phi) \right] - \mathbb{E}\_{\mathbf{x} \sim q(\mathbf{x};\theta)} \left[d(\mathbf{x};\phi)\right]$$$$
+Note that this formulation is very close to the original GANs, except that:
 - The classifier $d:\mathcal{X} \to [0,1]$ is replaced by a critic function $d:\mathcal{X}\to \mathbb{R}$
   and its output is not interpreted through the cross-entropy loss;
 - There is a strong regularization on the form of $d$.
@@ -625,31 +431,321 @@ class: middle
 
 class: middle
 
-.center.width-80[![](figures/lec7/wgan-jsd.png)]
-
-.center[(Arjovsky et al, 2017)]
-
----
-
-class: middle
-
-.center.width-80[![](figures/lec7/wgan-w1.png)]
-
-.center[(Arjovsky et al, 2017)]
-
----
-
-class: middle
-
 .center.width-70[![](figures/lec7/wgan-gallery.png)]
 
 .center[(Arjovsky et al, 2017)]
 
 ---
 
-class: center, middle
+class: middle
 
-# Some applications
+# Convergence of GANs
+
+---
+
+class: middle
+
+.center[
+.width-48[![](figures/lec7/animation2.gif)]
+.width-48[![](figures/lec7/animation1.gif)]
+]
+
+Solving for saddle points is different from gradient descent.
+- Minimization problems yield *conservative* vector fields.
+- Min-max saddle point problems may yield **non-conservative** vector fields.
+
+.footnote[Credits: Ferenc Huszá, [GANs are Broken in More than One Way](https://www.inference.vc/my-notes-on-the-numerics-of-gans/), 2017.]
+
+
+
+---
+
+class: middle
+
+Following the notations of Mescheder et al (2018), the training objective for the two players can be described by an objective function of the form
+$$L(\theta,\phi) = \mathbb{E}\_{p(\mathbf{z})}\left[ f(d(g(\mathbf{z};\theta);\phi)) \right] + \mathbb{E}\_{p(\mathbf{x})}\left[f(-d(\mathbf{x};\phi))\right],$$
+where the goal of the generator is to minimizes the loss, whereas the discriminator tries to maximize it.
+
+- If $f(t)=-\log(1+\exp(-t))$, then we recover the original GAN objective.
+- if $f(t)=-t$ and and if we impose the Lipschitz constraint on $d$, then we recover Wassterstein GAN.
+
+---
+
+class: middle
+
+Training algorithms can be described as fixed points algorithms that apply some operator $F\_h(\theta,\phi)$ to the parameters values $(\theta,\phi)$.
+
+- For simultaneous gradient descent,
+$$F\_h(\theta,\phi) = (\theta,\phi) + h v(\theta,\phi)$$
+where $v(\theta,\phi)$ denotes the **gradient vector field**
+$$v(\theta,\phi):= \begin{pmatrix}
+-\nabla\_\theta L(\theta,\phi) \\\\
+\nabla\_\phi L(\theta,\phi)
+\end{pmatrix}.$$
+- Similarly, alternating gradient descent can be described by an operator $F\_h = F\_{2,h} \circ F\_{1,h}$, where $F\_{1,h}$ and $F\_{2,h}$ perform an update for the generator and discriminator, respectively.
+
+---
+
+class: middle
+
+## Local convergence near an equilibrium point
+
+Let us consider the Jacobian $F'\_h(\theta^\*,\phi^\*)$ at the equilibrium $(\theta^\*,\phi^\*)$:
+- if $F'\_h(\theta^\*,\phi^\*)$ has eigenvalues with absolute value bigger than 1, the training will generally not converge to $(\theta^\*,\phi^\*)$.
+- if all eigenvalues have absolute value smaller than 1, the training will converge to $(\theta^\*,\phi^\*)$.
+- if all eigenvalues values are on the unit circle, training can be convergent, divergent or neither.
+
+---
+
+class: middle
+
+For the (idealized) continuous system
+$$
+\begin{pmatrix}
+\dot{\theta}(t) \\\\
+\dot{\phi}(t)
+\end{pmatrix} =
+\begin{pmatrix}
+-\nabla\_\theta L(\theta,\phi) \\\\
+\nabla\_\phi L(\theta,\phi)
+\end{pmatrix},$$
+which corresponds to training GANs with infinitely small learning rate:
+- if all eigenvalues of the Jacobian $v'(\theta^\*,\phi^\*)$ at a stationary point $(\theta^\*,\phi^\*)$ have negative real-part, the continuous system converges locally to $(\theta^\*,\phi^\*)$;
+- if $v'(\theta^\*,\phi^\*)$ has eigenvalues with positive real-part, the continuous system is not locally convergent.
+- if all eigenvalues have zero real-part, it can be convergent, divergent or neither.
+
+---
+
+class: middle
+
+.width-100[![](figures/lec7/continuous-diverge.png)]
+
+.center[Continuous system: divergence.]
+
+.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
+
+---
+
+
+class: middle
+
+.width-100[![](figures/lec7/continuous-converge.png)]
+
+.center[Continuous system: convergence.]
+
+.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
+
+---
+
+class: middle
+
+.width-100[![](figures/lec7/discrete-diverge.png)]
+
+.center[Discrete system: divergence.]
+
+.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
+
+---
+
+
+class: middle
+
+.width-100[![](figures/lec7/discrete-converge.png)]
+
+.center[Discrete system: convergence.]
+
+.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
+
+---
+
+class: middle
+
+## Dirac-GAN: Vanilla GANs
+
+.width-100[![](figures/lec7/dirac-unreg.png)]
+
+On the Dirac-GAN toy problem, eigenvalues are $\\{ -f'(0)i, +f'(0)i \\}$.
+Therefore convergence is not guaranteed.
+
+.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
+
+---
+
+class: middle
+
+## Dirac-GAN: Wasserstein GANs
+
+.width-100[![](figures/lec7/dirac-wgan.png)]
+
+Eigenvalues are $\\{ -i, +i \\}$.
+Therefore convergence is not guaranteed.
+
+.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
+
+---
+
+class: middle
+
+## Dirac-GAN: Zero-centered gradient penalties
+
+.width-100[![](figures/lec7/dirac-reg.png)]
+
+A penalty on the squared norm of the gradients of the discriminator results in the regularization
+$$R\_1(\phi) = \frac{\gamma}{2} \mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ || \nabla\_\mathbf{x} d(\mathbf{x};\phi)||^2 \right].$$
+The resulting eigenvalues are $\\{ -\frac{\gamma}{2} \pm \sqrt{\frac{\gamma}{4} - f'(0)^2}\\}$.
+Therefore, for $\gamma>0$, all eigenvalues have negative real part, hence training is locally convergent!
+
+
+.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
+
+---
+
+class: middle
+
+.center.width-70[![](figures/lec7/reg1.png)]
+
+.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
+
+---
+
+class: middle
+
+.center.width-70[![](figures/lec7/reg2.png)]
+
+.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
+
+---
+
+class: middle
+
+.center.width-70[![](figures/lec7/reg3.png)]
+
+.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
+
+---
+
+class: middle
+
+# State of the art
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec7/timeline.png)]
+
+---
+
+# Progressive growing of GANs
+
+.center[
+
+Wasserstein GANs as baseline (Arjovsky et al, 2017) + <br>Gradient Penalty (Gulrajani, 2017) + (quite a few other tricks)
+
++
+
+]
+
+.center.width-100[![](figures/lec7/progressive-gan.png)]
+
+.center[(Karras et al, 2017)]
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec7/progressive-gan2.png)]
+
+.center[(Karras et al, 2017)]
+
+
+---
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/XOxxPcy5Gr4" frameborder="0" volume="0" allowfullscreen></iframe>
+
+(Karras et al, 2017)
+
+---
+
+# BigGANs
+
+.center[
+
+Self-attention GANs as baseline (Zhang et al, 2018) + Hinge loss objective (Lim and Ye, 2017; Tran et al, 2017) + Class information to $g$ with class-conditional batchnorm (de Vries et al, 2017) + Class information to $d$ with projection (Miyato and Koyama, 2018) + Half the learning rate of SAGAN, 2 $d$-steps per $g$-step   + Spectral normalization for both $g$ and $d$ + Orthogonal initialization (Saxe et al, 2014) + Large minibatches (2048) + Large number of convolution filters + Shared embedding and hierarchical latent spaces + Orthogonal regularization + Truncated sampling + (quite a few other tricks)
+
+]
+
+<br>
+.center.width-100[![](figures/lec7/biggan.png)]
+.center[(Brock et al, 2018)]
+
+---
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/YY6LrQSxIbc" frameborder="0" allowfullscreen></iframe>
+
+(Brock et al, 2018)
+
+---
+
+# StyleGAN
+
+.center[
+
+Progressive GANs as baseline (Karras et al, 2017) + Non-saturating loss instead of WGAN-GP + $R\_1$ regularization (Mescheder et al, 2018) + (quite a few other tricks)
+
++
+
+.width-60[![](figures/lec7/stylegan.png)]
+
+]
+
+
+---
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/kSLJriaOumA" frameborder="0" allowfullscreen></iframe>
+
+(Karras et al, 2018)
+
+---
+
+class: middle
+
+The StyleGAN generator $g$ is so powerful that it can re-generate arbitrary faces.
+
+.center[
+.width-30[![](figures/lec7/stylegan-gilles.png)] &nbsp;
+.width-30[![](figures/lec7/stylegan-damien.png)]
+]
+
+---
+
+class: middle
+
+.center[.width-80[![](figures/lec7/stylegan-interpolation.jpg)]]
+
+---
+
+class: middle
+
+.center[
+.width-30[![](figures/lec7/stylegan-damien-1.png)] &nbsp;
+.width-30[![](figures/lec7/stylegan-damien-2.png)]
+
+.width-30[![](figures/lec7/stylegan-damien-3.png)] &nbsp;
+.width-30[![](figures/lec7/stylegan-damien-4.png)]
+]
+
+---
+
+class: middle
+
+# Applications
 
 ---
 
@@ -659,7 +755,9 @@ $p(\mathbf{z})$ need not be a random noise distribution.
 
 ---
 
-# Image-to-image translation
+class: middle
+
+## Image-to-image translation
 
 .center[
 
@@ -667,27 +765,31 @@ $p(\mathbf{z})$ need not be a random noise distribution.
 
 ![](figures/lec7/horse2zebra.gif)
 
-.center[(Zhu et al, 2017)]
+.center[CycleGANs (Zhu et al, 2017)]
 
 ]
+
+---
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/p5U4NgVGAwg" frameborder="0" allowfullscreen></iframe>
+
+GauGAN: Changing sketches into photorealistic masterpieces (NVIDIA, 2019)
+
+---
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/3AIpPlzM_qs" frameborder="0" volume="0" allowfullscreen></iframe>
+
+High-resolution image synthesis (Wang et al, 2017)
 
 ---
 
 class: middle
 
-.center[
-
-<iframe width="640" height="480" src="https://www.youtube.com/embed/3AIpPlzM_qs?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
-
-.center[(Wang et al, 2017)]
-
-]
-
----
-
-# Captioning
-
-<br>
+## Captioning
 
 .width-100[![](figures/lec7/caption1.png)]
 
@@ -695,12 +797,11 @@ class: middle
 
 .center[(Shetty et al, 2017)]
 
-
 ---
 
-# Text-to-image synthesis
+class: middle
 
-<br><br>
+## Text-to-image synthesis
 
 .center[
 
@@ -724,33 +825,54 @@ class: middle
 
 ---
 
-# Unsupervised machine translation
+class: middle
 
-<br>
+##  Music generation
+
+.center.width-100[![](figures/lec7/musegan.png)]
 
 .center[
 
-.width-100[![](figures/lec7/umt1.png)]
-
-.center[(Lample et al, 2018)]
+<audio src="https://salu133445.github.io/musegan/audio/best_samples.mp3" type="audio/mpeg" controls="" controlslist="nodownload">Your browser does not support the audio element.</audio>
 
 ]
+
+.center[MuseGAN (Dong et al, 2018)]
 
 ---
 
 class: middle
 
-.center[
+## Accelerating scientific simulators
 
-.width-100[![](figures/lec7/umt2.png)]
-
-.center[(Lample et al, 2018)]
-
+.grid[
+.kol-2-3[.width-100[![](figures/lec7/calogan1.png)]]
+.kol-1-3[<br>.width-100[![](figures/lec7/calogan2.png)]]
 ]
+
+.center[Learning particle physics (Paganini et al, 2017)]
+
+???
+
+https://arxiv.org/pdf/1712.10321.pdf
 
 ---
 
-# Brain reading
+class: middle
+
+.center.width-70[![](figures/lec7/cosmo.png)]
+
+.center[Learning cosmological models (Rodriguez et al, 2018)]
+
+???
+
+https://arxiv.org/pdf/1801.09070.pdf
+
+---
+
+class: middle
+
+## Brain reading
 
 .center[
 
@@ -774,15 +896,11 @@ class: middle
 
 ---
 
-class: middle
+class: middle, center, black-slide
 
-.center[
+<iframe width="600" height="450" src="https://www.youtube.com/embed/jsp1KaM-avU?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
 
-<iframe width="640" height="480" src="https://www.youtube.com/embed/jsp1KaM-avU?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
-
-.center[(Shen et al, 2018)]
-
-]
+Brain reading (Shen et al, 2018)
 
 ---
 
@@ -795,7 +913,6 @@ The end.
 
 # References
 
-- [EE-559 Deep learning](https://documents.epfl.ch/users/f/fl/fleuret/www/dlc/) (Fleuret, 2018)
-- [Tutorial: Generative adversarial networks](https://arxiv.org/abs/1701.00160) (Goodfellow, 2016)
-- [From GAN to WGAN](https://lilianweng.github.io/lil-log/2017/08/20/from-GAN-to-WGAN.html) (Weng, 2017)
-- [Wasserstein GAN and the Kantorovich-Rubinstein Duality](https://vincentherrmann.github.io/blog/wasserstein/) (Herrmann, 2017)
+- Goodfellow, I., Pouget-Abadie, J., Mirza, M., Xu, B., Warde-Farley, D., Ozair, S., ... & Bengio, Y. (2014). Generative adversarial nets. In Advances in neural information processing systems (pp. 2672-2680).
+- Arjovsky, M., Chintala, S., & Bottou, L. (2017). Wasserstein gan. arXiv preprint arXiv:1701.07875.
+- Mescheder, L., Geiger, A., & Nowozin, S. (2018). Which training methods for GANs do actually Converge?. arXiv preprint arXiv:1801.04406.

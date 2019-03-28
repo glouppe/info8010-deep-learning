@@ -8,6 +8,10 @@ Lecture 6: Auto-encoders and generative models
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](g.louppe@uliege.be)
 
+???
+
+R: add https://avdnoord.github.io/homepage/vqvae/ as application
+
 ---
 
 # Today
