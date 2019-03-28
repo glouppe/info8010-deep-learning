@@ -41,7 +41,8 @@ Learn a model of the data.
 .kol-1-3.width-100[![](figures/lec7/christies.jpg)]
 ]
 
-
+<br><br>
+.italic.center["Generative adversarial networks is the coolest idea<br> in deep learning in the last 20 years." -- Yann LeCun.]
 
 ---
 
@@ -119,9 +120,9 @@ class: middle
 
 ## Game analysis
 
-Let us consider **value function** $V(\phi, \theta)$.
+Let us consider the **value function** $V(\phi, \theta)$.
 
-- $V(\phi, \theta)$ is high if $d$ is good at recognizing true from generated samples.
+- For a fixed $g$, $V(\phi, \theta)$ is high if $d$ is good at recognizing true from generated samples.
 
 - If $d$ is the best classifier given $g$, and if $V$ is high, then this implies that
 the generator is bad at reproducing the data distribution.
@@ -218,7 +219,7 @@ Training a standard GAN often results in pathological behaviors:
 - *Oscillations* without convergence: contrary to standard loss minimization,
   alternating stochastic gradient descent has no guarantee of convergence.
 - **Vanishing gradients**: when the classifier $d$ is too good, the value function saturates
-  and we end up with no gradient to update the generator (more on this later).
+  and we end up with no gradient to update the generator.
 - *Mode collapse*: the generator $g$ models very well a small sub-population,
   concentrating on a few modes of the data distribution.
 - Performance is also difficult to assess in practice.
@@ -441,6 +442,10 @@ class: middle
 
 # Convergence of GANs
 
+???
+
+Check https://mitliagkas.github.io/ift6085/ift-6085-lecture-14-notes.pdf
+
 ---
 
 class: middle
@@ -454,7 +459,7 @@ Solving for saddle points is different from gradient descent.
 - Minimization problems yield *conservative* vector fields.
 - Min-max saddle point problems may yield **non-conservative** vector fields.
 
-.footnote[Credits: Ferenc Huszá, [GANs are Broken in More than One Way](https://www.inference.vc/my-notes-on-the-numerics-of-gans/), 2017.]
+.footnote[Credits: Ferenc Huszár, [GANs are Broken in More than One Way](https://www.inference.vc/my-notes-on-the-numerics-of-gans/), 2017.]
 
 
 
@@ -495,6 +500,8 @@ Let us consider the Jacobian $F'\_h(\theta^\*,\phi^\*)$ at the equilibrium $(\th
 - if all eigenvalues have absolute value smaller than 1, the training will converge to $(\theta^\*,\phi^\*)$.
 - if all eigenvalues values are on the unit circle, training can be convergent, divergent or neither.
 
+In particular, Mescheder et al (2017) show that all eigenvalues can be forced to remain within the unit ball if and only if the learning rate $h$ is made sufficiently small.
+
 ---
 
 class: middle
@@ -509,7 +516,7 @@ $$
 -\nabla\_\theta L(\theta,\phi) \\\\
 \nabla\_\phi L(\theta,\phi)
 \end{pmatrix},$$
-which corresponds to training GANs with infinitely small learning rate:
+which corresponds to training GANs with infinitely small learning rate $h \to 0$:
 - if all eigenvalues of the Jacobian $v'(\theta^\*,\phi^\*)$ at a stationary point $(\theta^\*,\phi^\*)$ have negative real-part, the continuous system converges locally to $(\theta^\*,\phi^\*)$;
 - if $v'(\theta^\*,\phi^\*)$ has eigenvalues with positive real-part, the continuous system is not locally convergent.
 - if all eigenvalues have zero real-part, it can be convergent, divergent or neither.
@@ -541,7 +548,7 @@ class: middle
 
 .width-100[![](figures/lec7/discrete-diverge.png)]
 
-.center[Discrete system: divergence.]
+.center[Discrete system: divergence ($h=1$, too large).]
 
 .footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
 
@@ -552,7 +559,7 @@ class: middle
 
 .width-100[![](figures/lec7/discrete-converge.png)]
 
-.center[Discrete system: convergence.]
+.center[Discrete system: convergence ($h=0.5$, small enough).]
 
 .footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
 
@@ -773,17 +780,17 @@ class: middle
 
 class: middle, center, black-slide
 
-<iframe width="600" height="450" src="https://www.youtube.com/embed/p5U4NgVGAwg" frameborder="0" allowfullscreen></iframe>
+<iframe width="600" height="450" src="https://www.youtube.com/embed/3AIpPlzM_qs" frameborder="0" volume="0" allowfullscreen></iframe>
 
-GauGAN: Changing sketches into photorealistic masterpieces (NVIDIA, 2019)
+High-resolution image synthesis (Wang et al, 2017)
 
 ---
 
 class: middle, center, black-slide
 
-<iframe width="600" height="450" src="https://www.youtube.com/embed/3AIpPlzM_qs" frameborder="0" volume="0" allowfullscreen></iframe>
+<iframe width="600" height="450" src="https://www.youtube.com/embed/p5U4NgVGAwg" frameborder="0" allowfullscreen></iframe>
 
-High-resolution image synthesis (Wang et al, 2017)
+GauGAN: Changing sketches into photorealistic masterpieces (NVIDIA, 2019)
 
 ---
 
