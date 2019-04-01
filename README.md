@@ -22,8 +22,8 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2019.
 - Lecture 5 (March 8): [Recurrent neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture5.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec5.pdf)]
 - Lecture 6 (March 15): [Auto-encoders and generative models](https://glouppe.github.io/info8010-deep-learning/?p=lecture6.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec6.pdf)]
 - Lecture 7 (March 29): [Generative adversarial networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture7.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec7.pdf)] [Room change: B7a A300]
-- Lecture 8 (April 5): Unsupervised Learning
-- Lecture 9 (April 26): Applications
+- Lecture 8 (April 5): Uncertainty
+- Lecture 9 (April 26): Mysteries and frontiers
 - Lecture 10 (May 3): Student presentations 1
 - Lecture 11 (May 10): Student presentations 2
 - Lecture 12 (May 17): Student presentations 3

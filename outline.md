@@ -12,6 +12,8 @@ Prof. Gilles Louppe<br>
 
 https://www.cs.toronto.edu/~duvenaud/courses/csc2541/index.html projects
 
+R: add one lecture on computer vision (segmentation, localization, tracking, etc) + NLP
+
 ---
 
 # Logistics
@@ -97,8 +99,8 @@ This course is part of the many other courses available at ULiège and related t
 - Lecture 5: Recurrent neural networks
 - Lecture 6: Auto-encoders and generative models
 - Lecture 7: Generative adversarial networks
-- Lecture 8: Bayesian deep learning
-- Lecture 9: Applications
+- Lecture 8: Uncertainty
+- Lecture 9: Mysteries and frontiers
 
 ---
 
