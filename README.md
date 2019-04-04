@@ -24,8 +24,6 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2019.
 - Lecture 7 (March 29): [Generative adversarial networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture7.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec7.pdf)]
 - Lecture 8 (April 5): [Uncertainty](https://glouppe.github.io/info8010-deep-learning/?p=lecture8.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec8.pdf)]
 - Lecture 9 (April 26): Mysteries and frontiers
-
-
 - Lecture 10 (May 3): Student presentations 1
 - Lecture 11 (May 10): Student presentations 2
 - Lecture 12 (May 17): Student presentations 3
