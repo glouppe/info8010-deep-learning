@@ -8,6 +8,10 @@ Lecture 2: Neural networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](g.louppe@uliege.be)
 
+???
+
+R: regression -> assume p(y|x) is Gaussian, hence the minimization of the mean squared error.
+
 ---
 
 # Today

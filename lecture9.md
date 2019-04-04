@@ -19,6 +19,8 @@ http://introtodeeplearning.com/materials/2019_6S191_L6.pdf
 R: check generalization from https://m2dsupsdlclass.github.io/lectures-labs/slides/08_expressivity_optimization_generalization/index.html#87
 http://web.stanford.edu/class/cs224n/slides/cs224n-2019-lecture14-transformers.pdf
 
+frontiers: biological plausibility
+
 ---
 
 TBD.
