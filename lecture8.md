@@ -26,6 +26,12 @@ class: middle
 .italic["Every time a scientific paper presents a bit of data, it's accompanied
 by an .bold[error bar] – a quiet but insistent reminder that no knowledge is complete or perfect. It's a .bold[calibration of how much we trust what we think we know]." ― Carl Sagan.]
 
+???
+
+Knowledge is an artefact. It is a mental construct.
+
+Uncertainty is how much we trust this construct.
+
 ---
 
 class: middle
