@@ -13,6 +13,7 @@ Prof. Gilles Louppe<br>
 R: add https://avdnoord.github.io/homepage/vqvae/ as application
 R: add mentions of the manifold hypothesis https://uvadlc.github.io/lectures/sep2018/lecture7-unsupervised.pdf
 R: add denoising ae
+R: check http://mlss2018.net.ar/slides/Adams-1.pdf
 
 ---
 
