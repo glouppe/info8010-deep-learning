@@ -8,6 +8,10 @@ Lecture 8: Uncertainty
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](g.louppe@uliege.be)
 
+???
+
+R: Mention ontological uncertainty
+
 ---
 
 # Today
