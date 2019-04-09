@@ -15,6 +15,8 @@ R: add mentions of the manifold hypothesis https://uvadlc.github.io/lectures/sep
 R: add denoising ae
 R: check http://mlss2018.net.ar/slides/Adams-1.pdf
 
+http://paulrubenstein.co.uk/variational-autoencoders-are-not-autoencoders/
+
 ---
 
 # Today
