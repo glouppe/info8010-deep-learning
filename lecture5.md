@@ -13,6 +13,8 @@ Prof. Gilles Louppe<br>
 R: add https://ai.googleblog.com/2018/05/duplex-ai-system-for-natural-conversation.html
 R: learning to learn
 
+https://arxiv.org/pdf/1904.10278.pdf
+
 ---
 
 # Today

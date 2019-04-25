@@ -15,6 +15,8 @@ R: add regularization chapter -> dropout, dropconnect, others?
 R: 1d plot of the proxy when the step size is too large? (wider proxy)
 R: add graph of computation for BN and backprop (dependency on samples from the minibatch)
 
+R: check https://joanbruna.github.io/MathsDL-spring18/?fbclid=IwAR0Ugn0GhW4fHHuhYYv005zibgoToeaG58wujX5Ej179tDBbJFZGNgaONjI
+
 ---
 
 # Today

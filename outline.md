@@ -17,6 +17,19 @@ R: add one lecture to better connect back to AI?
 R: add one lecture on attention/transformer/other architectures?
 https://jalammar.github.io/illustrated-transformer/
 https://staff.fnwi.uva.nl/s.abnar/?p=108
+R: science of dl https://people.csail.mit.edu/madry/6.883/
+
+
+mysteries of deep learning
+-> better generalization than they should (over-param)
+-> lottery ticket
+-> adversarial examples
+http://introtodeeplearning.com/materials/2019_6S191_L6.pdf
+
+R: check generalization from https://m2dsupsdlclass.github.io/lectures-labs/slides/08_expressivity_optimization_generalization/index.html#87
+http://web.stanford.edu/class/cs224n/slides/cs224n-2019-lecture14-transformers.pdf
+
+frontiers: biological plausibility
 
 ---
 
@@ -104,7 +117,7 @@ This course is part of the many other courses available at ULiège and related t
 - Lecture 6: Auto-encoders and generative models
 - Lecture 7: Generative adversarial networks
 - Lecture 8: Uncertainty
-- Lecture 9: Mysteries and frontiers
+- Lecture 9: Adversarial attacks and defenses
 
 ---
 

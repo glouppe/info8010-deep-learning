@@ -23,7 +23,10 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2019.
 - Lecture 6 (March 15): [Auto-encoders and generative models](https://glouppe.github.io/info8010-deep-learning/?p=lecture6.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec6.pdf)]
 - Lecture 7 (March 29): [Generative adversarial networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture7.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec7.pdf)]
 - Lecture 8 (April 5): [Uncertainty](https://glouppe.github.io/info8010-deep-learning/?p=lecture8.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec8.pdf)]
-- Lecture 9 (April 26): Mysteries and frontiers
+- Lecture 9 (April 26): [Adversarial attacks and defense](https://glouppe.github.io/info8010-deep-learning/?p=lecture9.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec9.pdf)]
+- All lectures [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec-all.pdf)]
+
+
 - Lecture 10 (May 3): Student presentations 1
 - Lecture 11 (May 10): Student presentations 2
 - Lecture 12 (May 17): Student presentations 3
@@ -40,7 +43,7 @@ See instructions in [`project.md`](https://github.com/glouppe/info8010-deep-lear
 #### Agenda
 
 - Project proposal, due by **March 1, 2019 at 23:59**.
-- Project code and report, due by **April 26, 2019 at 23:59**.
+- Project code and report, due by **May 1, 2019 at 23:59**.
 - Project presentations on May 3, 10 and 17, 2019.
 
 Projects should be submitted through the [Montefiore submission platform](https://submit.montefiore.ulg.ac.be).
