@@ -12,8 +12,6 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2019.
 
 ## Slides
 
-(Tentative and subject to change!)
-
 - [Outline](https://glouppe.github.io/info8010-deep-learning/?p=outline.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/outline.pdf)]
 - Lecture 1 (February 8): [Fundamentals of machine learning](https://glouppe.github.io/info8010-deep-learning/?p=lecture1.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec1.pdf)]
 - Lecture 2 (February 15): [Neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture2.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec2.pdf)]
@@ -26,6 +24,7 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2019.
 - Lecture 9 (April 26): [Adversarial attacks and defense](https://glouppe.github.io/info8010-deep-learning/?p=lecture9.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec9.pdf)]
 - All lectures [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec-all.pdf)]
 
+Project presentations:
 
 - Lecture 10 (May 3): Student presentations 1
 - Lecture 11 (May 10): Student presentations 2
