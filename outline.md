@@ -31,6 +31,8 @@ http://web.stanford.edu/class/cs224n/slides/cs224n-2019-lecture14-transformers.p
 
 frontiers: biological plausibility
 
+check Nando's https://www.youtube.com/watch?v=z8937RleAZo
+
 ---
 
 # Logistics

@@ -21,6 +21,7 @@ R: LeCun depart's from Nature's imitation -> backprop
    https://twitter.com/zacharylipton/status/1098996661030920194?s=03
 
 R: picture of the electrode in cat's eye + picture of the cat (somewhere in a youtube video)
+->https://www.youtube.com/watch?v=IOHayh06LJ4&feature=youtu.be
 R: check http://www.andreykurenkov.com/writing/ai/a-brief-history-of-neural-nets-and-deep-learning/ for history
 
 ---
