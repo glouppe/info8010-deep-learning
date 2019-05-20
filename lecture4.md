@@ -17,6 +17,8 @@ R: add graph of computation for BN and backprop (dependency on samples from the 
 
 R: check https://joanbruna.github.io/MathsDL-spring18/?fbclid=IwAR0Ugn0GhW4fHHuhYYv005zibgoToeaG58wujX5Ej179tDBbJFZGNgaONjI
 
+R: why weight initialization is important https://twitter.com/hardmaru/status/1127809708910211072?s=03  DEMO
+
 ---
 
 # Today

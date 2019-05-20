@@ -15,6 +15,10 @@ R: overfitting plot -> make the same with a large nn to show it does NOT overfit
 http://ai.stanford.edu/~nilsson/QAI/qai.pdf
 https://joanbruna.github.io/MathsDL-spring18/?fbclid=IwAR0Ugn0GhW4fHHuhYYv005zibgoToeaG58wujX5Ej179tDBbJFZGNgaONjI
 
+model of high complexity -> illustrate with the cat example (template matching like), which does not work very quickly
+
+R: gradient descent -> rewrite L(theta0+eps) as L(eps;theta0) (theta0 is fixed)
+
 ---
 
 # Today
