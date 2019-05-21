@@ -9,5 +9,5 @@ dependencies:
   - matplotlib
   - scikit-learn
   - jupyter
-  - pytorch
-  - torchvision
+  - pytorch-cpu
+  - torchvision-cpu
