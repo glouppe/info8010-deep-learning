@@ -17,6 +17,8 @@ R: check http://mlss2018.net.ar/slides/Adams-1.pdf
 
 http://paulrubenstein.co.uk/variational-autoencoders-are-not-autoencoders/
 
+R: world models as an application of vaes+rnn
+
 ---
 
 # Today
