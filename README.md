@@ -35,6 +35,8 @@ Project presentations:
 - Tutorial (March 8): Tensorflow [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/tutorial-tensorflow.pdf)]
 - Tutorial (March 15): Pytorch [[Notebook](https://github.com/glouppe/info8010-deep-learning/blob/master/code/pytorch-tutorial.ipynb)]
 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/glouppe/info8010-deep-learning/master)
+
 ## Project
 
 See instructions in [`project.md`](https://github.com/glouppe/info8010-deep-learning/blob/master/project.md).
