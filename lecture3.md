@@ -24,6 +24,8 @@ R: picture of the electrode in cat's eye + picture of the cat (somewhere in a yo
 ->https://www.youtube.com/watch?v=IOHayh06LJ4&feature=youtu.be
 R: check http://www.andreykurenkov.com/writing/ai/a-brief-history-of-neural-nets-and-deep-learning/ for history
 
+R: better, more fluid explanation on the issues with mlp and why convolution is a solution
+
 ---
 
 # Today
