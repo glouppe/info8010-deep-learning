@@ -398,7 +398,7 @@ $$\begin{aligned}
 s\_t  &=  \rho\_1 s\_{t-1} + (1-\rho\_1) g\_t \\\\
 \hat{s}\_t &= \frac{s\_t}{1-\rho\_1^t} \\\\
 r\_t  &=  \rho\_2 r\_{t-1} + (1-\rho\_2) g\_t \odot g\_t \\\\
-\hat{r}\_t &= \frac{s\_t}{1-\rho\_2^t} \\\\
+\hat{r}\_t &= \frac{r\_t}{1-\rho\_2^t} \\\\
 \theta\_{t+1} &= \theta\_t - \gamma \frac{\hat{s}\_t}{\delta+\sqrt{\hat{r}\_t}}
 \end{aligned}$$
 
