@@ -11,6 +11,7 @@ Prof. Gilles Louppe<br>
 ???
 
 R: overfitting plot -> make the same with a large nn to show it does NOT overfit!! increasing the numbers of parameters results in regularization
+-> https://arxiv.org/abs/1812.11118
 
 http://ai.stanford.edu/~nilsson/QAI/qai.pdf
 https://joanbruna.github.io/MathsDL-spring18/?fbclid=IwAR0Ugn0GhW4fHHuhYYv005zibgoToeaG58wujX5Ej179tDBbJFZGNgaONjI
