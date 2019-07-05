@@ -8,6 +8,10 @@ Lecture 9: Adversarial attacks and defense
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](g.louppe@uliege.be)
 
+???
+
+R: make it more formal
+
 ---
 
 # Today

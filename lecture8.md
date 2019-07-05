@@ -12,6 +12,8 @@ Prof. Gilles Louppe<br>
 
 R: Mention ontological uncertainty
 
+R: check https://drive.google.com/file/d/1G6I1hOxg9zN3PmKqm7sahXw6DvYmyYW3/view?usp=sharing
+
 ---
 
 # Today

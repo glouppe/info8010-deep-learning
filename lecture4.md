@@ -10,6 +10,7 @@ Prof. Gilles Louppe<br>
 
 ???
 
+R (exam): better explain the interplay in the terms of the tradeoffs of large-scale learning
 R: why do we want the information to flow?
 R: add regularization chapter -> dropout, dropconnect, others?
 R: 1d plot of the proxy when the step size is too large? (wider proxy)

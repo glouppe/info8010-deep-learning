@@ -13,7 +13,7 @@ Prof. Gilles Louppe<br>
 https://www.cs.toronto.edu/~duvenaud/courses/csc2541/index.html projects
 
 R: add one lecture on computer vision (segmentation, localization, tracking, etc) + NLP
-R: add one lecture to better connect back to AI?
+R: add one lecture to better connect back to AI? -> deep rl?
 R: add one lecture on attention/transformer/other architectures?
 https://jalammar.github.io/illustrated-transformer/
 https://staff.fnwi.uva.nl/s.abnar/?p=108

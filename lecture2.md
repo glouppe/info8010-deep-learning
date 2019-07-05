@@ -13,6 +13,8 @@ Prof. Gilles Louppe<br>
 R: regression -> assume p(y|x) is Gaussian, hence the minimization of the mean squared error.
 R: check http://www.andreykurenkov.com/writing/ai/a-brief-history-of-neural-nets-and-deep-learning/ for history
 
+R: trade-offs is not clear, explain better how the terms impact each other
+
 ---
 
 # Today

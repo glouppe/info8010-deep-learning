@@ -20,6 +20,10 @@ model of high complexity -> illustrate with the cat example (template matching l
 
 R: gradient descent -> rewrite L(theta0+eps) as L(eps;theta0) (theta0 is fixed)
 
+R: check https://drive.google.com/file/d/172peB-2VDgX8EhK81v473SQL9Xk1wIoR/view?usp=sharing
+
+R: add one lecture on deep rl?
+
 ---
 
 # Today
