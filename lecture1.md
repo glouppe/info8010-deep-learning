@@ -16,10 +16,6 @@ R: overfitting plot -> make the same with a large nn to show it does NOT overfit
 http://ai.stanford.edu/~nilsson/QAI/qai.pdf
 https://joanbruna.github.io/MathsDL-spring18/?fbclid=IwAR0Ugn0GhW4fHHuhYYv005zibgoToeaG58wujX5Ej179tDBbJFZGNgaONjI
 
-model of high complexity -> illustrate with the cat example (template matching like), which does not work very quickly
-
-R: gradient descent -> rewrite L(theta0+eps) as L(eps;theta0) (theta0 is fixed)
-
 R: check https://drive.google.com/file/d/172peB-2VDgX8EhK81v473SQL9Xk1wIoR/view?usp=sharing
 
 R: add one lecture on deep rl?
@@ -135,6 +131,39 @@ This is a mushroom.
 
 ---
 
+class: middle, center
+
+Writing a computer program that sees?
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec1/cat1.png)]
+
+---
+
+count: false
+class: black-slide
+
+.center.width-60[![](figures/lec1/cat2.png)]
+
+---
+
+count: false
+class: black-slide, middle
+
+.center.width-80[![](figures/lec1/cat3.png)]
+
+---
+
+count: false
+class: black-slide, middle
+
+.center.width-80[![](figures/lec1/cat4.png)]
+
+---
+
 class: middle
 
 Extracting semantic information requires models of **high complexity**, which cannot be designed by hand.
@@ -242,6 +271,14 @@ Speech synthesis and question answering (Google, 2018)
 
 class: middle, center, black-slide
 
+<iframe width="600" height="450" src="https://www.youtube.com/embed/Khuj4ASldmU" frameborder="0" allowfullscreen></iframe>
+
+Artistic style transfer (Ruder et al, 2016)
+
+---
+
+class: middle, center, black-slide
+
 <iframe width="600" height="450" src="https://www.youtube.com/embed/kSLJriaOumA" frameborder="0" allowfullscreen></iframe>
 
 Image generation (Karras et al, 2018)
@@ -321,7 +358,9 @@ class: middle
 
 ???
 
-Same story for storage, which allows for larger dataset.
+R: Same story for storage, which allows for larger dataset.
+R: add datasets
+R: add pytorch, to illustrate it is easy
 
 ---
 

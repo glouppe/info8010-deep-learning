@@ -315,7 +315,7 @@ Let $\mathcal{L}(\theta)$ denote a loss function defined over model parameters $
 To minimize $\mathcal{L}(\theta)$, **gradient descent** uses local linear information to iteratively move towards a (local) minimum.
 
 For $\theta\_0 \in \mathbb{R}^d$, a first-order approximation around $\theta\_0$ can be defined as
-$$\hat{\mathcal{L}}(\theta\_0 + \epsilon) = \mathcal{L}(\theta\_0) + \epsilon^T\nabla\_\theta \mathcal{L}(\theta\_0) + \frac{1}{2\gamma}||\epsilon||^2.$$
+$$\hat{\mathcal{L}}(\epsilon; \theta\_0) = \mathcal{L}(\theta\_0) + \epsilon^T\nabla\_\theta \mathcal{L}(\theta\_0) + \frac{1}{2\gamma}||\epsilon||^2.$$
 
 .center.width-60[![](figures/lec2/gd-good-0.png)]
 
@@ -323,9 +323,9 @@ $$\hat{\mathcal{L}}(\theta\_0 + \epsilon) = \mathcal{L}(\theta\_0) + \epsilon^T\
 
 class: middle
 
-A minimizer of the approximation $\hat{\mathcal{L}}(\theta\_0 + \epsilon)$ is given for
+A minimizer of the approximation $\hat{\mathcal{L}}(\epsilon; \theta\_0)$ is given for
 $$\begin{aligned}
-\nabla\_\epsilon \hat{\mathcal{L}}(\theta\_0 + \epsilon) &= 0 \\\\
+\nabla\_\epsilon \hat{\mathcal{L}}(\epsilon; \theta\_0) &= 0 \\\\
  &= \nabla\_\theta \mathcal{L}(\theta\_0) + \frac{1}{\gamma} \epsilon,
 \end{aligned}$$
 which results in the best improvement for the step $\epsilon = -\gamma \nabla\_\theta \mathcal{L}(\theta\_0)$.
@@ -871,10 +871,15 @@ $$F(x) = \sum\_{i \leq q} v\_i \sigma(w\_i^T x + b\_i)$$
 satisfies
 $$\sup\_{x \in I\_p} |f(x) - F(x)| < \epsilon.$$
 
-- It guarantees that even a single hidden-layer network can represent any classification
+---
+
+class: middle
+
+The universal approximation theorem
+- guarantees that even a single hidden-layer network can represent any classification
   problem in which the boundary is locally linear (smooth);
-- It does not inform about good/bad architectures, nor how they relate to the optimization procedure.
-- The universal approximation theorem generalizes to any non-polynomial (possibly unbounded) activation function, including the ReLU (Leshno, 1993).
+- does not inform about good/bad architectures, nor how they relate to the optimization procedure.
+- generalizes to any non-polynomial (possibly unbounded) activation function, including the ReLU (Leshno, 1993).
 
 ---
 

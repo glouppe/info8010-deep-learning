@@ -15,16 +15,14 @@ R: Beyond classification -> e.g., UNet for segmentation
 R: highlight and emphasize this idea that is applied over and over:
 - detection of patterns at specific locations (convolution)
 - detection of the presence of these patterns (regardless of the position) (pooling)
-R: analyze in more details the role of skip connections!!
-R: LeCun depart's from Nature's imitation -> backprop
-   analogy with bat planes
-   https://twitter.com/zacharylipton/status/1098996661030920194?s=03
 
-R: picture of the electrode in cat's eye + picture of the cat (somewhere in a youtube video)
-->https://www.youtube.com/watch?v=IOHayh06LJ4&feature=youtu.be
+R: analyze in more details the role of skip connections!!
+
 R: check http://www.andreykurenkov.com/writing/ai/a-brief-history-of-neural-nets-and-deep-learning/ for history
 
 R: better, more fluid explanation on the issues with mlp and why convolution is a solution
+
+R: better discuss the effect of depth on the effective receptive field
 
 ---
 
@@ -67,7 +65,19 @@ class: middle, black-slide
 
 .center[
 
-<iframe width="640" height="480" src="https://www.youtube.com/embed/y_l4kQ5wjiw?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
+<iframe width="640" height="480" src="https://www.youtube.com/embed/IOHayh06LJ4?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
+
+]
+
+.center[Hubel and Wiesel]
+
+---
+
+class: middle, black-slide
+
+.center[
+
+<iframe width="640" height="480" src="https://www.youtube.com/embed/y_l4kQ5wjiw?&loop=1&start=97" frameborder="0" volume="0" allowfullscreen></iframe>
 
 ]
 
@@ -181,9 +191,47 @@ Feature hierarchy]
 ]
 
 - Built upon **convolutions** and enables the composition of a *feature hierarchy*.
-- Biologically-inspired training algorithm, which proves to be largely inefficient.
+- Biologically-inspired training algorithm, which proves to be largely **inefficient**.
 
 .footnote[Credits: Kunihiko Fukushima, [Neocognitron: A Self-organizing Neural Network Model](https://www.rctn.org/bruno/public/papers/Fukushima1980.pdf), 1980.]
+
+---
+
+class: middle
+
+.center.width-90[![](figures/lec3/eole.jpg)]
+
+Let's be inspired by Nature, but not too much.
+- It is nice to imitate Nature.
+- We also need to **understand** what is important from what is not.
+    - For airplanes, we developed aerodynamics, from which we figured out that feathers and wing flapping are not necessary for flying.
+
+.footnote[Credits: Yann LeCun.]
+
+???
+
+Clément Ader's Eole took off from the ground in the 1890, 13 years before the Wright brothers.
+
+
+---
+
+class: middle
+
+.grid[
+.kol-2-5.center[.width-100[![](figures/lec3/neuron.png)]]
+.kol-3-5.center[
+
+<br><br>
+<br><br><br>
+
+$$\neq \sigma \left(\sum w\_i x\_i + b \right)$$
+
+<br><br><br>
+
+What is the equivalent of aerodynamics for understanding intelligence?
+
+]
+]
 
 ---
 
@@ -1073,9 +1121,14 @@ In other words, the network appears to learn a hierarchical composition of patte
 
 ---
 
-class: middle
+<br><br><br>
 
 What if we build images that maximize the activation of a chosen class output?
+
+--
+
+count: false
+
 The left image is predicted **with 99.9% confidence** as a magpie!
 
 .grid[
@@ -1084,10 +1137,6 @@ The left image is predicted **with 99.9% confidence** as a magpie!
 ]
 
 .footnote[Credits: Francois Chollet, [How convolutional neural networks see the world](https://blog.keras.io/how-convolutional-neural-networks-see-the-world.html), 2016.]
-
-???
-
-R: Split in order not to spoil the surprise.
 
 ---
 
