@@ -20,6 +20,8 @@ R: check https://drive.google.com/file/d/172peB-2VDgX8EhK81v473SQL9Xk1wIoR/view?
 
 R: add one lecture on deep rl?
 
+R: split in lectures 0 + 1
+
 ---
 
 # Today
@@ -193,7 +195,16 @@ model parameters and as many training examples.
 
 class: middle
 
-# Applications and success
+# Applications and successes
+
+---
+
+
+class: middle, center
+
+.width-80[![](figures/lec7/turing-award.png)]
+
+.italic["ACM named .bold[Yoshua Bengio], .bold[Geoffrey Hinton], and .bold[Yann LeCun] recipients of the .bold[2018 ACM A.M. Turing Award] for conceptual and engineering breakthroughs that have made deep neural networks a critical component of computing."]
 
 ---
 

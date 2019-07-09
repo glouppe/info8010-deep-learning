@@ -465,7 +465,7 @@ which we can reshape to a $2 \times 2$ matrix to obtain $\mathbf{u} \star \mathb
 
 class: middle
 
-The same procedure generalizes to $\mathbf{x} \in \mathbb{R}^{H \times W}$ and convolutional kernel $\mathbf{u} \in \mathbf{R}^{h \times w}$, such that:
+The same procedure generalizes to $\mathbf{x} \in \mathbb{R}^{H \times W}$ and convolutional kernel $\mathbf{u} \in \mathbb{R}^{h \times w}$, such that:
 - the convolutional kernel is rearranged as a sparse Toeplitz circulant matrix $\mathbf{U}$ of shape $(H-h+1)(W-w+1) \times HW$ where
     - each row $i$ identifies an element of the output feature map,
     - each column $j$ identifies an element of the input feature map,
