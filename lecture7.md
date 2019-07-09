@@ -18,14 +18,6 @@ add refs as footnotes
 
 ---
 
-class: middle, center
-
-.width-80[![](figures/lec7/turing-award.png)]
-
-.italic["ACM named .bold[Yoshua Bengio], .bold[Geoffrey Hinton], and .bold[Yann LeCun] recipients of the .bold[2018 ACM A.M. Turing Award] for conceptual and engineering breakthroughs that have made deep neural networks a critical component of computing."]
-
----
-
 # Today
 
 .grid[
