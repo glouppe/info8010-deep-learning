@@ -199,15 +199,6 @@ class: middle
 
 ---
 
-
-class: middle, center
-
-.width-80[![](figures/lec7/turing-award.png)]
-
-.italic["ACM named .bold[Yoshua Bengio], .bold[Geoffrey Hinton], and .bold[Yann LeCun] recipients of the .bold[2018 ACM A.M. Turing Award] for conceptual and engineering breakthroughs that have made deep neural networks a critical component of computing."]
-
----
-
 class: middle, center, black-slide
 
 <iframe width="600" height="450" src="https://www.youtube.com/embed/MPU2HistivI" frameborder="0" allowfullscreen></iframe>
@@ -245,6 +236,20 @@ class: middle, center, black-slide
 <iframe width="600" height="450" src="https://www.youtube.com/embed/HcZ48JDamyk" frameborder="0" allowfullscreen></iframe>
 
 Strategy games (Deepmind, 2016-2018)
+
+---
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/gn4nRCC9TwQ" frameborder="0" allowfullscreen></iframe>
+
+Learning to walk (2017)
+
+???
+
+Single algorithm for learning! Nothing is hardcoded.
+
+Similar to a baby learning to walk.
 
 ---
 
@@ -301,6 +306,14 @@ class: middle, center, black-slide
 <iframe width="600" height="450" src="https://www.youtube.com/embed/egJ0PTKQp4U?start=223" frameborder="0" allowfullscreen></iframe>
 
 Music composition (NVIDIA, 2017)
+
+---
+
+class: middle, center
+
+.width-80[![](figures/lec7/turing-award.png)]
+
+.italic["ACM named .bold[Yoshua Bengio], .bold[Geoffrey Hinton], and .bold[Yann LeCun] recipients of the .bold[2018 ACM A.M. Turing Award] for conceptual and engineering breakthroughs that have made deep neural networks a critical component of computing."]
 
 ---
 
@@ -367,12 +380,6 @@ class: middle
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
-???
-
-R: Same story for storage, which allows for larger dataset.
-R: add datasets
-R: add pytorch, to illustrate it is easy
-
 ---
 
 
@@ -381,6 +388,14 @@ class: middle
 .center.width-90[![](figures/lec1/op-vs-acc.png)]
 
 .footnote[Image credits: Canziani et al, 2016, arXiv:[1605.07678](https://arxiv.org/abs/1605.07678).]
+
+???
+
+More compute allowed for bigger networks and better accuracy. Now a shift back to snaller networks with same accuracy.
+
+R: Same story for storage, which allows for larger dataset.
+R: add datasets
+R: add pytorch, to illustrate it is easy
 
 ---
 
