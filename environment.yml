@@ -11,3 +11,5 @@ dependencies:
   - jupyter
   - pytorch-cpu
   - torchvision-cpu
+  - tensorboard
+  - tensorboardX
