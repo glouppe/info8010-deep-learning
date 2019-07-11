@@ -18,8 +18,6 @@ R: add graph of computation for BN and backprop (dependency on samples from the 
 
 R: check https://joanbruna.github.io/MathsDL-spring18/?fbclid=IwAR0Ugn0GhW4fHHuhYYv005zibgoToeaG58wujX5Ej179tDBbJFZGNgaONjI
 
-R: why weight initialization is important https://twitter.com/hardmaru/status/1127809708910211072?s=03  DEMO
-
 ---
 
 # Today
@@ -206,6 +204,13 @@ For $0 < c\_1 < c\_2 < 1$, the Wolfe conditions on the step size $\gamma$ are as
 $$f(x + \gamma p) \leq f(x) + c\_1 \gamma p^T \nabla f(x)$$
 - Curvature condition:
 $$c\_2 p^T \nabla f(x) \leq p^T \nabla f(x + \gamma p)$$
+
+Typical values are $c\_1 = 10^{-4}$ and $c\_2 = 0.9$.
+
+???
+
+- The sufficient decrease condition ensures that the function decreases sufficiently, as predicted by the slope of f in the direction p.
+- The curvature condition ensures that steps are not too short by ensuring that the slope has increased by some relative amount.
 
 ---
 
@@ -455,6 +460,12 @@ class: middle
 - Little is known on the mathematics of initialization strategies of neural networks.
     - What is known: initialization should break symmetry.
     - What is known: the scale of weights is important.
+
+---
+
+class: middle, center
+
+See [demo](https://www.deeplearning.ai/ai-notes/initialization/).
 
 ---
 
