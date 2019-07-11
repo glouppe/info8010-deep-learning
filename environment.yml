@@ -13,3 +13,4 @@ dependencies:
   - torchvision-cpu
   - tensorboard
   - tensorboardX
+  - pillow
