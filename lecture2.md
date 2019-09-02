@@ -14,6 +14,7 @@ R: regression -> assume p(y|x) is Gaussian, hence the minimization of the mean s
 R: check http://www.andreykurenkov.com/writing/ai/a-brief-history-of-neural-nets-and-deep-learning/ for history
 
 R: trade-offs is not clear, explain better how the terms impact each other
+R: https://twitter.com/gabrielpeyre/status/1167853444578893825?s=03
 
 ---
 
