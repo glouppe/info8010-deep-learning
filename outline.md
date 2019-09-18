@@ -18,6 +18,8 @@ R: add one lecture on attention/transformer/other architectures?
 https://jalammar.github.io/illustrated-transformer/
 https://staff.fnwi.uva.nl/s.abnar/?p=108
 R: science of dl https://people.csail.mit.edu/madry/6.883/
+R: more unsupervised
+R: self-supervised
 
 
 mysteries of deep learning
