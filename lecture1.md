@@ -25,6 +25,7 @@ R: split in lectures 0 + 1
 R: reading assingment:http://web.stanford.edu/class/cs224n/project/project-proposal-instructions.pdf
 
 R: https://jalammar.github.io/illustrated-gpt2/
+R: https://twitter.com/Ben_Hoov/status/1183823783754371076?s=03  --> BERT visualization
 
 ---
 
