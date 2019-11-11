@@ -20,6 +20,7 @@ https://staff.fnwi.uva.nl/s.abnar/?p=108
 R: science of dl https://people.csail.mit.edu/madry/6.883/
 R: more unsupervised
 R: self-supervised
+R: check https://github.com/Atcold/pytorch-Deep-Learning-Minicourse/blob/master/README.md
 
 
 mysteries of deep learning
