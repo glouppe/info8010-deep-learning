@@ -27,6 +27,10 @@ R: reading assingment:http://web.stanford.edu/class/cs224n/project/project-propo
 R: https://jalammar.github.io/illustrated-gpt2/
 R: https://twitter.com/Ben_Hoov/status/1183823783754371076?s=03  --> BERT visualization
 
+R: NN for tabular data https://forums.fast.ai/t/share-your-work-here/27676/1684
+
+R: have a lecture on theory
+
 ---
 
 # Today

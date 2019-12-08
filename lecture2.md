@@ -16,6 +16,11 @@ R: check http://www.andreykurenkov.com/writing/ai/a-brief-history-of-neural-nets
 R: trade-offs is not clear, explain better how the terms impact each other
 R: https://twitter.com/gabrielpeyre/status/1167853444578893825?s=03
 
+R: https://twitter.com/gabrielpeyre/status/1193977685363625986?s=03 backprop
+
+R: move out the GP part into a new lecture.
+R: cover neural tangents there
+
 ---
 
 # Today
