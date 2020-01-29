@@ -31,6 +31,8 @@ R: NN for tabular data https://forums.fast.ai/t/share-your-work-here/27676/1684
 
 R: have a lecture on theory
 
+R: reading: Nature's DL
+
 ---
 
 # Today
