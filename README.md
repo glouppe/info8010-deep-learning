@@ -1,61 +1,41 @@
 # INFO8010 - Deep Learning
 
-Lectures for INFO8010 - Deep Learning, ULiège, Spring 2019.
+Lectures for INFO8010 - Deep Learning, ULiège, Spring 2020.
 
 - Instructor: Gilles Louppe ([g.louppe@uliege.be](mailto:g.louppe@uliege.be))
-- Teaching assistants:
-    - Joeri Hermans ([joeri.hermans@doct.uliege.be](mailto:joeri.hermans@doct.uliege.be))
-    - Matthia Sabatelli ([m.sabatelli@uliege.be](mailto:m.sabatelli@uliege.be))
-    - Antoine Wehenkel ([antoine.wehenkel@uliege.be](antoine.wehenkel@uliege.be))
-- When: Spring 2019, Friday 9:00AM
-- Classroom: [B28/R7](https://www.campus.uliege.be/cms/c_5119631/fr/r7-montefiore)
+- Teaching assistants: Matthia Sabatelli ([m.sabatelli@uliege.be](mailto:m.sabatelli@uliege.be)), Antoine Wehenkel ([antoine.wehenkel@uliege.be](mailto:antoine.wehenkel@uliege.be))
+- When: Spring 2020, Friday 8:30AM
+- Classroom: B28/R3
 
-## Slides
+## Agenda
 
-- [Outline](https://glouppe.github.io/info8010-deep-learning/?p=outline.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/outline.pdf)]
-- Lecture 1 (February 8): [Fundamentals of machine learning](https://glouppe.github.io/info8010-deep-learning/?p=lecture1.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec1.pdf)]
-- Lecture 2 (February 15): [Neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture2.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec2.pdf)]
-- Lecture 3 (February 22): [Convolutional neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture3.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec3.pdf)]
-- Lecture 4 (March 1): [Training neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture4.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec4.pdf)]
-- Lecture 5 (March 8): [Recurrent neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture5.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec5.pdf)]
-- Lecture 6 (March 15): [Auto-encoders and generative models](https://glouppe.github.io/info8010-deep-learning/?p=lecture6.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec6.pdf)]
-- Lecture 7 (March 29): [Generative adversarial networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture7.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec7.pdf)]
-- Lecture 8 (April 5): [Uncertainty](https://glouppe.github.io/info8010-deep-learning/?p=lecture8.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec8.pdf)]
-- Lecture 9 (April 26): [Adversarial attacks and defense](https://glouppe.github.io/info8010-deep-learning/?p=lecture9.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec9.pdf)]
-- All lectures [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec-all.pdf)]
+| Date | Topic |
+| --- | --- |
+| February 7 | [Outline](https://glouppe.github.io/info8010-deep-learning/?p=outline.md) [[PDF](https://glouppe.github.io/info8010-deep-learning//pdf/outline.pdf)]<br>Lecture 0: Deep Learning<br>Lecture 1: Fundamentals of machine learning<br>Tutorial 0: Install party |
+| February 14 | Lecture 2: Neural networks<br>Tutorial 1 |
+| February 21 | Lecture 3: Convolutional networks<br>Tutorial 2 |
+| February 28 | Lecture 4: Computer vision<br>Tutorial 3 |
+| March 6 | Lecture 5: Training neural networks<br>Tutorial 4 |
+| March 13 | Lecture 6: Recurrent neural networks<br>Tutorial 5 |
+| March 20 | Lecture 7: Attention and transformer networks |
+| March 27 | Lecture 8: Auto-encoders and generative models |
+| April 3 | Lecture 9: Generative adversarial networks |
+| April 24 | Lecture 10: Uncertainty |
+| May 8 | Lecture 11: Theory of deep learning |
+| May 15 | Lecture 12: Deep reinforcement learning |
 
-Project presentations:
-
-- Lecture 10 (May 3): Student presentations 1
-- Lecture 11 (May 10): Student presentations 2
-- Lecture 12 (May 17): Student presentations 3
-
-## Tutorials
-
-- Tutorial (March 8): Tensorflow [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/tutorial-tensorflow.pdf)]
-- Tutorial (March 15): Pytorch [[Notebook](https://github.com/glouppe/info8010-deep-learning/blob/master/code/pytorch-tutorial.ipynb)]
-
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/glouppe/info8010-deep-learning/master)
 
 ## Project
 
-See instructions in [`project.md`](https://github.com/glouppe/info8010-deep-learning/blob/master/project.md).
-
-#### Agenda
-
-- Project proposal, due by **March 1, 2019 at 23:59**.
-- Project code and report, due by **May 1, 2019 at 23:59**.
-- Project presentations on May 3, 10 and 17, 2019.
-
-Projects should be submitted through the [Montefiore submission platform](https://submit.montefiore.ulg.ac.be).
+TBD.
 
 ## Reading assignment
 
 Your task is to read and summarize a major scientific paper in the field of deep learning. You are free to select one among the following three papers:
 
-> - He, K., Zhang, X., Ren, S., & Sun, J. (2016). Deep residual learning for image recognition. arXiv:[1512.03385](https://arxiv.org/abs/1512.03385).
-> - Andrychowicz, M., Denil, M., Gomez, S., Hoffman, M. W., Pfau, D., Schaul, T., ... & De Freitas, N. (2016). Learning to learn by gradient descent by gradient descent. arXiv:[1606.04474](https://arxiv.org/abs/1606.04474).
-> - Zhang, C., Bengio, S., Hardt, M., Recht, B., & Vinyals, O. (2016). Understanding deep learning requires rethinking generalization. arXiv:[1611.03530](https://arxiv.org/abs/1611.03530).
+> - J. Redmon and A. Farhadi, "YOLO9000: Better, Faster, Stronger", 2017. [[pdf](https://arxiv.org/abs/1612.08242)]
+> - A. Vaswani et al, "Attention is all you need", 2017. [[pdf](https://arxiv.org/abs/1706.03762)]
+> - M. Geiger et al, "Scaling description of generalization with number of parameters in deep learning", 2019. [[pdf](https://arxiv.org/abs/1901.01608)]
 
 You should produce a report that summarizes the problem that is tackled by the paper and explains why it is challenging or important. The report should outline the main contributions and results with respect to the problem that is addressed. It should also include a critical discussion of the advantages and shortcomings of the contributions of the paper.
 
@@ -65,4 +45,4 @@ Constraints:
 - 2 pages (excluding references, if any).
 - Formatted using the LaTeX template [`template-report.tex`](https://glouppe.github.io/info8010-deep-learning/template-report.tex).
 
-Your report should be submitted  by **April 5, 2019 at 23:59** on the [submission platform](https://submit.montefiore.ulg.ac.be/). This is a **hard** deadline.
+Your report should be submitted  by **April 3, 2020 at 23:59** on the [submission platform](https://submit.montefiore.ulg.ac.be/). This is a **hard** deadline.

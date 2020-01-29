@@ -1,46 +1,15 @@
 @import url(https://fonts.googleapis.com/css?family=Lato:400,900);
 
 body {
-    font-family:  'Lato', 'Avenir Next', 'Avenir', 'Trebuchet MS', 'Segoe UI', sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: 'Lato', 'Avenir Next', 'Avenir', 'Trebuchet MS', 'Segoe UI', sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     color: #354046; /*#455a64;*/
     line-height: 1.4;
     font-size: 11pt;
     word-wrap: break-word;
 }
 
-.footnote {
-  position: absolute;
-  bottom: 2em;
-  font-size: 0.5em;
-  opacity: 0.75;
-  margin-left: -5.5em;
-}
 
-
-.footnote a{
-    color: #20707e;
-}
-
-.footnote:before {
-    content: "\2015\2015\2015";
-    display: block;
-}
-
-.red {
-    color: #d11a01;
-}
-
-.Q {
-    color: #009933;
-}
-
-.italic {
-    font-style: italic;
-}
-
-.bold {
-    font-weight: bold;
-}
+/* Remark ------------------------------------------------------------------- */
 
 .remark-container {
     background: #ddd;
@@ -75,12 +44,12 @@ body {
     bottom: 2em;
 }
 
-.smaller-x {
-    font-size: 0.75em;
-}
 
-.smaller-xx {
-    font-size: 0.5em;
+/* Styles ------------------------------------------------------------------- */
+
+.footnote:before {
+    content: "\2015\2015\2015";
+    display: block;
 }
 
 a {
@@ -90,6 +59,22 @@ a {
 
 a:hover {
     text-decoration: underline;
+}
+
+.red {
+    color: #d11a01;
+}
+
+.Q {
+    color: #009933;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.bold {
+    font-weight: bold;
 }
 
 em {
@@ -103,8 +88,17 @@ strong {
     font-weight: normal;
 }
 
+
+.smaller {
+    font-size: 1.2em;
+}
+
 .katex {
     color: #1a7082;
+}
+
+.black-slide  .katex {
+    color: white;
 }
 
 .remark-code {
@@ -161,16 +155,6 @@ td {
     padding: 5px 8px;
 }
 
-.pull-left {
-    float: left;
-    margin-right: 1em;
-}
-
-.pull-right {
-    float: right;
-    margin-left: 1em;
-}
-
 .caption {
     display: block;
     text-align: center;
@@ -187,8 +171,70 @@ td {
     height: auto;
 }
 
+.footnote {
+  position: absolute;
+  bottom: 2em;
+  font-size: 0.5em;
+  opacity: 0.75;
+  margin-left: -5.5em;
+}
+
+.footnote a{
+    color: #0288d1; /*#20707e;*/
+}
+
+.inactive {
+    color: lightgray;
+}
+
+.exercise {
+    background-color: rgba(40,167,69,0.25);
+    border: 2px solid rgb(40,167,69);
+    border-radius: 5px;
+    width: 95%;
+    display: block;
+    padding: 1em;
+}
+
+.exercise:before {
+    content: "Exercise";
+    font-weight: bold;
+    display: block;
+}
+
+.alert {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 2px solid #f5c6cb;
+    border-radius: 5px;
+    width: 95%;
+    display: block;
+    padding: 1em;
+}
+
+
+/* Placement ---------------------------------------------------------------- */
+
+.pull-left {
+    float: left;
+    margin-right: 1em;
+}
+
+.pull-right {
+    float: right;
+    margin-left: 1em;
+}
+
+.width-5 * {
+    width: 5%;
+}
+
 .width-10 * {
     width: 10%;
+}
+
+.width-15 * {
+    width: 15%;
 }
 
 .width-20 * {
@@ -203,28 +249,48 @@ td {
     width: 30%;
 }
 
+.width-35 * {
+    width: 35%;
+}
+
 .width-40 * {
     width: 40%;
 }
 
-.width-48 * {
-    width: 48%;
+.width-45 * {
+    width: 45%;
 }
 
 .width-50 * {
     width: 50%;
 }
 
+.width-55 * {
+    width: 55%;
+}
+
 .width-60 * {
     width: 60%;
+}
+
+.width-65 * {
+    width: 65%;
 }
 
 .width-70 * {
     width: 70%;
 }
 
+.width-75 * {
+    width: 75%;
+}
+
 .width-80 * {
     width: 80%;
+}
+
+.width-85 * {
+    width: 85%;
 }
 
 .width-90 * {
@@ -239,8 +305,88 @@ td {
     width: 100%;
 }
 
+.width-105 * {
+    width: 105%;
+}
 
-/* Title slide */
+.width-110 * {
+    width: 110%;
+}
+
+.width-115 * {
+    width: 115%;
+}
+
+.width-120 * {
+    width: 120%;
+}
+
+.width-125 * {
+    width: 125%;
+}
+
+.width-130 * {
+    width: 130%;
+}
+
+.width-135 * {
+    width: 135%;
+}
+
+.width-140 * {
+    width: 140%;
+}
+
+.width-145 * {
+    width: 145%;
+}
+
+.width-150 * {
+    width: 150%;
+}
+
+.width-155 * {
+    width: 155%;
+}
+
+.width-160 * {
+    width: 160%;
+}
+
+.width-165 * {
+    width: 165%;
+}
+
+.width-170 * {
+    width: 170%;
+}
+
+.width-175 * {
+    width: 175%;
+}
+
+.width-180 * {
+    width: 180%;
+}
+
+.width-185 * {
+    width: 185%;
+}
+
+.width-190 * {
+    width: 190%;
+}
+
+.width-195 * {
+    width: 195%;
+}
+
+.width-200 * {
+    width: 200%;
+}
+
+
+/* Specials ----------------------------------------------------------------- */
 
 .title-slide:after {
     content: '';

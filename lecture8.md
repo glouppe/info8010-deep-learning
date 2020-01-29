@@ -2,7 +2,7 @@ class: middle, center, title-slide
 
 # Deep Learning
 
-Lecture 8: Uncertainty
+Lecture 8: Auto-encoders and generative models
 
 <br><br>
 Prof. Gilles Louppe<br>
@@ -10,617 +10,866 @@ Prof. Gilles Louppe<br>
 
 ???
 
-R: Mention ontological uncertainty
+R: denoising AE (+ diff of under/over-complete AEs; check alain and bengio 2012)
+R: add https://avdnoord.github.io/homepage/vqvae/ as application
+R: add mentions of the manifold hypothesis https://uvadlc.github.io/lectures/sep2018/lecture7-unsupervised.pdf
+R: add denoising ae
+R: check http://mlss2018.net.ar/slides/Adams-1.pdf
 
-R: check https://drive.google.com/file/d/1G6I1hOxg9zN3PmKqm7sahXw6DvYmyYW3/view?usp=sharing
-R: check https://www.slideshare.net/perone/uncertainty-estimation-in-deep-learning
+http://paulrubenstein.co.uk/variational-autoencoders-are-not-autoencoders/
+
+R: world models as an application of vaes+rnn
 
 ---
 
 # Today
 
-How to model *uncertainty* in deep learning?
-- Uncertainty
-- Aleatoric uncertainty
-- Epistemic uncertainty
+Learn a model of the data.
+
+- Auto-encoders
+- Generative models
+- Variational inference
+- Variational auto-encoders
 
 ---
 
 class: middle
 
-.center.circle.width-30[![](figures/lec8/carl.jpg)]
-
-.italic["Every time a scientific paper presents a bit of data, it's accompanied
-by an .bold[error bar] – a quiet but insistent reminder that no knowledge is complete or perfect. It's a .bold[calibration of how much we trust what we think we know]." ― Carl Sagan.]
-
-???
-
-Knowledge is an artefact. It is a mental construct.
-
-Uncertainty is how much we trust this construct.
+# Auto-encoders
 
 ---
 
 class: middle
 
-# Uncertainty
+Many applications such as image synthesis, denoising, super-resolution, speech synthesis or compression, require to *go beyond classification and regression* and model explicitly a high-dimensional signal.
+
+This modeling consists of finding .italic["meaningful degrees of freedom"], or .italic["factors of variations"], that describe the signal and are of lesser dimension.
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
 ---
 
 class: middle
+
+.center.width-90[![](figures/lec8/embedding1.png)]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+
+class: middle
+
+.center.width-90[![](figures/lec8/embedding2.png)]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+# Auto-encoders
+
+An auto-encoder is a composite function made of
+- an **encoder** $f$ from the original space $\mathcal{X}$ to a latent space $\mathcal{Z}$,
+- a *decoder* $g$ to map back to $\mathcal{X}$,
+
+such that $g \circ f$ is close to the identity on the data.
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec8/ae.png)]
+
+A proper auto-encoder should capture a good parameterization of the signal, and in particular the statistical dependencies between the signal components.
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+Let $p(\mathbf{x})$ be the data distribution over $\mathcal{X}$. A good auto-encoder could be characterized with the reconstruction loss
+$$\mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})} \left[ || \mathbf{x} - g \circ f(\mathbf{x}) ||^2 \right] \approx 0.$$
+
+Given two parameterized mappings $f(\cdot; \theta\_f)$ and $g(\cdot;\theta\_g)$, training consists of minimizing an empirical estimate of that loss,
+$$\theta = \arg \min\_{\theta\_f, \theta\_g} \frac{1}{N} \sum_{i=1}^N || \mathbf{x}\_i - g(f(\mathbf{x}\_i,\theta\_f), \theta\_g) ||^2.$$
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+For example, when the auto-encoder is linear,
+$$
+\begin{aligned}
+f: \mathbf{z} &= \mathbf{U}^T \mathbf{x} \\\\
+g: \hat{\mathbf{x}} &= \mathbf{U} \mathbf{z},
+\end{aligned}
+$$
+with $\mathbf{U} \in \mathbb{R}^{p\times k}$, the reconstruction error reduces to
+$$\mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})} \left[ || \mathbf{x} - \mathbf{U}\mathbf{U}^T \mathbf{x} ||^2 \right].$$
+
+In this case, an optimal solution is given by PCA.
+
+---
+
+# Deep auto-encoders
+
+.center.width-80[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](figures/lec8/architecture.svg)]
+
+Better results can be achieved with more sophisticated classes of mappings than linear projections, in particular by designing $f$ and $g$ as deep neural networks.
+
+For instance,
+- by combining a multi-layer perceptron encoder $f : \mathbb{R}^p \to \mathbb{R}^q$ with a multi-layer perceptron decoder $g: \mathbb{R}^q \to \mathbb{R}^p$.
+- by combining a convolutional network encoder $f : \mathbb{R}^{w\times h \times c} \to \mathbb{R}^q$ with a decoder $g : \mathbb{R}^q \to \mathbb{R}^{w\times h \times c}$ composed of the reciprocal transposed convolutional layers.
+
+---
+
+class: middle
+
+Deep neural decoders require layers that increase the input dimension,
+i.e., that map $\mathbf{z} \in \mathbb{R}^q$ to $\hat{\mathbf{x}}=g(\mathbf{z}) \in \mathbb{R}^p$, with $p \gg q$.
+
+- This is the opposite of what we did so far with feedforward networks, in which we reduced the dimension of the input to a few values.
+- Fully connected layers could be used for that purpose but would face the same limitations as before (spatial specialization, too many parameters).
+- Ideally, we would like layers that implement the inverse of convolutional
+ and pooling layers.
+
+---
+
+class: middle
+
+## Transposed convolutions
+
+A **transposed convolution** is a convolution where the implementation of the forward and backward passes
+are swapped.
+
+Given a convolutional kernel $\mathbf{u}$,
+- the forward pass is implemented as $v(\mathbf{h}) = \mathbf{U}^T v(\mathbf{x})$ with appropriate reshaping, thereby effectively up-sampling an input $v(\mathbf{x})$ into a larger one;
+- the backward pass is computed by multiplying the loss by $\mathbf{U}$ instead of $\mathbf{U}^T$.
+
+Transposed convolutions are also referred to as fractionally-strided convolutions or deconvolutions (mistakenly).
+
+.center.width-70[![](figures/lec8/transposed-convolution.svg)]
+
+---
+
+class: middle
+
+.pull-right[<br><br>![](figures/lec8/no_padding_no_strides_transposed.gif)]
+
+$$
+\begin{aligned}
+\mathbf{U}^T v(\mathbf{x}) &= v(\mathbf{h}) \\\\
+\begin{pmatrix}
+1 & 0 & 0 & 0 \\\\
+4 & 1 & 0 & 0 \\\\
+1 & 4 & 0 & 0 \\\\
+0 & 1 & 0 & 0 \\\\
+1 & 0 & 1 & 0 \\\\
+4 & 1 & 4 & 1 \\\\
+3 & 4 & 1 & 4 \\\\
+0 & 3 & 0 & 1 \\\\
+3 & 0 & 1 & 0 \\\\
+3 & 3 & 4 & 1 \\\\
+1 & 3 & 3 & 4 \\\\
+0 & 1 & 0 & 3 \\\\
+0 & 0 & 3 & 0 \\\\
+0 & 0 & 3 & 3 \\\\
+0 & 0 & 1 & 3 \\\\
+0 & 0 & 0 & 1
+\end{pmatrix}
+\begin{pmatrix}
+2 \\\\
+1 \\\\
+4 \\\\
+4
+\end{pmatrix} &=
+\begin{pmatrix}
+2 \\\\
+9 \\\\
+6 \\\\
+1 \\\\
+6 \\\\
+29 \\\\
+30 \\\\
+7 \\\\
+10 \\\\
+29 \\\\
+33 \\\\
+13 \\\\
+12 \\\\
+24 \\\\
+16 \\\\
+4
+\end{pmatrix}
+\end{aligned}$$
+
+.footnote[Credits: Dumoulin and Visin, [A guide to convolution arithmetic for deep learning](https://arxiv.org/abs/1603.07285), 2016.]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec8/samples1.png)]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec8/samples2.png)]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec8/samples3.png)]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+# Interpolation
+
+To get an intuition of the learned latent representation, we can pick two samples $\mathbf{x}$ and $\mathbf{x}'$ at random and interpolate samples along the line in the latent space.
+
+<br>
+.center.width-80[![](figures/lec8/interpolation.png)]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec8/interp1.png)]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec8/interp2.png)]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+# Sampling from latent space
+
+The generative capability of the decoder $g$ can be assessed by introducing a (simple) density model $q$ over the latent space $\mathcal{Z}$, sample there, and map the samples into the data space $\mathcal{X}$ with $g$.
+
+.center.width-80[![](figures/lec8/sampling.png)]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+For instance, a factored Gaussian model with diagonal covariance matrix,
+$$q(\mathbf{z}) = \mathcal{N}(\hat{\mu}, \hat{\Sigma}),$$
+where both $\\hat{\mu}$ and $\hat{\Sigma}$ are estimated on training data.
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec8/samples-bad.png)]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+These results are not satisfactory because the density model on the latent space is **too simple and inadequate**.
+
+Building a good model amounts to our original problem of modeling an empirical distribution, although it may now be in a lower dimension space.
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+# Generative models
+
+.footnote[Credits: slides adapted from .italic["[Tutorial on Deep Generative Models](http://auai.org/uai2017/media/tutorials/shakir.pdf)"], Shakir Mohamed and Danilo Rezende, UAI 2017.]
+
+---
+
+class: middle
+
+A **generative model** is a probabilistic model $p$ that can be used as *a simulator of the data*.
+Its purpose is to generate synthetic but realistic high-dimensional data
+$$\mathbf{x} \sim p(\mathbf{x};\theta),$$
+that is as close as possible from the true but unknown data distribution $p(\mathbf{x})$, but for which we have empirical samples.
 
 ## Motivation
 
-In May 2016, there was the **first fatality** from an assisted driving system, caused by the perception system confusing the white side of a trailer for bright sky.
+Go beyond estimating $p(y|\mathbf{x})$:
+- Understand and imagine how the world evolves.
+- Recognize objects in the world and their factors of variation.
+- Establish concepts for reasoning and decision making.
 
-.grid[
-.kol-2-3[.center.width-100[![](figures/lec8/crash.png)]]
-.kol-1-3[.center.width-100[![](figures/lec8/crash2.png)]]
+---
+
+class: middle
+
+.center[
+.width-100[![](figures/lec8/why-gm.png)]
 ]
-
-
-.footnote[Credits: Kendall and Gal, [What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?](https://papers.nips.cc/paper/7141-what-uncertainties-do-we-need-in-bayesian-deep-learning-for-computer-vision.pdf), 2017.]
-
----
-
-class: middle
-
-.center.width-70[![](figures/lec8/gorillas.png)]
-
-An image classification system erroneously identifies two African Americans as gorillas, raising concerns of racial discrimination.
-
-.footnote[Credits: Kendall and Gal, [What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?](https://papers.nips.cc/paper/7141-what-uncertainties-do-we-need-in-bayesian-deep-learning-for-computer-vision.pdf), 2017.]
-
----
-
-class: middle
-
-If both these algorithms were able to assign a high level of **uncertainty** to their erroneous predictions, then the system may have been able to *make better decisions*, and likely avoid disaster.
-
-.footnote[Credits: Kendall and Gal, [What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?](https://papers.nips.cc/paper/7141-what-uncertainties-do-we-need-in-bayesian-deep-learning-for-computer-vision.pdf), 2017.]
-
----
-
-# Types of uncertainty
-
-## Case 1
-
-Let us consider a neural network model trained with several pictures of dog breeds.
-- We ask the model to decide on a dog breed using a photo of a cat.
-- What would you want the model to do?
-
-.grid[
-.kol-1-2[.center.width-90[![](figures/lec8/dogs.jpg)]]
-.kol-1-2[.center.width-70[![](figures/lec8/cat.jpg)]]
-]
-
-
----
-
-class: middle
-
-## Case 2
-
-We have three different types of images to classify, cat, dog, and cow, where only cat images are noisy.
 
 <br>
-.center.width-90[![](figures/lec8/model-uncertainty2.png)]
+.center[Generative models have a role in many important problems]
 
 ---
 
 class: middle
 
-## Case 3
+## Image and content generation
 
-What is the best model parameters that best explain a given dataset? What model structure should we use?
+Generating images and video content.
 
 .center[
-.width-48[![](figures/lec1/poly-3.png)]
-.width-48[![](figures/lec1/poly-10.png)]
+.width-100[![](figures/lec8/generative-content.png)]
+
+(Gregor et al, 2015; Oord et al, 2016; Dumoulin et al, 2016)
 ]
 
 ---
 
 class: middle
 
-.bold[Case 1:] Given a model trained with several pictures of dog breeds. We ask the model to decide on a dog breed using a photo of a cat.
+## Text-to-speech synthesis
 
-$\Rightarrow$ **Out of distribution test data**.
-
-<br>
-
-.bold[Case 2:] We have three different types of images to classify, cat, dog, and cow, where only cat images are noisy.
-
-$\Rightarrow$ **Aleatoric uncertainty**.
-
-<br>
-
-.bold[Case 3:] What is the best model parameters that best explain a given dataset? What model structure should we use?
-
-$\Rightarrow$ **Epistemic uncertainty**.
-
----
-
-class: middle
-
-.center.width-90[![](figures/lec8/types.png)]
-
-.italic["Our model exhibits in (d) increased .bold[aleatoric uncertainty on object boundaries and for objects far from the camera]. .bold[Epistemic uncertainty accounts for our ignorance about which model generated our collected data]. In (e) our model exhibits increased epistemic uncertainty for semantically and visually challenging pixels. The bottom row shows a failure case of the segmentation model when the model fails to segment the footpath due to increased epistemic uncertainty, but not aleatoric uncertainty."]
-
-.footnote[Credits: Kendall and Gal, [What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?](https://papers.nips.cc/paper/7141-what-uncertainties-do-we-need-in-bayesian-deep-learning-for-computer-vision.pdf), 2017.]
-
----
-
-class: middle
-
-# Aleatoric uncertainty
-
----
-
-class: middle
-
-**Aleatoric** uncertainty captures noise inherent in the observations.
-- For example, sensor noise or motion noise result in uncertainty.
-- This uncertainty *cannot be reduced* with more data.
-- However, aleatoric could be reduced with better measurements.
-
-
----
-
-class: middle
-
-Aleatoric uncertainty can further be categorized into *homoscedastic* and *heteroscedastic* uncertainties:
-- Homoscedastic uncertainty relates to the uncertainty that a particular task might cause. It stays constant for different inputs.
-- Heteroscedastic uncertainty depends on the inputs to the model, with some inputs potentially having more noisy outputs than others.
-
-<br>
-.center.width-100[![](figures/lec8/homo-vs-hetero.png)]
-
-.footnote[Credits: Yarin Gal, [Uncertainty in  Deep Learning](https://pdfs.semanticscholar.org/55cd/9e1bb7ce02cd2bb01b364e7b331fcc1ef2c7.pdf), 2016.]
-
----
-
-# Regression with uncertainty
-
-Consider training data $(\mathbf{x}, y) \sim P(X,Y)$, with
-- $\mathbf{x} \in \mathbb{R}^p$,
-- $y \in \mathbb{R}$.
-
-We model aleatoric uncertainty in the output by modelling the conditional distribution as a Normal distribution,
-$$p(y|\mathbf{x}) = \mathcal{N}(y; \mu(\mathbf{x}), \sigma^2(\mathbf{x})),$$
-where $\mu(x)$ and $\sigma^2(\mathbf{x})$ are parametric functions to be learned, such as neural networks.
-
-In particular, we do not wish to learn a function $\hat{y} = f(\mathbf{x})$ that would only produce point estimates.
-
----
-
-class: middle
-
-## Homoscedastic aleatoric uncertainty
-
-.center.width-80[![](figures/lec8/homoscedastic.svg)]
-
----
-
-class: middle
-
-We have,
-$$\begin{aligned}
-&\arg \max\_{\theta,\sigma^2} p(\mathbf{d}|\theta,\sigma^2) \\\\
-&= \arg \max\_{\theta,\sigma^2} \prod\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} p(y\_i|\mathbf{x}\_i, \theta,\sigma^2) \\\\
-&= \arg \max\_{\theta,\sigma^2} \prod\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} \frac{1}{\sqrt{2\pi} \sigma} \exp\left(-\frac{(y\_i-\mu(\mathbf{x}\_i))^2}{2\sigma^2}\right) \\\\
-&= \arg \min\_{\theta,\sigma^2} \sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}}  \frac{(y\_i-\mu(\mathbf{x}\_i))^2}{2\sigma^2} + \log(\sigma) + C
-\end{aligned}$$
-
-.Q[[Q]] What if $\sigma^2$ was fixed?
-
----
-
-class: middle
-
-## Heteroscedastic aleatoric uncertainty
-
-.center.width-80[![](figures/lec8/heteroscedastic.svg)]
-
----
-
-class: middle
-
-Same as for the homoscedastic case, except that that $\sigma^2$ is now a function of $\mathbf{x}\_i$:
-$$\begin{aligned}
-&\arg \max\_{\theta} p(\mathbf{d}|\theta) \\\\
-&= \arg \max\_{\theta} \prod\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} p(y\_i|\mathbf{x}\_i, \theta) \\\\
-&= \arg \max\_{\theta} \prod\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} \frac{1}{\sqrt{2\pi} \sigma(\mathbf{x}\_i)} \exp\left(-\frac{(y\_i-\mu(\mathbf{x}\_i))^2}{2\sigma^2(\mathbf{x}\_i)}\right) \\\\
-&= \arg \min\_{\theta} \sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}}  \frac{(y\_i-\mu(\mathbf{x}\_i))^2}{2\sigma^2(\mathbf{x}\_i)} + \log(\sigma(\mathbf{x}\_i)) + C
-\end{aligned}$$
-
-- What is the role of $2\sigma^2(\mathbf{x}\_i)$?
-- What about $\log(\sigma(\mathbf{x}\_i))$?
-
----
-
-# Multimodality
-
-<br>
+Generating audio conditioned on text.
 
 .center[
+.width-100[![](figures/lec8/generative-text-to-speech.png)]
 
-Modelling $p(y|\mathbf{x})$ as a unimodal Gaussian is not always a good idea!
-
-(and it would be even worse to have only point estimates for $y$!)
-]
-
-.center.width-100[![](figures/lec8/multimodality.png)]
-
----
-
-class: middle
-
-## Gaussian mixture model
-
-A **Gaussian mixture model** (GMM) defines instead $p(y|\mathbf{x})$ as a mixture of $K$ Gaussian components,
-$$p(y|\mathbf{x}) = \sum\_{k=1}^K \pi\_k \mathcal{N}(y;\mu\_k, \sigma\_k^2),$$
-where $0 \leq \pi\_k \leq 1$ for all $k$ and $\sum\_{k=1}^K \pi\_k = 1$.
-
-.center.width-60[![](figures/lec8/gmm.jpg)]
-
----
-
-class: middle
-
-## Mixture density network
-
-A **mixture density network** is a neural network implementation of the Gaussian mixture model.
-
-.center.width-100[![](figures/lec8/mdn.svg)]
-
----
-
-class: middle
-
-## Illustration
-
-Let us consider training data generated randomly as
-$$y\_i = \mathbf{x}\_i + 0.3\sin(4\pi \mathbf{x}\_i) + \epsilon\_i$$
-with $\epsilon\_i \sim \mathcal{N}$.
-
----
-
-class: middle
-
-.center[
-
-.width-60[![](figures/lec8/illus1.png)]
-
-The data can be fit with a 2-layer network producing point estimates for $y$.
-[[demo](http://otoro.net/ml/mixture/index.html)]
-
-]
-
-.footnote[Credits: David Ha, [Mixture Density Networks](http://blog.otoro.net/2015/06/14/mixture-density-networks/), 2015.]
-
----
-
-class: middle
-
-.center[
-
-.width-60[![](figures/lec8/illus2.png)]
-
-If we flip $\mathbf{x}\_i$ and $y\_i$, the network faces issues since for each input, there are multiple outputs that can work. It produces some sort of average of the correct values.
-[[demo](http://otoro.net/ml/mixture/inverse.html)]
-
-]
-
-.footnote[Credits: David Ha, [Mixture Density Networks](http://blog.otoro.net/2015/06/14/mixture-density-networks/), 2015.]
-
----
-
-class: middle
-
-.center[
-
-.width-60[![](figures/lec8/illus3.png)]
-
-A mixture density network models the data correctly, as it predicts for each input a distribution for the output, rather than a point estimate.
-[[demo](http://otoro.net/ml/mixture/mixture.html)]
-
-]
-
-.footnote[Credits: David Ha, [Mixture Density Networks](http://blog.otoro.net/2015/06/14/mixture-density-networks/), 2015.]
-
-
----
-
-
-class: middle
-
-# Epistemic uncertainty
-
----
-
-class: middle
-
-**Epistemic** uncertainty accounts for uncertainty in the model parameters.
-- It captures our *ignorance* about which model generated the collected data.
-- It can be explained away given enough data (why?).
-- It is also often referred to as *model uncertainty*.
-
-.footnote[Credits: Kendall and Gal, [What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?](https://papers.nips.cc/paper/7141-what-uncertainties-do-we-need-in-bayesian-deep-learning-for-computer-vision.pdf), 2017.]
-
----
-
-# Bayesian neural networks
-
-To capture epistemic uncertainty in a neural network, we model our ignorance with a prior distribution $p(\mathbf{\omega})$ over its weights.
-
-Then we invoke Bayes for making predictions.
-
-<br><br>
-.center[
-.width-60[![](figures/lec8/bnn.png)] &nbsp;&nbsp;&nbsp;&nbsp; .circle.width-30[![](figures/lec8/thomas.png)]
+(Oord et al, 2016)
 ]
 
 ---
 
 class: middle
 
-- The prior predictive distribution at $\mathbf{x}$ is given by integrating over all possible weight configurations,
-$$p(y|\mathbf{x}) = \int p(y|\mathbf{x}, \mathbf{\omega}) p(\mathbf{\omega}) d\mathbf{\omega}.$$
-- Given training data $\mathbf{X}=\\{\mathbf{x}\_1, ..., \mathbf{x}\_N\\}$ and $\mathbf{Y}=\\{y\_1, ..., y\_N\\}$, a Bayesian update results in the posterior
-$$p(\mathbf{\omega}|\mathbf{X},\mathbf{Y}) = \frac{p(\mathbf{Y}|\mathbf{X},\mathbf{\omega})p(\mathbf{\omega})}{p(\mathbf{Y}|\mathbf{X})}.$$
-- The posterior predictive distribution is then given by
-$$p(y|\mathbf{x},\mathbf{X},\mathbf{Y}) = \int p(y|\mathbf{x}, \mathbf{\omega}) p(\mathbf{\omega}|\mathbf{X},\mathbf{Y}) d\mathbf{\omega}.$$
+## Communication and compression
+
+Hierarchical compression of images and other data.
+
+.center[
+.width-100[![](figures/lec8/generative-compression.png)]
+
+(Gregor et al, 2016)
+]
 
 ---
 
 class: middle
 
-Bayesian neural networks are *easy to formulate*,  but notoriously **difficult to perform inference in**.
+## Image super-resolution
 
-- This stems mainly from the fact that the marginal $p(\mathbf{Y}|\mathbf{X})$ is intractable to evaluate, which results in the posterior $p(\mathbf{\omega}|\mathbf{X},\mathbf{Y})$ not being tractable either.
-- Therefore, we must rely on approximations.
+Photo-realistic single image super-resolution.
+
+.center[
+.width-100[![](figures/lec8/generative-superres.png)]
+
+(Ledig et al, 2016)
+]
+
+---
+
+class: middle
+
+## One-shot generalization
+
+Rapid generalization of novel concepts.
+
+.center[
+.width-100[![](figures/lec8/generative-oneshot.png)]
+
+(Gregor et al, 2016)
+]
+
+---
+
+class: middle
+
+## Visual concept learning
+
+Understanding the factors of variation and invariances.
+
+.center[
+.width-100[![](figures/lec8/generative-factors.png)]
+
+(Higgins et al, 2017)
+]
+
+---
+
+class: middle
+
+## Scene understanding
+
+Understanding the components of scenes and their interactions.
+
+.center[
+.width-100[![](figures/lec8/generative-scene.png)]
+
+(Wu et al, 2017)
+]
+
+---
+
+class: middle
+
+## Future simulation
+
+Simulate future trajectories of environments based on actions for planning.
+
+.center[
+.width-40[![](figures/lec8/robot1.gif)] .width-40[![](figures/lec8/robot2.gif)]
+
+(Finn et al, 2016)
+]
+
+---
+
+class: middle
+
+## Drug design and response prediction
+
+Generative models for proposing candidate molecules and for improving prediction through semi-supervised learning.
+
+.center[
+.width-100[![](figures/lec8/generative-drug.png)]
+
+(Gomez-Bombarelli et al, 2016)
+]
+
+---
+
+class: middle
+
+## Locating celestial bodies
+
+Generative models for applications in astronomy and high-energy physics.
+
+.center[
+.width-100[![](figures/lec8/generative-space.png)]
+
+(Regier et al, 2015)
+]
+
+---
+
+class: middle
+
+# Variational inference
+
+---
+
+class: middle
+
+## Latent variable model
+
+.center.width-20[![](figures/lec8/latent-model.svg)]
+
+Consider for now a **prescribed latent variable model** that relates a set of observable variables $\mathbf{x} \in \mathcal{X}$ to a set of unobserved variables $\mathbf{z} \in \mathcal{Z}$.
+
+
+
+---
+
+class: middle
+
+The probabilistic model is given and motivated by domain knowledge assumptions.
+
+Examples include:
+- Linear discriminant analysis
+- Bayesian networks
+- Hidden Markov models
+- Probabilistic programs
+
+---
+
+class: middle
+
+The probabilistic model defines a joint probability distribution $p(\mathbf{x}, \mathbf{z})$, which decomposes as
+$$p(\mathbf{x}, \mathbf{z}) = p(\mathbf{x}|\mathbf{z}) p(\mathbf{z}).$$
+If we interpret $\mathbf{z}$ as causal factors for the high-dimension representations $\mathbf{x}$, then
+sampling from $p(\mathbf{x}|\mathbf{z})$ can be interpreted as **a stochastic generating process** from $\mathcal{Z}$ to $\mathcal{X}$.
+
+For a given model $p(\mathbf{x}, \mathbf{z})$, inference consists in computing the posterior
+$$p(\mathbf{z}|\mathbf{x}) = \frac{p(\mathbf{x}|\mathbf{z}) p(\mathbf{z})}{p(\mathbf{x})}.$$
+
+For most interesting cases, this is usually intractable since it requires evaluating the evidence
+$$p(\mathbf{x}) = \int p(\mathbf{x}|\mathbf{z})p(\mathbf{z}) d\mathbf{z}.$$
 
 ---
 
 # Variational inference
 
-Variational inference can be used for building an approximation $q(\mathbf{\omega};\nu)$ of the posterior $p(\mathbf{\omega}|\mathbf{X},\mathbf{Y})$.
+.center.width-80[![](figures/lec8/vi.png)]
 
-As before (see Lecture 6), we can show that minimizing
-$$\text{KL}(q(\mathbf{\omega};\nu) || p(\mathbf{\omega}|\mathbf{X},\mathbf{Y}))$$
-with respect to the variational parameters $\nu$, is identical to maximizing the evidence lower bound objective (ELBO)
-$$\text{ELBO}(\nu) = \mathbb{E}\_{q(\mathbf{\omega};\nu)} \left[\log p(\mathbf{Y}|\mathbf{X}, \mathbf{\omega})\right] - \text{KL}(q(\mathbf{\omega};\nu) || p(\mathbf{\omega})).$$
-
----
-
-class: middle
-
-The integral in the ELBO is not tractable for almost all $q$, but it can be minimized with stochastic gradient descent:
-
-1. Sample $\hat{\omega} \sim q(\mathbf{\omega};\nu)$.
-2. Do one step of maximization with respect to $\nu$ on
-$$\hat{L}(\nu) = \log p(\mathbf{Y}|\mathbf{X}, \hat{\omega}) - \text{KL}(q(\mathbf{\omega};\nu) || p(\mathbf{\omega})) $$
-
-In the context of Bayesian neural networks, this procedure is also known as **Bayes by backprop** (Blundell et al, 2015).
-
----
-
-# Dropout
-
-Dropout is an **empirical** technique that was first proposed to avoid overfitting in neural networks.
-
-At *each training step* (i.e., for each sample within a mini-batch):
-- Remove each node in the network with a probability $p$.
-- Update the weights of the remaining nodes with backpropagation.
-
-.center.width-70[![](figures/lec8/dropout1.png)]
+**Variational inference** turns posterior inference into an optimization problem.
+- Consider a family of distributions $q(\mathbf{z}|\mathbf{x}; \nu)$ that approximate the posterior $p(\mathbf{z}|\mathbf{x})$, where the
+variational parameters $\nu$ index the family of distributions.
+- The parameters $\nu$ are fit to minimize the KL divergence between $p(\mathbf{z}|\mathbf{x})$ and the approximation $q(\mathbf{z}|\mathbf{x};\nu)$.
 
 ---
 
 class: middle
 
-At **test time**, either:
-- Make predictions using the trained network *without* dropout but rescaling the weights by the dropout probability $p$ (fast and standard).
-- Sample $T$ neural networks using dropout and average their predictions (slower but better principled).
-
----
-
-class: middle, center
-
-.width-100[![](figures/lec8/dropout2.png)]
-
----
-
-class: middle
-
-## Why does dropout work?
-- It makes the learned weights of a node less sensitive to the weights of the other nodes.
-- This forces the network to learn several independent representations of the patterns and thus decreases overfitting.
-- It approximates **Bayesian model averaging**.
-
----
-
-class: middle
-
-## Dropout does variational inference
-
-What variational family $q$ would correspond to dropout?
-
-- Let us split the weights $\omega$ per layer,
-$\omega = \\{ \mathbf{W}\_1, ..., \mathbf{W}\_L \\},$
-where $\mathbf{W}\_i$ is further split per unit
-$\mathbf{W}\_i = \\{ \mathbf{w}\_{i,1}, ..., \mathbf{w}\_{i,q\_i} \\}.$
-- Variational parameters $\nu$ are split similarly into $\nu = \\{ \mathbf{M}\_1, ..., \mathbf{M}\_L \\}$, with $\mathbf{M}\_i = \\{ \mathbf{m}\_{i,1}, ..., \mathbf{m}\_{i,q\_i} \\}$.
-- Then, the proposed $q(\omega;\nu)$ is defined as follows:
-$$
-\begin{aligned}
-q(\omega;\nu) &= \prod\_{i=1}^L q(\mathbf{W}\_i; \mathbf{M}\_i) \\\\
-q(\mathbf{W}\_i; \mathbf{M}\_i)  &= \prod\_{k=1}^{q\_i} q(\mathbf{w}\_{i,k}; \mathbf{m}\_{i,k}) \\\\
-q(\mathbf{w}\_{i,k}; \mathbf{m}\_{i,k}) &= p\delta\_0(\mathbf{w}\_{i,k}) + (1-p)\delta\_{\mathbf{m}\_{i,k}}(\mathbf{w}\_{i,k})
-\end{aligned}
-$$
-where $\delta\_a(x)$ denotes a (multivariate) Dirac distribution centered at $a$.
-
----
-
-class: middle
-
-Given the previous definition for $q$, sampling parameters $\hat{\omega} = \\{ \hat{\mathbf{W}}\_1, ..., \hat{\mathbf{W}}\_L \\}$ is done as follows:
-- Draw binary  $z\_{i,k} \sim \text{Bernoulli}(1-p)$ for each layer $i$ and unit $k$.
-- Compute $\hat{\mathbf{W}}\_i = \mathbf{M}\_i \text{diag}([z\_{i,k}]\_{k=1}^{q\_i})$,
-where $\mathbf{M}\_i$ denotes a matrix composed of the columns $\mathbf{m}\_{i,k}$.
-
-.grid[
-.kol-3-5[
-That is, $\hat{\mathbf{W}}\_i$ are obtained by setting columns of $\mathbf{M}\_i$ to zero with probability $p$.
-
-This is **strictly equivalent to dropout**, i.e. removing units from the network with probability $p$.
-
-]
-.kol-2-5[.center.width-100[![](figures/lec8/variational-dropout.png)]]
-]
-
----
-
-class: middle
-
-Therefore, one step of stochastic gradient descent on the ELBO becomes:
-1. Sample $\hat{\omega} \sim q(\mathbf{\omega};\nu)$ $\Leftrightarrow$ Randomly set units of the network to zero $\Leftrightarrow$ Dropout.
-2. Do one step of maximization with respect to $\nu = \\{ \mathbf{M}\_i \\}$ on
-$$\hat{L}(\nu) = \log p(\mathbf{Y}|\mathbf{X}, \hat{\omega}) - \text{KL}(q(\mathbf{\omega};\nu) || p(\mathbf{\omega})).$$
-
----
-
-class: middle
-
-Maximizing $\hat{L}(\nu)$ is equivalent to minimizing
-$$-\hat{L}(\nu) = -\log p(\mathbf{Y}|\mathbf{X}, \hat{\omega}) + \text{KL}(q(\mathbf{\omega};\nu) || p(\mathbf{\omega})) $$
-
-Is this equivalent to one minimization step of a standard classification or regression objective? *Yes!*
-- The first term is the typical objective (see Lecture 2).
-- The second term forces $q$ to remain close to the prior $p(\omega)$.
-    - If $p(\omega)$ is Gaussian, minimizing the $KL$ is equivalent to $\ell\_2$ regularization.
-    - If $p(\omega)$ is Laplacian, minimizing the $KL$ is equivalent to  $\ell\_1$ regularization.
-
----
-
-class: middle
-
-Conversely, this shows that when **training a network with dropout** with a standard classification or regression objective, one *is actually implicitly doing variational inference* to match the posterior distribution of the weights.
-
----
-
-class: middle
-
-## Uncertainty estimates from dropout
-
-Proper epistemic uncertainty estimates at $\mathbf{x}$ can be obtained in a principled way using Monte-Carlo integration:
-- Draw $T$ sets of network parameters $\hat{\omega}\_t$ from $q(\omega;\nu)$.
-- Compute the predictions for the $T$ networks, $\\{ f(\mathbf{x};\hat{\omega}\_t) \\}\_{t=1}^T$.
-- Approximate the predictive mean and variance as follows:
-$$
-\begin{aligned}
-\mathbb{E}\_{p(y|\mathbf{x},\mathbf{X},\mathbf{Y})}\left[y\right] &\approx \frac{1}{T} \sum\_{t=1}^T f(\mathbf{x};\hat{\omega}\_t) \\\\
-\mathbb{V}\_{p(y|\mathbf{x},\mathbf{X},\mathbf{Y})}\left[y\right] &\approx \sigma^2 + \frac{1}{T} \sum\_{t=1}^T f(\mathbf{x};\hat{\omega}\_t)^2 - \hat{\mathbb{E}}\left[y\right]^2
-\end{aligned}
-$$
-
----
-
-class: middle, center
-
-.center.width-80[![](figures/lec8/gal-demo.png)]
-
-Yarin Gal's [demo](http://mlg.eng.cam.ac.uk/yarin/blog_3d801aa532c1ce.html).
-
----
-
-class: middle
-
-## Pixel-wise depth regression
-
-.center.width-80[![](figures/lec8/depth-regression.png)]
-
-.footnote[Credits: Kendall and Gal, [What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?](https://papers.nips.cc/paper/7141-what-uncertainties-do-we-need-in-bayesian-deep-learning-for-computer-vision.pdf), 2017.]
-
----
-
-# Bayesian Infinite Networks
-
-Consider the 1-layer MLP with a hidden layer of size $q$ and a bounded activation function $\sigma$:
-
+Formally, we want to minimize
 $$\begin{aligned}
-f(x) &= b + \sum\_{j=1}^q v\_j h\_j(x)\\\\
-h\_j(x) &= \sigma\left(a\_j + \sum\_{i=1}^p u\_{i,j}x\_i\right)
+KL(q\(\mathbf{z}|\mathbf{x};\nu) || p(\mathbf{z}|\mathbf{x})) &= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[\log \frac{q(\mathbf{z}|\mathbf{x} ; \nu)}{p(\mathbf{z}|\mathbf{x})}\right] \\\\
+&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log q(\mathbf{z}|\mathbf{x};\nu) - \log p(\mathbf{x},\mathbf{z}) \right] + \log p(\mathbf{x}).
+\end{aligned}$$
+For the same reason as before, the KL divergence cannot be directly minimized because
+of the $\log p(\mathbf{x})$ term.
+
+---
+
+class: middle
+
+However, we can write
+$$
+KL(q(\mathbf{z}|\mathbf{x};\nu) || p(\mathbf{z}|\mathbf{x})) = \log p(\mathbf{x}) - \underbrace{\mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log p(\mathbf{x},\mathbf{z}) - \log q(\mathbf{z}|\mathbf{x};\nu) \right]}\_{\text{ELBO}(\mathbf{x};\nu)}
+$$
+where $\text{ELBO}(\mathbf{x};\nu)$ is called the **evidence lower bound objective**.
+
+- Since $\log p(\mathbf{x})$ does not depend on $\nu$, it can be considered as a constant, and minimizing the KL divergence is equivalent to maximizing the evidence lower bound, while being computationally tractable.
+- Given a dataset $\mathbf{d} = \\\{\mathbf{x}\_i|i=1, ..., N\\\}$, the final objective is the sum $\sum\_{\\\{\mathbf{x}\_i \in \mathbf{d}\\\}} \text{ELBO}(\mathbf{x}\_i;\nu)$.
+
+---
+
+class: middle
+
+Remark that
+$$\begin{aligned}
+\text{ELBO}(\mathbf{x};\nu) &= \mathbb{E}\_{q(\mathbf{z};|\mathbf{x}\nu)}\left[ \log p(\mathbf{x},\mathbf{z}) - \log q(\mathbf{z}|\mathbf{x};\nu) \right] \\\\
+&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log p(\mathbf{x}|\mathbf{z}) p(\mathbf{z}) - \log q(\mathbf{z}|\mathbf{x};\nu) \right] \\\\
+&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log p(\mathbf{x}|\mathbf{z})\right] - KL(q(\mathbf{z}|\mathbf{x};\nu) || p(\mathbf{z}))
+\end{aligned}$$
+Therefore, maximizing the ELBO:
+- encourages distributions to place their mass on configurations of latent variables that explain the observed data (first term);
+- encourages distributions close to the prior (second term).
+
+---
+
+class: middle
+
+## Optimization
+
+We want
+$$\begin{aligned}
+\nu^{\*} &= \arg \max\_\nu \text{ELBO}(\mathbf{x};\nu) \\\\
+&= \arg \max\_\nu \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log p(\mathbf{x},\mathbf{z}) - \log q(\mathbf{z}|\mathbf{x};\nu) \right].
 \end{aligned}$$
 
-Assume Gaussian priors $v\_j \sim \mathcal{N}(0, \sigma\_v^2)$, $b \sim \mathcal{N}(0, \sigma\_b^2)$, $u\_{i,j} \sim \mathcal{N}(0, \sigma\_u^2)$ and $a\_j \sim \mathcal{N}(0, \sigma\_a^2)$.
+We can proceed by gradient ascent, provided we can evaluate $\nabla\_\nu \text{ELBO}(\mathbf{x};\nu)$.
+
+In general,
+this gradient is difficult to compute because the expectation is unknown and the parameters $\nu$ are parameters of the distribution $q(\mathbf{z}|\mathbf{x};\nu)$ we integrate over.
 
 ---
 
 class: middle
 
-For a fixed value $x^{(1)}$, let us consider the prior distribution of $f(x^{(1)})$ implied by
-the prior distributions for the weights and biases.
+# Variational auto-encoders
+
+---
+
+class: middle
+
+So far we assumed a prescribed probabilistic model motivated by domain knowledge.
+We will now directly learn a stochastic generating process with a neural network.
+
+---
+
+# Variational auto-encoders
+
+
+
+A variational auto-encoder is a deep latent variable model where:
+- The likelihood $p(\mathbf{x}|\mathbf{z};\theta)$ is parameterized with a **generative network** $\text{NN}\_\theta$
+(or decoder) that takes as input $\mathbf{z}$ and outputs parameters $\phi = \text{NN}\_\theta(\mathbf{z})$ to the data distribution. E.g.,
+$$\begin{aligned}
+\mu, \sigma &= \text{NN}\_\theta(\mathbf{z}) \\\\
+p(\mathbf{x}|\mathbf{z};\theta) &= \mathcal{N}(\mathbf{x}; \mu, \sigma^2\mathbf{I})
+\end{aligned}$$
+- The approximate posterior $q(\mathbf{z}|\mathbf{x};\varphi)$ is parameterized
+with an **inference network** $\text{NN}\_\varphi$ (or encoder) that takes as input $\mathbf{x}$ and
+outputs parameters $\nu = \text{NN}\_\varphi(\mathbf{x})$ to the approximate posterior. E.g.,
+$$\begin{aligned}
+\mu, \sigma &= \text{NN}\_\varphi(\mathbf{x}) \\\\
+q(\mathbf{z}|\mathbf{x};\varphi) &= \mathcal{N}(\mathbf{z}; \mu, \sigma^2\mathbf{I})
+\end{aligned}$$
+
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec8/vae.png)]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+As before, we can use variational inference, but to jointly optimize the generative and the inference networks parameters $\theta$ and $\varphi$.
+
+We want
+$$\begin{aligned}
+\theta^{\*}, \varphi^{\*} &= \arg \max\_{\theta,\varphi} \text{ELBO}(\mathbf{x};\theta,\varphi) \\\\
+&= \arg \max\_{\theta,\varphi} \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi)\right] \\\\
+&= \arg \max\_{\theta,\varphi} \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x}|\mathbf{z};\theta)\right] - KL(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z})).
+\end{aligned}$$
+
+- Given some generative network $\theta$, we want to put the mass of the latent variables, by adjusting $\varphi$, such that they explain the observed data, while remaining close to the prior.
+- Given some inference network $\varphi$, we want to put the mass of the observed variables, by adjusting $\theta$, such that
+they are well explained by the latent variables.
+
+---
+
+class: middle
+
+Unbiased gradients of the ELBO with respect to the generative model parameters $\theta$ are simple to obtain:
+$$\begin{aligned}
+\nabla\_\theta \text{ELBO}(\mathbf{x};\theta,\varphi) &= \nabla\_\theta \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi)\right] \\\\
+&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \nabla\_\theta ( \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi) ) \right] \\\\
+&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \nabla\_\theta \log p(\mathbf{x},\mathbf{z};\theta) \right],
+\end{aligned}$$
+which can be estimated with Monte Carlo integration.
+
+However, gradients with respect to the inference model parameters $\varphi$ are
+more difficult to obtain:
+$$\begin{aligned}
+\nabla\_\varphi \text{ELBO}(\mathbf{x};\theta,\varphi) &= \nabla\_\varphi \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi)\right] \\\\
+&\neq \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \nabla\_\varphi ( \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi) ) \right]
+\end{aligned}$$
+
+---
+
+class: middle
+
+Let us abbreviate
+$$\begin{aligned}
+\text{ELBO}(\mathbf{x};\theta,\varphi) &= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi)\right] \\\\
+&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ f(\mathbf{x}, \mathbf{z}; \varphi) \right].
+\end{aligned}$$
 
 We have
-$$\mathbb{E}[v\_j h\_j(x^{(1)})] = \mathbb{E}[v\_j] \mathbb{E}[h\_j(x^{(1)})] = 0,$$
-since $v\_j$ and $h\_j(x^{(1)})$ are statistically independent and $v\_j$ has zero mean by hypothesis.
 
-The variance of the contribution of each hidden unit $h\_j$ is
+.grid[
+.kol-1-5[]
+.kol-4-5[.center.width-90[![](figures/lec8/reparam-original.svg)]]
+]
+
+
+
+We cannot backpropagate through the stochastic node $\mathbf{z}$ to compute $\nabla\_\varphi f$!
+
+---
+
+# Reparameterization trick
+
+The *reparameterization trick* consists in re-expressing the variable $$\mathbf{z} \sim q(\mathbf{z}|\mathbf{x};\varphi)$$ as some differentiable and invertible transformation
+of another random variable $\epsilon$ given $\mathbf{x}$ and $\varphi$,
+$$\mathbf{z} = g(\varphi, \mathbf{x}, \epsilon),$$
+such that the distribution of $\epsilon$ is independent of $\mathbf{x}$ or $\varphi$.
+
+---
+
+class: middle
+
+.grid[
+.kol-1-5[]
+.kol-4-5[.center.width-90[![](figures/lec8/reparam-reparam.svg)]]
+]
+
+For example, if $q(\mathbf{z}|\mathbf{x};\varphi) = \mathcal{N}(\mathbf{z}; \mu(\mathbf{x};\varphi), \sigma^2(\mathbf{x};\varphi))$, where $\mu(\mathbf{x};\varphi)$ and $\sigma^2(\mathbf{x};\varphi)$
+are the outputs of the inference network $NN\_\varphi$, then a common reparameterization is:
 $$\begin{aligned}
-\mathbb{V}[v\_j h\_j(x^{(1)})] &= \mathbb{E}[(v\_j h\_j(x^{(1)}))^2] - \mathbb{E}[v\_j h\_j(x^{(1)})]^2 \\\\
-&= \mathbb{E}[v\_j^2] \mathbb{E}[h\_j(x^{(1)})^2] \\\\
-&= \sigma\_v^2 \mathbb{E}[h\_j(x^{(1)})^2],
+p(\epsilon) &= \mathcal{N}(\epsilon; \mathbf{0}, \mathbf{I}) \\\\
+\mathbf{z} &= \mu(\mathbf{x};\varphi) + \sigma(\mathbf{x};\varphi) \odot \epsilon
 \end{aligned}$$
-which must be finite since $h\_j$ is bounded by its activation function.
-
-We define $V(x^{(1)}) = \mathbb{E}[h\_j(x^{(1)})^2]$, and is the same for all $j$.
 
 ---
 
 class: middle
 
-## What if $q \to \infty$?
-
-By the Central Limit Theorem, as $q \to \infty$, the total contribution
-of the hidden units, $\sum\_{j=1}^q v\_j h\_j(x)$, to the value of $f(x^{(1)})$ becomes a Gaussian with variance $q \sigma_v^2 V(x^{(1)})$.
-
-The bias $b$ is also Gaussian, of variance $\sigma\_b^2$, so for large $q$, the prior
-distribution $f(x^{(1)})$ is a Gaussian of variance $\sigma\_b^2 + q \sigma_v^2 V(x^{(1)})$.
-
----
-
-class: middle
-
-Accordingly, for $\sigma\_v = \omega\_v q^{-\frac{1}{2}}$, for some fixed $\omega\_v$, the prior $f(x^{(1)})$ converges to a Gaussian of mean zero and variance $\sigma\_b^2 + \omega\_v^2 \sigma_v^2 V(x^{(1)})$ as $q \to \infty$.
-
-For two or more fixed values $x^{(1)}, x^{(2)}, ...$, a similar argument shows that,
-as $q \to \infty$, the joint distribution of the outputs converges to a multivariate Gaussian
-with means of zero and covariances of
+Given such a change of variable, the ELBO can be rewritten as:
 $$\begin{aligned}
-\mathbb{E}[f(x^{(1)})f(x^{(2)})] &= \sigma\_b^2 + \sum\_{j=1}^q \sigma\_v^2 \mathbb{E}[h\_j(x^{(1)}) h\_j(x^{(2)})] \\\\
-&= \sigma\_b^2 + \omega_v^2 C(x^{(1)}, x^{(2)})
+\text{ELBO}(\mathbf{x};\theta,\varphi) &= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ f(\mathbf{x}, \mathbf{z}; \varphi) \right]\\\\
+&= \mathbb{E}\_{p(\epsilon)} \left[ f(\mathbf{x}, g(\varphi,\mathbf{x},\epsilon); \varphi) \right]
 \end{aligned}$$
-where $C(x^{(1)}, x^{(2)}) = \mathbb{E}[h\_j(x^{(1)}) h\_j(x^{(2)})]$ and is the same for all $j$.
+Therefore,
+$$\begin{aligned}
+\nabla\_\varphi \text{ELBO}(\mathbf{x};\theta,\varphi) &= \nabla\_\varphi \mathbb{E}\_{p(\epsilon)} \left[  f(\mathbf{x}, g(\varphi,\mathbf{x},\epsilon); \varphi) \right] \\\\
+&= \mathbb{E}\_{p(\epsilon)} \left[ \nabla\_\varphi  f(\mathbf{x}, g(\varphi,\mathbf{x},\epsilon); \varphi) \right],
+\end{aligned}$$
+which we can now estimate with Monte Carlo integration.
+
+The last required ingredient is the evaluation of the likelihood $q(\mathbf{z}|\mathbf{x};\varphi)$ given the change of variable $g$. As long as $g$ is invertible, we have:
+$$\log q(\mathbf{z}|\mathbf{x};\varphi) = \log p(\epsilon) - \log \left| \det\left( \frac{\partial \mathbf{z}}{\partial \epsilon} \right) \right|.$$
+
+---
+
+# Example
+
+Consider the following setup:
+- Generative model:
+$$\begin{aligned}
+\mathbf{z} &\in \mathbb{R}^J \\\\
+p(\mathbf{z}) &= \mathcal{N}(\mathbf{z}; \mathbf{0},\mathbf{I})\\\\
+p(\mathbf{x}|\mathbf{z};\theta) &= \mathcal{N}(\mathbf{x};\mu(\mathbf{z};\theta), \sigma^2(\mathbf{z};\theta)\mathbf{I}) \\\\
+\mu(\mathbf{z};\theta) &= \mathbf{W}\_2^T\mathbf{h} + \mathbf{b}\_2 \\\\
+\log \sigma^2(\mathbf{z};\theta) &= \mathbf{W}\_3^T\mathbf{h} + \mathbf{b}\_3 \\\\
+\mathbf{h} &= \text{ReLU}(\mathbf{W}\_1^T \mathbf{z} + \mathbf{b}\_1)\\\\
+\theta &= \\\{ \mathbf{W}\_1, \mathbf{b}\_1, \mathbf{W}\_2, \mathbf{b}\_2, \mathbf{W}\_3, \mathbf{b}\_3 \\\}
+\end{aligned}$$
 
 ---
 
 class: middle
 
-This result states that for any set of fixed points $x^{(1)}, x^{(2)}, ...$,
-the joint distribution of $f(x^{(1)}), f(x^{(2)}), ...$ is a multivariate
-Gaussian.
+- Inference model:
+$$\begin{aligned}
+q(\mathbf{z}|\mathbf{x};\varphi) &=  \mathcal{N}(\mathbf{z};\mu(\mathbf{x};\varphi), \sigma^2(\mathbf{x};\varphi)\mathbf{I}) \\\\
+p(\epsilon) &= \mathcal{N}(\epsilon; \mathbf{0}, \mathbf{I}) \\\\
+\mathbf{z} &= \mu(\mathbf{x};\varphi) + \sigma(\mathbf{x};\varphi) \odot \epsilon \\\\
+\mu(\mathbf{x};\varphi) &= \mathbf{W}\_5^T\mathbf{h} + \mathbf{b}\_5 \\\\
+\log \sigma^2(\mathbf{x};\varphi) &= \mathbf{W}\_6^T\mathbf{h} + \mathbf{b}\_6 \\\\
+\mathbf{h} &= \text{ReLU}(\mathbf{W}\_4^T \mathbf{x} + \mathbf{b}\_4)\\\\
+\varphi &= \\\{ \mathbf{W}\_4, \mathbf{b}\_4, \mathbf{W}\_5, \mathbf{b}\_5, \mathbf{W}\_6, \mathbf{b}\_6 \\\}
+\end{aligned}$$
 
-In other words,  the *infinitely wide 1-layer MLP* converges towards
-a  **Gaussian process**.
+Note that there is no restriction on the generative and inference network architectures.
+They could as well be arbitrarily complex convolutional networks.
 
-<br>
+---
 
-.center.width-80[![](figures/lec8/in.png)]
+class: middle
 
-.center[(Neal, 1995)]
+Plugging everything together, the objective can be expressed as:
+$$\begin{aligned}
+\text{ELBO}(\mathbf{x};\theta,\varphi) &= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi)\right] \\\\
+&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)} \left[ \log p(\mathbf{x}|\mathbf{z};\theta) \right] - KL(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z})) \\\\
+&= \mathbb{E}\_{p(\epsilon)} \left[  \log p(\mathbf{x}|\mathbf{z}=g(\varphi,\mathbf{x},\epsilon);\theta) \right] - KL(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z}))
+\end{aligned}
+$$
+where the KL divergence can be expressed  analytically as
+$$KL(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z})) = \frac{1}{2} \sum\_{j=1}^J \left( 1 + \log(\sigma\_j^2(\mathbf{x};\varphi)) - \mu\_j^2(\mathbf{x};\varphi) - \sigma\_j^2(\mathbf{x};\varphi)\right),$$
+which allows to evaluate its derivative without approximation.
+
+---
+
+class: middle
+
+Consider as data $\mathbf{d}$ the MNIST digit dataset:
+
+.center.width-100[![](figures/lec8/mnist.png)]
+
+---
+
+class: middle, center
+
+.width-100[![](figures/lec8/vae-samples.png)]
+
+(Kingma and Welling, 2013)
+
+---
+
+class: middle, center
+
+.width-100[![](figures/lec8/vae-interpolation.png)]
+
+(Kingma and Welling, 2013)
+
+---
+
+class: middle
+
+# Applications of (variational) AEs
+
+---
+
+class: middle, black-slide
+
+.center[
+
+<iframe width="640" height="400" src="https://www.youtube.com/embed/XNZIN7Jh3Sg?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
+
+Random walks in latent space.
+
+(Alex Radford, 2015)
+
+]
+
+---
+
+class: middle, black-slide
+
+.center[
+
+<iframe width="500" height="200" src="https://int8.io/wp-content/uploads/2016/12/output.mp4" frameborder="0" volume="0" allowfullscreen></iframe>
+
+Impersonation by encoding-decoding an unknown face.
+
+(Kamil Czarnogórski, 2016)
+]
+
+---
+
+class: middle, black-slide
+
+.center[
+
+<iframe width="640" height="400" src="https://www.youtube.com/embed/Wd-1WU8emkw?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
+
+(Inoue et al, 2017)
+
+]
+
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec8/vae-smile.png)]
+
+.center[(Tom White, 2016)]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec8/vae-text1.png)]
+
+.center[(Bowman et al, 2015)]
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec8/bombarelli.jpeg)]
+
+.center[Design of new molecules with desired chemical properties.<br> (Gomez-Bombarelli et al, 2016)]
 
 ---
 
@@ -633,7 +882,6 @@ The end.
 
 # References
 
-- Bishop, C. M. (1994). Mixture density networks (p. 7). Technical Report NCRG/4288, Aston University, Birmingham, UK.
-- Kendall, A., & Gal, Y. (2017). What uncertainties do we need in bayesian deep learning for computer vision?. In Advances in neural information processing systems (pp. 5574-5584).
-- Srivastava, N., Hinton, G., Krizhevsky, A., Sutskever, I., & Salakhutdinov, R. (2014). Dropout: a simple way to prevent neural networks from overfitting. The Journal of Machine Learning Research, 15(1), 1929-1958.
-- Pierre Geurts, [INFO8004 Advanced Machine Learning - Lecture 1](https://glouppe.github.io/info8004-advanced-machine-learning/pdf/lec1.pdf), 2019.
+- Mohamed and Rezende, "[Tutorial on Deep Generative Models](http://auai.org/uai2017/media/tutorials/shakir.pdf)", UAI 2017.
+- Blei et al, "[Variational inference: Foundations and modern methods](https://media.nips.cc/Conferences/2016/Slides/6199-Slides.pdf)", 2016.
+- Kingma and Welling, "[Auto-Encoding Variational Bayes](https://arxiv.org/pdf/1312.6114.pdf)", 2013.

@@ -12,14 +12,9 @@ Prof. Gilles Louppe<br>
 
 R: regression -> assume p(y|x) is Gaussian, hence the minimization of the mean squared error.
 R: check http://www.andreykurenkov.com/writing/ai/a-brief-history-of-neural-nets-and-deep-learning/ for history
-
+   also http://ai.stanford.edu/~nilsson/QAI/qai.pdf
 R: trade-offs is not clear, explain better how the terms impact each other
-R: https://twitter.com/gabrielpeyre/status/1167853444578893825?s=03
-
-R: https://twitter.com/gabrielpeyre/status/1193977685363625986?s=03 backprop
-
-R: move out the GP part into a new lecture.
-R: cover neural tangents there
+R: NN for tabular data https://forums.fast.ai/t/share-your-work-here/27676/1684
 
 ---
 
