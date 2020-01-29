@@ -37,6 +37,7 @@ Feel free to contact us for help!
 
 - Theoretical lectures
 - Programming tutorials
+- (No exercise sessions)
 
 ---
 

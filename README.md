@@ -46,3 +46,7 @@ Constraints:
 - Formatted using the LaTeX template [`template-report.tex`](https://glouppe.github.io/info8010-deep-learning/template-report.tex).
 
 Your report should be submitted  by **April 3, 2020 at 23:59** on the [submission platform](https://submit.montefiore.ulg.ac.be/). This is a **hard** deadline.
+
+## Archives
+
+- [2018-2019](https://github.com/glouppe/info8010-deep-learning/tree/v2-info8010-2019)
