@@ -15,6 +15,7 @@ R: check http://www.andreykurenkov.com/writing/ai/a-brief-history-of-neural-nets
    also http://ai.stanford.edu/~nilsson/QAI/qai.pdf
 R: trade-offs is not clear, explain better how the terms impact each other
 R: NN for tabular data https://forums.fast.ai/t/share-your-work-here/27676/1684
+R: https://twitter.com/alfcnz/status/1223126877163753472?s=03
 
 ---
 

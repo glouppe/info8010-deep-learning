@@ -2,7 +2,7 @@ class: middle, center, title-slide
 
 # Deep Learning
 
-Lecture 0: Deep Learning
+Lecture 0: Introduction
 
 <br><br>
 Prof. Gilles Louppe<br>
@@ -18,11 +18,13 @@ class: middle
 
 class: middle, center
 
-.width-80[![](figures/lec0/mushrooms.png)]
+.width-100[![](figures/lec0/mushrooms.png)]
 
 What do you see?
 
-.italic[How do we do that?!]
+???
+
+.italic[How do you do that?]
 
 ---
 
@@ -47,20 +49,6 @@ Chihuahua or muffin?
 ]
 
 .footnote[Credits: [Karen Zack](https://twitter.com/teenybiscuit). 2016.]
-
----
-
-class: middle
-
-The automatic extraction of **semantic information** from raw signal is at the
-core of many applications, such as
-- image recognition
-- speech processing
-- natural language processing
-- robotic control
-- ... and many others.
-
-How can we *write a computer program* that implements that?
 
 ---
 
@@ -144,11 +132,15 @@ Extracting semantic information requires models of **high complexity**, which ca
 
 However, one can write a program that *learns* the task of extracting semantic information.
 
+---
+
+class: middle, black-slide
+
+.center.width-80[![](figures/lec0/console.jpg)]
+
 Techniques used in practice consist of:
 - defining a parametric model with high capacity,
 - optimizing its parameters, by "making it work" on the training data.
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
 ---
 
@@ -235,6 +227,26 @@ Autonomous cars (NVIDIA, 2016)
 
 class: middle, center, black-slide
 
+<iframe width="600" height="450" src="https://www.youtube.com/embed/tlThdr3O5Qo" frameborder="0" allowfullscreen></iframe>
+
+Autopilot (Tesla, 2019)
+
+???
+
+A full build of Autopilot neural networks involves 48 networks that take 70,000 GPU hours to train 🔥. Together, they output 1,000 distinct tensors (predictions) at each timestep.
+
+---
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/DuIrjRAzNPQ" frameborder="0" allowfullscreen></iframe>
+
+... while preventing accidents.
+
+---
+
+class: middle, center, black-slide
+
 <iframe width="600" height="450" src="https://www.youtube.com/embed/Nu-nlQqFCKg?start=471" frameborder="0" allowfullscreen></iframe>
 
 Speech recognition, translation and synthesis (Microsoft, 2012)
@@ -281,19 +293,33 @@ Music composition (NVIDIA, 2017)
 
 ---
 
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/BIDaxl4xqJ4" frameborder="0" allowfullscreen></iframe>
+
+Dali Lives (2019)
+
+---
+
 class: middle, center
 
-.width-80[![](figures/lec7/turing-award.png)]
+.width-80[![](figures/lec0/turing-award.png)]
 
 .italic["ACM named .bold[Yoshua Bengio], .bold[Geoffrey Hinton], and .bold[Yann LeCun] recipients of the .bold[2018 ACM A.M. Turing Award] for conceptual and engineering breakthroughs that have made deep neural networks a critical component of computing."]
 
 ---
 
+class: middle
+
 # Why does it work now?
+
+---
+
+class: middle
 
 .center.grid[
 .kol-1-2[
-New algorithms<br><br>
+Algorithms (old and new)<br><br>
 .width-90[![](figures/lec0/skip-connection.png)]
 ]
 .center.kol-1-2[
@@ -312,6 +338,10 @@ Faster compute engines<br><br>
 .width-50[![](figures/lec0/titan.jpg)]
 ]
 ]
+
+???
+
+The success of deep learning is multi-factorial...
 
 ---
 
@@ -354,6 +384,16 @@ class: middle
 
 ---
 
+class: middle
+
+.center.width-70[![](figures/lec0/storage.png)]
+
+.center[The typical cost of a 4Tb hard disk is less than 100 USD (February 2020).]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
 
 class: middle
 
@@ -361,13 +401,23 @@ class: middle
 
 .footnote[Image credits: Canziani et al, 2016, arXiv:[1605.07678](https://arxiv.org/abs/1605.07678).]
 
-???
+---
 
-More compute allowed for bigger networks and better accuracy. Now a shift back to snaller networks with same accuracy.
+class: middle
 
-R: Same story for storage, which allows for larger dataset.
-R: add datasets
-R: add pytorch, to illustrate it is easy
+.center.width-100[![](figures/lec0/ai-and-compute-modern-log.png)]
+
+.footnote[Credtis: [AI and Compute, Open AI, 2018](https://openai.com/blog/ai-and-compute).]
+
+---
+
+class: middle 
+
+$1$ petaflop/s-day<br> 
+$=$ $10^{15}$ neural net operations per second for one day<br>
+$= 10^{20}$ opetations<br>
+$\approx 100$ GPUs for one day<br>
+$\approx 500 \text{kWh}$
 
 ---
 
@@ -380,4 +430,4 @@ The end.
 
 # References
 
-- Nature DL
+- LeCun, Y., Bengio, Y., & Hinton, G. (2015). Deep learning. nature, 521(7553), 436-444.
