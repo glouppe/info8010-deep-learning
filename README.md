@@ -11,7 +11,7 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2020.
 
 | Date | Topic |
 | --- | --- |
-| February 7 | [Outline](https://glouppe.github.io/info8010-deep-learning/?p=outline.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/outline.pdf)]<br>Lecture 0: [Introduction](https://glouppe.github.io/info8010-deep-learning/?p=lecture0.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec0.pdf)]<br>Lecture 1: [Fundamentals of machine learning](https://glouppe.github.io/info8010-deep-learning/?p=lecture1.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec1.pdf)]<br>Tutorial 0: Install party |
+| February 7 | [Outline](https://glouppe.github.io/info8010-deep-learning/?p=outline.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/outline.pdf)]<br>Lecture 0: [Introduction](https://glouppe.github.io/info8010-deep-learning/?p=lecture0.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec0.pdf)]<br>Lecture 1: [Fundamentals of machine learning](https://glouppe.github.io/info8010-deep-learning/?p=lecture1.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec1.pdf)]<br>[Tutorial 1: Installation and tensor operations](https://github.com/glouppe/info8010-deep-learning/tree/master/tutorials/lecture_01) |
 | February 14 | Lecture 2: Neural networks<br>Tutorial 1 |
 | February 21 | Lecture 3: Convolutional networks<br>Tutorial 2 |
 | February 28 | Lecture 4: Computer vision<br>Tutorial 3 |
