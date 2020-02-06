@@ -35,7 +35,9 @@ This course is part of the many other courses available at ULiège and related t
 
 This course is given by:
 - Theory: Prof. Gilles Louppe ([g.louppe@uliege.be](mailto:g.louppe@uliege.be))
-- Projects and guidance: Matthia Sabatelli ([m.sabatelli@uliege.be](mailto:m.sabatelli@uliege.be)), Antoine Wehenkel ([antoine.wehenkel@uliege.be](mailto:antoine.wehenkel@uliege.be))
+- Projects and guidance: 
+  - Matthia Sabatelli ([m.sabatelli@uliege.be](mailto:m.sabatelli@uliege.be))
+  - Antoine Wehenkel ([antoine.wehenkel@uliege.be](mailto:antoine.wehenkel@uliege.be))
 
 Feel free to contact us for help!
 
