@@ -419,6 +419,10 @@ $= 10^{20}$ opetations<br>
 $\approx 100$ GPUs for one day<br>
 $\approx 500 \text{kWh}$
 
+???
+
+R: https://twitter.com/eturner303/status/1223976313544773634
+
 ---
 
 class: end-slide, center

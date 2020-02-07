@@ -189,7 +189,7 @@ For this regression problem, we use the squared error loss
 $$\ell(y, f(x;\mathbf{w})) = (y - f(x;\mathbf{w}))^2$$
 to measure how wrong the predictions are.
 
-Therefore, our goal is to find the best value $\mathbf{w}\_\*$ such
+Therefore, our goal is to find the best value $\mathbf{w}\_\*$ such that
 $$\begin{aligned}
 \mathbf{w}\_\* &= \arg\min\_\mathbf{w} R(\mathbf{w}) \\\\
 &= \arg\min\_\mathbf{w}  \mathbb{E}\_{(x,y)\sim P(X,Y)}\left[ (y-f(x;\mathbf{w}))^2 \right]
