@@ -582,6 +582,8 @@ The end.
 
 ---
 
+count: false
+
 # References
 
 - Vapnik, V. (1992). Principles of risk minimization for learning theory. In Advances in neural information processing systems (pp. 831-838).

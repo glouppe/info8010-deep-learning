@@ -97,7 +97,7 @@ strong {
     color: #1a7082;
 }
 
-.black-slide  .katex {
+.black-slide  .katex, .black-slide h1, .black-slide a {
     color: white;
 }
 
