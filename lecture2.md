@@ -31,7 +31,9 @@ class: middle
 # Threshold Logic Unit
 
 The Threshold Logic Unit (McCulloch and Pitts, 1943) was the first mathematical model for a **neuron**.
-Assuming Boolean inputs and outputs, it is defined as:
+
+
+Assuming Boolean inputs and outputs, it is defined as
 
 $$f(\mathbf{x}) = 1_{\\{\sum_i w\_i x_i + b \geq 0\\}}$$
 
@@ -143,7 +145,7 @@ $$f(\mathbf{x}) = \text{sign}(\sum\_i w\_i x\_i  + b)$$ can be represented as a 
 
 ???
 
-Note that some intermediate nodes are not represented.
+Draw the NN diagram.
 
 ---
 
@@ -522,9 +524,13 @@ $$\begin{aligned}
 \mathcal{L}(\theta) &= \frac{1}{N} \sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} \ell(y\_i, f(\mathbf{x}\_i; \theta)) \\\\
 \nabla \mathcal{L}(\theta) &= \frac{1}{N} \sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} \nabla \ell(y\_i, f(\mathbf{x}\_i; \theta)).
 \end{aligned}$$
-Therefore, in **batch** gradient descent the complexity of an update grows linearly with the size $N$ of the dataset.
+Therefore, in **batch** gradient descent the complexity of an update grows linearly with the size $N$ of the dataset. This is bad!
 
-More importantly, since the empirical risk is already an approximation of the expected risk, it should not be necessary to carry out the minimization with great accuracy.
+---
+
+class: middle
+
+Since the empirical risk is already an approximation of the expected risk, it should not be necessary to carry out the minimization with great accuracy.
 
 ---
 
@@ -598,6 +604,10 @@ where  $\mathbf{h} \in \mathbb{R}^q$, $\mathbf{x} \in \mathbb{R}^p$, $\mathbf{W}
 <br>
 .center.width-70[![](figures/lec2/graphs/layer.svg)]
 
+???
+
+Draw the NN diagram.
+
 
 ---
 
@@ -614,6 +624,10 @@ f(\mathbf{x}; \theta) = \hat{y} &= \mathbf{h}\_L
 where $\theta$ denotes the model parameters $\\{ \mathbf{W}\_k, \mathbf{b}\_k, ... | k=1, ..., L\\}$.
 
 This model is the **multi-layer perceptron**, also known as the fully connected feedforward network.
+
+???
+
+Draw the NN diagram.
 
 ---
 
@@ -661,10 +675,10 @@ $$\begin{aligned}
 &\arg \max\_{\theta} P(\mathbf{d}|\theta) \\\\
 &= \arg \max\_{\theta} \prod\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} P(Y=y\_i|\mathbf{x}\_i, \theta) \\\\
 &= \arg \min\_{\theta} -\sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} \log P(Y=y\_i|\mathbf{x}\_i, \theta) \\\\
-&= \arg \min\_{\theta} \sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} \frac{1}{2}(y\_i - f(\mathbf{x};\theta))^2 + \text{constant} \\\\
+&= \arg \min\_{\theta} -\sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} \log\left( \frac{1}{\sqrt{2\pi}} \exp\(-\frac{1}{2}(y\_i - f(\mathbf{x};\theta))^2\) \right)\\\\
 &= \arg \min\_{\theta} \sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} (y\_i - f(\mathbf{x};\theta))^2,
 \end{aligned}$$
-which recovers the common **squared error** loss.
+which recovers the common **squared error** loss $\ell(y, \hat{y}) = (y-\hat{y})^2$.
 
 ---
 
