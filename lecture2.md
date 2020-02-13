@@ -623,6 +623,15 @@ class: middle, center
 
 ---
 
+
+class: middle
+
+.width-100[![](figures/lec2/mlp.png)]
+
+.footnote[Credits: [PyTorch Deep Learning Minicourse](https://atcold.github.io/pytorch-Deep-Learning-Minicourse/), Alfredo Canziani, 2020.]
+
+---
+
 class: middle
 
 ## Output layer 
