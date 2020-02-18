@@ -247,7 +247,7 @@ class: middle, center
 
 .center.width-70[![](figures/lec2/graphs/logistic-neuron.svg)]
 
-This unit is the main **primitve** of all neural networks!
+This unit is the main **primitive** of all neural networks!
 
 ---
 

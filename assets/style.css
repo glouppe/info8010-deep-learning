@@ -93,6 +93,15 @@ strong {
     font-size: 1.2em;
 }
 
+.smaller-x {
+    font-size: 0.8em;
+}
+
+
+.smaller-xx {
+    font-size: 0.5em;
+}
+
 .katex {
     color: #1a7082;
 }

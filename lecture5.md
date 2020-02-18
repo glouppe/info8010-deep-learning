@@ -10,6 +10,7 @@ Prof. Gilles Louppe<br>
 
 ???
 
+R: check the Bayesian derivation that leads to those algos
 R (exam): better explain the interplay in the terms of the tradeoffs of large-scale learning
 R: why do we want the information to flow?
 R: add regularization chapter -> dropout, dropconnect, others?

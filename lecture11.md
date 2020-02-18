@@ -11,7 +11,7 @@ Prof. Gilles Louppe<br>
 ???
 
 R: move out the GP part into a new lecture.
-R: cover neural tangents there
+R: cover neural tangents there   https://rajatvd.github.io/NTK/
 R: science of dl https://people.csail.mit.edu/madry/6.883/
 
 
