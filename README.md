@@ -20,7 +20,7 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2020.
 | March 20 | Lecture 7: Attention and transformer networks<br>Tutorial 6 |
 | March 27 | Lecture 8: Auto-encoders and generative models |
 | April 3 | Lecture 9: Generative adversarial networks |
-| April 24 | Lecture 10: Uncertainty |
+| April 24 | Lecture 10: Uncertainty<br>Q&A session |
 | May 1 | Project code and report | 
 | May 8 | Lecture 11: Theory of deep learning |
 | May 15 | Lecture 12: Deep reinforcement learning |
