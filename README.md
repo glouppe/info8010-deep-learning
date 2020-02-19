@@ -15,12 +15,13 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2020.
 | February 14 | Lecture 2: [Neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture2.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec2.pdf)]<br>Tutorial 2: [Using pre-trained neural networks](https://github.com/glouppe/info8010-deep-learning/tree/master/tutorials/lecture_02) |
 | February 21 | Lecture 3: [Convolutional networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture3.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec3.pdf)]<br>Tutorial 3: Backpropagation |
 | February 28 | Lecture 4: Computer vision<br>Q&A session |
-| March 6 | Lecture 5: Training neural networks<br>Tutorial 4 |
+| March 6 | Lecture 5: Training neural networks<br>Tutorial 4<br>Project proposal |
 | March 13 | Lecture 6: Recurrent neural networks<br>Tutorial 5 |
 | March 20 | Lecture 7: Attention and transformer networks<br>Tutorial 6 |
 | March 27 | Lecture 8: Auto-encoders and generative models |
 | April 3 | Lecture 9: Generative adversarial networks |
 | April 24 | Lecture 10: Uncertainty |
+| May 1 | Project code and report | 
 | May 8 | Lecture 11: Theory of deep learning |
 | May 15 | Lecture 12: Deep reinforcement learning |
 
@@ -28,12 +29,6 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2020.
 ## Project
 
 See instructions in [`project.md`](https://github.com/glouppe/info8010-deep-learning/blob/master/project.md).
-
-#### Agenda
-
-- Project proposal, due by **March 6, 2020 at 23:59**.
-- Project code and report, due by **May 1, 2020 at 23:59**.
-- Project presentations (TBD).
 
 ## Reading assignment
 
