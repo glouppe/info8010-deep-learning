@@ -27,7 +27,13 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2020.
 
 ## Project
 
-TBD.
+See instructions in [`project.md`](https://github.com/glouppe/info8010-deep-learning/blob/master/project.md).
+
+#### Agenda
+
+- Project proposal, due by **March 6, 2020 at 23:59**.
+- Project code and report, due by **May 1, 2020 at 23:59**.
+- Project presentations (TBD).
 
 ## Reading assignment
 
