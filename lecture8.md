@@ -20,6 +20,8 @@ http://paulrubenstein.co.uk/variational-autoencoders-are-not-autoencoders/
 
 R: world models as an application of vaes+rnn
 
+R: reverse KL https://ermongroup.github.io/cs228-notes/inference/variational/
+
 ---
 
 # Today

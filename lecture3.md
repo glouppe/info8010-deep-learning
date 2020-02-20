@@ -247,7 +247,7 @@ class: middle
 
 class: middle
 
-If they were handled as normal "unstructured" vectors, large-dimension signal as sound samples or images would require of intractable size.
+If they were handled as normal "unstructured" vectors, high-dimensional signals such as sound samples or images would require models of intractable size.
 
 E.g., a linear layer taking $256\times 256$ RGB images as input and producing an image of same size would require
 $$(256 \times 256 \times 3)^2 \approx 3.87e+10$$
@@ -381,7 +381,7 @@ class: middle
 
 The dilation modulates the expansion of the kernel support by adding rows and columns of zeros between coefficients. 
 
-Having a dilation coeffient greater than one increases the units receptive field size without increasing the number of parameters. 
+Having a dilation coefficient greater than one increases the units receptive field size without increasing the number of parameters. 
 
 .center[
 .width-45[![](figures/lec3/dilation.gif)]
