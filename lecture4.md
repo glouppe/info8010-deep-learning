@@ -12,18 +12,18 @@ Prof. Gilles Louppe<br>
 
 # Today 
 
-.grid[
-.kol-1-2[
+Computer vision with deep learning:
 - Classification
 - Object detection
 - Semantic segmentation
-]
-.kol-1-2[
-.width-100.center[![](figures/lec4/tasks.jpg)]
+
+---
+
+class: middle
+
+.width-80.center[![](figures/lec4/tasks.jpg)]
 
 .caption[Some of the main computer vision tasks.<br> Each of them requires a different neural network architecture.]
-]
-]
 
 .footnote[Credits: [Aurélien Géron](https://www.oreilly.com/content/introducing-capsule-networks/), 2018.]
 
@@ -91,6 +91,7 @@ class: middle
 
 - Training a model on natural images, from scratch, takes **days or weeks**.
 - Many models trained on ImageNet are publicly available for download. These models can be used as *feature extractors* or for smart *initialization*.
+- The models themselves should be considered as generic and re-usable assets.
 
 ---
 
@@ -98,7 +99,7 @@ class: middle
 
 ## Transfer learning
 
-- Take a pre-trained network, remove the last layer(s) and then treat the rest of the the network as a **fixed** feature extractor.
+- Take a pre-trained network, remove the last layer(s) and then treat the rest of the network as a **fixed** feature extractor.
 - Train a model from these features on a new task.
 - Often better than handcrafted feature extraction for natural images, or better than training from data of the new task only.
 
@@ -113,7 +114,7 @@ class: middle
 
 .center.width-65[![](figures/lec4/finetune.svg)]
 
-## Fine tuning
+## Fine-tuning
 
 - Same as for transfer learning, but also *fine-tune* the weights of the pre-trained network by continuing backpropagation.
 - All or only some of the layers can be tuned.
@@ -124,7 +125,7 @@ class: middle
 
 class: middle
 
-In the case of models pre-trained on ImageNet, transferred/fine-tuned networks usually works even when the input images for the new task are not photographs of objects or animals, such as biomedical images, satellite images or paintings.
+In the case of models pre-trained on ImageNet, transferred/fine-tuned networks usually work even when the input images for the new task are not photographs of objects or animals, such as biomedical images, satellite images or paintings.
 
 
 .center.width-70[![](figures/lec4/fine-tuning-results.png)]
@@ -184,7 +185,7 @@ class: middle
 
 The sliding window approach evaluates a classifier at large number of locations and scales. 
 
-This approach is usually **very computationally expensive** as performance directly depends on the resolution and number of the windows fed to the classifier (the finer the better, but also the more costly). 
+This approach is usually **very computationally expensive** as performance directly depends on the resolution and number of the windows fed to the classifier (the more the better, but also the more costly). 
 
 ---
 
@@ -246,7 +247,7 @@ Negative samples are taken in each scene either at random or by selecting the on
 class: middle
 
 Although OverFeat is one of the earliest successful networks for object detection, its architecture comes with several **drawbacks**:
-- it is a disjoint system (2 disjoint heads with their respective losses);
+- it is a disjoint system (2 disjoint heads with their respective losses, ad-hoc merging procedure);
 - it optimizes for localization rather than detection;
 - it cannot reason about global context and thus requires significant post-processing to produce coherent detections.
 
@@ -278,7 +279,7 @@ class: middle
 
 The network predicts class scores and bounding-box regressions, and .bold[although the output comes from fully connected layers, it has a 2D structure].
 
-- Unlike sliding window techniques, YOLO is threfore capable of reasoning globally about the image when making predictions. 
+- Unlike sliding window techniques, YOLO is therefore capable of reasoning globally about the image when making predictions. 
 - It sees the entire image during training and test time, so it implicitly encodes contextual information about classes as well as their appearance.
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
@@ -363,6 +364,7 @@ The main family of architectures following this principle are **region-based** c
 - (Slow) R-CNN (Girshick et al, 2014)
 - Fast R-CNN (Girshick et al, 2015)
 - Faster R-CNN (Ren et al, 2015)
+- Mask R-CNN (He et al, 2017)
 
 ---
 
@@ -372,7 +374,7 @@ class: middle
 
 This architecture is made of four parts:
 1. Selective search is performed on the input image to select multiple high-quality region proposals.
-2. A pre-trained CNN is selected and put before the output layer. It resizes each proposed region into the input dimensions required by the networks and uses a forward pass to output features for the proposals.
+2. A pre-trained CNN is selected and put before the output layer. It resizes each proposed region into the input dimensions required by the network and uses a forward pass to output features for the proposals.
 3. The features are fed to an SVM for predicting the class.
 4. The features are fed to a linear regression model for predicting the bounding-box.
 
@@ -410,7 +412,7 @@ class: middle
 
 class: middle
 
-.center.width-80[![](figures/lec4/faster-rcnn.svg)]
+.center.width-75[![](figures/lec4/faster-rcnn.svg)]
 
 ## Faster R-CNN
 
@@ -458,7 +460,7 @@ These semantic regions label and predict objects at the pixel level.
 
 ---
 
-class: middle
+# Fully convolutional networks
 
 The historical approach to image segmentation was to define a measure of
 similarity between pixels, and to cluster groups of similar pixels. Such
@@ -466,9 +468,25 @@ approaches account poorly for semantic content.
 
 The deep-learning approach re-casts semantic segmentation as pixel
 classification, and re-uses networks trained for image classification by making
-them **fully convolutional**.
+them **fully convolutional** (FCNs).
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec4/fcn-1.png)]
+
+.footnote[Credits: [CS231n, Lecture 11](http://cs231n.stanford.edu/slides/2018/cs231n_2018_lecture11.pdf), 2018.]
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec4/fcn-2.png)]
+
+.footnote[Credits: [CS231n, Lecture 11](http://cs231n.stanford.edu/slides/2018/cs231n_2018_lecture11.pdf), 2018.]
 
 ---
 
@@ -552,17 +570,23 @@ $$
 
 ---
 
-# Fully convolutional networks
+# FCNs for segmentation
+
 .grid[
 .kol-3-4[
-
-The simplest design of a fully convolutional network (FCN) for semantic segmentation consists in:
+The simplest design of a fully convolutional network for semantic segmentation consists in:
 - using a (pre-trained) convolutional network for downsampling and extracting image features;
-- transforming the number of channels into the number of categories through a $1 \times 1$ convolution layer;
+- replacing the dense layers with a  $1 \times 1$ convolution layer to  transform the number of channels into the number of categories;
 - upsampling the feature map to the size of the input image by using one (or several) transposed convolution layer(s).
 ]
 .kol-1-4[.center.width-90[![](figures/lec4/fcn.svg)]]
 ]
+
+---
+
+class: middle
+
+Contrary to fully connected networks, the dimensions of the output of an FCN is not fixed. It directly depends on the dimensions of the input, which can be images of abitrary sizes.
 
 ---
 
@@ -597,6 +621,7 @@ class: middle
 Mask R-CNN extends the Faster R-CNN model for semantic segmentation. 
 - The RoI pooling layer is replaced with an RoI alignment layer. 
 - It branches off to an FCN for predicting a segmentation mask.
+- Object detection combined with mask prediction enables *instance segmentation*.
 
 .footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
 
