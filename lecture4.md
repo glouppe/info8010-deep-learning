@@ -208,7 +208,7 @@ class: middle
 
 .center.width-80[![](figures/lec4/overfeat-grid.png)]
 
-The classifier head outputs a class and a confidence for each location and scale pre-defined from a coarse grid. 
+The classifier head outputs a class and a confidence for each location and scale pre-defined from a coarse grid. Each window is resized to fit with the input dimensions of the classifier.
 
 .footnote[Credits: Sermanet et al, 2013.]
 
@@ -586,7 +586,7 @@ The simplest design of a fully convolutional network for semantic segmentation c
 
 class: middle
 
-Contrary to fully connected networks, the dimensions of the output of an FCN is not fixed. It directly depends on the dimensions of the input, which can be images of abitrary sizes.
+Contrary to fully connected networks, the dimensions of the output of a fully convolutional network is not fixed. It directly depends on the dimensions of the input, which can be images of arbitrary sizes.
 
 ---
 

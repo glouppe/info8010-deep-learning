@@ -352,8 +352,8 @@ class: middle
 Vanilla gradient descent assumes the isotropy of the curvature, so that the same step size $\gamma$ applies to all parameters.
 
 .center[
-.width-48[![](figures/lec5/isotropic.png)]
-.width-48[![](figures/lec5/anisotropic.png)]
+.width-45[![](figures/lec5/isotropic.png)]
+.width-45[![](figures/lec5/anisotropic.png)]
 
 Isotropic vs. Anistropic
 ]
