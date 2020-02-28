@@ -170,7 +170,7 @@ class: middle
 
 If $\text{IoU}(B,\hat{B})$ is larger than a fixed threshold (usually $\frac{1}{2}$), then the predicted bounding-box is valid (true positive) and wrong otherwise (false positive).
 
-Precision and recall values are accumulated for all thresholds on the predicted confidence.
+TP and FP values are accumulated for all thresholds on the predicted confidence.
 The area under the resulting precision-recall curve is the *average precision* for the considered class.
 
 The mean over the classes is the **mean average precision**.
@@ -178,6 +178,11 @@ The mean over the classes is the **mean average precision**.
 .center.width-50[![](figures/lec4/interpolated_precision.png)]
 
 .footnote[Credits: [Rafael Padilla](https://github.com/rafaelpadilla/Object-Detection-Metrics), 2018.]
+
+???
+
+- Precision = TP / all detections 
+- Recall = TP / all ground truths
 
 ---
 
