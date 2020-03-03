@@ -15,7 +15,7 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2020.
 | February 14 | Lecture 2: [Neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture2.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec2.pdf)]<br>Tutorial 2: [Using pre-trained neural networks](https://github.com/glouppe/info8010-deep-learning/tree/master/tutorials/lecture_02) |
 | February 21 | Lecture 3: [Convolutional networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture3.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec3.pdf)]<br>Tutorial 3: [Backpropagation](https://github.com/glouppe/info8010-deep-learning/blob/master/tutorials/lecture_03) |
 | February 28 | Lecture 4: [Computer vision](https://glouppe.github.io/info8010-deep-learning/?p=lecture4.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec4.pdf)]<br>Q&A session |
-| March 6 | Lecture 5: Training neural networks<br>Tutorial 4<br>Project proposal |
+| March 6 | Lecture 5: [Training neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture5.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec5.pdf)]<br>Tutorial 4: Neural networks with PyTorch<br>Project proposal |
 | March 13 | Lecture 6: Recurrent neural networks<br>Tutorial 5 |
 | March 20 | Lecture 7: Attention and transformer networks<br>Tutorial 6 |
 | March 27 | Lecture 8: Auto-encoders and generative models |
