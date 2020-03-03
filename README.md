@@ -17,9 +17,9 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2020.
 | February 28 | Lecture 4: [Computer vision](https://glouppe.github.io/info8010-deep-learning/?p=lecture4.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec4.pdf)]<br>Q&A session |
 | March 6 | Lecture 5: [Training neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture5.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec5.pdf)]<br>Tutorial 4: Neural networks with PyTorch<br>Project proposal |
 | March 13 | Lecture 6: Recurrent neural networks<br>Tutorial 5 |
-| March 20 | Lecture 7: Attention and transformer networks<br>Tutorial 6 |
-| March 27 | Lecture 8: Auto-encoders and generative models |
-| April 3 | Lecture 9: Generative adversarial networks |
+| March 20 | Lecture 7: Auto-encoders and generative models<br>Tutorial 6  |
+| March 27 | Lecture 8: Generative adversarial networks |
+| April 3 | Lecture 9: Attention and transformer networks|
 | April 24 | Lecture 10: Uncertainty<br>Q&A session |
 | May 1 | Project code and report | 
 | May 8 | Lecture 11: Theory of deep learning |
