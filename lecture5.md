@@ -252,6 +252,24 @@ However, in deep learning,
 
 ---
 
+class: middle
+
+## The tradeoffs large-scale learning 
+
+A fundamental result due to Bottou and Bousquet (2011) states that stochastic optimization algorithms (e.g., SGD) yield the best generalization performance (in terms of excess error) despite being the worst optimization algorithms for minimizing the empirical risk.
+
+That is, for a fixed computational budget, stochastic optimization algorithms reach a lower test error than more sophisticated algorithms (2nd order methods, line search algorithms, etc) that would fit the training error too well or would consume too large a part of the computational budget at every step.
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec5/tradeoffs.svg)]
+
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
+
+---
+
 # Momentum
 
 .center.width-80[![](figures/lec5/floor.png)]
@@ -475,9 +493,9 @@ class: middle
 
 Let us assume that
 - we are in a linear regime at initialization (e.g., the positive part of a ReLU or the middle of a sigmoid),
-- weights $w\_{ij}^l$ are initialized independently,
+- weights $w\_{ij}^l$ are initialized i.i.d,
 - biases $b\_l$ are initialized to be $0$,
-- input feature variances are the same, which we denote as $\mathbb{V}[x]$.
+- input features are i.i.d, which we denote as $\mathbb{V}[x]$.
 
 Then, the variance of the activation $h\_i^l$ of unit $i$ in layer $l$ is
 $$
@@ -498,7 +516,7 @@ Use
 
 class: middle
 
-If we further assume that weights $w\_{ij}^l$ at layer $l$ share the same variance $\mathbb{V}\left[ w^l \right]$ and that the variance of the activations in the previous layer are the same, then we can drop the indices and write
+Since the weights $w\_{ij}^l$ at layer $l$ share the same variance $\mathbb{V}\left[ w^l \right]$ and the variance of the activations in the previous layer are the same, we can drop the indices and write
 $$\mathbb{V}\left[h^l\right] = q\_{l-1} \mathbb{V}\left[ w^l \right] \mathbb{V}\left[ h^{l-1} \right].$$
 
 Therefore, the variance of the activations is preserved across layers when
