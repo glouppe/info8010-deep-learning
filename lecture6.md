@@ -8,24 +8,16 @@ Lecture 6: Recurrent neural networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](g.louppe@uliege.be)
 
-???
-
-R: add https://ai.googleblog.com/2018/05/duplex-ai-system-for-natural-conversation.html
-R: learning to learn
-
-R: graph neural nets as generalization to abitrary structures
-
-https://arxiv.org/pdf/1904.10278.pdf
-
 ---
 
 # Today
 
 How to make sense of *sequential data*?
 
+- Temporal convolutions
 - Recurrent neural networks
 - Applications
-- Differentiable computers
+- Beyond sequences
 
 ---
 
@@ -77,11 +69,18 @@ In the rest of the slides, we consider only time-indexed signal, although it gen
 
 ---
 
+class: middle
+
 # Temporal convolutions
 
-One of the simplest approach to sequence processing is to use **temporal convolutional networks** (TCNs).
-- TCNs correspond to standard 1D convolutional networks.
-- They process input sequences as fixed-size vectors of the *maximum possible length*.
+---
+
+class: middle
+
+The simplest approach to sequence processing is to use **temporal convolutional networks** (TCNs).
+
+TCNs correspond to standard 1D convolutional networks.
+They process input sequences as fixed-size vectors of the maximum possible length.
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
@@ -89,11 +88,11 @@ One of the simplest approach to sequence processing is to use **temporal convolu
 
 class: middle
 
-.center.width-90[![](figures/lec6/tcn.png)]
-Complexity:
-- Increasing the window size $T$ makes the required number of layers grow as $O(\log T)$.
-- Thanks to dilated convolutions, the model size is $O(\log T)$.
-- The memory footprint and computation are $O(T \log T)$.
+.center.width-80[![](figures/lec6/tcn.png)]
+
+Increasing exponentially the kernel sizes makes the required number of layers grow as $O(\log T)$ of the time window $T$ taken into account. 
+
+Dilated convolutions make the model size grow as $O(\log T)$, while the memory footprint and computation are $O(T\log T)$.
 
 .footnote[Credits: Philippe Remy, [keras-tcn](https://github.com/philipperemy/keras-tcn), 2018; Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
@@ -144,18 +143,21 @@ class: middle
 
 ---
 
+count: false
 class: middle
 
 .width-100[![](figures/lec6/rnn-hiddens.svg)]
 
 ---
 
+count: false
 class: middle
 
 .width-100[![](figures/lec6/rnn-single-output.svg)]
 
 ---
 
+count: false
 class: middle
 
 .width-100[![](figures/lec6/rnn-sequence-output.svg)]
@@ -178,10 +180,7 @@ class: middle
 
 # Elman networks
 
-Elman networks consist of $\phi$ and $\psi$ defined as primitive neuron units, such as logistic regression units.
-
-That is,
-
+Elman networks consist of $\phi$ and $\psi$ defined as primitive neuron units, such as logistic regression units:
 $$
 \begin{aligned}
 &\mathbf{h}\_t = \sigma\_h\left( \mathbf{W}^T\_{xh} \mathbf{x}\_t + \mathbf{W}^T\_{hh} \mathbf{h}\_{t-1} + \mathbf{b}\_h \right) \\\\
@@ -196,9 +195,11 @@ where $\sigma\_h$ and $\sigma\_y$ are non-linear activation functions, such as t
 
 class: middle
 
-## Example
+## Benchmark example
 
-Can a recurrent network learn to tell whether a variable-length sequence is a *palindrome*?
+Learn to recognize variable-length sequences that are palindromes.
+For training, we will use sequences of random sizes, from $1$ to $10$.
+
 .grid[
 .kol-1-4[]
 .kol-1-4.center[
@@ -221,9 +222,6 @@ $0$
 ]
 ]
 
-<br>
-For training, we will use sequences of random sizes, from $1$ to $10$.
-
 
 ---
 
@@ -231,26 +229,13 @@ class: middle
 
 .center.width-80[![](figures/lec6/palindrome-1.png)]
 
-.center[Epoch vs. cross-entropy.]
-
----
-
-class: middle
-
-.center.width-80[![](figures/lec6/length-1.png)]
-
-.center[Sequence length vs. cross-entropy.]
-
-Note that the network was trained on sequences of size 10 or lower.<br>
-It does not appear to generalize outside of the range.
-
 ---
 
 # Stacked RNNs
 
 Recurrent networks can be viewed as layers producing sequences $\mathbf{h}\_{1:T}^l$ of activations.
 
-As for multi-perceptron layers, recurrent layers can be composed in series to form a *stack* of recurrent networks.
+As for dense layers, recurrent layers can be composed in series to form a .bold[stack] of recurrent networks.
 
 <br>
 
@@ -261,16 +246,6 @@ As for multi-perceptron layers, recurrent layers can be composed in series to fo
 class: middle
 
 .center.width-80[![](figures/lec6/palindrome-2.png)]
-
-.center[Epoch vs. cross-entropy.]
-
----
-
-class: middle
-
-.center.width-80[![](figures/lec6/length-2.png)]
-
-.center[Sequence length vs. cross-entropy.]
 
 ---
 
@@ -285,14 +260,21 @@ Computing the recurrent states forward in time does not make use of future input
 
 ---
 
+
+class: middle
+
+.center.width-80[![](figures/lec6/palindrome-3.png)]
+
+---
+
 # Gating
 
-When unfolded through time, the resulting network can grow very deep, and training it involves dealing with **vanishing gradients**.
-- A critical component in the design of RNN cells is to add in a *pass-through*, or additive paths, so that the recurrent state does not go repeatedly through a squashing non-linearity.
-- This is very similar to skip connections in ResNets.
+When unfolded through time, the graph of computation of a recurrent network can grow very deep, and training involves dealing with **vanishing gradients**.
+- RNN cells should include a *pass-through*, or additive paths, so that the recurrent state does not go repeatedly through a squashing non-linearity.
+- This is identical to skip connections in ResNet.
 
 <br><br><br>
-.center.width-60[![](figures/lec6/skip.svg)]
+.center.width-70[![](figures/lec6/skip.svg)]
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
@@ -325,7 +307,7 @@ class: middle
 
 ## LSTM
 
-The **long short-term memory model** (Hochreiter and Schmidhuber, 1997) is an instance of the previous gated recurrent cell, with the following changes:
+The long short-term memory model (LSTM; Hochreiter and Schmidhuber, 1997) is an instance of the previous gated recurrent cell, with the following changes:
 - The recurrent state is split into two parts $\mathbf{c}\_t$ and $\mathbf{h}\_t$, where
     - $\mathbf{c}\_t$ is the cell state and
     - $\mathbf{h}\_t$ is output state.
@@ -387,17 +369,7 @@ $$
 
 class: middle
 
-.center.width-80[![](figures/lec6/palindrome-3.png)]
-
-.center[Epoch vs. cross-entropy.]
-
----
-
-class: middle
-
-.center.width-80[![](figures/lec6/length-3.png)]
-
-.center[Sequence length vs. cross-entropy.]
+.center.width-80[![](figures/lec6/palindrome-4.png)]
 
 ---
 
@@ -405,8 +377,8 @@ class: middle
 
 ## GRU
 
-The **gated recurrent unit** (Cho et al, 2014) is another gated recurrent cell.
-- It is based on two gates instead of three: an update gate $\mathbf{z}\_t$ and a reset gate $\mathbf{r}\_t$.
+The gated recurrent unit (GRU; Cho et al, 2014) is another gated recurrent cell.
+- It uses two gates instead of three: an update gate $\mathbf{z}\_t$ and a reset gate $\mathbf{r}\_t$.
 - GRUs perform similarly as LSTMs for language or speech modeling sequences, but with fewer parameters.
 - However, LSTMs remain strictly stronger than GRUs.
 
@@ -429,23 +401,33 @@ $$
 
 class: middle
 
-.center.width-80[![](figures/lec6/palindrome-4.png)]
-
-.center[Epoch vs. cross-entropy.]
+.center.width-80[![](figures/lec6/palindrome-5.png)]
 
 ---
 
 class: middle
 
-.center.width-80[![](figures/lec6/length-4.png)]
+.center.width-80[![](figures/lec6/length-lstm-gru.png)]
 
-.center[Sequence length vs. cross-entropy.]
+.center[The models do not generalize to sequences longer than those in the training set!]
 
 ---
 
-# Gradient clipping
+# Exploding gradients
 
 Gated units prevent gradients from vanishing, but not from **exploding**.
+
+<br>
+
+.center.width-90[![](figures/lec6/loss-exploding.png)]
+
+.footnote[Credits: [pat-coady](https://pat-coady.github.io/rnn/).]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec6/gradclip.png)]
 
 The standard strategy to solve this issue is *gradient norm clipping*, which rescales the norm of the gradient to a fixed threshold $\delta$ when it is above:
 $$\tilde{\nabla} f = \frac{\nabla f}{||\nabla f||} \min(||\nabla f||, \delta).$$
@@ -628,7 +610,7 @@ $\mathbf{A}$ is orthogonal.
 
 class: middle
 
-Finally, let us note that exploding activations are also the reason why squashing non-linearity functions (such as $\text{tanh}$) are preferred in RNNs.
+Exploding activations are also the reason why squashing non-linearity functions (such as $\text{tanh}$) are preferred in RNNs.
 - They avoid recurrent states from exploding by upper bounding $||\mathbf{h}\_t||$.
 - (At least when running the network forward.)
 
@@ -684,24 +666,21 @@ class: middle
 
 .center[
 .width-80[![](figures/lec6/textgenrnn_console.gif)]
-
-[Open](https://drive.google.com/file/d/1mMKGnVxirJnqDViH7BDJxFqWrsXlPSoK/view?usp=sharing) in Google Colab.
 ]
+
+.footnote[Credits: [Max Woolf](https://drive.google.com/file/d/1mMKGnVxirJnqDViH7BDJxFqWrsXlPSoK/view?usp=sharing), 2018.]
 
 ---
 
 class: middle
 
+## Sequence synthesis
+
 The same generative architecture applies to any kind of sequences.
 
-Say, sketches defined as sequences of strokes?
+E.g., [`sketch-rnn-demo`](https://magenta.tensorflow.org/assets/sketch_rnn_demo/index.html) sketches defined as sequences of strokes.
 
-.grid[
-.kol-2-3.center[
-<br>[`sketch-rnn-demo`](https://magenta.tensorflow.org/assets/sketch_rnn_demo/index.html)
-]
-.kol-1-3.width-100[![](figures/lec6/sketch-rnn.png)]
-]
+.center.width-40[![](figures/lec6/sketch-rnn.png)]
 
 ---
 
@@ -729,28 +708,6 @@ class: middle
 
 class: middle
 
-## Image captioning
-
-.center[
-.width-100[![](figures/lec6/sat.png)]
-]
-
-.footnote[Credits: Kelvin Xu et al, [Show, Attend and Tell: Neural Image Caption Generation with Visual Attention](https://arxiv.org/abs/1502.03044), 2015.]
-
----
-
-class: middle
-
-.center[
-.width-100[![](figures/lec6/sat-demo.jpg)]
-]
-
-.footnote[Credits: Kelvin Xu et al, [Show, Attend and Tell: Neural Image Caption Generation with Visual Attention](https://arxiv.org/abs/1502.03044), 2015.]
-
----
-
-class: middle
-
 ## Text-to-speech synthesis
 
 .width-80.center[![](figures/lec6/tacotron.png)]
@@ -762,27 +719,19 @@ class: middle
 class: middle, black-slide
 
 .center[
-<iframe width="640" height="400" src="https://www.youtube.com/embed/Zt-7MI9eKEo?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
-
-DRAW: A Recurrent Neural Network For Image Generation
+<iframe width="640" height="400" src="https://www.youtube.com/embed/Ipi40cb_RsI?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
 ]
 
----
-
-class: middle, black-slide
-
-.center[
-<iframe width="640" height="400" src="https://www.youtube.com/embed/Ipi40cb_RsI?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
+## Learning to control 
 
 A recurrent network playing Mario Kart.
-]
 
 ---
 
 
 class: middle
 
-# Differentiable computers
+# Beyond sequences 
 
 ---
 
@@ -791,8 +740,6 @@ class: middle
 .center.circle.width-30[![](figures/lec6/lecun.jpg)]
 
 .italic[
-People are now building a new kind of software by assembling networks of parameterized functional blocks and by training them from examples using some form of gradient-based optimization.
-
 An increasingly large number of .bold[people are defining the networks procedurally in a data-dependent way (with loops and conditionals)], allowing them to change dynamically as a function of the input data fed to them. It's really .bold[very much like a regular program, except it's parameterized].
 ]
 
@@ -800,12 +747,12 @@ An increasingly large number of .bold[people are defining the networks procedura
 
 ---
 
-class: middle, center
+# Neural computers
 
-.width-60[![](figures/lec6/turing-net.png)]
+.center.width-55[![](figures/lec6/turing-net.png)]
 
-Any Turing machine can be simulated by a recurrent neural network<br>
-(Siegelmann and Sontag, 1995)
+.center[Any Turing machine can be simulated by a recurrent neural network<br>
+(Siegelmann and Sontag, 1995)]
 
 ???
 
@@ -813,11 +760,13 @@ This implies that usual programs can all be equivalently implemented as a neural
 
 ---
 
-class: middle, center
+class: middle
 
-.width-100[![](figures/lec6/dnc.png)]
+.center.width-80[![](figures/lec6/dnc.png)]
 
-Differentiable Neural Computer (Graves et al, 2016)
+Networks can be coupled with memory storage to produce **neural computers**: 
+- The controller processes the input sequence and interacts with the memory to generate the output. 
+- The read and write operations *attend to* all the memory addresses.
 
 ???
 
@@ -836,12 +785,90 @@ Upper right: the model's output
 
 ---
 
+# Programs as neural nets
+
+The topology of a recurrent network unrolled through time is *dynamic*. 
+
+It depends on:
+- the input sequence and its size
+- a graph construction algorithms which consumes input tokens in sequence to add layers to the graph of computation.
+
+This principle generalizes to:
+- arbitrarily structured data (e.g., sequences, trees, **graphs**)
+- arbitrary graph construction algorithm that traverses these structures (e.g., including for-loops or recursive calls).
+
+---
+
+class: middle
+
+## Neural message passing
+
+.center[
+.width-50[![](figures/lec6/graph.png)] .width-60[![](figures/lec6/nmp.png)]
+]
+
+Even though the graph topology is dynamic, the unrolled computation is fully differentiable. The program is trainable.
+
+.footnote[Credits: [Henrion et al](https://dl4physicalsciences.github.io/files/nips_dlps_2017_29.pdf), 2017.]
+
+
+---
+
+class: middle
+
+## Graph neural network for object detection in point clouds
+
+.center.width-100[![](figures/lec6/cloud.png)] 
+
+.footnote[Credits: Shi and Rajkumar, [Point-GNN](https://arxiv.org/abs/2003.01251), 2020.]
+
+---
+
+class: middle 
+
+## Quantum chemistry with graph networks
+
+.center.width-65[![](figures/lec6/chemistry.png)] 
+
+.footnote[Credits: [Schutt et al](https://www.nature.com/articles/ncomms13890), 2017.]
+
+???
+
+quantum-mechanical properties of molecular systems
+
+---
+
+class: middle 
+
+## Learning to simulate physics with graph networks
+
+.center.width-100[![](figures/lec6/physics.png)] 
+
+.footnote[Credits: [Sanchez-Gonzalez et al](https://arxiv.org/abs/2002.09405), 2020.]
+
+---
+
+
+class: middle, black-slide
+
+.center[
+<video loop controls preload="auto" height="400" width="600">
+  <source src="./figures/lec6/physics-simulation.mp4" type="video/mp4">
+</video>
+]
+
+.footnote[Credits: [Sanchez-Gonzalez et al](https://arxiv.org/abs/2002.09405), 2020.]
+
+---
+
 class: end-slide, center
 count: false
 
 The end.
 
 ---
+
+count: false
 
 # References
 

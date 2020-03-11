@@ -8,6 +8,10 @@ Lecture 2: Neural networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](g.louppe@uliege.be)
 
+???
+
+R: regenerate all svg files from draw.io
+
 ---
 
 # Today

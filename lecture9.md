@@ -21,3 +21,25 @@ R: google meena
 https://www.microsoft.com/en-us/research/blog/turing-nlg-a-17-billion-parameter-language-model-by-microsoft/
 
 R: set transformer https://arxiv.org/abs/1810.00825
+
+---
+
+class: middle
+
+## Image captioning
+
+.center[
+.width-100[![](figures/lec6/sat.png)]
+]
+
+.footnote[Credits: Kelvin Xu et al, [Show, Attend and Tell: Neural Image Caption Generation with Visual Attention](https://arxiv.org/abs/1502.03044), 2015.]
+
+---
+
+class: middle
+
+.center[
+.width-100[![](figures/lec6/sat-demo.jpg)]
+]
+
+.footnote[Credits: Kelvin Xu et al, [Show, Attend and Tell: Neural Image Caption Generation with Visual Attention](https://arxiv.org/abs/1502.03044), 2015.]

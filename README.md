@@ -16,7 +16,7 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2020.
 | February 21 | Lecture 3: [Convolutional networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture3.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec3.pdf)]<br>Tutorial 3: [Backpropagation](https://github.com/glouppe/info8010-deep-learning/blob/master/tutorials/lecture_03) |
 | February 28 | Lecture 4: [Computer vision](https://glouppe.github.io/info8010-deep-learning/?p=lecture4.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec4.pdf)]<br>Q&A session |
 | March 6 | Lecture 5: [Training neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture5.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec5.pdf)]<br>Tutorial 4: [Neural networks with PyTorch](https://github.com/glouppe/info8010-deep-learning/blob/master/tutorials/lecture_04) <br>Project proposal |
-| March 13 | Lecture 6: Recurrent neural networks<br>Tutorial 5 |
+| March 13 | Lecture 6: [Recurrent neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture6.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec6.pdf)]<br>Tutorial 5: Convolutional neural networks |
 | March 20 | Lecture 7: Auto-encoders and generative models<br>Tutorial 6  |
 | March 27 | Lecture 8: Generative adversarial networks |
 | April 3 | Lecture 9: Attention and transformer networks<br>Reading assignment |
