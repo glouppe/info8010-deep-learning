@@ -11,23 +11,24 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2020.
 
 | Date | Topic |
 | --- | --- |
-| February 7 | [Outline](https://glouppe.github.io/info8010-deep-learning/?p=outline.md) [[PDF](https://glouppe.github.io/info8010-deep-learning//pdf/outline.pdf)]<br>Lecture 0: Deep Learning<br>Lecture 1: Fundamentals of machine learning<br>Tutorial 0: Install party |
-| February 14 | Lecture 2: Neural networks<br>Tutorial 1 |
-| February 21 | Lecture 3: Convolutional networks<br>Tutorial 2 |
-| February 28 | Lecture 4: Computer vision<br>Tutorial 3 |
-| March 6 | Lecture 5: Training neural networks<br>Tutorial 4 |
+| February 7 | [Outline](https://glouppe.github.io/info8010-deep-learning/?p=outline.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/outline.pdf)]<br>Lecture 0: [Introduction](https://glouppe.github.io/info8010-deep-learning/?p=lecture0.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec0.pdf)]<br>Lecture 1: [Fundamentals of machine learning](https://glouppe.github.io/info8010-deep-learning/?p=lecture1.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec1.pdf)]<br>Tutorial 1: [Installation and tensor operations](https://github.com/glouppe/info8010-deep-learning/tree/master/tutorials/lecture_01) |
+| February 14 | Lecture 2: [Neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture2.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec2.pdf)]<br>Tutorial 2: [Using pre-trained neural networks](https://github.com/glouppe/info8010-deep-learning/tree/master/tutorials/lecture_02) |
+| February 21 | Lecture 3: [Convolutional networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture3.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec3.pdf)]<br>Tutorial 3: [Backpropagation](https://github.com/glouppe/info8010-deep-learning/blob/master/tutorials/lecture_03) |
+| February 28 | Lecture 4: [Computer vision](https://glouppe.github.io/info8010-deep-learning/?p=lecture4.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec4.pdf)]<br>Q&A session |
+| March 6 | Lecture 5: [Training neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture5.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec5.pdf)]<br>Tutorial 4: [Neural networks with PyTorch](https://github.com/glouppe/info8010-deep-learning/blob/master/tutorials/lecture_04) <br>Project proposal |
 | March 13 | Lecture 6: Recurrent neural networks<br>Tutorial 5 |
-| March 20 | Lecture 7: Attention and transformer networks |
-| March 27 | Lecture 8: Auto-encoders and generative models |
-| April 3 | Lecture 9: Generative adversarial networks |
-| April 24 | Lecture 10: Uncertainty |
+| March 20 | Lecture 7: Auto-encoders and generative models<br>Tutorial 6  |
+| March 27 | Lecture 8: Generative adversarial networks |
+| April 3 | Lecture 9: Attention and transformer networks<br>Reading assignment |
+| April 24 | Lecture 10: Uncertainty<br>Q&A session |
+| May 1 | Project code and report | 
 | May 8 | Lecture 11: Theory of deep learning |
 | May 15 | Lecture 12: Deep reinforcement learning |
 
 
 ## Project
 
-TBD.
+See instructions in [`project.md`](https://github.com/glouppe/info8010-deep-learning/blob/master/project.md).
 
 ## Reading assignment
 

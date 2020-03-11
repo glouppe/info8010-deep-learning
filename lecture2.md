@@ -8,14 +8,6 @@ Lecture 2: Neural networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](g.louppe@uliege.be)
 
-???
-
-R: regression -> assume p(y|x) is Gaussian, hence the minimization of the mean squared error.
-R: check http://www.andreykurenkov.com/writing/ai/a-brief-history-of-neural-nets-and-deep-learning/ for history
-   also http://ai.stanford.edu/~nilsson/QAI/qai.pdf
-R: trade-offs is not clear, explain better how the terms impact each other
-R: NN for tabular data https://forums.fast.ai/t/share-your-work-here/27676/1684
-
 ---
 
 # Today
@@ -26,19 +18,7 @@ Explain and motivate the basic constructs of neural networks.
 - Stochastic gradient descent
 - From logistic regression to the multi-layer perceptron
 - Vanishing gradients and rectified networks
-- Universal approximation theorem
-
----
-
-# Cooking recipe
-
-- Get data (loads of them).
-- Get good hardware.
-- Define the neural network architecture as a composition of differentiable functions.
-    - Stick to non-saturating activation function to avoid vanishing gradients.
-    - Prefer deep over shallow architectures.
-- Optimize with (variants of) stochastic gradient descent.
-    - Evaluate gradients with automatic differentiation.
+- Universal approximation theorem (teaser)
 
 ---
 
@@ -51,7 +31,9 @@ class: middle
 # Threshold Logic Unit
 
 The Threshold Logic Unit (McCulloch and Pitts, 1943) was the first mathematical model for a **neuron**.
-Assuming Boolean inputs and outputs, it is defined as:
+
+
+Assuming Boolean inputs and outputs, it is defined as
 
 $$f(\mathbf{x}) = 1_{\\{\sum_i w\_i x_i + b \geq 0\\}}$$
 
@@ -163,7 +145,7 @@ $$f(\mathbf{x}) = \text{sign}(\sum\_i w\_i x\_i  + b)$$ can be represented as a 
 
 ???
 
-Note that some intermediate nodes are not represented.
+Draw the NN diagram.
 
 ---
 
@@ -265,7 +247,7 @@ class: middle, center
 
 .center.width-70[![](figures/lec2/graphs/logistic-neuron.svg)]
 
-This unit is the **lego brick** of all neural networks!
+This unit is the main **primitive** of all neural networks!
 
 ---
 
@@ -542,9 +524,13 @@ $$\begin{aligned}
 \mathcal{L}(\theta) &= \frac{1}{N} \sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} \ell(y\_i, f(\mathbf{x}\_i; \theta)) \\\\
 \nabla \mathcal{L}(\theta) &= \frac{1}{N} \sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} \nabla \ell(y\_i, f(\mathbf{x}\_i; \theta)).
 \end{aligned}$$
-Therefore, in **batch** gradient descent the complexity of an update grows linearly with the size $N$ of the dataset.
+Therefore, in **batch** gradient descent the complexity of an update grows linearly with the size $N$ of the dataset. This is bad!
 
-More importantly, since the empirical risk is already an approximation of the expected risk, it should not be necessary to carry out the minimization with great accuracy.
+---
+
+class: middle
+
+Since the empirical risk is already an approximation of the expected risk, it should not be necessary to carry out the minimization with great accuracy.
 
 ---
 
@@ -582,25 +568,32 @@ $$\begin{aligned}
 &= \nabla \mathcal{L}(\theta\_t)
 \end{aligned}$$
 then the formal convergence of SGD can be proved, under appropriate assumptions (see references).
-- Interestingly, if training examples $\mathbf{x}\_i, y\_i \sim P\_{X,Y}$ are received and used in an online fashion, then SGD directly minimizes the **expected** risk.
+- If training is limited to single pass over the data, then SGD directly minimizes the **expected** risk.
 
 ---
 
 class: middle
 
-When decomposing the excess error in terms of approximation, estimation and optimization errors,
-stochastic algorithms yield the best generalization performance (in terms of **expected** risk) despite being
-the worst optimization algorithms (in terms of *empirical risk*) (Bottou, 2011).
-
+The excess error characterizes the expected risk discrepancy between the Bayes model and the approximate empirical risk minimizer. It can be decomposed as
 $$\begin{aligned}
 &\mathbb{E}\left[ R(\tilde{f}\_\*^\mathbf{d}) - R(f\_B) \right] \\\\
 &= \mathbb{E}\left[ R(f\_\*) - R(f\_B) \right] + \mathbb{E}\left[ R(f\_\*^\mathbf{d}) - R(f\_\*) \right] + \mathbb{E}\left[ R(\tilde{f}\_\*^\mathbf{d}) - R(f\_\*^\mathbf{d}) \right]  \\\\
 &= \mathcal{E}\_\text{app} + \mathcal{E}\_\text{est} + \mathcal{E}\_\text{opt}
 \end{aligned}$$
+where
+- $\mathcal{E}\_\text{app}$ is the approximation error due to the choice of an hypothesis space,
+- $\mathcal{E}\_\text{est}$ is the estimation error due to the empirical risk minimization principle,
+- $\mathcal{E}\_\text{opt}$ is the optimization error due to the approximate optimization algorithm.
 
 ---
 
-# Layers
+class: middle
+
+A fundamental result due to Bottou and Bousquet (2011) states that stochastic optimization algorithms (e.g., SGD) yield the best generalization performance (in terms of excess error) despite being the worst optimization algorithms for minimizing the empirical risk.
+
+---
+
+# Multi-layer perceptron
 
 So far we considered the logistic unit $h=\sigma\left(\mathbf{w}^T \mathbf{x} + b\right)$, where $h \in \mathbb{R}$, $\mathbf{x} \in \mathbb{R}^p$, $\mathbf{w} \in \mathbb{R}^p$ and $b \in \mathbb{R}$.
 
@@ -611,10 +604,14 @@ where  $\mathbf{h} \in \mathbb{R}^q$, $\mathbf{x} \in \mathbb{R}^p$, $\mathbf{W}
 <br>
 .center.width-70[![](figures/lec2/graphs/layer.svg)]
 
+???
+
+Draw the NN diagram.
+
 
 ---
 
-# Multi-layer perceptron
+class: middle
 
 Similarly, layers can be composed *in series*, such that:
 $$\begin{aligned}
@@ -628,6 +625,10 @@ where $\theta$ denotes the model parameters $\\{ \mathbf{W}\_k, \mathbf{b}\_k, .
 
 This model is the **multi-layer perceptron**, also known as the fully connected feedforward network.
 
+???
+
+Draw the NN diagram.
+
 ---
 
 class: middle, center
@@ -636,12 +637,21 @@ class: middle, center
 
 ---
 
+
 class: middle
 
-## Classification
+.width-100[![](figures/lec2/mlp.png)]
+
+.footnote[Credits: [PyTorch Deep Learning Minicourse](https://atcold.github.io/pytorch-Deep-Learning-Minicourse/), Alfredo Canziani, 2020.]
+
+---
+
+class: middle
+
+## Output layer 
 
 - For binary classification, the width $q$ of the last layer $L$ is set to $1$, which results in a single output $h\_L \in [0,1]$ that models the probability $P(Y=1|\mathbf{x})$.
-- For multi-class classification, the sigmoid action $\sigma$ in the last layer can be generalized to produce a (normalized) vector $\mathbf{h}\_L \in [0,1]^C$ of probability estimates $P(Y=i|\mathbf{x})$.
+- For multi-class classification, the sigmoid action $\sigma$ in the last layer can be generalized to produce a vector $\mathbf{h}\_L \in \bigtriangleup^C$ of probability estimates $P(Y=i|\mathbf{x})$.
 <br><br>
 This activation is the $\text{Softmax}$ function, where its $i$-th output is defined as
 $$\text{Softmax}(\mathbf{z})\_i = \frac{\exp(z\_i)}{\sum\_{j=1}^C \exp(z\_j)},$$
@@ -650,11 +660,25 @@ for $i=1, ..., C$.
 
 ---
 
+# Regression
+
+For regression problems, one usually starts with the assumption that
+$$P(y|\mathbf{x}) = \mathcal{N}(y; \mu=f(\mathbf{x}; \theta), \sigma^2=1),$$
+where $f$ is parameterized with a neural network which last layer does not contain any final activation.
+
+---
+
 class: middle
 
-## Regression
-
-The last activation $\sigma$ can be skipped to produce unbounded output values $h\_L \in \mathbb{R}$.
+We have,
+$$\begin{aligned}
+&\arg \max\_{\theta} P(\mathbf{d}|\theta) \\\\
+&= \arg \max\_{\theta} \prod\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} P(Y=y\_i|\mathbf{x}\_i, \theta) \\\\
+&= \arg \min\_{\theta} -\sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} \log P(Y=y\_i|\mathbf{x}\_i, \theta) \\\\
+&= \arg \min\_{\theta} -\sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} \log\left( \frac{1}{\sqrt{2\pi}} \exp\(-\frac{1}{2}(y\_i - f(\mathbf{x};\theta))^2\) \right)\\\\
+&= \arg \min\_{\theta} \sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} (y\_i - f(\mathbf{x};\theta))^2,
+\end{aligned}$$
+which recovers the common **squared error** loss $\ell(y, \hat{y}) = (y-\hat{y})^2$.
 
 ---
 
@@ -663,7 +687,7 @@ The last activation $\sigma$ can be skipped to produce unbounded output values $
 To minimize $\mathcal{L}(\theta)$ with stochastic gradient descent, we need the gradient $\nabla_\theta \mathcal{\ell}(\theta_t)$.
 
 Therefore, we require the evaluation of the (total) derivatives
-$$\frac{\text{d} \ell}{\text{d} \mathbf{W}\_k},  \frac{\text{d} \mathcal{\ell}}{\text{d} \mathbf{b}\_k}$$
+$$\frac{\text{d} \ell}{\text{d} \mathbf{W}\_k}  \,\text{and}\,  \frac{\text{d} \mathcal{\ell}}{\text{d} \mathbf{b}\_k}$$
 of the loss $\ell$ with respect to all model parameters $\mathbf{W}\_k$, $\mathbf{b}\_k$, for $k=1, ..., L$.
 
 These derivatives can be evaluated automatically from the *computational graph* of $\ell$ using **automatic differentiation**.
@@ -863,43 +887,16 @@ Note that:
 
 ---
 
-# Universal approximation
+# Universal approximation (teaser)
 
-.bold[Theorem.] (Cybenko 1989; Hornik et al, 1991) Let $\sigma(\cdot)$ be a
-bounded, non-constant continuous function. Let $I\_p$ denote the $p$-dimensional hypercube, and
-$C(I\_p)$ denote the space of continuous functions on $I\_p$. Given any $f \in C(I\_p)$ and $\epsilon > 0$, there exists $q > 0$ and $v\_i, w\_i, b\_i, i=1, ..., q$ such that
-$$F(x) = \sum\_{i \leq q} v\_i \sigma(w\_i^T x + b\_i)$$
-satisfies
-$$\sup\_{x \in I\_p} |f(x) - F(x)| < \epsilon.$$
-
----
-
-class: middle
-
-The universal approximation theorem
-- guarantees that even a single hidden-layer network can represent any classification
-  problem in which the boundary is locally linear (smooth);
-- does not inform about good/bad architectures, nor how they relate to the optimization procedure.
-- generalizes to any non-polynomial (possibly unbounded) activation function, including the ReLU (Leshno, 1993).
-
----
-
-class: middle
-
-.bold[Theorem] (Barron, 1992) The mean integrated square error between the estimated network $\hat{F}$ and the target function $f$ is bounded by
-$$O\left(\frac{C^2\_f}{q} + \frac{qp}{N}\log N\right)$$
-where $N$ is the number of training points, $q$ is the number of neurons, $p$ is the input dimension, and $C\_f$ measures the global smoothness of $f$.
-
-- Combines approximation and estimation errors.
-- Provided enough data, it guarantees that adding more neurons will result in a better approximation.
-
----
-
-class: middle
 
 Let us consider the 1-layer MLP
 $$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
-This model can approximate any smooth 1D function, provided enough hidden units.
+This model can approximate *any* smooth 1D function, provided enough hidden units.
+
+---
+
+class: middle
 
 .center[![](figures/lec2/ua-0.png)]
 
@@ -908,20 +905,12 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 class: middle
 count: false
 
-Let us consider the 1-layer MLP
-$$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
-This model can approximate any smooth 1D function, provided enough hidden units.
-
 .center[![](figures/lec2/ua-1.png)]
 
 ---
 
 class: middle
 count: false
-
-Let us consider the 1-layer MLP
-$$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
-This model can approximate any smooth 1D function, provided enough hidden units.
 
 .center[![](figures/lec2/ua-2.png)]
 
@@ -930,20 +919,12 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 class: middle
 count: false
 
-Let us consider the 1-layer MLP
-$$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
-This model can approximate any smooth 1D function, provided enough hidden units.
-
 .center[![](figures/lec2/ua-3.png)]
 
 ---
 
 class: middle
 count: false
-
-Let us consider the 1-layer MLP
-$$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
-This model can approximate any smooth 1D function, provided enough hidden units.
 
 .center[![](figures/lec2/ua-4.png)]
 
@@ -952,20 +933,12 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 class: middle
 count: false
 
-Let us consider the 1-layer MLP
-$$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
-This model can approximate any smooth 1D function, provided enough hidden units.
-
 .center[![](figures/lec2/ua-5.png)]
 
 ---
 
 class: middle
 count: false
-
-Let us consider the 1-layer MLP
-$$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
-This model can approximate any smooth 1D function, provided enough hidden units.
 
 .center[![](figures/lec2/ua-6.png)]
 
@@ -974,20 +947,12 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 class: middle
 count: false
 
-Let us consider the 1-layer MLP
-$$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
-This model can approximate any smooth 1D function, provided enough hidden units.
-
 .center[![](figures/lec2/ua-7.png)]
 
 ---
 
 class: middle
 count: false
-
-Let us consider the 1-layer MLP
-$$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
-This model can approximate any smooth 1D function, provided enough hidden units.
 
 .center[![](figures/lec2/ua-8.png)]
 
@@ -996,20 +961,12 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 class: middle
 count: false
 
-Let us consider the 1-layer MLP
-$$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
-This model can approximate any smooth 1D function, provided enough hidden units.
-
 .center[![](figures/lec2/ua-9.png)]
 
 ---
 
 class: middle
 count: false
-
-Let us consider the 1-layer MLP
-$$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
-This model can approximate any smooth 1D function, provided enough hidden units.
 
 .center[![](figures/lec2/ua-10.png)]
 
@@ -1018,10 +975,6 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 class: middle
 count: false
 
-Let us consider the 1-layer MLP
-$$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
-This model can approximate any smooth 1D function, provided enough hidden units.
-
 .center[![](figures/lec2/ua-11.png)]
 
 ---
@@ -1029,46 +982,68 @@ This model can approximate any smooth 1D function, provided enough hidden units.
 class: middle
 count: false
 
-Let us consider the 1-layer MLP
-$$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
-This model can approximate any smooth 1D function, provided enough hidden units.
-
 .center[![](figures/lec2/ua-12.png)]
 
 ---
 
-# Effect of depth
+class: middle, center
 
-.center.width-80[![](figures/lec2/folding.png)]
-
-.bold[Theorem] (Montúfar et al, 2014) A rectifier neural network with $p$ input units and $L$ hidden layers of width $q \geq p$ can compute functions that have $\Omega((\frac{q}{p})^{(L-1)p} q^p)$ linear regions.
-
-- That is, the number of linear regions of deep models grows **exponentially** in $L$ and polynomially in $q$.
-- Even for small values of $L$ and $q$, deep rectifier models are able to produce substantially more linear regions than shallow rectifier models.
+(demo)
 
 ---
 
-# Deep learning
+# LEGO® Deep Learning 
 
-Recent advances and model architectures in deep learning are built on a natural generalization of a neural network: **a graph of tensor operators**, taking advantage of
-- the chain rule
-- stochastic gradient descent
-- convolutions
-- parallel operations on GPUs.
+<br><br><br><br>
 
-This does not differ much from networks from the 90s, as covered in Today's lecture.
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+.center.width-50[![](figures/lec2/lego-box.jpg)]
 
 ---
 
 class: middle
 
-This generalization allows to **compose** and design complex networks of operators, possibly dynamically, dealing with images, sound, text, sequences, etc. and to train them *end-to-end*.
+.center.circle.width-30[![](figures/lec2/lecun.jpg)]
 
-.center.width-90[![](figures/lec2/architecture.png)]
+.italic[
+People are now building a new kind of software by .bold[assembling networks of parameterized functional blocks] and by .bold[training them from examples using some form of gradient-based optimization].
+]
 
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL; Rahmatizadeh et al, 2017, arXiv:[1707.02920](https://arxiv.org/abs/1707.02920).]
+.pull-right[Yann LeCun, 2018.]
+
+---
+
+class: middle
+
+## DL as an architectural language
+
+.width-100[![](figures/lec2/lego-composition.png)]
+
+---
+
+class: middle
+
+.center[
+<video preload="auto" height="400" width="750" autoplay loop>
+  <source src="./figures/lec2/toolbox.mp4" type="video/mp4">
+</video>
+
+The toolbox
+]
+
+.footnote[Credits: [Oriol Vinyals](https://twitter.com/OriolVinyalsML/status/1212422497339105280), 2020.]
+
+---
+
+class: black-slide
+
+# LEGO® Creator Expert 
+
+.center[
+.width-60[![](figures/lec2/unnamed.gif)]
+.width-70[![](figures/lec2/alphastar.png)]
+]
+
+.footnote[Credits: [Vinyals et al, 2019](https://www.nature.com/articles/s41586-019-1724-z).]
 
 ---
 
@@ -1079,10 +1054,10 @@ The end.
 
 ---
 
+count: false
+
 # References
 
 - Rosenblatt, F. (1958). The perceptron: a probabilistic model for information storage and organization in the brain. Psychological review, 65(6), 386.
 - Bottou, L., & Bousquet, O. (2008). The tradeoffs of large scale learning. In Advances in neural information processing systems (pp. 161-168).
 - Rumelhart, D. E., Hinton, G. E., & Williams, R. J. (1986). Learning representations by back-propagating errors. nature, 323(6088), 533.
-- Cybenko, G. (1989). Approximation by superpositions of a sigmoidal function. Mathematics of control, signals and systems, 2(4), 303-314.
-- Montufar, G. F., Pascanu, R., Cho, K., & Bengio, Y. (2014). On the number of linear regions of deep neural networks. In Advances in neural information processing systems (pp. 2924-2932).

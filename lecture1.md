@@ -58,11 +58,15 @@ class: middle
 
 Supervised learning is usually concerned with the two following inference problems:
 - **Classification**:
-Given $(\mathbf{x}\_i, y\_i) \in \mathcal{X}\times\mathcal{Y} = \mathbb{R}^p \times \\\{1, ..., C\\\}$, for $i=1, ..., N$,
+Given $(\mathbf{x}\_i, y\_i) \in \mathcal{X}\times\mathcal{Y} = \mathbb{R}^p \times \bigtriangleup^C$, for $i=1, ..., N$,
 we want to estimate for any new $\mathbf{x}$, $$\arg \max\_y P(Y=y|X=\mathbf{x}).$$
 - **Regression**:
 Given $(\mathbf{x}\_i, y\_i) \in \mathcal{X}\times\mathcal{Y} =  \mathbb{R}^p \times \mathbb{R}$, for $i=1, ..., N$,
 we want to estimate for any new $\mathbf{x}$, $$\mathbb{E}\left[ Y|X=\mathbf{x} \right].$$
+
+???
+
+$\bigtriangleup^C$ is the simplex $\\{\mathbf{p} \in \mathbb{R}^C_+ : ||\mathbf{p}||_1 = 1\\}$.
 
 ---
 
@@ -185,7 +189,7 @@ For this regression problem, we use the squared error loss
 $$\ell(y, f(x;\mathbf{w})) = (y - f(x;\mathbf{w}))^2$$
 to measure how wrong the predictions are.
 
-Therefore, our goal is to find the best value $\mathbf{w}\_\*$ such
+Therefore, our goal is to find the best value $\mathbf{w}\_\*$ such that
 $$\begin{aligned}
 \mathbf{w}\_\* &= \arg\min\_\mathbf{w} R(\mathbf{w}) \\\\
 &= \arg\min\_\mathbf{w}  \mathbb{E}\_{(x,y)\sim P(X,Y)}\left[ (y-f(x;\mathbf{w}))^2 \right]
@@ -551,12 +555,34 @@ class: middle
 
 ---
 
+class: middle, center, red-slide
+
+What about a neural network with .bold[millions] of parameters?
+
+---
+
+class: middle
+
+.center[![](figures/lec1/mlp-1000000.png)]
+
+---
+
+class: middle
+
+.width-100[![](figures/lec1/double-descent.png)]
+
+.footnote[Credits: [Belkin et al, 2018](https://arxiv.org/abs/1812.11118).]
+
+---
+
 class: end-slide, center
 count: false
 
 The end.
 
 ---
+
+count: false
 
 # References
 

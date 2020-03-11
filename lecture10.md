@@ -18,6 +18,8 @@ R: check https://www.slideshare.net/perone/uncertainty-estimation-in-deep-learni
 R: mention out-of-distribution data
 R: put back some of the adversarial examples materials
 
+R: langevin dynamics (welling)
+
 ---
 
 # Today

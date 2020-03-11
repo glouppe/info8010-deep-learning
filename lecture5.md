@@ -8,25 +8,30 @@ Lecture 5: Training neural networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](g.louppe@uliege.be)
 
-???
-
-R (exam): better explain the interplay in the terms of the tradeoffs of large-scale learning
-R: why do we want the information to flow?
-R: add regularization chapter -> dropout, dropconnect, others?
-R: 1d plot of the proxy when the step size is too large? (wider proxy)
-R: add graph of computation for BN and backprop (dependency on samples from the minibatch)
-
-R: check https://joanbruna.github.io/MathsDL-spring18/?fbclid=IwAR0Ugn0GhW4fHHuhYYv005zibgoToeaG58wujX5Ej179tDBbJFZGNgaONjI
-
 ---
 
 # Today
 
-How to *optimize parameters* efficiently?
+How to **optimize parameters** efficiently?
 
 - Optimizers
 - Initialization
 - Normalization
+
+---
+
+class: middle
+
+## A practical recommendation
+
+Training a massive deep neural network is long, complex and sometimes confusing. 
+
+A first step towards understanding, debugging and optimizing neural networks is to make use of visualization tools such as TensorBoard for
+- plotting losses and metrics, 
+- visualizing computational graphs,
+- or show additional data as the network is being trained.
+
+.center.width-45[![](figures/lec5/tensorboard.png)]
 
 ---
 
@@ -52,7 +57,7 @@ where $\gamma$ is the learning rate.
 class: middle
 
 .center[
-<video loop autoplay controls preload="auto" height="600" width="600">
+<video loop controls preload="auto" height="600" width="600">
   <source src="./figures/lec5/opt-gd.mp4" type="video/mp4">
 </video>
 ]
@@ -61,7 +66,7 @@ class: middle
 
 class: middle
 
-While it makes sense in principle to compute the gradient exactly,
+While it makes sense to compute the gradient exactly,
 - it takes time to compute and becomes inefficient for large $N$,
 - it is an empirical estimation of an hidden quantity (the expected risk), and any partial sum is also an unbiased estimate, although of greater variance.
 
@@ -100,7 +105,7 @@ g\_t &= \nabla\_\theta \ell(y\_{n(t)}, f(\mathbf{x}\_{n(t)}; \theta\_t)) \\\\
 class: middle
 
 .center[
-<video loop autoplay controls preload="auto" height="600" width="600">
+<video loop controls preload="auto" height="600" width="600">
   <source src="./figures/lec5/opt-sgd.mp4" type="video/mp4">
 </video>
 ]
@@ -152,7 +157,7 @@ The gradient descent method makes strong assumptions about
 class: middle
 
 .center[
-<video loop autoplay controls preload="auto" height="550" width="550">
+<video loop controls preload="auto" height="550" width="550">
   <source src="./figures/lec5/opt-gd-easy-0.01.mp4" type="video/mp4">
 </video>
 <br>$\gamma=0.01$
@@ -163,7 +168,7 @@ class: middle
 class: middle
 
 .center[
-<video loop autoplay controls preload="auto" height="550" width="550">
+<video loop controls preload="auto" height="550" width="550">
   <source src="./figures/lec5/opt-gd-difficult-0.01.mp4" type="video/mp4">
 </video>
 <br>$\gamma=0.01$
@@ -174,7 +179,7 @@ class: middle
 class: middle
 
 .center[
-<video loop autoplay controls preload="auto" height="550" width="550">
+<video loop controls preload="auto" height="550" width="550">
   <source src="./figures/lec5/opt-gd-difficult-0.1.mp4" type="video/mp4">
 </video>
 <br>$\gamma=0.1$
@@ -185,7 +190,7 @@ class: middle
 class: middle
 
 .center[
-<video loop autoplay controls preload="auto" height="550" width="550">
+<video loop controls preload="auto" height="550" width="550">
   <source src="./figures/lec5/opt-gd-difficult-0.4.mp4" type="video/mp4">
 </video>
 <br>$\gamma=0.4$
@@ -210,7 +215,7 @@ Typical values are $c\_1 = 10^{-4}$ and $c\_2 = 0.9$.
 ???
 
 - The sufficient decrease condition ensures that the function decreases sufficiently, as predicted by the slope of f in the direction p.
-- The curvature condition ensures that steps are not too short by ensuring that the slope has increased by some relative amount.
+- The curvature condition ensures that steps are not too short by ensuring that the slope has decreased (in magnitude) by some relative amount.
 
 ---
 
@@ -243,23 +248,25 @@ The Wolfe conditions can be used to design **line search** algorithms to automat
 
 However, in deep learning,
 - these algorithms are impractical because of the size of the parameter space and the overhead it would induce,
-- they might lead to overfitting when the empirical risk is minimized too well.
+- they might lead to *overfitting* when the empirical risk is minimized too well.
 
 ---
 
 class: middle
 
-## The tradeoffs of learning
+## The tradeoffs large-scale learning 
 
-When decomposing the excess error in terms of approximation, estimation and optimization errors,
-stochastic algorithms yield the best generalization performance (in terms of **expected** risk) despite being
-the worst optimization algorithms (in terms of *empirical risk*) (Bottou, 2011).
+A fundamental result due to Bottou and Bousquet (2011) states that stochastic optimization algorithms (e.g., SGD) yield the best generalization performance (in terms of excess error) despite being the worst optimization algorithms for minimizing the empirical risk.
 
-$$\begin{aligned}
-&\mathbb{E}\left[ R(\tilde{f}\_\*^\mathbf{d}) - R(f\_B) \right] \\\\
-&= \mathbb{E}\left[ R(f\_\*) - R(f\_B) \right] + \mathbb{E}\left[ R(f\_\*^\mathbf{d}) - R(f\_\*) \right] + \mathbb{E}\left[ R(\tilde{f}\_\*^\mathbf{d}) - R(f\_\*^\mathbf{d}) \right]  \\\\
-&= \mathcal{E}\_\text{app} + \mathcal{E}\_\text{est} + \mathcal{E}\_\text{opt}
-\end{aligned}$$
+That is, for a fixed computational budget, stochastic optimization algorithms reach a lower test error than more sophisticated algorithms (2nd order methods, line search algorithms, etc) that would fit the training error too well or would consume too large a part of the computational budget at every step.
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec5/tradeoffs.svg)]
+
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
 
 ---
 
@@ -312,7 +319,7 @@ $$u = -\frac{\gamma}{1-\alpha} g.$$
 class: middle
 
 .center[
-<video loop autoplay controls preload="auto" height="600" width="600">
+<video loop controls preload="auto" height="600" width="600">
   <source src="./figures/lec5/opt-momentum.mp4" type="video/mp4">
 </video>
 ]
@@ -339,7 +346,7 @@ u\_t &= \alpha u\_{t-1} - \gamma g\_t \\\\
 class: middle
 
 .center[
-<video loop autoplay controls preload="auto" height="600" width="600">
+<video loop controls preload="auto" height="600" width="600">
   <source src="./figures/lec5/opt-nesterov.mp4" type="video/mp4">
 </video>
 ]
@@ -351,8 +358,8 @@ class: middle
 Vanilla gradient descent assumes the isotropy of the curvature, so that the same step size $\gamma$ applies to all parameters.
 
 .center[
-.width-48[![](figures/lec5/isotropic.png)]
-.width-48[![](figures/lec5/anisotropic.png)]
+.width-45[![](figures/lec5/isotropic.png)]
+.width-45[![](figures/lec5/anisotropic.png)]
 
 Isotropic vs. Anistropic
 ]
@@ -415,7 +422,7 @@ r\_t  &=  \rho\_2 r\_{t-1} + (1-\rho\_2) g\_t \odot g\_t \\\\
 ---
 
 .center[
-<video loop autoplay controls preload="auto" height="600" width="600">
+<video loop controls preload="auto" height="600" width="600">
   <source src="./figures/lec5/opt-adaptive.mp4" type="video/mp4">
 </video>
 ]
@@ -439,9 +446,12 @@ Despite per-parameter adaptive learning rate methods, it is usually helpful to *
 - Exponential decay: $\gamma\_t = \gamma\_0 \exp(-kt)$ where $\gamma\_0$ and $k$ are hyper-parameters.
 - $1/t$ decay: $\gamma\_t = \gamma\_0 / (1+kt)$ where $\gamma\_0$ and $k$ are hyper-parameters.
 
+---
+
+class: middle
+
 .center[
-<br>
-.width-40[![](figures/lec5/resnet.png)]<br>
+.width-70[![](figures/lec5/resnet.png)]<br>
 .caption[Step decay scheduling for training ResNets.]
 ]
 
@@ -483,9 +493,9 @@ class: middle
 
 Let us assume that
 - we are in a linear regime at initialization (e.g., the positive part of a ReLU or the middle of a sigmoid),
-- weights $w\_{ij}^l$ are initialized independently,
+- weights $w\_{ij}^l$ are initialized i.i.d,
 - biases $b\_l$ are initialized to be $0$,
-- input feature variances are the same, which we denote as $\mathbb{V}[x]$.
+- input features are i.i.d, which we denote as $\mathbb{V}[x]$.
 
 Then, the variance of the activation $h\_i^l$ of unit $i$ in layer $l$ is
 $$
@@ -506,7 +516,7 @@ Use
 
 class: middle
 
-If we further assume that weights $w\_{ij}^l$ at layer $l$ share the same variance $\mathbb{V}\left[ w^l \right]$ and that the variance of the activations in the previous layer are the same, then we can drop the indices and write
+Since the weights $w\_{ij}^l$ at layer $l$ share the same variance $\mathbb{V}\left[ w^l \right]$ and the variance of the activations in the previous layer are the same, we can drop the indices and write
 $$\mathbb{V}\left[h^l\right] = q\_{l-1} \mathbb{V}\left[ w^l \right] \mathbb{V}\left[ h^{l-1} \right].$$
 
 Therefore, the variance of the activations is preserved across layers when
@@ -514,6 +524,10 @@ $$\mathbb{V}\left[ w^l \right] = \frac{1}{q\_{l-1}} \quad \forall l.$$
 
 This condition is enforced in **LeCun's uniform initialization**, which is defined as
 $$w\_{ij}^l \sim \mathcal{U}\left[-\sqrt{\frac{3}{q\_{l-1}}}, \sqrt{\frac{3}{q\_{l-1}}}\right].$$
+
+???
+
+Var[ U(a,b) ] = 1/12 (b-a)^2
 
 ---
 
@@ -618,25 +632,22 @@ $$
 # Batch normalization
 
 Maintaining proper statistics of the activations and derivatives is critical for training neural networks.
-- This constraint can be enforced explicitly during the forward pass by re-normalizing them.
-- **Batch normalization** was the first method introducing this idea.
 
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+This constraint can be enforced explicitly during the forward pass by re-normalizing them.
+**Batch normalization** was the first method introducing this idea.
 
----
+<br>
+.center.width-80[![](figures/lec5/bn.png)]
 
-class: middle
-
-.center.width-100[![](figures/lec5/bn.png)]
-
-.footnote[Credits: Ioffe and Szegedy, [Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift](https://arxiv.org/abs/1502.03167), 2015.]
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL; Ioffe and Szegedy, [Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift](https://arxiv.org/abs/1502.03167), 2015.]
 
 ---
 
 class: middle
 
-- During training, batch normalization shifts and rescales according to the mean and variance estimated on the batch.
-- During test, it shifts and rescales according to the empirical moments estimated during training.
+During training, batch normalization shifts and rescales according to the mean and variance estimated on the batch.
+
+During test, it shifts and rescales according to the empirical moments estimated during training.
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
@@ -646,7 +657,7 @@ class: middle
 
 .center.width-50[![](figures/lec5/bn.svg)]
 
-Let us consider a given minibatch of samples at training, for which $\mathbf{u}\_b \in \mathbb{R}^q$, $b=1, ..., B$, are intermediate values computed at some location in the computational graph.
+Let us consider a minibatch of samples at training, for which $\mathbf{u}\_b \in \mathbb{R}^q$, $b=1, ..., B$, are intermediate values computed at some location in the computational graph.
 
 In batch normalization following the node $\mathbf{u}$, the per-component mean and variance are first computed on the batch
 $$
