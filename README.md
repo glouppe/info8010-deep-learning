@@ -4,8 +4,8 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2020.
 
 - Instructor: Gilles Louppe ([g.louppe@uliege.be](mailto:g.louppe@uliege.be))
 - Teaching assistants: Matthia Sabatelli ([m.sabatelli@uliege.be](mailto:m.sabatelli@uliege.be)), Antoine Wehenkel ([antoine.wehenkel@uliege.be](mailto:antoine.wehenkel@uliege.be))
-- When: Spring 2020, Friday 8:30AM
-- Classroom: B28/R3
+- When: Spring 2020, Friday ~~8:30AM~~ 9:00AM
+- Classroom: ~~B28/R3~~ lectures are now virtual.
 
 ## Agenda
 
@@ -16,14 +16,14 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2020.
 | February 21 | Lecture 3: [Convolutional networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture3.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec3.pdf)]<br>Tutorial 3: [Backpropagation](https://github.com/glouppe/info8010-deep-learning/blob/master/tutorials/lecture_03) |
 | February 28 | Lecture 4: [Computer vision](https://glouppe.github.io/info8010-deep-learning/?p=lecture4.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec4.pdf)]<br>Q&A session |
 | March 6 | Lecture 5: [Training neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture5.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec5.pdf)]<br>Tutorial 4: [Neural networks with PyTorch](https://github.com/glouppe/info8010-deep-learning/blob/master/tutorials/lecture_04) <br>Project proposal |
-| March 13 | Lecture 6: [Recurrent neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture6.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec6.pdf)]<br>Tutorial 5: Convolutional neural networks |
-| March 20 | Lecture 7: Auto-encoders and generative models<br>Tutorial 6  |
-| March 27 | Lecture 8: Generative adversarial networks |
-| April 3 | Lecture 9: Attention and transformer networks<br>Reading assignment |
-| April 24 | Lecture 10: Uncertainty<br>Q&A session |
+| March 13 | ~~Lecture 6: [Recurrent neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture6.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec6.pdf)]~~ _(Cancelled)_<br>Tutorial 5: [Convolutional neural networks](https://github.com/glouppe/info8010-deep-learning/blob/master/tutorials/lecture_05) |
+| March 20 | Lecture 6: [Recurrent neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture6.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec6.pdf)]  |
+| March 27 | Lecture 7: Auto-encoders and generative models |
+| April 3 | Lecture 8: Generative adversarial networks<br>Reading assignment |
+| April 24 | Lecture 9: Attention and transformer networks<br>Q&A session |
 | May 1 | Project code and report | 
-| May 8 | Lecture 11: Theory of deep learning |
-| May 15 | Lecture 12: Deep reinforcement learning |
+| May 8 | Lecture 10: Uncertainty |
+| May 15 | Lecture 11: TBD |
 
 
 ## Project
