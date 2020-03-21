@@ -51,7 +51,7 @@ then we formally define:
 
 .grid.center[
 .kol-1-2.bold[Sequence classification]
-.kol-1-2[$f: S(\mathcal{X}) \to \\\\{ 1, ..., C\\\\}$]
+.kol-1-2[$f: S(\mathcal{X}) \to \bigtriangleup^C$]
 ]
 .grid.center[
 .kol-1-2.bold[Sequence synthesis]
@@ -678,7 +678,7 @@ class: middle
 
 The same generative architecture applies to any kind of sequences.
 
-E.g., [`sketch-rnn-demo`](https://magenta.tensorflow.org/assets/sketch_rnn_demo/index.html) sketches defined as sequences of strokes.
+E.g., [`sketch-rnn-demo`](https://magenta.tensorflow.org/assets/sketch_rnn_demo/index.html) for sketches defined as sequences of strokes.
 
 .center.width-40[![](figures/lec6/sketch-rnn.png)]
 
@@ -795,7 +795,7 @@ It depends on:
 
 This principle generalizes to:
 - arbitrarily structured data (e.g., sequences, trees, **graphs**)
-- arbitrary graph construction algorithm that traverses these structures (e.g., including for-loops or recursive calls).
+- arbitrary graph of computation construction algorithm that traverses these structures (e.g., including for-loops or recursive calls).
 
 ---
 
