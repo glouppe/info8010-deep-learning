@@ -5,7 +5,7 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2020.
 - Instructor: Gilles Louppe ([g.louppe@uliege.be](mailto:g.louppe@uliege.be))
 - Teaching assistants: Matthia Sabatelli ([m.sabatelli@uliege.be](mailto:m.sabatelli@uliege.be)), Antoine Wehenkel ([antoine.wehenkel@uliege.be](mailto:antoine.wehenkel@uliege.be))
 - When: Spring 2020, Friday ~~8:30AM~~ 9:00AM
-- Classroom: ~~B28/R3~~ lectures are now virtual.
+- Classroom: ~~B28/R3~~ Lectures are now virtual.
 
 ## Agenda
 
@@ -18,7 +18,7 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2020.
 | March 6 | Lecture 5: [Training neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture5.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec5.pdf)]<br>Tutorial 4: [Neural networks with PyTorch](https://github.com/glouppe/info8010-deep-learning/blob/master/tutorials/lecture_04) <br>Project proposal |
 | March 13 | ~~Lecture 6: [Recurrent neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture6.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec6.pdf)]~~ _(Cancelled)_ |
 | March 20 | Lecture 6: [Recurrent neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture6.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec6.pdf)] [[Podcast](https://my.uliege.be/portail/go_xt.do?a=o%7C3117%7Ce%7C399421)] |
-| March 27 | Lecture 7: Auto-encoders and generative models<br>Tutorial 5: [Convolutional neural networks](https://github.com/glouppe/info8010-deep-learning/blob/master/tutorials/lecture_05) |
+| March 27 | Lecture 7: [Auto-encoders and generative models](https://glouppe.github.io/info8010-deep-learning/?p=lecture7.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec7.pdf)] <br>Tutorial 5: [Convolutional neural networks](https://github.com/glouppe/info8010-deep-learning/blob/master/tutorials/lecture_05) |
 | April 3 | Lecture 8: Generative adversarial networks<br>Reading assignment |
 | April 24 | Lecture 9: Attention and transformer networks<br>Q&A session |
 | May 1 | Project code and report | 

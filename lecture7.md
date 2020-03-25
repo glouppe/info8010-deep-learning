@@ -10,17 +10,10 @@ Prof. Gilles Louppe<br>
 
 ???
 
-R: denoising AE (+ diff of under/over-complete AEs; check alain and bengio 2012)
-R: add https://avdnoord.github.io/homepage/vqvae/ as application
-R: add mentions of the manifold hypothesis https://uvadlc.github.io/lectures/sep2018/lecture7-unsupervised.pdf
-R: add denoising ae
-R: check http://mlss2018.net.ar/slides/Adams-1.pdf
-
-http://paulrubenstein.co.uk/variational-autoencoders-are-not-autoencoders/
-
-R: world models as an application of vaes+rnn
-
+R: VAE:
 R: reverse KL https://ermongroup.github.io/cs228-notes/inference/variational/
+R: http://paulrubenstein.co.uk/variational-autoencoders-are-not-autoencoders/
+
 
 ---
 
@@ -43,7 +36,7 @@ class: middle
 
 class: middle
 
-Many applications such as image synthesis, denoising, super-resolution, speech synthesis or compression, require to *go beyond classification and regression* and model explicitly a high-dimensional signal.
+Many applications such as image synthesis, denoising, super-resolution, speech synthesis or compression, require to **go beyond** classification and regression and model explicitly a high-dimensional signal.
 
 This modeling consists of finding .italic["meaningful degrees of freedom"], or .italic["factors of variations"], that describe the signal and are of lesser dimension.
 
@@ -59,8 +52,8 @@ class: middle
 
 ---
 
-
 class: middle
+count: false
 
 .center.width-90[![](figures/lec7/embedding2.png)]
 
@@ -76,15 +69,7 @@ An auto-encoder is a composite function made of
 
 such that $g \circ f$ is close to the identity on the data.
 
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-
 .center.width-80[![](figures/lec7/ae.png)]
-
-A proper auto-encoder should capture a good parameterization of the signal, and in particular the statistical dependencies between the signal components.
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
@@ -118,7 +103,9 @@ In this case, an optimal solution is given by PCA.
 
 ---
 
-# Deep auto-encoders
+class: middle
+
+## Deep auto-encoders
 
 .center.width-80[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](figures/lec7/architecture.svg)]
 
@@ -127,90 +114,6 @@ Better results can be achieved with more sophisticated classes of mappings than 
 For instance,
 - by combining a multi-layer perceptron encoder $f : \mathbb{R}^p \to \mathbb{R}^q$ with a multi-layer perceptron decoder $g: \mathbb{R}^q \to \mathbb{R}^p$.
 - by combining a convolutional network encoder $f : \mathbb{R}^{w\times h \times c} \to \mathbb{R}^q$ with a decoder $g : \mathbb{R}^q \to \mathbb{R}^{w\times h \times c}$ composed of the reciprocal transposed convolutional layers.
-
----
-
-class: middle
-
-Deep neural decoders require layers that increase the input dimension,
-i.e., that map $\mathbf{z} \in \mathbb{R}^q$ to $\hat{\mathbf{x}}=g(\mathbf{z}) \in \mathbb{R}^p$, with $p \gg q$.
-
-- This is the opposite of what we did so far with feedforward networks, in which we reduced the dimension of the input to a few values.
-- Fully connected layers could be used for that purpose but would face the same limitations as before (spatial specialization, too many parameters).
-- Ideally, we would like layers that implement the inverse of convolutional
- and pooling layers.
-
----
-
-class: middle
-
-## Transposed convolutions
-
-A **transposed convolution** is a convolution where the implementation of the forward and backward passes
-are swapped.
-
-Given a convolutional kernel $\mathbf{u}$,
-- the forward pass is implemented as $v(\mathbf{h}) = \mathbf{U}^T v(\mathbf{x})$ with appropriate reshaping, thereby effectively up-sampling an input $v(\mathbf{x})$ into a larger one;
-- the backward pass is computed by multiplying the loss by $\mathbf{U}$ instead of $\mathbf{U}^T$.
-
-Transposed convolutions are also referred to as fractionally-strided convolutions or deconvolutions (mistakenly).
-
-.center.width-70[![](figures/lec7/transposed-convolution.svg)]
-
----
-
-class: middle
-
-.pull-right[<br><br>![](figures/lec7/no_padding_no_strides_transposed.gif)]
-
-$$
-\begin{aligned}
-\mathbf{U}^T v(\mathbf{x}) &= v(\mathbf{h}) \\\\
-\begin{pmatrix}
-1 & 0 & 0 & 0 \\\\
-4 & 1 & 0 & 0 \\\\
-1 & 4 & 0 & 0 \\\\
-0 & 1 & 0 & 0 \\\\
-1 & 0 & 1 & 0 \\\\
-4 & 1 & 4 & 1 \\\\
-3 & 4 & 1 & 4 \\\\
-0 & 3 & 0 & 1 \\\\
-3 & 0 & 1 & 0 \\\\
-3 & 3 & 4 & 1 \\\\
-1 & 3 & 3 & 4 \\\\
-0 & 1 & 0 & 3 \\\\
-0 & 0 & 3 & 0 \\\\
-0 & 0 & 3 & 3 \\\\
-0 & 0 & 1 & 3 \\\\
-0 & 0 & 0 & 1
-\end{pmatrix}
-\begin{pmatrix}
-2 \\\\
-1 \\\\
-4 \\\\
-4
-\end{pmatrix} &=
-\begin{pmatrix}
-2 \\\\
-9 \\\\
-6 \\\\
-1 \\\\
-6 \\\\
-29 \\\\
-30 \\\\
-7 \\\\
-10 \\\\
-29 \\\\
-33 \\\\
-13 \\\\
-12 \\\\
-24 \\\\
-16 \\\\
-4
-\end{pmatrix}
-\end{aligned}$$
-
-.footnote[Credits: Dumoulin and Visin, [A guide to convolution arithmetic for deep learning](https://arxiv.org/abs/1603.07285), 2016.]
 
 ---
 
@@ -238,7 +141,9 @@ class: middle
 
 ---
 
-# Interpolation
+class: middle
+
+## Interpolation
 
 To get an intuition of the learned latent representation, we can pick two samples $\mathbf{x}$ and $\mathbf{x}'$ at random and interpolate samples along the line in the latent space.
 
@@ -265,27 +170,13 @@ class: middle
 
 ---
 
-# Sampling from latent space
+# Denoising auto-encoders
 
-The generative capability of the decoder $g$ can be assessed by introducing a (simple) density model $q$ over the latent space $\mathcal{Z}$, sample there, and map the samples into the data space $\mathcal{X}$ with $g$.
+Besides dimension reduction, auto-encoders can capture dependencies between signal components to restore degraded or noisy signals. 
 
-.center.width-80[![](figures/lec7/sampling.png)]
+In this case, the composition $$h = g \circ f : \mathcal{X} \to \mathcal{X}$$ is referred to as a **denoising** auto-encoder.
 
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-
-For instance, a factored Gaussian model with diagonal covariance matrix,
-$$q(\mathbf{z}) = \mathcal{N}(\hat{\mu}, \hat{\Sigma}),$$
-where both $\\hat{\mu}$ and $\hat{\Sigma}$ are estimated on training data.
-
----
-
-class: middle
-
-.center.width-60[![](figures/lec7/samples-bad.png)]
+The goal is to optimize $h$ such that a perturbation $\tilde{\mathbf{x}}$ of the signal $\mathbf{x}$ is restored to $\mathbf{x}$, hence $$h(\tilde{\mathbf{x}}) \approx \mathbf{x}.$$
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
@@ -293,9 +184,45 @@ class: middle
 
 class: middle
 
-These results are not satisfactory because the density model on the latent space is **too simple and inadequate**.
+.center.width-60[![](figures/lec7/dae0.png)]
 
-Building a good model amounts to our original problem of modeling an empirical distribution, although it may now be in a lower dimension space.
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec7/dae1.png)]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec7/dae2.png)]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec7/dae3.png)]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+A fundamental weakness of denoising auto-encoders is that the posterior $p(\mathbf{x}|\tilde{\mathbf{x}})$ is possibly multi-modal.
+
+If we train an auto-encoder with the quadratic loss, then the best reconstruction is 
+$$h(\tilde{\mathbf{x}}) = \mathbb{E}[\mathbf{x}|\tilde{\mathbf{x}}],$$
+which may be very unlikely under $p(\mathbf{x}|\tilde{\mathbf{x}})$.
+
+.center.width-60[![](figures/lec7/dae-posterior.png)]
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
@@ -316,23 +243,23 @@ Its purpose is to generate synthetic but realistic high-dimensional data
 $$\mathbf{x} \sim p(\mathbf{x};\theta),$$
 that is as close as possible from the true but unknown data distribution $p(\mathbf{x})$, but for which we have empirical samples.
 
-## Motivation
+---
+
+# Motivation
+
+<br>
+
+.center[
+.width-100[![](figures/lec7/why-gm.png)]
+]
+.caption[Generative models have a role in many important problems]
+
+???
 
 Go beyond estimating $p(y|\mathbf{x})$:
 - Understand and imagine how the world evolves.
 - Recognize objects in the world and their factors of variation.
 - Establish concepts for reasoning and decision making.
-
----
-
-class: middle
-
-.center[
-.width-100[![](figures/lec7/why-gm.png)]
-]
-
-<br>
-.center[Generative models have a role in many important problems]
 
 ---
 
@@ -394,20 +321,6 @@ Photo-realistic single image super-resolution.
 
 class: middle
 
-## One-shot generalization
-
-Rapid generalization of novel concepts.
-
-.center[
-.width-100[![](figures/lec7/generative-oneshot.png)]
-
-(Gregor et al, 2016)
-]
-
----
-
-class: middle
-
 ## Visual concept learning
 
 Understanding the factors of variation and invariances.
@@ -422,20 +335,6 @@ Understanding the factors of variation and invariances.
 
 class: middle
 
-## Scene understanding
-
-Understanding the components of scenes and their interactions.
-
-.center[
-.width-100[![](figures/lec7/generative-scene.png)]
-
-(Wu et al, 2017)
-]
-
----
-
-class: middle
-
 ## Future simulation
 
 Simulate future trajectories of environments based on actions for planning.
@@ -444,6 +343,20 @@ Simulate future trajectories of environments based on actions for planning.
 .width-40[![](figures/lec7/robot1.gif)] .width-40[![](figures/lec7/robot2.gif)]
 
 (Finn et al, 2016)
+]
+
+---
+
+class: middle
+
+## One-shot generalization
+
+Rapid generalization of novel concepts.
+
+.center[
+.width-100[![](figures/lec7/generative-oneshot.png)]
+
+(Gregor et al, 2016)
 ]
 
 ---
@@ -473,6 +386,42 @@ Generative models for applications in astronomy and high-energy physics.
 
 (Regier et al, 2015)
 ]
+
+---
+
+# Sampling from an AE's latent space
+
+The generative capability of the decoder $g$ in an auto-encoder can be assessed by introducing a (simple) density model $q$ over the latent space $\mathcal{Z}$, sample there, and map the samples into the data space $\mathcal{X}$ with $g$.
+
+.center.width-80[![](figures/lec7/sampling.png)]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+For instance, a factored Gaussian model with diagonal covariance matrix,
+$$q(\mathbf{z}) = \mathcal{N}(\hat{\mu}, \hat{\Sigma}),$$
+where both $\\hat{\mu}$ and $\hat{\Sigma}$ are estimated on training data.
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec7/samples-bad.png)]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+These results are not satisfactory because the density model on the latent space is **too simple and inadequate**.
+
+Building a good model in latent space amounts to our original problem of modeling an empirical distribution, although it may now be in a lower dimension space.
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
 ---
 
@@ -805,21 +754,15 @@ class: middle, center
 
 ---
 
-class: middle
+class: black-slide
 
-# Applications of (variational) AEs
+# Applications 
 
----
-
-class: middle, black-slide
-
+<br>
 .center[
-
 <iframe width="640" height="400" src="https://www.youtube.com/embed/XNZIN7Jh3Sg?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
 
-Random walks in latent space.
-
-(Alex Radford, 2015)
+Random walks in latent space. (Alex Radford, 2015)
 
 ]
 
@@ -829,11 +772,24 @@ class: middle, black-slide
 
 .center[
 
-<iframe width="500" height="200" src="https://int8.io/wp-content/uploads/2016/12/output.mp4" frameborder="0" volume="0" allowfullscreen></iframe>
+<iframe  width="640" height="400"  src="https://int8.io/wp-content/uploads/2016/12/output.mp4" frameborder="0" volume="0" allowfullscreen></iframe>
 
 Impersonation by encoding-decoding an unknown face.
 
 (Kamil Czarnogórski, 2016)
+]
+
+---
+
+class: middle 
+
+.center[
+
+.width-80[![](figures/lec7/vae-styletransfer.jpg)]
+
+Voice style transfer [[demo](https://avdnoord.github.io/homepage/vqvae/)]
+
+(van den Oord et al, 2017)
 ]
 
 ---
@@ -847,23 +803,6 @@ class: middle, black-slide
 (Inoue et al, 2017)
 
 ]
-
-
----
-
-class: middle
-
-.center.width-80[![](figures/lec7/vae-smile.png)]
-
-.center[(Tom White, 2016)]
-
----
-
-class: middle
-
-.center.width-60[![](figures/lec7/vae-text1.png)]
-
-.center[(Bowman et al, 2015)]
 
 ---
 
@@ -881,6 +820,8 @@ count: false
 The end.
 
 ---
+
+count: false
 
 # References
 
