@@ -21,9 +21,9 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2020.
 | March 27 | Lecture 7: [Auto-encoders and generative models](https://glouppe.github.io/info8010-deep-learning/?p=lecture7.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec7.pdf)] <br>Tutorial 5: [Convolutional neural networks](https://github.com/glouppe/info8010-deep-learning/blob/master/tutorials/lecture_05) |
 | April 3 | Lecture 8: Generative adversarial networks<br>Reading assignment |
 | April 10 | Lecture 9: Attention and transformer networks<br>Q&A session |
-| April 24 | Project code and report | 
-| May 1 | Lecture 10: Uncertainty |
-| May 8 | Lecture 11: TBD |
+| April 24 | Lecture 10: Uncertainty | 
+| May 1 | Lecture 11: TBD<br>Project code and report |
+| May 8 | Lecture 12: TBD |
 
 
 ## Project
