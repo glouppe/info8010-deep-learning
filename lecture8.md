@@ -18,10 +18,16 @@ add refs as footnotes
 
 ---
 
+class: middle 
+
+.center.width-50[![](figures/lec8/christies.jpg)]
+
+.italic.center["Generative adversarial networks is the coolest idea<br> in deep learning in the last 20 years." -- Yann LeCun.]
+
+---
+
 # Today
 
-.grid[
-.kol-2-3[
 Learn a model of the data.
 
 - Generative adversarial networks
@@ -29,12 +35,6 @@ Learn a model of the data.
 - Convergence of GANs
 - State of the art
 - Applications
-]
-.kol-1-3.width-100[![](figures/lec8/christies.jpg)]
-]
-
-<br><br>
-.italic.center["Generative adversarial networks is the coolest idea<br> in deep learning in the last 20 years." -- Yann LeCun.]
 
 ---
 
@@ -44,9 +44,8 @@ class: middle
 
 ---
 
-# GANs
+class: middle
 
-<br>
 .center.width-80[![](figures/lec8/catch-me.jpg)]
 
 ---
@@ -59,60 +58,42 @@ In **generative adversarial networks** (GANs), the task of learning a generative
 
 - The first network is a *generator*  $g(\cdot;\theta) : \mathcal{Z} \to \mathcal{X}$, mapping a latent space equipped with a prior distribution $p(\mathbf{z})$ to the data space, thereby inducing a distribution
 $$\mathbf{x} \sim q(\mathbf{x};\theta) \Leftrightarrow \mathbf{z} \sim p(\mathbf{z}), \mathbf{x} = g(\mathbf{z};\theta).$$
+The generator is trained so that it produces samples following the data distribution as output.
 - The second network $d(\cdot; \phi) : \mathcal{X} \to [0,1]$ is a *classifier* trained to distinguish between true samples $\mathbf{x} \sim p(\mathbf{x})$ and generated samples $\mathbf{x} \sim q(\mathbf{x};\theta)$.
 
-The central mechanism consists in using supervised learning to guide the learning of the generative model.
+---
+
+class: middle
+
+.center.width-100[![](figures/lec8/gan-setup.png)]
+
+The approach is **adversarial** since the two networks have antagonistic objectives.
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
 ---
 
 class: middle
 
-.center.width-100[![](figures/lec8/gan.png)]
-<br>
+For a gixed generator $g$, the classifier $d$ can be trained by generating a two-class training set
+$$\mathbf{d} = \\\{ (\mathbf{x}\_1, y=1), ..., (\mathbf{x}\_N, y=1), (g(\mathbf{z}\_1; \theta), y=0), ..., (g(\mathbf{z}\_N; \theta), y=0)  \\\},$$
+where $\mathbf{x}\_i \sim p(\mathbf{x})$, and minimizing the cross-entropy loss
+$$\begin{aligned}
+\mathcal{L}(\phi) &= \frac{1}{2N} \sum\_{i=1}^N \left[ \log d(\mathbf{x}\_i; \phi) + \log\left(1 - d(g(\mathbf{z}\_i;\theta); \phi)\right) \right] \\\\
+&\approx \mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ \log d(\mathbf{x};\phi) \right] + \mathbb{E}\_{\mathbf{z} \sim p(\mathbf{z})}\left[ \log (1-d(g(\mathbf{z};\theta);\phi)) \right].
+\end{aligned}$$
 
-$$\arg \min\_\theta \max\_\phi \underbrace{\mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ \log d(\mathbf{x};\phi) \right] + \mathbb{E}\_{\mathbf{z} \sim p(\mathbf{z})}\left[ \log (1-d(g(\mathbf{z};\theta);\phi)) \right]}\_{V(\phi, \theta)}$$
-
----
-
-class: middle
-
-## Learning process
-
-In practice, the minimax solution is approximated using *alternating* stochastic gradient descent:
-$$
-\begin{aligned}
-\theta &\leftarrow \theta - \gamma \nabla\_\theta V(\phi, \theta) \\\\
-\phi &\leftarrow \phi + \gamma \nabla\_\phi V(\phi, \theta),
-\end{aligned}
-$$
-where gradients are estimated with Monte Carlo integration.
-
-- For one step on $\theta$, we can optionally take $k$ steps on $\phi$, since we need the classifier to remain near optimal.
-- Note that to compute $\nabla\_\theta V(\phi, \theta)$, it is necessary to backprop all the way through $d$ before computing the partial derivatives with respect to $g$'s internals.
+However, the situation is slightly more complicated since we also want to train $g$ to maximize $d$'s loss.
 
 ---
 
-class: middle
-
-.center.width-100[![](figures/lec8/learning.png)]
-
-.center[(Goodfellow et al, 2014)]
-
----
-
-class: middle, center
-
-.width-100[![](figures/lec8/ganlab.png)]
-
-Demo: [GAN Lab](https://poloclub.github.io/ganlab)
-
----
 
 class: middle
 
 ## Game analysis
 
-Let us consider the **value function** $V(\phi, \theta)$.
+Let us consider the **value function** 
+$$V(\phi, \theta) = \mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ \log d(\mathbf{x};\phi) \right] + \mathbb{E}\_{\mathbf{z} \sim p(\mathbf{z})}\left[ \log (1-d(g(\mathbf{z};\theta);\phi)) \right].$$
 
 - For a fixed $g$, $V(\phi, \theta)$ is high if $d$ is good at recognizing true from generated samples.
 
@@ -160,23 +141,51 @@ Since $\text{JSD}(p(\mathbf{x}) || q(\mathbf{x};\theta))$ is minimum if and only
 $$p(\mathbf{x}) = q(\mathbf{x};\theta)$$ for all $\mathbf{x}$, this proves that the minimax solution
 corresponds to a generative model that perfectly reproduces the true data distribution.
 
+---
+
+class: middle
+
+## Learning process
+
+In practice, the minimax solution is approximated using *alternating* stochastic gradient descent:
+$$
+\begin{aligned}
+\theta &\leftarrow \theta - \gamma \nabla\_\theta V(\phi, \theta) \\\\
+\phi &\leftarrow \phi + \gamma \nabla\_\phi V(\phi, \theta),
+\end{aligned}
+$$
+where gradients are estimated with Monte Carlo integration.
+
+- For one step on $\theta$, we can optionally take $k$ steps on $\phi$, since we need the classifier to remain near optimal.
+- Note that to compute $\nabla\_\theta V(\phi, \theta)$, it is necessary to backprop all the way through $d$ before computing the partial derivatives with respect to $g$'s internals.
 
 ---
 
 class: middle
 
-.center.width-90[![](figures/lec8/gan-gallery.png)]
+.center.width-100[![](figures/lec8/learning.png)]
 
 .center[(Goodfellow et al, 2014)]
 
 ---
 
-# DCGANs
+class: middle, center
 
-<br><br><br>
-.center.width-100[![](figures/lec8/dcgan.png)]
+.width-100[![](figures/lec8/ganlab.png)]
 
-.center[(Radford et al, 2015)]
+[[Demo](https://poloclub.github.io/ganlab)]
+
+
+
+---
+
+class: middle
+
+## Results
+
+.center.width-90[![](figures/lec8/gan-gallery.png)]
+
+.center[(Goodfellow et al, 2014)]
 
 ---
 
@@ -196,15 +205,9 @@ class: middle, center
 
 ---
 
-class: middle, center
+class: middle
 
-.center.width-100[![](figures/lec8/arithmetic.png)]
-
-.center[Vector arithmetic in latent space (Radford et al, 2015)]
-
----
-
-# Open problems
+## Open problems
 
 Training a standard GAN often results in pathological behaviors:
 
@@ -233,7 +236,7 @@ While early results (2014-2016) were already impressive, a close inspection of t
 
 class: middle
 
-.center.width-100[![](figures/lec8/curiosity-cherrypicks.png)]
+.center.width-90[![](figures/lec8/curiosity-cherrypicks.png)]
 
 .center[Cherry-picks (Goodfellow, 2016)]
 
@@ -241,7 +244,7 @@ class: middle
 
 class: middle
 
-.center.width-100[![](figures/lec8/curiosity-counting.png)]
+.center.width-90[![](figures/lec8/curiosity-counting.png)]
 
 .center[Problems with counting (Goodfellow, 2016)]
 
@@ -249,7 +252,7 @@ class: middle
 
 class: middle
 
-.center.width-100[![](figures/lec8/curiosity-perspective.png)]
+.center.width-90[![](figures/lec8/curiosity-perspective.png)]
 
 .center[Problems with perspective (Goodfellow, 2016)]
 
@@ -257,7 +260,7 @@ class: middle
 
 class: middle
 
-.center.width-100[![](figures/lec8/curiosity-global.png)]
+.center.width-90[![](figures/lec8/curiosity-global.png)]
 
 .center[Problems with global structures (Goodfellow, 2016)]
 
@@ -269,7 +272,9 @@ class: middle
 
 ---
 
-# Return of the Vanishing Gradients
+class: middle
+
+## Return of the Vanishing Gradients
 
 For most non-toy data distributions, the fake samples $\mathbf{x} \sim q(\mathbf{x};\theta)$
 may be so bad initially that the response of $d$ saturates.
@@ -287,14 +292,16 @@ and $\nabla\_\theta V(\phi,\theta) = 0$, thereby **halting** gradient descent.
 
 class: middle
 
-## Dilemma
 
+Dilemma :
 - If $d$ is bad, then $g$ does not have accurate feedback and the loss function cannot represent the reality.
 - If $d$ is too good, the gradients drop to 0, thereby slowing down or even halting the optimization.
 
 ---
 
-# Jensen-Shannon divergence
+class: middle
+
+## Jensen-Shannon divergence
 
 For any two distributions $p$ and $q$,
 $$0 \leq JSD(p||q) \leq \log 2,$$
@@ -317,7 +324,9 @@ Intuitively, instead of comparing distributions "vertically", we would like to c
 
 ---
 
-# Wasserstein distance
+class: middle
+
+## Wasserstein distance
 
 An alternative choice is the **Earth mover's distance**, which intuitively
 corresponds to the minimum mass displacement to transform one distribution into
@@ -367,7 +376,9 @@ For any two distributions $p$ and $q$,
 
 ---
 
-# Wasserstein GANs
+class: middle
+
+## Wasserstein GANs
 
 Given the attractive properties of the Wasserstein-1 distance, Arjovsky et al (2017) propose
 to learn a generative model by solving instead:
@@ -416,7 +427,7 @@ Note that this formulation is very close to the original GANs, except that:
 
 class: middle
 
-.center.width-100[![](figures/lec8/wgan.png)]
+.center.width-90[![](figures/lec8/wgan.png)]
 
 .center[(Arjovsky et al, 2017)]
 
@@ -443,8 +454,8 @@ Check https://mitliagkas.github.io/ift6085/ift-6085-lecture-14-notes.pdf
 class: middle
 
 .center[
-.width-48[![](figures/lec8/animation2.gif)]
-.width-48[![](figures/lec8/animation1.gif)]
+.width-45[![](figures/lec8/animation2.gif)]
+.width-45[![](figures/lec8/animation1.gif)]
 ]
 
 Solving for saddle points is different from gradient descent.
@@ -492,7 +503,7 @@ Let us consider the Jacobian $F'\_h(\theta^\*,\phi^\*)$ at the equilibrium $(\th
 - if all eigenvalues have absolute value smaller than 1, the training will converge to $(\theta^\*,\phi^\*)$.
 - if all eigenvalues values are on the unit circle, training can be convergent, divergent or neither.
 
-In particular, Mescheder et al (2017) show that all eigenvalues can be forced to remain within the unit ball if and only if the learning rate $h$ is made sufficiently small.
+Mescheder et al (2017) show that all eigenvalues can be forced to remain within the unit ball if and only if the learning rate $h$ is made sufficiently small.
 
 ---
 
@@ -517,7 +528,7 @@ which corresponds to training GANs with infinitely small learning rate $h \to 0$
 
 class: middle
 
-.width-100[![](figures/lec8/continuous-diverge.png)]
+.width-90.center[![](figures/lec8/continuous-diverge.png)]
 
 .center[Continuous system: divergence.]
 
@@ -528,7 +539,7 @@ class: middle
 
 class: middle
 
-.width-100[![](figures/lec8/continuous-converge.png)]
+.width-90.center[![](figures/lec8/continuous-converge.png)]
 
 .center[Continuous system: convergence.]
 
@@ -538,7 +549,7 @@ class: middle
 
 class: middle
 
-.width-100[![](figures/lec8/discrete-diverge.png)]
+.width-90.center[![](figures/lec8/discrete-diverge.png)]
 
 .center[Discrete system: divergence ($h=1$, too large).]
 
@@ -546,10 +557,9 @@ class: middle
 
 ---
 
-
 class: middle
 
-.width-100[![](figures/lec8/discrete-converge.png)]
+.width-90.center[![](figures/lec8/discrete-converge.png)]
 
 .center[Discrete system: convergence ($h=0.5$, small enough).]
 
@@ -561,7 +571,7 @@ class: middle
 
 ## Dirac-GAN: Vanilla GANs
 
-.width-100[![](figures/lec8/dirac-unreg.png)]
+.width-90.center[![](figures/lec8/dirac-unreg.png)]
 
 On the Dirac-GAN toy problem, eigenvalues are $\\{ -f'(0)i, +f'(0)i \\}$.
 Therefore convergence is not guaranteed.
@@ -574,7 +584,7 @@ class: middle
 
 ## Dirac-GAN: Wasserstein GANs
 
-.width-100[![](figures/lec8/dirac-wgan.png)]
+.width-90.center[![](figures/lec8/dirac-wgan.png)]
 
 Eigenvalues are $\\{ -i, +i \\}$.
 Therefore convergence is not guaranteed.
@@ -587,7 +597,7 @@ class: middle
 
 ## Dirac-GAN: Zero-centered gradient penalties
 
-.width-100[![](figures/lec8/dirac-reg.png)]
+.width-90.center[![](figures/lec8/dirac-reg.png)]
 
 A penalty on the squared norm of the gradients of the discriminator results in the regularization
 $$R\_1(\phi) = \frac{\gamma}{2} \mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ || \nabla\_\mathbf{x} d(\mathbf{x};\phi)||^2 \right].$$
@@ -631,11 +641,13 @@ class: middle
 
 class: middle
 
-.center.width-80[![](figures/lec8/timeline.png)]
+.center.width-70[![](figures/lec8/timeline.png)]
 
 ---
 
-# Progressive growing of GANs
+class: middle
+
+## Progressive growing of GANs
 
 .center[
 
@@ -668,7 +680,9 @@ class: middle, center, black-slide
 
 ---
 
-# BigGANs
+class: middle
+
+## BigGANs
 
 .center[
 
@@ -690,7 +704,9 @@ class: middle, center, black-slide
 
 ---
 
-# StyleGAN
+class: middle
+
+## StyleGAN (v1)
 
 .center[
 
@@ -739,6 +755,16 @@ class: middle
 .width-30[![](figures/lec8/stylegan-damien-3.png)] &nbsp;
 .width-30[![](figures/lec8/stylegan-damien-4.png)]
 ]
+
+---
+
+class: middle 
+
+## StyleGAN (v2)
+
+.width-60.center[![](figures/lec8/styleganv2.png)]
+
+.center[(Karras et al, 2019)]
 
 ---
 

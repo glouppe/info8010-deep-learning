@@ -96,7 +96,7 @@ f: \mathbf{z} &= \mathbf{U}^T \mathbf{x} \\\\
 g: \hat{\mathbf{x}} &= \mathbf{U} \mathbf{z},
 \end{aligned}
 $$
-with $\mathbf{U} \in \mathbb{R}^{p\times k}$, the reconstruction error reduces to
+with $\mathbf{U} \in \mathbb{R}^{p\times d}$, the reconstruction error reduces to
 $$\mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})} \left[ || \mathbf{x} - \mathbf{U}\mathbf{U}^T \mathbf{x} ||^2 \right].$$
 
 In this case, an optimal solution is given by PCA.
@@ -112,8 +112,8 @@ class: middle
 Better results can be achieved with more sophisticated classes of mappings than linear projections, in particular by designing $f$ and $g$ as deep neural networks.
 
 For instance,
-- by combining a multi-layer perceptron encoder $f : \mathbb{R}^p \to \mathbb{R}^q$ with a multi-layer perceptron decoder $g: \mathbb{R}^q \to \mathbb{R}^p$.
-- by combining a convolutional network encoder $f : \mathbb{R}^{w\times h \times c} \to \mathbb{R}^q$ with a decoder $g : \mathbb{R}^q \to \mathbb{R}^{w\times h \times c}$ composed of the reciprocal transposed convolutional layers.
+- by combining a multi-layer perceptron encoder $f : \mathbb{R}^p \to \mathbb{R}^d$ with a multi-layer perceptron decoder $g: \mathbb{R}^d \to \mathbb{R}^p$.
+- by combining a convolutional network encoder $f : \mathbb{R}^{w\times h \times c} \to \mathbb{R}^d$ with a decoder $g : \mathbb{R}^d \to \mathbb{R}^{w\times h \times c}$ composed of the reciprocal transposed convolutional layers.
 
 ---
 
@@ -686,7 +686,7 @@ $$\log q(\mathbf{z}|\mathbf{x};\varphi) = \log p(\epsilon) - \log \left| \det\le
 Consider the following setup:
 - Generative model:
 $$\begin{aligned}
-\mathbf{z} &\in \mathbb{R}^J \\\\
+\mathbf{z} &\in \mathbb{R}^d \\\\
 p(\mathbf{z}) &= \mathcal{N}(\mathbf{z}; \mathbf{0},\mathbf{I})\\\\
 p(\mathbf{x}|\mathbf{z};\theta) &= \mathcal{N}(\mathbf{x};\mu(\mathbf{z};\theta), \sigma^2(\mathbf{z};\theta)\mathbf{I}) \\\\
 \mu(\mathbf{z};\theta) &= \mathbf{W}\_2^T\mathbf{h} + \mathbf{b}\_2 \\\\
@@ -725,7 +725,7 @@ $$\begin{aligned}
 \end{aligned}
 $$
 where the KL divergence can be expressed  analytically as
-$$KL(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z})) = \frac{1}{2} \sum\_{j=1}^J \left( 1 + \log(\sigma\_j^2(\mathbf{x};\varphi)) - \mu\_j^2(\mathbf{x};\varphi) - \sigma\_j^2(\mathbf{x};\varphi)\right),$$
+$$KL(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z})) = \frac{1}{2} \sum\_{j=1}^d \left( 1 + \log(\sigma\_j^2(\mathbf{x};\varphi)) - \mu\_j^2(\mathbf{x};\varphi) - \sigma\_j^2(\mathbf{x};\varphi)\right),$$
 which allows to evaluate its derivative without approximation.
 
 ---
