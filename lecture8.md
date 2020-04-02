@@ -75,15 +75,15 @@ The approach is **adversarial** since the two networks have antagonistic objecti
 
 class: middle
 
-For a gixed generator $g$, the classifier $d$ can be trained by generating a two-class training set
+For a fixed generator $g$, the classifier $d$ can be trained by generating a two-class training set
 $$\mathbf{d} = \\\{ (\mathbf{x}\_1, y=1), ..., (\mathbf{x}\_N, y=1), (g(\mathbf{z}\_1; \theta), y=0), ..., (g(\mathbf{z}\_N; \theta), y=0)  \\\},$$
-where $\mathbf{x}\_i \sim p(\mathbf{x})$, and minimizing the cross-entropy loss
+where $\mathbf{x}\_i \sim p(\mathbf{x})$ and $\mathbf{z}\_i \sim p(\mathbf{z})$, and minimizing the cross-entropy loss
 $$\begin{aligned}
-\mathcal{L}(\phi) &= \frac{1}{2N} \sum\_{i=1}^N \left[ \log d(\mathbf{x}\_i; \phi) + \log\left(1 - d(g(\mathbf{z}\_i;\theta); \phi)\right) \right] \\\\
-&\approx \mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ \log d(\mathbf{x};\phi) \right] + \mathbb{E}\_{\mathbf{z} \sim p(\mathbf{z})}\left[ \log (1-d(g(\mathbf{z};\theta);\phi)) \right].
+\mathcal{L}(\phi) &= -\frac{1}{2N} \sum\_{i=1}^N \left[ \log d(\mathbf{x}\_i; \phi) + \log\left(1 - d(g(\mathbf{z}\_i;\theta); \phi)\right) \right] \\\\
+&\approx -\mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ \log d(\mathbf{x};\phi) \right] - \mathbb{E}\_{\mathbf{z} \sim p(\mathbf{z})}\left[ \log (1-d(g(\mathbf{z};\theta);\phi)) \right].
 \end{aligned}$$
 
-However, the situation is slightly more complicated since we also want to train $g$ to maximize $d$'s loss.
+However, the situation is slightly more complicated since we also want to train $g$ to fool the discriminator, which is equivalent to maximize $d$'s loss.
 
 ---
 
@@ -474,7 +474,7 @@ Following the notations of Mescheder et al (2018), the training objective for th
 $$L(\theta,\phi) = \mathbb{E}\_{p(\mathbf{z})}\left[ f(d(g(\mathbf{z};\theta);\phi)) \right] + \mathbb{E}\_{p(\mathbf{x})}\left[f(-d(\mathbf{x};\phi))\right],$$
 where the goal of the generator is to minimizes the loss, whereas the discriminator tries to maximize it.
 
-- If $f(t)=-\log(1+\exp(-t))$, then we recover the original GAN objective.
+- If $f(t)=-\log(1+\exp(-t))$, then we recover the original GAN objective (assuming that $d$ outputs the logits).
 - if $f(t)=-t$ and and if we impose the Lipschitz constraint on $d$, then we recover Wassterstein GAN.
 
 ---
@@ -504,6 +504,26 @@ Let us consider the Jacobian $F'\_h(\theta^\*,\phi^\*)$ at the equilibrium $(\th
 - if all eigenvalues values are on the unit circle, training can be convergent, divergent or neither.
 
 Mescheder et al (2017) show that all eigenvalues can be forced to remain within the unit ball if and only if the learning rate $h$ is made sufficiently small.
+
+---
+
+class: middle
+
+.width-90.center[![](figures/lec8/discrete-diverge.png)]
+
+.center[Discrete system: divergence ($h=1$, too large).]
+
+.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
+
+---
+
+class: middle
+
+.width-90.center[![](figures/lec8/discrete-converge.png)]
+
+.center[Discrete system: convergence ($h=0.5$, small enough).]
+
+.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
 
 ---
 
@@ -542,26 +562,6 @@ class: middle
 .width-90.center[![](figures/lec8/continuous-converge.png)]
 
 .center[Continuous system: convergence.]
-
-.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
-
----
-
-class: middle
-
-.width-90.center[![](figures/lec8/discrete-diverge.png)]
-
-.center[Discrete system: divergence ($h=1$, too large).]
-
-.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
-
----
-
-class: middle
-
-.width-90.center[![](figures/lec8/discrete-converge.png)]
-
-.center[Discrete system: convergence ($h=0.5$, small enough).]
 
 .footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
 
