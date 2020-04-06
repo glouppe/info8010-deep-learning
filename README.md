@@ -19,13 +19,10 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2020.
 | March 13 | ~~Lecture 6: [Recurrent neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture6.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec6.pdf)]~~ _(Cancelled)_ |
 | March 20 | Lecture 6: [Recurrent neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture6.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec6.pdf)] [[Podcast](https://my.uliege.be/portail/go_xt.do?a=o%7C3117%7Ce%7C399421)] |
 | March 27 | Lecture 7: [Auto-encoders and generative models](https://glouppe.github.io/info8010-deep-learning/?p=lecture7.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec7.pdf)] [[Podcast](https://my.uliege.be/portail/go_xt.do?a=o%7C3117%7Ce%7C401184)] |
-| April 3 | Lecture 8: [Generative adversarial networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture8.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec8.pdf)]<br>Tutorial 5: [Convolutional neural networks](https://github.com/glouppe/info8010-deep-learning/blob/master/tutorials/lecture_05) <br>Reading assignment |
-| April 10 | Lecture 9: Attention and transformer networks<br>Q&A session |
-| April 24 | Lecture 10: Uncertainty | 
-| May 1 | Lecture 11: TBD<br>Project code and report |
-| May 8 | Lecture 12: TBD |
-
-
+| April 3 | Lecture 8: [Generative adversarial networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture8.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec8.pdf)] [[Podcast](https://my.uliege.be/portail/go_xt.do?a=o%7C3117%7Ce%7C402870)]<br>Tutorial 5: [Convolutional neural networks](https://github.com/glouppe/info8010-deep-learning/blob/master/tutorials/lecture_05) <br>Reading assignment |
+| April 10 | Lecture 9: Uncertainty<br>Q&A session |
+| April 24 | Lecture 10: Deep reinforcement learning (guest lecture)<br>Tutorial 6: Deep reinforcement learning | 
+| May 1 | Project code and report |
 
 ## Project
 

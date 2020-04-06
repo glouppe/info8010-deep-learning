@@ -6,7 +6,7 @@ Lecture 1: Fundamentals of machine learning
 
 <br><br>
 Prof. Gilles Louppe<br>
-[g.louppe@uliege.be](g.louppe@uliege.be)
+[g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
 ???
 
