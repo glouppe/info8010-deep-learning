@@ -10,14 +10,8 @@ Prof. Gilles Louppe<br>
 
 ???
 
-R: Mention ontological uncertainty
-
 R: check https://drive.google.com/file/d/1G6I1hOxg9zN3PmKqm7sahXw6DvYmyYW3/view?usp=sharing
 R: check https://www.slideshare.net/perone/uncertainty-estimation-in-deep-learning
-
-R: mention out-of-distribution data
-R: put back some of the adversarial examples materials
-
 R: langevin dynamics (welling)
 
 ---
@@ -28,6 +22,7 @@ How to model *uncertainty* in deep learning?
 - Uncertainty
 - Aleatoric uncertainty
 - Epistemic uncertainty
+- Adversarial attacks
 
 ---
 
@@ -80,7 +75,7 @@ An image classification system erroneously identifies two African Americans as g
 
 class: middle
 
-If both these algorithms were able to assign a high level of **uncertainty** to their erroneous predictions, then the system may have been able to *make better decisions*, and likely avoid disaster.
+If both these algorithms were able to assign a high level of **uncertainty** to their erroneous predictions, then the systems may have been able to *make better decisions*, and likely avoid disaster.
 
 .footnote[Credits: Kendall and Gal, [What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?](https://papers.nips.cc/paper/7141-what-uncertainties-do-we-need-in-bayesian-deep-learning-for-computer-vision.pdf), 2017.]
 
@@ -91,8 +86,9 @@ If both these algorithms were able to assign a high level of **uncertainty** to 
 ## Case 1
 
 Let us consider a neural network model trained with several pictures of dog breeds.
-- We ask the model to decide on a dog breed using a photo of a cat.
-- What would you want the model to do?
+
+We ask the model to decide on a dog breed using a photo of a cat.
+What would you want the model to do?
 
 .grid[
 .kol-1-2[.center.width-90[![](figures/lec9/dogs.jpg)]]
@@ -106,7 +102,7 @@ class: middle
 
 ## Case 2
 
-We have three different types of images to classify, cat, dog, and cow, where only cat images are noisy.
+We have three different types of images to classify, cat, dog, and cow, some of which may be noisy due to the limitations of the acquisition instrument.
 
 <br>
 .center.width-90[![](figures/lec9/model-uncertainty2.png)]
@@ -117,11 +113,11 @@ class: middle
 
 ## Case 3
 
-What is the best model parameters that best explain a given dataset? What model structure should we use?
+What are the model parameters that best explain a given dataset? What model structure should we use? What are the known unknowns?
 
 .center[
-.width-48[![](figures/lec1/poly-3.png)]
-.width-48[![](figures/lec1/poly-10.png)]
+.width-45[![](figures/lec1/poly-3.png)]
+.width-45[![](figures/lec1/poly-10.png)]
 ]
 
 ---
@@ -134,13 +130,13 @@ $\Rightarrow$ **Out of distribution test data**.
 
 <br>
 
-.bold[Case 2:] We have three different types of images to classify, cat, dog, and cow, where only cat images are noisy.
+.bold[Case 2:] We have three different types of images to classify, cat, dog, and cow, some of which may be noisy due to the limitations of the acquisition instrument.
 
 $\Rightarrow$ **Aleatoric uncertainty**.
 
 <br>
 
-.bold[Case 3:] What is the best model parameters that best explain a given dataset? What model structure should we use?
+.bold[Case 3:] What are the model parameters that best explain a given dataset? What model structure should we use? What are the known unknowns?
 
 $\Rightarrow$ **Epistemic uncertainty**.
 
@@ -178,7 +174,10 @@ Aleatoric uncertainty can further be categorized into *homoscedastic* and *heter
 - Homoscedastic uncertainty relates to the uncertainty that a particular task might cause. It stays constant for different inputs.
 - Heteroscedastic uncertainty depends on the inputs to the model, with some inputs potentially having more noisy outputs than others.
 
-<br>
+---
+
+class: middle
+
 .center.width-100[![](figures/lec9/homo-vs-hetero.png)]
 
 .footnote[Credits: Yarin Gal, [Uncertainty in  Deep Learning](https://pdfs.semanticscholar.org/55cd/9e1bb7ce02cd2bb01b364e7b331fcc1ef2c7.pdf), 2016.]
@@ -195,7 +194,7 @@ We model aleatoric uncertainty in the output by modelling the conditional distri
 $$p(y|\mathbf{x}) = \mathcal{N}(y; \mu(\mathbf{x}), \sigma^2(\mathbf{x})),$$
 where $\mu(x)$ and $\sigma^2(\mathbf{x})$ are parametric functions to be learned, such as neural networks.
 
-In particular, we do not wish to learn a function $\hat{y} = f(\mathbf{x})$ that would only produce point estimates.
+We do not wish to learn a function $\hat{y} = f(\mathbf{x})$ that would only produce point estimates.
 
 ---
 
@@ -217,7 +216,7 @@ $$\begin{aligned}
 &= \arg \min\_{\theta,\sigma^2} \sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}}  \frac{(y\_i-\mu(\mathbf{x}\_i))^2}{2\sigma^2} + \log(\sigma) + C
 \end{aligned}$$
 
-.Q[[Q]] What if $\sigma^2$ was fixed?
+.exercise[What if $\sigma^2$ was fixed?]
 
 ---
 
@@ -239,23 +238,18 @@ $$\begin{aligned}
 &= \arg \min\_{\theta} \sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}}  \frac{(y\_i-\mu(\mathbf{x}\_i))^2}{2\sigma^2(\mathbf{x}\_i)} + \log(\sigma(\mathbf{x}\_i)) + C
 \end{aligned}$$
 
-- What is the role of $2\sigma^2(\mathbf{x}\_i)$?
-- What about $\log(\sigma(\mathbf{x}\_i))$?
+.exercise[What is the purpose of $2\sigma^2(\mathbf{x}\_i)$? What about $\log(\sigma(\mathbf{x}\_i))$?]
 
 ---
 
 # Multimodality
 
+Modelling $p(y|\mathbf{x})$ as a unimodal Gaussian is not always a good idea since the conditional distribution may be multimodal.
+
 <br>
 
-.center[
-
-Modelling $p(y|\mathbf{x})$ as a unimodal Gaussian is not always a good idea!
-
-(and it would be even worse to have only point estimates for $y$!)
-]
-
-.center.width-100[![](figures/lec9/multimodality.png)]
+.center.width-90[![](figures/lec9/multimodality.png)]
+.caption[(and it would be even worse to have only point estimates for $y$!)]
 
 ---
 
@@ -372,30 +366,31 @@ class: middle
 
 - The prior predictive distribution at $\mathbf{x}$ is given by integrating over all possible weight configurations,
 $$p(y|\mathbf{x}) = \int p(y|\mathbf{x}, \mathbf{\omega}) p(\mathbf{\omega}) d\mathbf{\omega}.$$
-- Given training data $\mathbf{X}=\\{\mathbf{x}\_1, ..., \mathbf{x}\_N\\}$ and $\mathbf{Y}=\\{y\_1, ..., y\_N\\}$, a Bayesian update results in the posterior
-$$p(\mathbf{\omega}|\mathbf{X},\mathbf{Y}) = \frac{p(\mathbf{Y}|\mathbf{X},\mathbf{\omega})p(\mathbf{\omega})}{p(\mathbf{Y}|\mathbf{X})}.$$
+- Given training data $\mathbf{d}=\\{(\mathbf{x}\_1, y\_1), ..., (\mathbf{x}\_N, y\_N)\\}$ a Bayesian update results in the posterior
+$$p(\mathbf{\omega}|\mathbf{d}) = \frac{p(\mathbf{d}|\mathbf{\omega})p(\mathbf{\omega})}{p(\mathbf{d})}$$
+where the likelihood $p(\mathbf{d}|\omega) = \prod\_i p(y\_i | \mathbf{x}\_i, \omega).$
 - The posterior predictive distribution is then given by
-$$p(y|\mathbf{x},\mathbf{X},\mathbf{Y}) = \int p(y|\mathbf{x}, \mathbf{\omega}) p(\mathbf{\omega}|\mathbf{X},\mathbf{Y}) d\mathbf{\omega}.$$
+$$p(y|\mathbf{x},\mathbf{d}) = \int p(y|\mathbf{x}, \mathbf{\omega}) p(\mathbf{\omega}|\mathbf{d}) d\mathbf{\omega}.$$
 
 ---
 
 class: middle
 
-Bayesian neural networks are *easy to formulate*,  but notoriously **difficult to perform inference in**.
+Bayesian neural networks are *easy to formulate*,  but notoriously **difficult** to perform inference in.
 
-- This stems mainly from the fact that the marginal $p(\mathbf{Y}|\mathbf{X})$ is intractable to evaluate, which results in the posterior $p(\mathbf{\omega}|\mathbf{X},\mathbf{Y})$ not being tractable either.
+- This stems mainly from the fact that the marginal $p(\mathbf{d})$ is intractable to evaluate, which results in the posterior $p(\mathbf{\omega}|\mathbf{d})$ not being tractable either.
 - Therefore, we must rely on approximations.
 
 ---
 
 # Variational inference
 
-Variational inference can be used for building an approximation $q(\mathbf{\omega};\nu)$ of the posterior $p(\mathbf{\omega}|\mathbf{X},\mathbf{Y})$.
+Variational inference can be used for building an approximation $q(\mathbf{\omega};\nu)$ of the posterior $p(\mathbf{\omega}|\mathbf{d})$.
 
-As before (see Lecture 6), we can show that minimizing
-$$\text{KL}(q(\mathbf{\omega};\nu) || p(\mathbf{\omega}|\mathbf{X},\mathbf{Y}))$$
+As before (see Lecture 7), we can show that minimizing
+$$\text{KL}(q(\mathbf{\omega};\nu) || p(\mathbf{\omega}|\mathbf{d}))$$
 with respect to the variational parameters $\nu$, is identical to maximizing the evidence lower bound objective (ELBO)
-$$\text{ELBO}(\nu) = \mathbb{E}\_{q(\mathbf{\omega};\nu)} \left[\log p(\mathbf{Y}|\mathbf{X}, \mathbf{\omega})\right] - \text{KL}(q(\mathbf{\omega};\nu) || p(\mathbf{\omega})).$$
+$$\text{ELBO}(\nu) = \mathbb{E}\_{q(\mathbf{\omega};\nu)} \left[\log p(\mathbf{d}| \mathbf{\omega})\right] - \text{KL}(q(\mathbf{\omega};\nu) || p(\mathbf{\omega})).$$
 
 ---
 
@@ -405,7 +400,7 @@ The integral in the ELBO is not tractable for almost all $q$, but it can be mini
 
 1. Sample $\hat{\omega} \sim q(\mathbf{\omega};\nu)$.
 2. Do one step of maximization with respect to $\nu$ on
-$$\hat{L}(\nu) = \log p(\mathbf{Y}|\mathbf{X}, \hat{\omega}) - \text{KL}(q(\mathbf{\omega};\nu) || p(\mathbf{\omega})) $$
+$$\hat{L}(\nu) = \log p(\mathbf{d}|\hat{\omega}) - \text{KL}(q(\mathbf{\omega};\nu) || p(\mathbf{\omega})) $$
 
 In the context of Bayesian neural networks, this procedure is also known as **Bayes by backprop** (Blundell et al, 2015).
 
@@ -493,20 +488,20 @@ class: middle
 Therefore, one step of stochastic gradient descent on the ELBO becomes:
 1. Sample $\hat{\omega} \sim q(\mathbf{\omega};\nu)$ $\Leftrightarrow$ Randomly set units of the network to zero $\Leftrightarrow$ Dropout.
 2. Do one step of maximization with respect to $\nu = \\{ \mathbf{M}\_i \\}$ on
-$$\hat{L}(\nu) = \log p(\mathbf{Y}|\mathbf{X}, \hat{\omega}) - \text{KL}(q(\mathbf{\omega};\nu) || p(\mathbf{\omega})).$$
+$$\hat{L}(\nu) = \log p(\mathbf{d}|\hat{\omega}) - \text{KL}(q(\mathbf{\omega};\nu) || p(\mathbf{\omega})).$$
 
 ---
 
 class: middle
 
 Maximizing $\hat{L}(\nu)$ is equivalent to minimizing
-$$-\hat{L}(\nu) = -\log p(\mathbf{Y}|\mathbf{X}, \hat{\omega}) + \text{KL}(q(\mathbf{\omega};\nu) || p(\mathbf{\omega})) $$
+$$-\hat{L}(\nu) = -\log p(\mathbf{d}|\hat{\omega}) + \text{KL}(q(\mathbf{\omega};\nu) || p(\mathbf{\omega})) $$
 
-Is this equivalent to one minimization step of a standard classification or regression objective? *Yes!*
-- The first term is the typical objective (see Lecture 2).
+This is also equivalent to one minimization step of a standard classification or regression objective:
+- The first term is the typical objective (such as the cross-entropy).
 - The second term forces $q$ to remain close to the prior $p(\omega)$.
-    - If $p(\omega)$ is Gaussian, minimizing the $KL$ is equivalent to $\ell\_2$ regularization.
-    - If $p(\omega)$ is Laplacian, minimizing the $KL$ is equivalent to  $\ell\_1$ regularization.
+    - If $p(\omega)$ is Gaussian, minimizing the $\text{KL}$ is equivalent to $\ell\_2$ regularization.
+    - If $p(\omega)$ is Laplacian, minimizing the $\text{KL}$ is equivalent to  $\ell\_1$ regularization.
 
 ---
 
@@ -526,8 +521,8 @@ Proper epistemic uncertainty estimates at $\mathbf{x}$ can be obtained in a prin
 - Approximate the predictive mean and variance as follows:
 $$
 \begin{aligned}
-\mathbb{E}\_{p(y|\mathbf{x},\mathbf{X},\mathbf{Y})}\left[y\right] &\approx \frac{1}{T} \sum\_{t=1}^T f(\mathbf{x};\hat{\omega}\_t) \\\\
-\mathbb{V}\_{p(y|\mathbf{x},\mathbf{X},\mathbf{Y})}\left[y\right] &\approx \sigma^2 + \frac{1}{T} \sum\_{t=1}^T f(\mathbf{x};\hat{\omega}\_t)^2 - \hat{\mathbb{E}}\left[y\right]^2
+\mathbb{E}\_{p(y|\mathbf{x},\mathbf{d})}\left[y\right] &\approx \frac{1}{T} \sum\_{t=1}^T f(\mathbf{x};\hat{\omega}\_t) \\\\
+\mathbb{V}\_{p(y|\mathbf{x},\mathbf{d})}\left[y\right] &\approx \sigma^2 + \frac{1}{T} \sum\_{t=1}^T f(\mathbf{x};\hat{\omega}\_t)^2 - \hat{\mathbb{E}}\left[y\right]^2
 \end{aligned}
 $$
 
@@ -626,6 +621,224 @@ a  **Gaussian process**.
 .center.width-80[![](figures/lec9/in.png)]
 
 .center[(Neal, 1995)]
+
+---
+
+class: middle
+
+# Adversarial attacks
+
+---
+
+class: middle
+
+## Intriguing properties of neural networks
+
+.italic["We can cause the network to *misclassify an image by applying a certain hardly perceptible perturbation*, which is found
+by maximizing the network’s prediction error. In addition, the specific nature of
+these perturbations is **not a random artifact of learning**: the same perturbation can
+cause a different network, that was trained on a different subset of the dataset, to
+misclassify the same input."
+
+The existence of
+the adversarial negatives appears to be in *contradiction with the network’s ability to achieve high
+generalization performance*. Indeed, if the network can generalize well, how can it be confused
+by these adversarial negatives, which are indistinguishable from the regular examples?"]
+
+.pull-right[(Szegedy et al, 2013)]
+
+---
+
+# Attacks
+
+<br><br>
+
+.center.width-100[![](figures/lec9/piggie.png)]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec9/negative1.png)]
+
+.center[(Left) Original images. (Middle) Adversarial noise. (Right) Modified images.<br>
+All are classified as 'Ostrich'. ]
+
+.footnote[Credits: Szegedy et al, [Intriguing properties of neural networks](https://arxiv.org/abs/1312.6199), 2013.]
+
+---
+
+class: middle
+
+## Fooling deep structured prediction models
+
+.center.width-80[![](figures/lec9/houdini1.png)]
+
+.center.width-80[![](figures/lec9/houdini2.png)]
+
+.center[(Cisse et al, 2017)]
+
+---
+
+class: middle, black-slide
+
+## Adversarial examples in the physical world
+
+.center[
+<iframe width="600" height="450" src="https://www.youtube.com/embed/zQ_uMenoBCk" frameborder="0" volume="0" allowfullscreen></iframe>
+]
+
+---
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/oeQW5qdeyy8" frameborder="0" volume="0" allowfullscreen></iframe>
+
+---
+
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/YXy6oX1iNoA" frameborder="0" volume="0" allowfullscreen></iframe>
+
+---
+
+class: middle
+
+## Creating adversarial examples
+
+"The deep stack of non-linear layers are a way for the model to encode a non-local
+generalization prior over the input space. In other words, it is assumed that is
+possible for the output unit to assign probabilities to regions of the input
+space that contain no training examples in their vicinity.
+
+It is implicit in such arguments that local generalization—in the very proximity
+of the training examples—works as expected. And that in particular, for a small
+enough radius $\epsilon > 0$ in the vicinity of a given training input
+$\mathbf{x}$, an $\mathbf{x} + \mathbf{r}$ satisfying $||\mathbf{r}|| < \epsilon$ will
+get assigned a high probability of the correct class by the model."
+
+.pull-right[(Szegedy et al, 2013)]
+
+---
+
+class: middle
+
+$$\begin{aligned}
+\min\_{\mathbf{r}}&\, \ell(y\_\text{target}, f(\mathbf{x}+\mathbf{r};\theta))\\\\
+\text{subject to}&\, ||\mathbf{r}||\leq L
+\end{aligned}$$
+
+---
+
+class: middle 
+
+## A security threat
+
+Adversarial attacks pose a **security threat** to machine learning systems deployed in the real world.
+
+Examples include:
+- fooling real classifiers trained by remotely hosted API (e.g., Google),
+- fooling malware detector networks,
+- obfuscating speech data,
+- displaying adversarial examples in the physical world and fool systems that perceive them through a camera.
+
+---
+
+class: middle, black-slide
+
+.center.width-50[![](figures/lec9/stop.png)]
+
+.center[What if adversarial patches are put on road signs?<br> Say, for a self-driving car?]
+
+---
+
+# Origins of the vulnerability
+
+## Conjecture 1: Overfitting
+
+Natural images are within the correct regions, but are also sufficiently close to the decision boundary.
+
+.center.width-70[![](figures/lec9/conjecture1.png)]
+
+---
+
+class: middle
+
+## Conjecture 2: Excessive linearity
+
+The decision boundary for most ML models, including neural networks, are near piecewise linear.
+
+Then, for an adversarial sample $\hat{\mathbf{x}}$, its dot product with a weight vector $\mathbf{w}$ is such that
+$$\mathbf{w}^T \hat{\mathbf{x}} = \mathbf{w}^T\mathbf{x} + \mathbf{w}^T\mathbf{r}.$$
+- The adversarial perturbation causes the activation to grow by $\mathbf{w}^T\mathbf{r}$.
+- For $\mathbf{r} = \epsilon \text{sign}(\mathbf{w})$, if $\mathbf{w}$ has $n$ dimensions and the average magnitude of an element is $m$, then the activation will grow by $\epsilon mn$.
+- Therefore, for high dimensional problems, we can make
+many infinitesimal changes to the input that add up to one large change to the output.
+
+???
+
+See also https://arxiv.org/pdf/1608.07690.pdf
+
+---
+
+class: middle
+
+.center.width-70[![](figures/lec9/epsilon-response.png)]
+
+.center[Empirical observation: neural networks produce nearly linear responses over $\epsilon$.]
+
+---
+
+# Defenses
+
+- Data augmentation
+- Adversarial training
+- Denoising / smoothing
+
+---
+
+class: middle
+
+## Denoising
+
+- Train the network to remove adversarial perturbations before using the input.
+- The winning team of the defense track of the NIPS 2017 competition trained a denoising U-Net to remove adversarial noise.
+
+<br>
+
+.center.width-100[![](figures/lec9/dunet.png)]
+
+.footnote[Credits: Liao et al, [Defense against Adversarial Attacks Using High-Level Representation Guided Denoiser](http://bigml.cs.tsinghua.edu.cn/~jun/pub/adversarial-defense.pdf), 2017.]
+
+???
+
+http://bigml.cs.tsinghua.edu.cn/~jun/pub/adversarial-defense.pdf
+
+---
+
+class: middle
+
+## Failed defenses
+
+.italic["In this paper we evaluate ten proposed defenses and **demonstrate
+that none of them are able to withstand a white-box attack**. We do
+this by constructing defense-specific loss functions that we minimize
+with a strong iterative attack algorithm. With these attacks, on
+CIFAR an adversary can create imperceptible adversarial examples
+for each defense.
+
+By studying these ten defenses, we have drawn two lessons: existing
+defenses lack thorough security evaluations, and adversarial
+examples are much more difficult to detect than previously recognized."]
+
+.pull-right[(Carlini and Wagner, 2017)]
+
+<br><br>
+
+.italic["No method of defending against adversarial examples is yet completely satisfactory. This remains a rapidly evolving research area."]
+
+.pull-right[(Kurakin, Goodfellow and Bengio, 2018)]
 
 ---
 
