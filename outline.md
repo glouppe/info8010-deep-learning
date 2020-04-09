@@ -13,6 +13,9 @@ Prof. Gilles Louppe<br>
 R: reading assingment:http://web.stanford.edu/class/cs224n/project/project-proposal-instructions.pdf
 R: https://www.cs.toronto.edu/~duvenaud/courses/csc2541/index.html projects
 
+
+R: add overview maps for each lecture, as in INFO8002
+
 ---
 
 # AI at ULiège
