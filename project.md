@@ -25,7 +25,7 @@ Examples of such ideas could revolve around more theoretical projects such as op
 ### Agenda
 
 - Project proposal, due by **March 6, 2020 at 23:59**.
-- Project code and report, due by **May 1, 2020 at 23:59**.
+- Project code and report, due by **May 15, 2020 at 23:59**.
 - Project presentations (TBD).
 
 Projects should be submitted through the [Montefiore submission platform](https://submit.montefiore.ulg.ac.be).

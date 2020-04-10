@@ -113,7 +113,7 @@ class: middle
 
 ## Case 3
 
-What are the model parameters that best explain a given dataset? What model structure should we use? What are the known unknowns?
+What are the model parameters that best explain a given dataset? What model structure should we use? What are the known unknowns and our prior beliefs?
 
 .center[
 .width-45[![](figures/lec1/poly-3.png)]
@@ -136,7 +136,7 @@ $\Rightarrow$ **Aleatoric uncertainty**.
 
 <br>
 
-.bold[Case 3:] What are the model parameters that best explain a given dataset? What model structure should we use? What are the known unknowns?
+.bold[Case 3:] What are the model parameters that best explain a given dataset? What model structure should we use? What are the known unknowns and our prior beliefs?
 
 $\Rightarrow$ **Epistemic uncertainty**.
 

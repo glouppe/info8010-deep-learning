@@ -10,6 +10,8 @@ Prof. Gilles Louppe<br>
 
 ???
 
+R: https://lilianweng.github.io/lil-log/2020/04/07/the-transformer-family.html <-- very good!
+
 R: https://jalammar.github.io/illustrated-gpt2/
 R: https://twitter.com/Ben_Hoov/status/1183823783754371076?s=03  --> BERT visualization
 http://web.stanford.edu/class/cs224n/slides/cs224n-2019-lecture14-transformers.pdf
