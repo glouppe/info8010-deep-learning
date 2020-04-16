@@ -138,17 +138,131 @@ $$V^* (s)=\underset{\pi}{\max}\:V^{\pi}(s), \ \text{for all} \ s\in\mathcal{S}$$
 and the optimal state-action value function
 $$ Q^* (s,a)= \underset{\pi}{\max}\:Q^{\pi}(s,a) \ \text{for all} \ s\in\mathcal{S} \ \text{and} \ a \in\mathcal{A}$$
 
-Both value functions satisfy the **Bellman optimality equation**, and can be learned via Temporal-Difference or Monte-Carlo learning methods.
+Both value functions satisfy the **Bellman optimality equation**, and can be learned via Monte-Carlo or Temporal-Difference learning methods.
 
 ---
 ## Policies and Value Functions
 
 We have seen how to define value functions mathematically but what do they represent in practice?
 
+- The environment is **unknown** so we do not have any prior which can help us out
 - We can see value functions as some sort of **knowledge** representation of an agent
 - If a value functions is accurate an agent will know everything he needs to know for interacting with an environment
-- The environment is **unknown** so we do not have any prior which can help us out
-- We can only interact and update
+- We can only interact with the environment and update our knowledge
+
+---
+## Monte Carlo (MC) Methods
+
+- The first method than can be used for learning a value function without assuming complete knowledge of the environment: **model-free RL**
+
+- The only requirement of MC methods is *experience*: sampling sequences of states, actions and rewards from an environment which can be even simulated
+
+- We assume that RL episodes **eventually** terminate, no matter which actions are selected. Only at the end of an episode our value estimates and therefore a policy can get updated.
+
+---
+## Monte Carlo (MC) Methods
+
+The idea is to compute the **real return** once an episode terminates
+
+$$G_t = \sum_{k=0}^{\infty}\gamma^{k}r_{t+k+1}$$
+and keep track of the value of a single state based on the amount of times this state has been visited
+$$V(s_t)=\frac{\sum_{i=1}^{k}G_t(s)}{N(s)}$$
+This estimate can then get updated as follows:
+$$V(s_t):= V(s_t)+\alpha[G_t -V(S_t)].$$
+
+---
+## Monte Carlo (MC) Methods
+
+There are some important **drawbacks** when it comes to MC methods:
+
+- We need to wait until an episode is terminated because only then $G_t$ will be known
+- Convergence is slowed down
+
+A nice advantage however is that these kind of methods are **unbiased** when compared to their alternatives.
+
+---
+## Temporal Difference (TD)-Learning
+
+*"The most central and novel idea of entire Reinforcement Learning"*
+
+- TD-Learning is a combination of Monte Carlo ideas and dynamic programming ideas.
+
+- Just like MC methods TD-Learning approaches can simply learn from raw experiences without the need for a model of the environment. Like DP techniques, the update estimates are based (in part) on other learned estimates.
+
+- This means we do not have to wait until the end of an episode anymore but instead rely on **bootstrapping**.
+
+$$V(S_t):= V(S_t)+\alpha[r_t+\gamma V(S_{t+1}) - V(s_t)]$$
+---
+## Temporal Difference (TD)-Learning
+
+The core idea of TD-Learning is the concept of **TD-error**, or sometimes called target
+
+$$\delta_t = r_t+\gamma V(s_{t+1})$$
+
+- It corresponds to the only information that is needed in order to update our value estimates, remember that we **do not** have access to $V^* (s)$ and we want to overcome waiting for $G_t$!
+
+- We are learning $V^* (s)$ by guessing the value estimates that the exact same function provides at $s_{t+1}$
+
+---
+## Temporal Difference (TD)-Learning
+
+We have seen the simplest form of how to update an estimate based on another estimate, but is this really a **good idea**?
+
+- TD-Learning methods do not require a model of the environment, its rewards and the $s_{t+1}$ probability distributions
+- They are implemented in an online, fully incremental fashion
+- We only need to wait one-step before starting learning (might also be a drawback!)
+- TD methods are also **sound** and convergence of any fixed policy $\pi$ to $V^\pi$ is guaranteed.
+This policy might however not be the optimal one!
+
+- A convergence proof on the speed of TD methods vs MC methods is still missing!
+
+---
+## Eligibility Traces
+
+So far we have seen that we can update a value function from the real final return $G_t$ obtained at the end of an episode, or based on an immediate future estimate $V(s_{t+1})$. There is however an intermediate approach between MC and TD-Learning called **TD $(\lambda)$**
+
+$$G^{n}_{t}=r_t+\gamma r_{t+1}+\gamma^2 r_{t+2} + ... + \gamma^{n} V_t(s_{t+n})$$
+
+With setting $0\leq\gamma\leq1$ we are able to compute updates based on n-step returns.
+
+- The problem is that we would have to wait indefinitely for computing $G_t^{\infty}$. This is also known as *the problem of the forward view of* TD($\lambda$)
+
+---
+## Eligibility Traces
+
+We could however partially overcome this problem by **incrementally** updating the eligibility trace of a state, which nicely allows us to perform n-step backups in an elegant way.
+
+- For each state $s\in\mathcal{S}$ a trace $e_t(s)$ is kept in memory and initialized at 0
+- At each state we update $e_t(s)$ as
+
+$$e_t(s) = \begin{cases}
+\gamma\lambda e_{t-1}(s) & \text{if} & s \neq s_t \\
+\gamma\lambda e_{t-1}(s)+ 1 & \text{if} & s = s_t\\
+\end{cases} $$
+
+---
+## Eligibility Traces
+
+The trace of each state is increased every time that particular state is visited and decreases exponentially otherwise due to $\lambda$.
+
+If we again consider the TD-error as:
+$$\delta_t = r_t+\gamma V(s_{t+1})-V(s_t)$$
+
+On every step we want to update all the possible states in proportion to their eligibility traces which results in the following update:
+
+$$V(s_t):= V(s_t) + \alpha \delta_t e_t(s)$$
+
+
+
+---
+## Exploration vs Exploitation
+
+
+---
+## On-policy vs Off-policy learning
+
+
+---
 
 ---
 
