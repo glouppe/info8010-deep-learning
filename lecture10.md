@@ -253,7 +253,9 @@ On every step we want to update a state in proportion to its eligibility trace, 
 $$V(s_t):= V(s_t) + \alpha \delta_t e_t(s_t)$$
 
 * A general mechanism for learning from n-step returns
+
 * For $\lambda=1$ we have MC-Learning
+
 * For $\lambda=0$ we have TD-Learning
 
 ---
@@ -282,7 +284,7 @@ So why is the exploration-exploitation dilemma so **challenging?**
 
 Let us assume that we have learned the **optimal** $Q$ function:
 
-$$ Q^* (s,a)= \underset{\pi}{\text{max}}\:Q^{\pi}(s,a) \ \text{for all} \ s\in\mathcal{S} \ \text{and} \ a \in\mathcal{A}$$
+$$ Q^* (s,a)= \underset{\pi}{\max}\:Q^{\pi}(s,a) \ \text{for all} \ s\in\mathcal{S} \ \text{and} \ a \in\mathcal{A}$$
 
 We know that this equation satisfies the Bellman optimality equation as given by:
 
@@ -352,9 +354,13 @@ $$\delta_t =  r_{t} + \gamma \: \underset{a\in \mathcal{A}}{\max}\: Q(s_{t+1}, a
 $$Q(s_{t}, a_{t}) := Q(s_{t}, a_{t}) + \alpha \big[r_{t} + \gamma \max_{a \in \cal A} Q(s_{t+1}, a) - Q(s_{t}, a_{t})\big]$$
 
 - The most popular RL algorithm
+
 - Based on a variation of the simplest form of TD-Learning
+
 - Learns the $Q$ function in an off-policy learning setting
+
 - (In the limit) Converges to the optimal policy regardless of the exploration strategy used
+
 - Suffers from numerous biases  
 
 ---
@@ -365,7 +371,9 @@ $$Q(s_{t}, a_{t}) := Q(s_{t}, a_{t}) + \alpha \big[r_{t} + \gamma \max_{a \in \c
 $$Q(s_{t}, a_{t}) := Q(s_{t}, a_{t}) + \alpha \big[r_{t} + \gamma Q(s_{t+1}, a_{t+1}) - Q(s_{t}, a_{t})\big]$$
 
 - An on-policy variation of Q-Learning
+
 - The TD-error is given by the estimate at $s_{t+1}$ which is based on the current policy
+
 - When function approximators are used it diverges less when compared to Q-Learning
 
 ---
@@ -379,7 +387,9 @@ $$V(s_t) := V(s_t) + \alpha \big[r_{t} + \gamma V(s_{t+1}) - V(s_t))]e_t(s)$$
 $$Q(s_t, a_t) :=  Q(s_{t}, a_{t}) + \alpha \big[r_{t} + \gamma V(s_{t+1}) - Q(s_{t}, a_{t})\big] $$
 
 - Learns on-policy
+
 - Learning two value functions might accelerate learning
+
 - Uses the same TD-error to learn two value functions
 
 ---
@@ -397,18 +407,185 @@ With this error we can strengthen or weaken the selection of an action by modify
 
 $$p(s_t, a_t):= p(s_t, a_t)+\beta\delta_t$$
 
+where $\beta$ determines the size of the update.
 
 ---
 class: middle
 
-# Deep Reinforcement Learning
+# Deep Reinforcement Learning (DRL)
+---
+
+## The need for function approximators
+
+- All previously mentioned RL algorithms work well when the size of the MDP is relatively **small**
+
+- In practice value functions are usually represented by a look-up table where for example each state-action pair has an entry representing $Q(s, a)$
+
+- Storing such data structures is however not possible when the state-action space is too large
+
+- We want to replace a value function with a **function approximator** e.g. a neural network
+
+  - $V(s; \theta)\approx V^{\pi}(s)$
+
+  - $Q(s,a;\theta)\approx Q^{\pi}(s,a)$
+
+---
+## The need for function approximators
+
+Using a function approximator allows us to drastically increase the complexity of the MDP
+
+  - TD-Gammon: $10^{20}$ possible states   
+
+  - Alpha-Go: $10^{20}$ possible states
+
+  - Many real world situations ranging from autonomous driving cars, to personalized web-services
+
+In these examples RL methods with function approximators are mostly used in combination with other AI techniques e.g. tree-search
+
+There are no restrictions on the type of function approximator that is used:
+  - Linear vs Non-Linear
+  - Neural Networks
+  - Regression Trees
+  - KNN
 
 ---
 
-Coucou
+## The need for function approximators
+
+In this class we mostly (only ;)) care about neural networks
+
+- Despite the recent hype of DRL the combination between MLPs and RL algorithms is not new
+
+- Before DRL existed this research field was known as **Connectionist Reinforcement Learning**
+
+- We start speaking of DRL when more complex neural architectures are used as function approximators, one above all Convolutional Neural Networks (CNNs)
+
+- CNNs are then combined with other techniques which make DRL algorithms stable and will correspond to a *DRL cooking recipe*
+
+---
+## The need for function approximators
+
+Most of the DRL algorithms we will see from now on use a CNN as a function approximator
+
+  - Universal function approximators
+
+  - Powerful feature extractors
+
+  - This allows us to learn an appoximation of a value function from raw dimensional feature inputs
+
+The CNN itself will be directly modeling the **value function**, or in case of policy gradient methods it will represent the **policy** of our agent.
+
+---
+## The need for function approximators
+
+One question needs to be answered, how do we exactly **train** a neural network on a RL problem?
+
+Let us consider the Q-Learning algorithm
+$$Q(s_{t}, a_{t}) := Q(s_{t}, a_{t}) + \alpha \big[r_{t} + \gamma \max_{a \in \cal A} Q(s_{t+1}, a) - Q(s_{t}, a_{t})\big]$$
+
+This update rule is very different from the objective functions which we have encountered so far in the course
+
+  - There are no parameters $\theta$ defining a neural network
+  - There is no loss function $\mathcal{L}(\theta)$
+
+  - **What should we minimize?**
+
+---
+## The need for function approximators
+
+The answer comes when considering the **TD-error** that defines Q-Learning update's rule
+
+$$\delta_t=r_{t} + \gamma \max_{a \in \cal A} Q(s_{t+1}, a) - Q(s_{t}, a_{t})$$
+
+This quantity is telling us to update our current $Q(s_t, a_t)$ estimate with respect to the greedy $s_{t+1}$ one, which is an idea that resembles the **Mean Squared Error** loss
+
+$$\mathcal{L}(y,f(x)) = (y-f(x))^2$$
+
+which we can adapt to obtain the following objective function:
+
+$$\mathcal{L}(\theta) = \big(r_{t} + \gamma \: \underset{a\in \mathcal{A}}{\max}\: Q(s_{t+1}, a; \theta) - Q(s_{t}, a_{t}; \theta)\big)^{2}$$
+
+where $\theta$ represents the neural network approximating the $Q$ function.
+
+---
+## DQN
+
+The popular DQN algorithm integrates two additional components into the previous objective function which ensure **stable** and **robust** training:
+
+- Experience Replay
+
+- Target Networks
+
+$$L(\theta) = \mathbb{E}_{\color{green}{\langle s_{t},a_{t},r_{t},s_{t+1}\rangle\sim U(D)}} \bigg[\big(r_{t} + \gamma \: \underset{a\in \mathcal{A}}{\max}\: Q(s_{t+1}, a; \color{red}{\theta^{-}})  - Q(s_{t}, a_{t}; \theta)\big)^{2}\bigg]$$
+
+Given a training iteration $i$, differentiating this objective function with respect to $\theta$ gives the following gradient:
+
+$$\nabla_{\theta_{i}}y^{DQN}_{t}(\theta_{i}) = \mathbb{E}_{\langle s_{t},a_{t},r_{t},s_{t+1}\rangle\sim U(D)} \bigg[\big(r_{t} + \\ \gamma \: \underset{a\in \mathcal{A}}{\max}\: Q(s_{t+1}, a; \theta^{-}_{i-1})  - Q(s_{t}, a_{t}; \theta_{i})\big)\nabla_{\theta_{i}} Q(s_{t}, a_{t}; \theta_{i})\bigg]$$
+
+---
+## DQN
+
+Integrating the popular Q-Learning algorithm with an experience replay memory buffer and a separate network ensures that training is stable only until a certain point.
+
+- DRL algorithms suffer from the same problems that characterize their tabular counterparts
+
+- This is especially true for TD methods which are built upon **biased expectations**
+
+- Biases get even more enhanced because of the use of function approximators which can make training even more unstable
+
+An example of these biases is the **overestimation bias** of the $Q$ function that characterizes Q-Learning and therefore DQN.
+
+---
+## DDQN
+
+DQN's objective function tells us that the same set of actions is used when **selecting** and **evaluating** an action.
+
+This becomes clearer if we look at DQN's target:
+
+$$\delta_{t} = r_{t} + \gamma \: \color{red}{\underset{a\in \mathcal{A}}{\max}}\: Q(s_{t+1}, \color{red}{a}; \theta^{-})$$
+
+and rewrite it as:
+
+$$\delta_t =  r_{t} + \gamma \: Q(s_{t+1}, \underset{a\in \mathcal{A}}{\text{argmax}}\: Q(s_{t+1}, a; \theta); \theta^{-})$$
+
+DQN tends to approximate the expected maximum value of a state, instead of its maximum expected value, resulting in $Q$ values that are overestimated.
+
+DDQN partially solves this problem by untangling the selection and the evaluation of an action by taking advantage of the target network.
+
+---
+## Prioritized Experience Replay (PER)
+
+
+
+
+---
+## Dueling Networks
+
+
+---
+## The DQV-Family of Algorithms
+
+---
+## Rainbow
 
 ---
 
+## The Deadly Triad of DRL
+
+---
+## Policy Gradient Methods
+
+
+---
+## Q-Mix for Multi-Agent DRL
+
+---
+
+
+---
+
+
+---
 class: end-slide, center
 count: false
 
