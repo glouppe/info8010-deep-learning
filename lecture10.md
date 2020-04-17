@@ -248,24 +248,157 @@ The trace of each state is increased every time that particular state is visited
 If we again consider the TD-error as:
 $$\delta_t = r_t+\gamma V(s_{t+1})-V(s_t)$$
 
-On every step we want to update all the possible states in proportion to their eligibility traces which results in the following update:
+On every step we want to update a state in proportion to its eligibility trace, which results in the following update:
 
-$$V(s_t):= V(s_t) + \alpha \delta_t e_t(s)$$
+$$V(s_t):= V(s_t) + \alpha \delta_t e_t(s_t)$$
 
-
+* A general mechanism for learning from n-step returns
+* For $\lambda=1$ we have MC-Learning
+* For $\lambda=0$ we have TD-Learning
 
 ---
 ## Exploration vs Exploitation
 
+* We know that if a complete model of an environment is given it is easy to compute an optimal policy (like Dynamic-Programming).
+
+* As we have seen so far in the general RL setting this is unfortunately not the case, therefore learning an optimal policy becomes as process of *trial and error*.
+
+* During this process the only feedback that is available to the agent is the reward that is obtained at the end of an
+action
+
+---
+## Exploration vs Exploitation
+
+So why is the exploration-exploitation dilemma so **challenging?**
+
+* In RL the amount of feedback that the agent gets compared to e.g. SL is much less. There is no direct relationship between a learning sample and its output which allows us to evaluate a **general** performance
+
+* In SL we usually deal with **static** datasets, similarly in Unsupervised Learning we learn a hopefully useful partition of an unlabeled dataset. In RL we have to deal with **time**
+
+* The RL "dataset" is considered as a **moving target** which makes it hard to quantify how well e.g. an objective function is minimized
+
+---
+## Exploration vs Exploitation
+
+Let us assume that we have learned the **optimal** $Q$ function:
+
+$$ Q^* (s,a)= \underset{\pi}{\text{max}}\:Q^{\pi}(s,a) \ \text{for all} \ s\in\mathcal{S} \ \text{and} \ a \in\mathcal{A}$$
+
+We know that this equation satisfies the Bellman optimality equation as given by:
+
+$$ Q^* (s_t,a_t)=\sum_{s_{t+1}}p(s_{t+1} | s_{t}, a_{t})  \bigg[\Re (s_{t}, a_{t}, s_{t+1}) + \gamma \: \underset{a}{\max} \: Q^* (s_{t+1}, a) \bigg]$$
+
+If such a function is learned it is straightforward to derive and **optimal policy** which does not require exploration
+
+$$\pi^* (s_t)= \underset{a \in \cal A}{argmax} \; Q^{\pi}(s_t, a_t).$$
+
+Unfortunately we first need to learn $Q$ :P
+
+---
+## Exploration vs Exploitation
+
+- An agent which always learns from the same experience will learn fast but will never increase its knowledge and performance
+
+- But once the agent has learned enough we do not want it to make sub-optimal decisions anymore since deviating from a greedy policy can cause some loss
+
+- The most popular way of dealing with this dilemma is the $\epsilon$ greedy approach
+
+$$a_{t} = \begin{cases}
+  max_{a} Q(s_{t}, a_{t}) & \text{with prob 1-}\epsilon \\
+  \text{random action with prob } \epsilon
+\end{cases}$$
+
+We anneal $\epsilon$ linearly over time to encourage exploration in the early training stages.
+
+---
+
+## Exploration vs Exploitation
+
+If in practice the $\epsilon$ greedy approach is almost always used, it is important to mention that it treats all negative actions equally.
+
+- We can overcome this with Boltzmann Exploration
+$$P(a) = \frac{e^{\frac{Q(a)}{\tau}}}{\sum_{i=1}^{K}e^\frac{Q(i)}{\tau}}$$
+
+which causes a lot of exploration for states where $Q$ values are similar and little exploration in states where $Q$ values are very different.  
 
 ---
 ## On-policy vs Off-policy learning
 
+- We have seen how important it is to learn a policy and how this governs the behavior of an agent
+
+- Policies also define the underlying **RL algorithm** which we use when learning a value function
+
+- Specifically they are of interest when we need to compute a TD-error
+
+$$\delta_t = r_t+\gamma V(s_{t+1})$$
+
+$$\delta_t =  r_{t} + \gamma \: \underset{a\in \mathcal{A}}{\max}\: Q(s_{t+1}, a)$$
+
+---
+## On-policy vs Off-policy learning
+
+- The first TD-error defines an **on-policy** RL algorithm since the estimate at $V(s_{t+1})$ will always be defined by the current policy the agent is following
+
+- The second TD-error defines an **off-policy** RL algorithm since the TD-error $r_{t} + \gamma \: \underset{a\in \mathcal{A}}{\max}\: Q(s_{t+1}, a)$ is always greedy because it is defined by the **$\max$** operator. Remember that because of the exploration-exploitation trade-off the agent might not follow this greedy policy in practice
+
+- Overall we can see off-policy algorithms as methods which learn **many** policies whereas on-policy ones only learn **one** policy. Both methods come with their pros and cons and the choice of a particular algorithm depends on the problem at hand.
+
+- This difference starts to play a significant role when neural networks are used.
 
 ---
 
+## Q-Learning
+
+$$Q(s_{t}, a_{t}) := Q(s_{t}, a_{t}) + \alpha \big[r_{t} + \gamma \max_{a \in \cal A} Q(s_{t+1}, a) - Q(s_{t}, a_{t})\big]$$
+
+- The most popular RL algorithm
+- Based on a variation of the simplest form of TD-Learning
+- Learns the $Q$ function in an off-policy learning setting
+- (In the limit) Converges to the optimal policy regardless of the exploration strategy used
+- Suffers from numerous biases  
+
 ---
 
+## SARSA
+
+
+$$Q(s_{t}, a_{t}) := Q(s_{t}, a_{t}) + \alpha \big[r_{t} + \gamma Q(s_{t+1}, a_{t+1}) - Q(s_{t}, a_{t})\big]$$
+
+- An on-policy variation of Q-Learning
+- The TD-error is given by the estimate at $s_{t+1}$ which is based on the current policy
+- When function approximators are used it diverges less when compared to Q-Learning
+
+---
+
+## QV-Learning
+
+Jointly learns the state-value function $V$ and the state-action value function $Q$
+
+$$V(s_t) := V(s_t) + \alpha \big[r_{t} + \gamma V(s_{t+1}) - V(s_t))]e_t(s)$$
+
+$$Q(s_t, a_t) :=  Q(s_{t}, a_{t}) + \alpha \big[r_{t} + \gamma V(s_{t+1}) - Q(s_{t}, a_{t})\big] $$
+
+- Learns on-policy
+- Learning two value functions might accelerate learning
+- Uses the same TD-error to learn two value functions
+
+---
+
+## Actor-Critic Learning
+
+A branch of TD methods which keep the policy **(Actor)**
+from a learned value function **(Critic)**
+
+The TD error
+$$\delta_t = r_t+\gamma V(s_{t+1})-V(s_t)$$
+is used by the critic to evaluate the action which was taken by the actor.
+
+With this error we can strengthen or weaken the selection of an action by modifying the preference of selecting an action
+
+$$p(s_t, a_t):= p(s_t, a_t)+\beta\delta_t$$
+
+
+---
 class: middle
 
 # Deep Reinforcement Learning
