@@ -555,15 +555,121 @@ DDQN partially solves this problem by untangling the selection and the evaluatio
 ---
 ## Prioritized Experience Replay (PER)
 
+The original formulation of experience replay memory buffer presented some **limitations**
 
+- A large amount of the $\langle s_t, a_t, r_t, s_{t+1}\rangle$ trajectories that are stored in the buffer might correspond to similar situations
 
+- Each trajectory is treated as equally important, but when it comes to learning  there might be some situations which are more informative than others
+
+- Assuming there is more informative trajectories than others, uniform sampling techniques will still treat all trajectories equally
 
 ---
-## Dueling Networks
+## Prioritized Experience Replay (PER)
 
+PER addresses all these remarks by introducing a stochastic sampling method that interpolates between pure greedy prioritization and uniform random sampling.
+
+The probability of sampling a transition $i$ is defined as
+
+$$P(i)=\frac{p_i^{\alpha}}{\sum_k p_k^{\alpha}}$$
+
+where $p_i$ is the **priority** of a transition and $\alpha$
+is the degree of prioritization we want to use (if $\alpha=0$ we are in the uniform sampling case).
+
+The priority $p_i$ is defined by the **TD-error** associated to a transition $p_i= |\delta_i|+\epsilon$
 
 ---
 ## The DQV-Family of Algorithms
+
+So far we have considered neural networks which approximate the state-action value function only. We know that in addition to the $Q$ function there also is the $V$ which provides us with significant information.
+
+The idea of **jointly approximating** two value functions over one is what characterizes the DQV-family of DRL algorithms.
+
+- $V(s_t)$ is simpler to learn than $Q(s_t, a_t)$
+
+- The convergence of $V(s_t)$ can help the convergence of $Q(s_t, a_t)$
+
+- Regressing the $Q$ function towards itself leads to biased Q-estimates
+
+
+Defines **two neural networks** which are responsible for each learning an approximation of either the state-value function or the state-action value function
+
+* $V(s_t; \Phi) \approx V(s)$
+* $Q(s_t,a_t ; \theta) \approx Q(s, a)$
+
+---
+
+## The DQV-Family of Algorithms
+
+**DQV-Learning** is an *on-policy* DRL algorithm which learns the state-value function with the simplest form of TD-Learning
+
+$$L(\Phi) = \mathbb{E}_{\langle s_{t},a_{t},r_{t},s_{t+1}\rangle\sim U(D)} \bigg[\big(r_{t} + \gamma V(s_{t+1}; \Phi^{-}) - V(s_{t}; \Phi)\big)^{2}\bigg]$$
+
+while the state-action value function is learned as follows:
+$$L(\theta) = \mathbb{E}_{\langle s_{t},a_{t},r_{t},s_{t+1}\rangle\sim U(D)} \bigg[\big(r_{t} + \gamma V(s_{t+1}; \Phi^{-}) - Q(s_{t}, a_{t}; \theta)\big)^{2}\bigg]$$
+
+* DQV has the interesting property of requiring the computation of **one** TD-error which can be used for learning two value functions simultaneously.
+
+---
+## The DQV-Family of Algorithms
+
+**DQV-Max Learning** is an *off-policy* DRL algorithm which combines ideas from DQV and DQN. The idea is to reintroduce DQN's $\underset{a\in \mathcal{A}}{\max}\: Q(s_{t+1}, a)$ operator and use it for learning the state-value function
+
+$$L(\Phi) = \mathbb{E}_{\langle s_{t},a_{t},r_{t},s_{t+1}\rangle\sim U(D)} \bigg[\big(r_{t} + \gamma \: \underset{a\in \mathcal{A}}{\max}\: Q(s_{t+1}, a; \theta^{-}) - V(s_{t}; \Phi)\big)^{2}\bigg]$$
+
+while we keep learning the state-action value function as we did with DQV
+
+$$L(\theta) = \mathbb{E}_{\langle s_{t},a_{t},r_{t},s_{t+1}\rangle\sim U(D)} \bigg[\big(r_{t} + \gamma V(s_{t+1}; \Phi)- Q(s_{t}, a_{t}; \theta)\big)^{2}\bigg].$$
+
+* Note that we are now computing **two** TD-errors and not one anymore
+
+---
+## The DQV-Family of Algorithms
+
+The DQV family of algorithms is characterized by the idea of learning different value estimates and then **transfer** them in the form of TD-errors from one value function to another.
+
+This presents some nice benefits:
+
+- Overall obtain higher cumulative rewards on popular DRL benchmarks
+
+- Converge significantly faster than methods which only learn one value function
+
+- They suffer less from the overestimation bias (especially DQV)
+
+
+But comes at the price of being:
+
+- Memory wise more expensive
+
+- Computationally more expensive
+
+- Greater risk of encountering divergence issues
+
+---
+## Dueling Architectures
+
+The idea of learning multiple value functions is also used by the Dueling network architecture. In addition to the $Q$ and $V$ estimates this kind of method also learns the **Advantage** function:
+
+$$A^{\pi}(s_t, a_t) = Q^\pi (s_t, a_t) - V^\pi(s_t)$$
+
+Intuitively $A^{\pi}(s_t, a_t)$ tells us how much of a good idea it was to select action $a_t$ in state $s_t$.
+
+- All estimates are computed within the same neural network ($\theta$), which has different streams that are responsible for the different value estimates
+
+#TODO image
+
+---
+## Dueling Architectures
+The different $Q$ values will depend from all the different "heads" of the network and have to satisfy the following **forward mapping**
+
+$$Q(s_t, a_t; \theta, \alpha, \beta) = V(s_t; \theta, \beta) + A((s_t, a_t; \theta, \alpha) - \frac{1}{|\mathcal{A}|} \sum_{a^{'}} A(s_t, a_t; \theta, \alpha)$$  
+
+If this equality is satisfied this intuitively means that the $Q$ values that are learned are maximizing the correct state-value estimates (identifiability issue).
+
+- Dueling Architectures are trained in a DDQN fashion
+
+- Uses Prioritized Experience Replay
+
+- Achieved SOA results on the popular Atari-2600 benchmark 
 
 ---
 ## Rainbow
@@ -573,7 +679,6 @@ DDQN partially solves this problem by untangling the selection and the evaluatio
 ## The Deadly Triad of DRL
 
 ---
-## Policy Gradient Methods
 
 
 ---
