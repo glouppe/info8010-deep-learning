@@ -14,11 +14,11 @@ Guest lecture by Matthia Sabatelli<br>
 
 Understand the field of Reinforcement Learning (RL) and see how it can be combined with neural networks.
 
-- Markov Decision Processes (MDPs)
+- Markov Decision Processes 
 - Value functions and optimal policies
 - Temporal Difference Learning
 - Function approximators
-- Tutorial
+
 ---
 
 class: middle
@@ -29,83 +29,75 @@ class: middle
 
 # Markov Decision Processes
 
-A classical formalization when it comes to sequential decision making problems. They allow us to mathematically define RL problems for which **precise** and **sound** statements can be made.
+A classical formalization when it comes to sequential decision making problems. MDPs allow us to mathematically define RL problems for which precise and sound statements can be made.
 
 An MDP consists of the following elements
 - A set of possible states $\mathcal{S}$
 - A set of possible actions $\mathcal{A}$
-- A reward signal $R(s_t,a_t,s_{t+1})$
-- A transition probability distribution $p(s_{t+1}|s_t,a_t)$
+- A reward signal $R(s\_t,a\_t,s\_{t+1})$
+- A transition probability distribution $p(s\_{t+1}|s\_t,a\_t)$
 
 ---
-## Markov Decision Processes
 
-In addition to these elements we have the **Agent-Environment Interface**.
-
-The agent corresponds to the learner, sometimes also defined as the decision maker, which has the ability to **continually** interact with the environment.
-
-Each time an action is performed the environment has the ability to change and will present **new** situations to the agent.
-
----
+class: middle
 
 .center.width-40[![](figures/lec10/rl.jpg)]
-.footnote[]()
 
----
-## Markov Decision Processes
+xxx: this picture is ugly :(
 
-Differently from Supervised-Learning in RL we have to deal with the component of **time**: in case no conditions are specified we could even let an agent interact with an environment forever.
+## Agent-environment interface
 
-Specifically the agent and the environment interact at each of a sequence of **discrete** time-steps
-
-$$t=0,1,2,3, . . ..$$
-
-At each time step $t$ the agent receives a state representation $s_t$, selects an action $a_t$, and receives a numerical reward $r_t \in \mathcal{R} \subset \mathbb{R}$ after which it will find itself in a new state $s_{t+1}$.
-
-This gives rise to *trajectories*:
-$$s_t, a_t, r_t, s_{t+1}, ... $$
+- The agent corresponds to the learner, sometimes also defined as the decision maker, which has the ability to continually interact with the environment.
+- Each time an action is performed the environment has the ability to change and will present new situations to the agent.
 
 ---
 
-## Markov Decision Processes
+class: middle
 
-Some important properties of MDPs
+Differently from Supervised-Learning, in RL we have to deal with the component of time.
 
-- $s$ and $a$ at time-step $t$ give all the **necessary** information that is required for predicting to which state the agent will step next
-- The reward that is obtained is only determined by the **previous** action and not by the history of all previously taken actions.
+At each discrete time-step $t=0,1,2,3, ...$ the agent receives a state representation $s\_t$, selects an action $a\_t$, and receives a numerical reward $r\_t \in \mathcal{R} \subset \mathbb{R}$ after which it will find itself in a new state $s\_{t+1}$.
 
-$$p(r_t = R|s_t,a_t) = p(r_t = R| s_t, a_t, ..., s_1, a_1)$$
+This gives rise to trajectories:
+$$s\_t, a\_t, r\_t, s\_{t+1}, ... $$
 
+---
+
+class: middle
+
+Some important properties of MDPs:
+- $s$ and $a$ at time-step $t$ give all the **necessary** information that is required for predicting to which state the agent will step next.
+- The reward that is obtained is only determined by the **previous** action and not by the history of all previously taken actions,
+$$p(r\_t = R|s\_t,a\_t) = p(r\_t = R| s\_t, a\_t, ..., s\_1, a\_1).$$
 For predicting the future it does not matter how an agent arrived in a particular current state.
 
 ---
-## Goals and Returns
 
-So far we have properly defined how an agent can interact with an environment but have not seen **why*+1* this should be done.
+# Goals and returns
 
-- The purpose of an RL agent is formalized by $r_t \in \mathcal{R} \subset \mathbb{R}$, which is a numerical quantity that we want to **maximize**
+So far we have properly defined how an agent can interact with an environment but have not seen .bold[why] this should be done.
 
+- The purpose of an RL agent is formalized by $r\_t \in \mathcal{R} \subset \mathbb{R}$, which is a numerical quantity that we want to **maximize**.
 - We do not want to maximize the immediate reward but rather the cumulative reward
-
-$$G_t = r_t + r_{t+1} + r_{t+2} + ... + r_{T} $$
-
-- Mathematically this can be seen as maximizing the expected value of the cumulative sum of a scalar signal
+$$G\_t = r\_t + r\_{t+1} + r\_{t+2} + ... + r\_{T}.$$
+- Mathematically this can be seen as maximizing the expected value of the cumulative sum of a scalar signal.
 
 ---
-## Goals and Returns
+
+class: middle
 
 To properly define the concept of return we need one additional component: the discount factor $\gamma$.
 
-The idea of *discounting* allows our agent to select actions which will maximize the sum of **discounted** rewards, therefore maximizing the discounted return:
-
-$$G_t=r_t+\gamma r_{t+1}, \gamma^{2} r_{t+2} + ... $$
-$$G_t = \sum_{k-0}^{\infty}\gamma^{k}r_{t+k+1}.$$  
-
-The discount factor $0\leq \gamma \leq 1$ and controls the trade-off between immediate and long-term rewards.
+- The idea of *discounting* allows our agent to select actions which will maximize the sum of **discounted** rewards, therefore maximizing the discounted return:
+$$\begin{aligned}
+G\_t &= r\_t+\gamma r\_{t+1}, \gamma^{2} r\_{t+2} + ... \\\\
+&= \sum\_{k-0}^{\infty}\gamma^{k} r\_{t+k+1}.
+\end{aligned}$$ 
+- The discount factor $0\leq \gamma \leq 1$ and controls the trade-off between immediate and long-term rewards.
 
 ---
 
-## Policies and Value Functions
+# Policies and value functions
 
 Basically all RL algorithms involve the concept of **value function**, functions that are able to estimate how *good* or *bad* it is for an agent to be in a particular state.
 
@@ -113,22 +105,22 @@ Basically all RL algorithms involve the concept of **value function**, functions
   - Just being in a *good* state is not enough, since the rewards will depend on which actions will be performed in the future. We need the concept of **policy**:
   $$\pi: \mathcal{S} \rightarrow \mathcal{A} $$
 
-
 RL methods specify how the agent's policy is changed as a result of its experience.
 
 ---
 
-## Policies and Value Functions
+class: middle
 
 When it comes to value functions there are two popular value functions we care about
 
 - The **state-value** function:  
-  $$V^{\pi}(s)=\mathbb{E}\bigg[\sum_{k=0}^{\infty}\gamma^{k}r_{t+k}\bigg| s_t = s, \pi \bigg]$$
+  $$V^{\pi}(s)=\mathbb{E}\bigg[\sum\_{k=0}^{\infty}\gamma^{k}r\_{t+k}\bigg| s\_t = s, \pi \bigg]$$
 - The **state-action** value function:
-$$ Q^{\pi}(s,a)=\mathbb{E}\bigg[\sum_{k=0}^{\infty}\gamma^{k}r_{t+k} \bigg| s_t = s, a_t=a, \pi\bigg].$$
+$$ Q^{\pi}(s,a)=\mathbb{E}\bigg[\sum\_{k=0}^{\infty}\gamma^{k}r\_{t+k} \bigg| s\_t = s, a\_t=a, \pi\bigg].$$
 
 ---
-## Policies and Value Functions
+
+class: middle
 
 Both value functions can compute the desirability of being in a specific state. The goal of a RL agent is to find
 an **optimal policy** that realizes the optimal expected return
@@ -141,7 +133,8 @@ $$ Q^* (s,a)= \underset{\pi}{\max}\:Q^{\pi}(s,a) \ \text{for all} \ s\in\mathcal
 Both value functions satisfy the **Bellman optimality equation**, and can be learned via Monte-Carlo or Temporal-Difference learning methods.
 
 ---
-## Policies and Value Functions
+
+class: middle
 
 We have seen how to define value functions mathematically but what do they represent in practice?
 
@@ -151,7 +144,8 @@ We have seen how to define value functions mathematically but what do they repre
 - We can only interact with the environment and update our knowledge
 
 ---
-## Monte Carlo (MC) Methods
+
+# Monte Carlo (MC) Methods
 
 - The first method than can be used for learning a value function without assuming complete knowledge of the environment: **model-free RL**
 
@@ -160,30 +154,32 @@ We have seen how to define value functions mathematically but what do they repre
 - We assume that RL episodes **eventually** terminate, no matter which actions are selected. Only at the end of an episode our value estimates and therefore a policy can get updated.
 
 ---
-## Monte Carlo (MC) Methods
+
+class: middle
 
 The idea is to compute the **real return** once an episode terminates
-
-$$G_t = \sum_{k=0}^{\infty}\gamma^{k}r_{t+k+1}$$
+$$G\_t = \sum\_{k=0}^{\infty}\gamma^{k}r\_{t+k+1}$$
 and keep track of the value of a single state based on the amount of times this state has been visited
-$$V(s_t)=\frac{\sum_{i=1}^{k}G_t(s)}{N(s)}$$
+$$V(s\_t)=\frac{\sum\_{i=1}^{k}G\_t(s)}{N(s)}$$
 This estimate can then get updated as follows:
-$$V(s_t):= V(s_t)+\alpha[G_t -V(S_t)].$$
+$$V(s\_t):= V(s\_t)+\alpha[G\_t -V(S\_t)].$$
 
 ---
-## Monte Carlo (MC) Methods
+
+class: middle
 
 There are some important **drawbacks** when it comes to MC methods:
 
-- We need to wait until an episode is terminated because only then $G_t$ will be known
+- We need to wait until an episode is terminated because only then $G\_t$ will be known
 - Convergence is slowed down
 
 A nice advantage however is that these kind of methods are **unbiased** when compared to their alternatives.
 
 ---
-## Temporal Difference (TD)-Learning
 
-*"The most central and novel idea of entire Reinforcement Learning"*
+# Temporal Difference (TD)-Learning
+
+.center.italic["The most central and novel idea of entire Reinforcement Learning"]
 
 - TD-Learning is a combination of Monte Carlo ideas and dynamic programming ideas.
 
@@ -191,20 +187,23 @@ A nice advantage however is that these kind of methods are **unbiased** when com
 
 - This means we do not have to wait until the end of an episode anymore but instead rely on **bootstrapping**.
 
-$$V(S_t):= V(S_t)+\alpha[r_t+\gamma V(S_{t+1}) - V(s_t)]$$
+$$V(S\_t):= V(S\_t)+\alpha[r\_t+\gamma V(S\_{t+1}) - V(s\_t)]$$
+
 ---
-## Temporal Difference (TD)-Learning
+
+class: middle
 
 The core idea of TD-Learning is the concept of **TD-error**, or sometimes called target
 
-$$\delta_t = r_t+\gamma V(s_{t+1})$$
+$$\delta\_t = r\_t+\gamma V(s\_{t+1})$$
 
-- It corresponds to the only information that is needed in order to update our value estimates, remember that we **do not** have access to $V^* (s)$ and we want to overcome waiting for $G_t$!
+- It corresponds to the only information that is needed in order to update our value estimates, remember that we **do not** have access to $V^* (s)$ and we want to overcome waiting for $G\_t$!
 
-- We are learning $V^* (s)$ by guessing the value estimates that the exact same function provides at $s_{t+1}$
+- We are learning $V^*(s)$ by guessing the value estimates that the exact same function provides at $s\_{t+1}$
 
 ---
-## Temporal Difference (TD)-Learning
+
+class: middle
 
 We have seen the simplest form of how to update an estimate based on another estimate, but is this really a **good idea**?
 
@@ -217,59 +216,60 @@ This policy might however not be the optimal one!
 - A convergence proof on the speed of TD methods vs MC methods is still missing!
 
 ---
-## Eligibility Traces
 
-So far we have seen that we can update a value function from the real final return $G_t$ obtained at the end of an episode, or based on an immediate future estimate $V(s_{t+1})$. There is however an intermediate approach between MC and TD-Learning called **TD $(\lambda)$**
+# Eligibility Traces
 
-$$G^{n}_{t}=r_t+\gamma r_{t+1}+\gamma^2 r_{t+2} + ... + \gamma^{n} V_t(s_{t+n})$$
+So far we have seen that we can update a value function from the real final return $G\_t$ obtained at the end of an episode, or based on an immediate future estimate $V(s\_{t+1})$. There is however an intermediate approach between MC and TD-Learning called TD-($\lambda$)
+
+$$G^{n}\_{t}=r\_t+\gamma r\_{t+1}+\gamma^2 r\_{t+2} + ... + \gamma^{n} V\_t(s\_{t+n})$$
 
 With setting $0\leq\gamma\leq1$ we are able to compute updates based on n-step returns.
 
-- The problem is that we would have to wait indefinitely for computing $G_t^{\infty}$. This is also known as *the problem of the forward view of* TD($\lambda$)
+- The problem is that we would have to wait indefinitely for computing $G\_t^{\infty}$. This is also known as *the problem of the forward view of* TD($\lambda$)
 
 ---
-## Eligibility Traces
+
+class: middle
 
 We could however partially overcome this problem by **incrementally** updating the eligibility trace of a state, which nicely allows us to perform n-step backups in an elegant way.
 
-- For each state $s\in\mathcal{S}$ a trace $e_t(s)$ is kept in memory and initialized at 0
-- At each state we update $e_t(s)$ as
+- For each state $s\in\mathcal{S}$ a trace $e\_t(s)$ is kept in memory and initialized at $0$
+- At each state we update $e\_t(s)$ as
 
-$$e_t(s) = \begin{cases}
-\gamma\lambda e_{t-1}(s) & \text{if} & s \neq s_t \\
-\gamma\lambda e_{t-1}(s)+ 1 & \text{if} & s = s_t\\
+$$e\_t(s) = \begin{cases}
+\gamma\lambda e\_{t-1}(s) & \text{if} & s \neq s\_t \\\\
+\gamma\lambda e\_{t-1}(s)+ 1 & \text{if} & s = s\_t
 \end{cases} $$
 
 ---
-## Eligibility Traces
+
+class: middle
 
 The trace of each state is increased every time that particular state is visited and decreases exponentially otherwise due to $\lambda$.
 
 If we again consider the TD-error as:
-$$\delta_t = r_t+\gamma V(s_{t+1})-V(s_t)$$
+$$\delta\_t = r\_t+\gamma V(s\_{t+1})-V(s\_t)$$
 
 On every step we want to update a state in proportion to its eligibility trace, which results in the following update:
 
-$$V(s_t):= V(s_t) + \alpha \delta_t e_t(s_t)$$
+$$V(s\_t):= V(s\_t) + \alpha \delta\_t e\_t(s\_t)$$
 
 * A general mechanism for learning from n-step returns
-
 * For $\lambda=1$ we have MC-Learning
-
 * For $\lambda=0$ we have TD-Learning
 
 ---
-## Exploration vs Exploitation
+
+# Exploration vs Exploitation
 
 * We know that if a complete model of an environment is given it is easy to compute an optimal policy (like Dynamic-Programming).
-
 * As we have seen so far in the general RL setting this is unfortunately not the case, therefore learning an optimal policy becomes as process of *trial and error*.
-
 * During this process the only feedback that is available to the agent is the reward that is obtained at the end of an
 action
 
 ---
-## Exploration vs Exploitation
+
+class: middle
 
 So why is the exploration-exploitation dilemma so **challenging?**
 
@@ -280,68 +280,68 @@ So why is the exploration-exploitation dilemma so **challenging?**
 * The RL "dataset" is considered as a **moving target** which makes it hard to quantify how well e.g. an objective function is minimized
 
 ---
-## Exploration vs Exploitation
+
+class: middle
 
 Let us assume that we have learned the **optimal** $Q$ function:
 
-$$ Q^* (s,a)= \underset{\pi}{\max}\:Q^{\pi}(s,a) \ \text{for all} \ s\in\mathcal{S} \ \text{and} \ a \in\mathcal{A}$$
+$$ Q^\*(s,a)= \underset{\pi}{\max}\:Q^{\pi}(s,a) \ \text{for all} \ s\in\mathcal{S} \ \text{and} \ a \in\mathcal{A}$$
 
 We know that this equation satisfies the Bellman optimality equation as given by:
 
-$$ Q^* (s_t,a_t)=\sum_{s_{t+1}}p(s_{t+1} | s_{t}, a_{t})  \bigg[\Re (s_{t}, a_{t}, s_{t+1}) + \gamma \: \underset{a}{\max} \: Q^* (s_{t+1}, a) \bigg]$$
+$$ Q^\*(s\_t,a\_t)=\sum\_{s\_{t+1}}p(s\_{t+1} | s\_{t}, a\_{t})  \bigg[\Re (s\_{t}, a\_{t}, s\_{t+1}) + \gamma \: \underset{a}{\max} \: Q^\* (s\_{t+1}, a) \bigg]$$
 
 If such a function is learned it is straightforward to derive and **optimal policy** which does not require exploration
 
-$$\pi^* (s_t)= \underset{a \in \cal A}{argmax} \; Q^{\pi}(s_t, a_t).$$
+$$\pi^\*(s\_t)= \underset{a \in \mathcal{A}}{\text{argmax}} \; Q^{\pi}(s\_t, a\_t).$$
 
-Unfortunately we first need to learn $Q$ :P
+Unfortunately we first need to learn $Q$.
 
 ---
-## Exploration vs Exploitation
+
+class: middle
 
 - An agent which always learns from the same experience will learn fast but will never increase its knowledge and performance
 
 - But once the agent has learned enough we do not want it to make sub-optimal decisions anymore since deviating from a greedy policy can cause some loss
 
 - The most popular way of dealing with this dilemma is the $\epsilon$ greedy approach
-
-$$a_{t} = \begin{cases}
-  max_{a} Q(s_{t}, a_{t}) & \text{with prob 1-}\epsilon \\
+$$a\_{t} = \begin{cases}
+  \max\_{a} Q(s\_{t}, a\_{t}) & \text{with prob 1-}\epsilon \\\\
   \text{random action with prob } \epsilon
 \end{cases}$$
-
 We anneal $\epsilon$ linearly over time to encourage exploration in the early training stages.
 
 ---
 
-## Exploration vs Exploitation
+class: middle
 
 If in practice the $\epsilon$ greedy approach is almost always used, it is important to mention that it treats all negative actions equally.
 
-- We can overcome this with Boltzmann Exploration
+We can overcome this with Boltzmann Exploration
 $$P(a) = \frac{e^{\frac{Q(a)}{\tau}}}{\sum_{i=1}^{K}e^\frac{Q(i)}{\tau}}$$
-
 which causes a lot of exploration for states where $Q$ values are similar and little exploration in states where $Q$ values are very different.  
 
 ---
-## On-policy vs Off-policy learning
+
+# On-policy vs Off-policy learning
 
 - We have seen how important it is to learn a policy and how this governs the behavior of an agent
 
 - Policies also define the underlying **RL algorithm** which we use when learning a value function
 
 - Specifically they are of interest when we need to compute a TD-error
-
-$$\delta_t = r_t+\gamma V(s_{t+1})$$
-
-$$\delta_t =  r_{t} + \gamma \: \underset{a\in \mathcal{A}}{\max}\: Q(s_{t+1}, a)$$
+$$\begin{aligned}\delta\_t &= r\_t+\gamma V(s\_{t+1})\\\\
+&=  r\_{t} + \gamma \: \underset{a\in \mathcal{A}}{\max}\: Q(s\_{t+1}, a)
+\end{aligned}$$
 
 ---
-## On-policy vs Off-policy learning
 
-- The first TD-error defines an **on-policy** RL algorithm since the estimate at $V(s_{t+1})$ will always be defined by the current policy the agent is following
+class: middle
 
-- The second TD-error defines an **off-policy** RL algorithm since the TD-error $r_{t} + \gamma \: \underset{a\in \mathcal{A}}{\max}\: Q(s_{t+1}, a)$ is always greedy because it is defined by the **$\max$** operator. Remember that because of the exploration-exploitation trade-off the agent might not follow this greedy policy in practice
+- The first TD-error defines an *on-policy* RL algorithm since the estimate at $V(s\_{t+1})$ will always be defined by the current policy the agent is following
+
+- The second TD-error defines an **off-policy** RL algorithm since the TD-error $r\_{t} + \gamma \: \underset{a\in \mathcal{A}}{\max}\: Q(s\_{t+1}, a)$ is always greedy because it is defined by the **$\max$** operator. Remember that because of the exploration-exploitation trade-off the agent might not follow this greedy policy in practice
 
 - Overall we can see off-policy algorithms as methods which learn **many** policies whereas on-policy ones only learn **one** policy. Both methods come with their pros and cons and the choice of a particular algorithm depends on the problem at hand.
 
@@ -349,50 +349,48 @@ $$\delta_t =  r_{t} + \gamma \: \underset{a\in \mathcal{A}}{\max}\: Q(s_{t+1}, a
 
 ---
 
+class: middle
+
 ## Q-Learning
 
-$$Q(s_{t}, a_{t}) := Q(s_{t}, a_{t}) + \alpha \big[r_{t} + \gamma \max_{a \in \cal A} Q(s_{t+1}, a) - Q(s_{t}, a_{t})\big]$$
+$$Q(s\_{t}, a\_{t}) := Q(s\_{t}, a\_{t}) + \alpha \big[r\_{t} + \gamma \max\_{a \in \mathcal{A}} Q(s\_{t+1}, a) - Q(s\_{t}, a\_{t})\big]$$
 
 - The most popular RL algorithm
-
 - Based on a variation of the simplest form of TD-Learning
-
 - Learns the $Q$ function in an off-policy learning setting
-
 - (In the limit) Converges to the optimal policy regardless of the exploration strategy used
-
 - Suffers from numerous biases  
 
 ---
 
+class: middle
+
 ## SARSA
 
-
-$$Q(s_{t}, a_{t}) := Q(s_{t}, a_{t}) + \alpha \big[r_{t} + \gamma Q(s_{t+1}, a_{t+1}) - Q(s_{t}, a_{t})\big]$$
+$$Q(s\_{t}, a\_{t}) := Q(s\_{t}, a\_{t}) + \alpha \big[r\_{t} + \gamma Q(s\_{t+1}, a\_{t+1}) - Q(s\_{t}, a\_{t})\big]$$
 
 - An on-policy variation of Q-Learning
-
-- The TD-error is given by the estimate at $s_{t+1}$ which is based on the current policy
-
+- The TD-error is given by the estimate at $s\_{t+1}$ which is based on the current policy
 - When function approximators are used it diverges less when compared to Q-Learning
 
 ---
+
+class: middle
 
 ## QV-Learning
 
 Jointly learns the state-value function $V$ and the state-action value function $Q$
 
-$$V(s_t) := V(s_t) + \alpha \big[r_{t} + \gamma V(s_{t+1}) - V(s_t))]e_t(s)$$
-
-$$Q(s_t, a_t) :=  Q(s_{t}, a_{t}) + \alpha \big[r_{t} + \gamma V(s_{t+1}) - Q(s_{t}, a_{t})\big] $$
+$$V(s\_t) := V(s\_t) + \alpha \big[r\_{t} + \gamma V(s\_{t+1}) - V(s\_t))]e\_t(s)$$
+$$Q(s\_t, a\_t) :=  Q(s\_{t}, a\_{t}) + \alpha \big[r\_{t} + \gamma V(s\_{t+1}) - Q(s\_{t}, a\_{t})\big] $$
 
 - Learns on-policy
-
 - Learning two value functions might accelerate learning
-
 - Uses the same TD-error to learn two value functions
 
 ---
+
+class: middle
 
 ## Actor-Critic Learning
 
@@ -400,12 +398,12 @@ A branch of TD methods which keep the policy **(Actor)**
 from a learned value function **(Critic)**
 
 The TD error
-$$\delta_t = r_t+\gamma V(s_{t+1})-V(s_t)$$
+$$\delta\_t = r\_t+\gamma V(s\_{t+1})-V(s\_t)$$
 is used by the critic to evaluate the action which was taken by the actor.
 
 With this error we can strengthen or weaken the selection of an action by modifying the preference of selecting an action
 
-$$p(s_t, a_t):= p(s_t, a_t)+\beta\delta_t$$
+$$p(s\_t, a\_t):= p(s\_t, a\_t)+\beta\delta\_t$$
 
 where $\beta$ determines the size of the update.
 
