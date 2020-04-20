@@ -29,45 +29,45 @@ class: middle
 
 # Markov Decision Processes
 
-A classical formalization when it comes to sequential decision making problems. MDPs allow us to mathematically define RL problems for which precise and sound statements can be made.
+Markov Decision Processes (MDP) are a classical formalization when it comes to sequential decision making problems. 
 
-An MDP consists of the following elements
-- A set of possible states $\mathcal{S}$
-- A set of possible actions $\mathcal{A}$
-- A reward signal $R(s\_t,a\_t,s\_{t+1})$
-- A transition probability distribution $p(s\_{t+1}|s\_t,a\_t)$
+MDPs allow us to mathematically define RL problems for which precise and sound statements can be made.
+
+An MDP consists of the following elements:
+- a set of possible states $\mathcal{S}$
+- a set of possible actions $\mathcal{A}$
+- a reward signal $R(s\_t,a\_t,s\_{t+1})$
+- a transition probability distribution $p(s\_{t+1}|s\_t,a\_t)$
 
 ---
 
 class: middle
 
-.center.width-40[![](figures/lec10/rl_loop.png)]
-.footnote[Credits: [Sutton and Barto](https://mitpress.mit.edu/books/reinforcement-learning-second-edition), 2018.]
+.center.width-90[![](figures/lec10/rl_loop.png)]
 
 ## Agent-environment interface
 
 - The agent corresponds to the learner, sometimes also defined as the decision maker, which has the ability to continually interact with the environment.
 - Each time an action is performed the environment has the ability to change and will present new situations to the agent.
 
----
-
-class: middle
-
-Differently from Supervised-Learning, in RL we have to deal with the component of time.
-
-At each discrete time-step $t=0,1,2,3, ...$ the agent receives a state representation $s\_t$, selects an action $a\_t$, and receives a numerical reward $r\_t \in \mathcal{R} \subset \mathbb{R}$ after which it will find itself in a new state $s\_{t+1}$.
-
-This gives rise to trajectories:
-$$s\_t, a\_t, r\_t, s\_{t+1}, ... $$
+.footnote[Credits: [Sutton and Barto](https://mitpress.mit.edu/books/reinforcement-learning-second-edition), 2018.]
 
 ---
 
 class: middle
 
-Some important properties of MDPs:
+Differently from supervised learning, in RL we have to deal with the component of time:
+- At each discrete time-step $t=0,1,2,3, ...$ the agent receives a state representation $s\_t$, selects an action $a\_t$, and receives a numerical reward $r\_t \in \mathbb{R}$ after which it will find itself in a new state $s\_{t+1}$.
+- This gives rise to trajectories
+$$s\_t, a\_t, r\_t, s\_{t+1}, a\_{t+1}, r\_{t+1}, s\_{t+2}, ... $$
+
+---
+
+class: middle
+
 - $s$ and $a$ at time-step $t$ give all the **necessary** information that is required for predicting to which state the agent will step next.
 - The reward that is obtained is only determined by the **previous** action and not by the history of all previously taken actions,
-$$p(r\_t = R|s\_t,a\_t) = p(r\_t = R| s\_t, a\_t, ..., s\_1, a\_1).$$
+$$p(r\_t|s\_t,a\_t) = p(r\_t| s\_t, a\_t, ..., s\_1, a\_1).$$
 For predicting the future it does not matter how an agent arrived in a particular current state.
 
 ---
