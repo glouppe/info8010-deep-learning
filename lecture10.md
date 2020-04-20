@@ -14,7 +14,7 @@ Guest lecture by Matthia Sabatelli<br>
 
 Understand the field of Reinforcement Learning (RL) and see how it can be combined with neural networks.
 
-- Markov Decision Processes 
+- Markov Decision Processes
 - Value functions and optimal policies
 - Temporal Difference Learning
 - Function approximators
@@ -41,9 +41,8 @@ An MDP consists of the following elements
 
 class: middle
 
-.center.width-40[![](figures/lec10/rl.jpg)]
-
-xxx: this picture is ugly :(
+.center.width-40[![](figures/lec10/rl_loop.png)]
+.footnote[Credits: [Sutton and Barto](https://mitpress.mit.edu/books/reinforcement-learning-second-edition), 2018.]
 
 ## Agent-environment interface
 
@@ -92,7 +91,7 @@ To properly define the concept of return we need one additional component: the d
 $$\begin{aligned}
 G\_t &= r\_t+\gamma r\_{t+1}, \gamma^{2} r\_{t+2} + ... \\\\
 &= \sum\_{k-0}^{\infty}\gamma^{k} r\_{t+k+1}.
-\end{aligned}$$ 
+\end{aligned}$$
 - The discount factor $0\leq \gamma \leq 1$ and controls the trade-off between immediate and long-term rewards.
 
 ---
@@ -551,6 +550,15 @@ DQN tends to approximate the expected maximum value of a state, instead of its m
 DDQN partially solves this problem by untangling the selection and the evaluation of an action by taking advantage of the target network.
 
 ---
+## DDQN
+
+The overestimation in practice
+
+.center.width-40[![](figures/lec10/overestimation_ddqn.jpg)]
+
+.footnote[Credits: [Van Hasselt et al](https://arxiv.org/abs/1509.06461), 2016.]
+
+---
 ## Prioritized Experience Replay (PER)
 
 The original formulation of experience replay memory buffer presented some **limitations**
@@ -623,6 +631,15 @@ $$L(\theta) = \mathbb{E}_{\langle s_{t},a_{t},r_{t},s_{t+1}\rangle\sim U(D)} \bi
 ---
 ## The DQV-Family of Algorithms
 
+
+.center.width-40[![](figures/lec10/dqv_family.jpg)]
+
+.footnote[Credits: [Sabatelli et al](https://arxiv.org/abs/1909.01779), 2019.]
+
+
+---
+## The DQV-Family of Algorithms
+
 The DQV family of algorithms is characterized by the idea of learning different value estimates and then **transfer** them in the form of TD-errors from one value function to another.
 
 This presents some nice benefits:
@@ -653,7 +670,8 @@ Intuitively $A^{\pi}(s_t, a_t)$ tells us how much of a good idea it was to selec
 
 - All estimates are computed within the same neural network ($\theta$), which has different streams that are responsible for the different value estimates
 
-#TODO image
+.center.width-40[![](figures/lec10/dueling_networks.png)]
+.footnote[Credits: [Wang et al](https://arxiv.org/abs/1511.06581), 2015.]
 
 ---
 ## Dueling Architectures
@@ -667,25 +685,124 @@ If this equality is satisfied this intuitively means that the $Q$ values that ar
 
 - Uses Prioritized Experience Replay
 
-- Achieved SOA results on the popular Atari-2600 benchmark 
+- Achieved SOA results on the popular Atari-2600 benchmark
 
 ---
 ## Rainbow
 
----
+We have seen that DRL is characterized by several independent improvements which combine RL theory and deep neural networks.
 
+The idea of the Rainbow agent is to combine all these improvements into a *super-agent* which gets the best out of six different DRL contributions.
+
+  * DDQN
+  * PER
+  * Dueling Architectures
+  * A3C
+  * Distributional DRL
+  * Noisy Exploration
+
+---
+## Rainbow
+
+* After many experiments and lots of hyperparameter tuning the Rainbow agent significantly outperforms all previous DRL methods while also being more data efficient.
+
+.center.width-40[![](figures/lec10/rainbow.png)]
+.footnote[Credits: [Hessel et al](https://arxiv.org/abs/1710.02298), 2017.]
+
+* Despite all the improvements Rainbow still failed to master some of the games of the Atari benchmark. This has only recently been overcome with the **Agent-57** algorithm.
+
+---
+## Montezuma's Revenge in 2012
+
+class: middle, center, black-slide
+<iframe width="600" height="450" src="
+https://www.youtube.com/embed?list=PLqYmG7hTraZB5YFgejiwDoKBkg50SlY6z&time_continue=9&v=o4b9FBvr28Y&feature=emb_title" frameborder="0" allowfullscreen></iframe>
+
+---
+## Montezuma's Revenge in 2020
+
+class: middle, center, black-slide
+<iframe width="600" height="450" src="
+https://www.youtube.com/embed?v=M9Yn1kYZb6E&list=PLqYmG7hTraZB5YFgejiwDoKBkg50SlY6z&index=2" frameborder="0" allowfullscreen></iframe>
+
+---
+## Multi-Agent DRL
+
+So far we have seen algorithms which only consider learning an optimal policy for **one** single agent, but what happens if we would like to train a **team** of agents such that they can coordinate their behavior and cooperate?
+
+<iframe width="600" height="450" src="
+https://www.youtube.com/embed?v=gEyBzcPU5-w" frameborder="0" allowfullscreen></iframe>
+
+---
+## Multi-Agent DRL
+
+If we are dealing with multiple agents the RL setting has to be slightly re-formulated because we now consider a Dec-POMDP:
+
+$$G=\langle S,U,P,r,Z,O,n,\gamma\rangle$$
+
+The main differences over the previous RL setting are:
+ - Agents deal with observations $z \in Z$ and not states
+ - W have an Observation function $O(s,a):S\times A \rightarrow Z$
+ - At each time-step each agent takes an action $u^a\in U$
+ - The Reward function is shared among agents
+ - The policy $\pi$ is joined as well
+
+---
+## Multi-Agent DRL
+
+Besides having to deal with a POMDP there are additional challenges which characterize Multi-Agent DRL:
+
+- Complexity increases wrt the number of agents  
+- Training needs to be decentralized
+- The type of neural networks that are used are more complex and therefore harder to train (RNNs, Hypernetworks, etc ...)
+
+However the update rules that are used do not drastically change from the single agent setting!
+
+$$\mathcal{L}(\theta) = \sum_{i=1}^{b}\bigl[(y_i^{tot} - Q_{tot}(\tau, \mathbb{u}, s; \theta))^{2}\bigl]$$
+
+---
 ## The Deadly Triad of DRL
 
+But is DRL as hard and tricky as we have been warning you? :P  
+
+- So far I have presented you a set of results that seem to make it easy to be a successful DRL researcher, but why is it then that DRL became so popular only recently?
+
+- If we go back to tabular RL algorithms there is no mention of
+
+  * Experience Replay memory buffers
+  * Target networks
+  * PER
+
+DRL can work well but it requires RL algorithms to be coupled with a lot of additional techniques which ensure that training can be done in a stable way.
+
 ---
+## The Deadly Triad of DRL
 
+The **cause** of potential issues is known as the *Deadly Triad of DRL*
+
+- Function Approximators: we are learning an approximation of a value-function   
+- Bootstrapping: when the estimates of a value function are learned wrt other estimates which come from the same value function  
+- Off-policy training: training on trajectories that are different from the one which are being followed
 
 ---
-## Q-Mix for Multi-Agent DRL
+## The Deadly Triad of DRL
+
+If any of the three elements is present then instability can be avoided, but it is hard to choose which components to discard.
+
+- Function Approximators: clearly we cannot give up on this, if we want to scale RL up we need at least a linear function approximator
+
+- Bootstrapping: it is possible to find alternatives ($n$-step updates or MC methods) but this has to be done at the cost of computational data and efficiency, besides TD-Learning seems to work better in practice
+
+- Off-policy Learning: we can create on-policy DRL algorithms (Deep-SARSA, DQV, ...) but training them in a robust way makes these methods closer to off-policy algorithms than one might think
+
+$$\mathcal{L}(\theta) = \mathbb{E}_{\color{red}{\langle s_{t},a_{t},r_{t},s_{t+1}\rangle}\sim U(D)} \bigg[\big( r_{t} + \gamma V(s_{t+1}; \color{red}{\Phi^{-})} - Q(s_{t}, a_{t}; \theta)\big)^{2}\bigg].$$  
+
+Furthermore if we want to learn in parallel off-policy methods are the only way to go.
 
 ---
+## Concluding Remarks
 
 
----
 
 
 ---
