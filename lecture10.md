@@ -85,6 +85,12 @@ class: middle
 - $s$ and $a$ at time-step $t$ give all the **necessary** information that is required for predicting to which state the agent will step next.
 - The reward that is obtained is only determined by the **previous** action and not by the history of all previously taken actions,
 $$p(r\_t|s\_t,a\_t) = p(r\_t| s\_t, a\_t, ..., s\_1, a\_1).$$
+- This is related to the fact that the environment is **Markovian**, where an action $a\_t$ only depends on the current state $s\_t$  
+$$\begin{aligned}
+p(s\_{t+1}|s\_t, a\_t, s\_{t-1}, a\_{t-1}, ...) \
+&= P(s\_{t+1} | s\_t, a\_t) \\
+&= T(s\_t, a\_{t}, s\_{t+1}) \end{aligned}$$
+
 For predicting the future it does not matter how an agent arrived in a particular current state.
 
 ---
