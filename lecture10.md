@@ -26,10 +26,16 @@ class: middle
 # Reinforcement Learning
 
 ---
+## Reinforcement Learning
 
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed?v=_5T7F_QRIqk" frameborder="0" allowfullscreen></iframe>
+
+---
 # Markov Decision Processes
 
-Markov Decision Processes (MDP) are a classical formalization when it comes to sequential decision making problems. 
+Markov Decision Processes (MDP) are a classical formalization when it comes to sequential decision making problems.
 
 MDPs allow us to mathematically define RL problems for which precise and sound statements can be made.
 
@@ -38,6 +44,17 @@ An MDP consists of the following elements:
 - a set of possible actions $\mathcal{A}$
 - a reward signal $R(s\_t,a\_t,s\_{t+1})$
 - a transition probability distribution $p(s\_{t+1}|s\_t,a\_t)$
+
+---
+# Markov Decision Processes
+
+When it comes to most RL settings the MDPs can come in a **more challenging** form than the one they have when we use *planning* or *dynamic programming* algorithms
+
+Specifically we consider cases in which the following information is **not known**
+  - The transition probability distribution $p(s\_{t+1}|s\_t,a\_t)$
+  - The reward $R(s\_t,a\_t,s\_{t+1})$
+
+In practice this means that we do not know beforehand which states are good or bad, and therefore also do not know what actions to take
 
 ---
 
@@ -407,6 +424,13 @@ $$p(s\_t, a\_t):= p(s\_t, a\_t)+\beta\delta\_t$$
 where $\beta$ determines the size of the update.
 
 ---
+## A Practical Example
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/dJ2l4X5AWsI" frameborder="0" allowfullscreen></iframe>
+
+---
 class: middle
 
 # Deep Reinforcement Learning (DRL)
@@ -513,7 +537,7 @@ The popular DQN algorithm integrates two additional components into the previous
 
 - Target Networks
 
-$$L(\theta) = \mathbb{E}_{\color{green}{\langle s_{t},a_{t},r_{t},s_{t+1}\rangle\sim U(D)}} \bigg[\big(r_{t} + \gamma \: \underset{a\in \mathcal{A}}{\max}\: Q(s_{t+1}, a; \color{red}{\theta^{-}})  - Q(s_{t}, a_{t}; \theta)\big)^{2}\bigg]$$
+$$\mathcal{L}(\theta) = \mathbb{E}_{\color{green}{\langle s_{t},a_{t},r_{t},s_{t+1}\rangle\sim U(D)}} \bigg[\big(r_{t} + \gamma \: \underset{a\in \mathcal{A}}{\max}\: Q(s_{t+1}, a; \color{red}{\theta^{-}})  - Q(s_{t}, a_{t}; \theta)\big)^{2}\bigg]$$
 
 Given a training iteration $i$, differentiating this objective function with respect to $\theta$ gives the following gradient:
 
@@ -608,10 +632,10 @@ Defines **two neural networks** which are responsible for each learning an appro
 
 **DQV-Learning** is an *on-policy* DRL algorithm which learns the state-value function with the simplest form of TD-Learning
 
-$$L(\Phi) = \mathbb{E}_{\langle s_{t},a_{t},r_{t},s_{t+1}\rangle\sim U(D)} \bigg[\big(r_{t} + \gamma V(s_{t+1}; \Phi^{-}) - V(s_{t}; \Phi)\big)^{2}\bigg]$$
+$$\mathcal{L}(\Phi) = \mathbb{E}_{\langle s_{t},a_{t},r_{t},s_{t+1}\rangle\sim U(D)} \bigg[\big(r_{t} + \gamma V(s_{t+1}; \Phi^{-}) - V(s_{t}; \Phi)\big)^{2}\bigg]$$
 
 while the state-action value function is learned as follows:
-$$L(\theta) = \mathbb{E}_{\langle s_{t},a_{t},r_{t},s_{t+1}\rangle\sim U(D)} \bigg[\big(r_{t} + \gamma V(s_{t+1}; \Phi^{-}) - Q(s_{t}, a_{t}; \theta)\big)^{2}\bigg]$$
+$$\mathcal{L}(\theta) = \mathbb{E}_{\langle s_{t},a_{t},r_{t},s_{t+1}\rangle\sim U(D)} \bigg[\big(r_{t} + \gamma V(s_{t+1}; \Phi^{-}) - Q(s_{t}, a_{t}; \theta)\big)^{2}\bigg]$$
 
 * DQV has the interesting property of requiring the computation of **one** TD-error which can be used for learning two value functions simultaneously.
 
@@ -620,11 +644,11 @@ $$L(\theta) = \mathbb{E}_{\langle s_{t},a_{t},r_{t},s_{t+1}\rangle\sim U(D)} \bi
 
 **DQV-Max Learning** is an *off-policy* DRL algorithm which combines ideas from DQV and DQN. The idea is to reintroduce DQN's $\underset{a\in \mathcal{A}}{\max}\: Q(s_{t+1}, a)$ operator and use it for learning the state-value function
 
-$$L(\Phi) = \mathbb{E}_{\langle s_{t},a_{t},r_{t},s_{t+1}\rangle\sim U(D)} \bigg[\big(r_{t} + \gamma \: \underset{a\in \mathcal{A}}{\max}\: Q(s_{t+1}, a; \theta^{-}) - V(s_{t}; \Phi)\big)^{2}\bigg]$$
+$$\mathcal{L}(\Phi) = \mathbb{E}_{\langle s_{t},a_{t},r_{t},s_{t+1}\rangle\sim U(D)} \bigg[\big(r_{t} + \gamma \: \underset{a\in \mathcal{A}}{\max}\: Q(s_{t+1}, a; \theta^{-}) - V(s_{t}; \Phi)\big)^{2}\bigg]$$
 
 while we keep learning the state-action value function as we did with DQV
 
-$$L(\theta) = \mathbb{E}_{\langle s_{t},a_{t},r_{t},s_{t+1}\rangle\sim U(D)} \bigg[\big(r_{t} + \gamma V(s_{t+1}; \Phi)- Q(s_{t}, a_{t}; \theta)\big)^{2}\bigg].$$
+$$\mathcal{L}(\theta) = \mathbb{E}_{\langle s_{t},a_{t},r_{t},s_{t+1}\rangle\sim U(D)} \bigg[\big(r_{t} + \gamma V(s_{t+1}; \Phi)- Q(s_{t}, a_{t}; \theta)\big)^{2}\bigg].$$
 
 * Note that we are now computing **two** TD-errors and not one anymore
 
@@ -800,12 +824,6 @@ $$\mathcal{L}(\theta) = \mathbb{E}_{\color{red}{\langle s_{t},a_{t},r_{t},s_{t+1
 Furthermore if we want to learn in parallel off-policy methods are the only way to go.
 
 ---
-## Concluding Remarks
-
-
-
-
----
 class: end-slide, center
 count: false
 
@@ -816,3 +834,19 @@ The end.
 count: false
 
 # References
+
+- Richard Sutton and Samuel Barto, [Reinforcement Learning: an introduction, second edition](https://mitpress.mit.edu/books/reinforcement-learning-second-edition)
+- Richard Sutton [Learning to predict by the methods of temporal differences](https://link.springer.com/article/10.1007/BF00115009)
+- Marco Wiering and Martijn van Otterlo, [Reinforcement Learning](https://www.springer.com/gp/book/9783642276446)
+- Watkins Christopher and Peter Dayan, [Q-Learning](https://link.springer.com/article/10.1007/BF00992698)
+- Hado Van Hasselt [Double Q-Learning](https://papers.nips.cc/paper/3964-double-q-learning)
+- Marco Wiering and Hado Van Hasselt [The QV Family Compared to Other Reinforcement Learning Algorithms](https://www.rug.nl/research/portal/publications/the-qv-family-compared-to-other-reinforcement-learning-algorithms(f46669c4-8de6-4efb-ad92-e262c8d1732c).html)
+- Mnih et al. [Human-level control through deep reinforcement learning](https://www.nature.com/articles/nature14236)
+- Van Hasselt et al. [Deep Reinforcement Learning with Double Q-learning](https://arxiv.org/abs/1509.06461)
+- Sabatelli et al. [Deep Quality-Value (DQV) Learning](https://arxiv.org/abs/1810.00368)
+- Sabatelli et al. [Towards characterizing a new family of Deep Reinforcement Learning algorithms](https://arxiv.org/abs/1909.01779)
+- Schaul et al. [Prioritized Experience Replay](https://arxiv.org/abs/1511.05952)
+- Hessel et al. [Rainbow: Combining Improvements in Deep Reinforcement Learning](https://arxiv.org/abs/1710.02298)
+- Rashid et al. [QMIX: Monotonic Value Function Factorisation for
+Deep Multi-Agent Reinforcement Learning](https://arxiv.org/pdf/1803.11485.pdf)
+- Van Hasselt et al. [Deep Reinforcement Learning and the Deadly Triad](https://arxiv.org/abs/1812.02648)
