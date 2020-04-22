@@ -496,7 +496,7 @@ The popular DQN algorithm integrates two additional components into the previous
 - Experience Replay
 - Target Networks
 
-$$\mathcal{L}(\theta) = \mathbb{E}\_{{\langle s\_{t},a\_{t},r\_{t},s\_{t+1}\rangle\sim U(D)}} \bigg[\big(r\_{t} + \gamma \: \underset{a\in \mathcal{A}}{\max}\: Q(s\_{t+1}, a; {\theta^{-}})  - Q(s\_{t}, a\_{t}; \theta)\big)^{2}\bigg]$$
+$$\mathcal{L}(\theta) = \mathbb{E}\_{ {\langle s\_{t},a\_{t},r\_{t},s\_{t+1}\rangle\sim U(D)}} \bigg[\big(r\_{t} + \gamma \: \underset{a\in \mathcal{A}}{\max}\: Q(s\_{t+1}, a; {\theta^{-}})  - Q(s\_{t}, a\_{t}; \theta)\big)^{2}\bigg]$$
 
 Given a training iteration $i$, differentiating this objective function with respect to $\theta$ gives the following gradient:
 .smaller-x[
