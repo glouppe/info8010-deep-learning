@@ -21,7 +21,7 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2020.
 | March 27 | Lecture 7: [Auto-encoders and generative models](https://glouppe.github.io/info8010-deep-learning/?p=lecture7.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec7.pdf)] [[Podcast](https://my.uliege.be/portail/go_xt.do?a=o%7C3117%7Ce%7C401184)] |
 | April 3 | Lecture 8: [Generative adversarial networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture8.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec8.pdf)] [[Podcast](https://my.uliege.be/portail/go_xt.do?a=o%7C3117%7Ce%7C402870)]<br>Tutorial 5: [Convolutional neural networks](https://github.com/glouppe/info8010-deep-learning/blob/master/tutorials/lecture_05) |
 | April 10 | Lecture 9: [Uncertainty](https://glouppe.github.io/info8010-deep-learning/?p=lecture9.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec9.pdf)] [[Podcast](https://my.uliege.be/portail/go_xt.do?a=o%7C3117%7Ce%7C403339)]<br>Q&A session |
-| April 24 | Lecture 10: Deep reinforcement learning (guest lecture)<br>Tutorial 6: Deep reinforcement learning<br>Reading assignment | 
+| April 24 | Lecture 10: [Deep reinforcement learning](https://glouppe.github.io/info8010-deep-learning/?p=lecture10.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec10.pdf)]  (guest lecture)<br>Reading assignment | 
 | May 1 | Q&A session (10:00 AM, Lifesize) |
 | May 8 | Q&A session (10:00 AM, Lifesize) |
 | May 15 | Q&A session (10:00 AM, Lifesize)<br>Project code and report |
