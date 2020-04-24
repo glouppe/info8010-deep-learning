@@ -182,7 +182,7 @@ $$G\_t = \sum\_{k=0}^{\infty}\gamma^{k}r\_{t+k+1}$$
 and keep track of the value of a single state based on the amount of times this state has been visited
 $$V(s\_t)=\frac{\sum\_{i=1}^{k}G\_t(s)}{N(s)}.$$
 This estimate can then get updated as follows:
-$$V(s\_t):= V(s\_t)+\alpha[G\_t -V(S\_t)].$$
+$$V(s\_t):= V(s\_t)+\alpha[G\_t -V(s\_t)].$$
 
 ---
 
@@ -203,14 +203,14 @@ class: middle
 - Just like MC methods TD-Learning approaches can simply learn from raw experiences without the need for a model of the environment. Like DP techniques, the update estimates are based (in part) on other learned estimates.
 
 - This means we do not have to wait until the end of an episode anymore but instead rely on **bootstrapping**:
-$$V(S\_t):= V(S\_t)+\alpha[r\_t+\gamma V(S\_{t+1}) - V(s\_t)]$$
+$$V(s\_t) := V(s\_t)+\alpha[r\_t+\gamma V(s\_{t+1}) - V(s\_t)]$$
 
 ---
 
 class: middle
 
 The core idea of TD-Learning is the concept of **TD-error**, or sometimes called target
-$$\delta\_t = r\_t+\gamma V(s\_{t+1}).$$
+$$\delta\_t = r\_t+\gamma V(s\_{t+1}) - V(s\_t).$$
 
 - It corresponds to the only information that is needed in order to update our value estimates
   (remember that we **do not** have access to $V^* (s)$ and we want to overcome waiting for $G\_t$!)
@@ -324,8 +324,8 @@ where $\epsilon$ is annealed linearly over time to encourage exploration in the 
 - We have seen how important it is to learn a policy and how this governs the behavior of an agent.
 - Policies also define the underlying **RL algorithm** which we use when learning a value function.
 - Specifically they are of interest when we need to compute a TD-error
-$$\begin{aligned}\delta\_t &= r\_t+\gamma V(s\_{t+1})\\\\
-&=  r\_{t} + \gamma \: \underset{a\in \mathcal{A}}{\max}\: Q(s\_{t+1}, a).
+$$\begin{aligned}\delta\_t &= r\_t+\gamma V(s\_{t+1}) - V(s\_t)\\\\
+&=  r\_{t} + \gamma \: \underset{a\in \mathcal{A}}{\max}\: Q(s\_{t+1}, a) - Q(s\_t, a\_t).
 \end{aligned}$$
 
 ---
