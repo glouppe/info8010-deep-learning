@@ -18,6 +18,9 @@ R: add overview maps for each lecture, as in INFO8002
 R: lec10 on RL -> restructure partly as a lecture on World Models -> nice comprehensive pedagogical example (combine mdn, rnn, vae, rl) into a big network
 R: lec - theory of DL -> universal approx theorem, double descent
 
+
+R: projects -> use github classroom https://classroom.github.com/
+
 ---
 
 # AI at ULiège
