@@ -12,6 +12,8 @@ Prof. Gilles Louppe<br>
 
 R: regenerate all svg files from draw.io
 
+R: backprop -> check https://mathematical-tours.github.io/book-sources/optim-ml/OptimML.pdf
+
 ---
 
 # Today
