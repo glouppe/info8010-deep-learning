@@ -24,7 +24,8 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2020.
 | April 24 | Lecture 10: [Deep reinforcement learning](https://glouppe.github.io/info8010-deep-learning/?p=lecture10.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec10.pdf)] [[Podcast](https://my.uliege.be/portail/go_xt.do?a=o%7C3117%7Ce%7C405111)] (guest lecture)<br>Reading assignment | 
 | May 1 | Q&A session (10:00 AM, Lifesize) |
 | May 8 | Q&A session (10:00 AM, Lifesize) |
-| May 15 | Q&A session (10:00 AM, Lifesize)<br>Project code and report |
+| May 15 | Q&A session (10:00 AM, Lifesize) |
+| May 22 | Project code and report |
 
 ## Project
 
