@@ -393,7 +393,7 @@ $$
 \mathbf{z}\_t &= \sigma\left( \mathbf{W}\_z^T  \[ \mathbf{h}\_{t-1}, \mathbf{x}\_t \] + \mathbf{b}\_z \right) \\\\
 \mathbf{r}\_t &= \sigma\left( \mathbf{W}\_r^T  \[ \mathbf{h}\_{t-1}, \mathbf{x}\_t \] + \mathbf{b}\_r \right) \\\\
 \bar{\mathbf{h}}\_t &= \text{tanh}\left( \mathbf{W}\_h^T  \[ \mathbf{r}\_t \odot \mathbf{h}\_{t-1}, \mathbf{x}\_t \] + \mathbf{b}\_h \right) \\\\
-\mathbf{h}\_t &= (1-\mathbf{z}\_t) \odot \mathbf{h}\_{h-1} + \mathbf{z}\_t \odot \bar{\mathbf{h}}\_t
+\mathbf{h}\_t &= (1-\mathbf{z}\_t) \odot \mathbf{h}\_{t-1} + \mathbf{z}\_t \odot \bar{\mathbf{h}}\_t
 \end{aligned}
 $$
 
