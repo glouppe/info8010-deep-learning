@@ -21,6 +21,8 @@ R: lec - theory of DL -> universal approx theorem, double descent
 
 R: projects -> use github classroom https://classroom.github.com/
 
+R: act functions https://www.youtube.com/watch?v=bj1fh3BvqSU&feature=youtu.be
+
 ---
 
 # AI at ULiège
