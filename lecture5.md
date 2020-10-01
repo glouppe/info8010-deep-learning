@@ -495,7 +495,7 @@ Let us assume that
 - we are in a linear regime at initialization (e.g., the positive part of a ReLU or the middle of a sigmoid),
 - weights $w\_{ij}^l$ are initialized i.i.d,
 - biases $b\_l$ are initialized to be $0$,
-- input features are i.i.d, which we denote as $\mathbb{V}[x]$.
+- input features are i.i.d, with a variance denoted as $\mathbb{V}[x]$.
 
 Then, the variance of the activation $h\_i^l$ of unit $i$ in layer $l$ is
 $$

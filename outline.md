@@ -23,6 +23,13 @@ R: projects -> use github classroom https://classroom.github.com/
 
 R: act functions https://www.youtube.com/watch?v=bj1fh3BvqSU&feature=youtu.be
 
+R: symmetries conv https://www.youtube.com/watch?v=0_O8PdZBc5s
+
+R: curlGo https://www.youtube.com/watch?v=TA-muzhgCQ0
+
+
+R: https://m.facebook.com/story.php?story_fbid=10157192753177143&id=722677142&anchor_composer=false
+
 ---
 
 # AI at ULiège
