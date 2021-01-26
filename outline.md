@@ -30,6 +30,14 @@ R: curlGo https://www.youtube.com/watch?v=TA-muzhgCQ0
 
 R: https://m.facebook.com/story.php?story_fbid=10157192753177143&id=722677142&anchor_composer=false
 
+R: https://twitter.com/suzatweet/status/1317400009508343814?s=09
+
+https://deepgenerativemodels.github.io/syllabus.html
+https://courses.cs.washington.edu/courses/cse599i/20au/
+https://sites.google.com/view/berkeley-cs294-158-sp20/home
+
+R: open questions in DL
+
 ---
 
 # AI at ULiège

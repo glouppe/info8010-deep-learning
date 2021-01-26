@@ -14,6 +14,8 @@ R: VAE:
 R: reverse KL https://ermongroup.github.io/cs228-notes/inference/variational/
 R: http://paulrubenstein.co.uk/variational-autoencoders-are-not-autoencoders/
 
+R: latent variable models -> illustrate with the bean machine -> intractability
+
 
 ---
 

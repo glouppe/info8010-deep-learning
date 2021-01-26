@@ -8,6 +8,10 @@ Lecture 0: Introduction
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+- R: NeurIPS Bishop Posner -> we used to program computers, we will now train them
+
 ---
 
 class: middle
