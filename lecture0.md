@@ -8,15 +8,6 @@ Lecture 0: Introduction
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-- R: NeurIPS Bishop Posner -> we used to program computers, we will now train them
-- R: tidy up videos
-
-R: curlGo https://www.youtube.com/watch?v=TA-muzhgCQ0
-R: https://m.facebook.com/story.php?story_fbid=10157192753177143&id=722677142&anchor_composer=false
-R: rework end of lecture 0
-
 ---
 
 # Today
@@ -47,7 +38,7 @@ R: rework end of lecture 0
 
 class: middle
 
-.center.width-65[![](figures/lec0/map.png)]
+.center.width-60[![](figures/lec0/map.png)]
 
 ---
 
@@ -59,24 +50,6 @@ By the end of this course, you will have acquired a solid and detailed understan
 You will have learned how to use and architecture deep neural networks for a wide range of probabilistic inference problems, including classification, regression, detection, generation or reinforcement learning.
 
 The techniques you will learn in this course apply to a wide variety of artificial intelligence problems, with plenty of applications in engineering and science.
-
----
-
-class: middle
-
-## Going further
-
-This course is part of the many other courses available at ULiège and related to AI, including:
-
-- INFO8006: Introduction to Artificial Intelligence
-- ELEN0062: Introduction to Machine Learning
-- **INFO8010: Deep Learning $\leftarrow$ you are there**
-- INFO8003: Optimal decision making for complex problems
-- INFO8004: Advanced Machine Learning
-- INFO0948: Introduction to Intelligent Robotics
-- INFO0049: Knowledge representation
-- ELEN0016: Computer vision
-- DROI8031: Introduction to the law of robots
 
 ---
 
@@ -206,9 +179,9 @@ However, one can write a program that *learns* the task of extracting semantic i
 
 class: middle, black-slide
 
-.center.width-80[![](figures/lec0/console.jpg)]
+.center.width-70[![](figures/lec0/console.jpg)]
 
-Techniques used in practice consist of:
+The common approach used in practice consists of:
 - defining a parametric model with high capacity,
 - optimizing its parameters, by "making it work" on the training data.
 
@@ -216,14 +189,9 @@ Techniques used in practice consist of:
 
 class: middle
 
-This is similar to *biological systems* for which the model (e.g., brain structure) is
-DNA-encoded, and parameters (e.g., synaptic weights) are tuned through
-experiences.
+## A change of paradigm
 
-Deep learning encompasses software technologies to **scale-up** to billions of
-model parameters and as many training examples.
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+We used to program computers. We will now train them.
 
 ---
 
@@ -235,25 +203,9 @@ class: middle
 
 class: middle, center, black-slide
 
-<iframe width="600" height="450" src="https://www.youtube.com/embed/MPU2HistivI" frameborder="0" allowfullscreen></iframe>
+<iframe width="600" height="450" src="https://www.youtube.com/embed/5kpsZoKjPgQ" frameborder="0" allowfullscreen></iframe>
 
-Real-time object detection (Redmon and Farhadi, 2018)
-
----
-
-class: middle, center, black-slide
-
-<iframe width="600" height="450" src="https://www.youtube.com/embed/qWl9idsCuLQ" frameborder="0" allowfullscreen></iframe>
-
-Segmentation (Hengshuang et al, 2017)
-
----
-
-class: middle, center, black-slide
-
-<iframe width="600" height="450" src="https://www.youtube.com/embed/pW6nZXeWlGM" frameborder="0" allowfullscreen></iframe>
-
-Pose estimation (Cao et al, 2017)
+Object detection, pose estimation, segmentation (2019)
 
 ---
 
@@ -270,20 +222,6 @@ class: middle, center, black-slide
 <iframe width="600" height="450" src="https://www.youtube.com/embed/HcZ48JDamyk" frameborder="0" allowfullscreen></iframe>
 
 Strategy games (Deepmind, 2016-2018)
-
----
-
-class: middle, center, black-slide
-
-<iframe width="600" height="450" src="https://www.youtube.com/embed/gn4nRCC9TwQ" frameborder="0" allowfullscreen></iframe>
-
-Learning to walk (2017)
-
-???
-
-Single algorithm for learning! Nothing is hardcoded.
-
-Similar to a baby learning to walk.
 
 ---
 
@@ -309,33 +247,22 @@ A full build of Autopilot neural networks involves 48 networks that take 70,000 
 
 class: middle, center, black-slide
 
-<iframe width="600" height="450" src="https://www.youtube.com/embed/DuIrjRAzNPQ" frameborder="0" allowfullscreen></iframe>
-
-... while preventing accidents.
-
----
-
-class: middle, center, black-slide
-
-<iframe width="600" height="450" src="https://www.youtube.com/embed/Nu-nlQqFCKg?start=471" frameborder="0" allowfullscreen></iframe>
-
-Speech recognition, translation and synthesis (Microsoft, 2012)
-
----
-
-class: middle, center, black-slide
-
-<iframe width="600" height="450" src="https://www.youtube.com/embed/8BFzu9m52sc" frameborder="0" allowfullscreen></iframe>
-
-Auto-captioning (2015)
-
----
-
-class: middle, center, black-slide
-
 <iframe width="600" height="450" src="https://www.youtube.com/embed/7gh6_U7Nfjs" frameborder="0" allowfullscreen></iframe>
 
 Speech synthesis and question answering (Google, 2018)
+
+---
+
+class: middle, black-slide
+
+.center[
+<video loop controls preload="auto" height="400" width="600">
+  <source src="./figures/lec7/physics-simulation.mp4" type="video/mp4">
+</video>
+
+Physics simulation (Sanchez-Gonzalez et al, 2020)
+
+]
 
 ---
 
@@ -373,19 +300,25 @@ Dali Lives (2019)
 
 class: middle, center
 
-.width-80[![](figures/lec0/turing-award.png)]
+.width-70[![](figures/lec0/turing-award.png)]
 
 .italic["ACM named .bold[Yoshua Bengio], .bold[Geoffrey Hinton], and .bold[Yann LeCun] recipients of the .bold[2018 ACM A.M. Turing Award] for conceptual and engineering breakthroughs that have made deep neural networks a critical component of computing."]
 
 ---
 
-class: middle
+class: middle, center, black-slide
 
-# Why does it work now?
+class: middle, black-slide
+
+.center[
+<video loop controls preload="auto" height="500" width="600">
+  <source src="./figures/lec0/yann-dl.mp4" type="video/mp4">
+</video>
+]
 
 ---
 
-class: middle
+# Why does it work now?
 
 .center.grid[
 .kol-1-2[
@@ -443,56 +376,6 @@ From a practical perspective, deep learning
 - makes large trained networks a commodity.
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-
-.center.width-70[![](figures/lec0/flops.png)]
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-
-.center.width-70[![](figures/lec0/storage.png)]
-
-.center[The typical cost of a 4Tb hard disk is less than 100 USD (February 2020).]
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-
-class: middle
-
-.center.width-90[![](figures/lec0/op-vs-acc.png)]
-
-.footnote[Image credits: Canziani et al, 2016, arXiv:[1605.07678](https://arxiv.org/abs/1605.07678).]
-
----
-
-class: middle
-
-.center.width-100[![](figures/lec0/ai-and-compute-modern-log.png)]
-
-.footnote[Credtis: [AI and Compute, Open AI, 2018](https://openai.com/blog/ai-and-compute).]
-
----
-
-class: middle 
-
-$1$ petaflop/s-day<br> 
-$=$ $10^{15}$ neural net operations per second for one day<br>
-$= 10^{20}$ opetations<br>
-$\approx 100$ GPUs for one day<br>
-$\approx 500 \text{kWh}$
-
-???
-
-R: this was not clearly explained
-R: https://twitter.com/eturner303/status/1223976313544773634
 
 ---
 

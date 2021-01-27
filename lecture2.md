@@ -10,6 +10,8 @@ Prof. Gilles Louppe<br>
 
 ???
 
+- R: NeurIPS Bishop Posner -> we used to program computers, we will now train them
+
 R: folding trick
 R: expand on activation functions (see Lecun's)
 R: act functions https://www.youtube.com/watch?v=bj1fh3BvqSU&feature=youtu.be

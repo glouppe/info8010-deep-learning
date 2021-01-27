@@ -8,11 +8,6 @@ Lecture 1: Fundamentals of machine learning
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-R: overfitting plot -> make the same with a large nn to show it does NOT overfit!! increasing the numbers of parameters results in regularization
--> https://arxiv.org/abs/1812.11118
-
 ---
 
 # Today
@@ -570,6 +565,14 @@ class: middle
 class: middle
 
 .width-100[![](figures/lec1/double-descent.png)]
+
+.footnote[Credits: [Belkin et al, 2018](https://arxiv.org/abs/1812.11118).]
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec1/double-descent-mnist.png)]
 
 .footnote[Credits: [Belkin et al, 2018](https://arxiv.org/abs/1812.11118).]
 
