@@ -11,6 +11,72 @@ Prof. Gilles Louppe<br>
 ???
 
 - R: NeurIPS Bishop Posner -> we used to program computers, we will now train them
+- R: tidy up videos
+
+R: curlGo https://www.youtube.com/watch?v=TA-muzhgCQ0
+R: https://m.facebook.com/story.php?story_fbid=10157192753177143&id=722677142&anchor_composer=false
+R: rework end of lecture 0
+
+---
+
+# Today
+
+- Course outline
+- Introduction to deep learning
+- Fundamentals of machine learning
+
+---
+
+# Outline
+
+- Lecture 0: Introduction
+- Lecture 1: Fundamentals of machine learning
+- Lecture 2: Multi-layer perceptron
+- Lecture 3: Automatic differentiation
+- Lecture 4: Training neural networks
+- Lecture 5: Convolutional neural networks
+- Lecture 6: Computer vision
+- Lecture 7: Recurrent neural networks
+- Lecture 8: Attention and transformer networks
+- Lecture 9: Generative models (Part 1)
+- Lecture 10: Generative models (Part 2)
+- Lecture 11: Uncertainty
+- Lecture 12: Deep reinforcement learning
+
+---
+
+class: middle
+
+.center.width-65[![](figures/lec0/map.png)]
+
+---
+
+class: middle
+
+## My mission
+
+By the end of this course, you will have acquired a solid and detailed understanding of the field of deep learning. 
+You will have learned how to use and architecture deep neural networks for a wide range of probabilistic inference problems, including classification, regression, detection, generation or reinforcement learning.
+
+The techniques you will learn in this course apply to a wide variety of artificial intelligence problems, with plenty of applications in engineering and science.
+
+---
+
+class: middle
+
+## Going further
+
+This course is part of the many other courses available at ULiège and related to AI, including:
+
+- INFO8006: Introduction to Artificial Intelligence
+- ELEN0062: Introduction to Machine Learning
+- **INFO8010: Deep Learning $\leftarrow$ you are there**
+- INFO8003: Optimal decision making for complex problems
+- INFO8004: Advanced Machine Learning
+- INFO0948: Introduction to Intelligent Robotics
+- INFO0049: Knowledge representation
+- ELEN0016: Computer vision
+- DROI8031: Introduction to the law of robots
 
 ---
 
@@ -425,6 +491,7 @@ $\approx 500 \text{kWh}$
 
 ???
 
+R: this was not clearly explained
 R: https://twitter.com/eturner303/status/1223976313544773634
 
 ---

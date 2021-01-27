@@ -2,7 +2,7 @@ class: middle, center, title-slide
 
 # Deep Learning
 
-Lecture 6: Recurrent neural networks
+Lecture 6: Computer vision
 
 <br><br>
 Prof. Gilles Louppe<br>
@@ -10,60 +10,141 @@ Prof. Gilles Louppe<br>
 
 ---
 
-# Today
+# Today 
 
-How to make sense of *sequential data*?
-
-- Temporal convolutions
-- Recurrent neural networks
-- Applications
-- Beyond sequences
+Computer vision with deep learning:
+- Classification
+- Object detection
+- Semantic segmentation
 
 ---
 
 class: middle
 
-Many real-world problems require to process a signal with a **sequence** structure.
+.width-80.center[![](figures/lec6/tasks.jpg)]
 
-- Sequence classification:
-    - sentiment analysis
-    - activity/action recognition
-    - DNA sequence classification
-    - action selection
-- Sequence synthesis:
-    - text synthesis
-    - music synthesis
-    - motion synthesis
-- Sequence-to-sequence translation:
-    - speech recognition
-    - text translation
-    - part-of-speech tagging
+.caption[Some of the main computer vision tasks.<br> Each of them requires a different neural network architecture.]
 
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+.footnote[Credits: [Aurélien Géron](https://www.oreilly.com/content/introducing-capsule-networks/), 2018.]
 
 ---
 
 class: middle
 
-Given a set $\mathcal{X}$, if $S(\mathcal{X})$ denotes the set of sequences of elements from $\mathcal{X}$,
-$$S(\mathcal{X}) = \cup\_{t=1}^\infty \mathcal{X}^t,$$
-then we formally define:
+# Classification
 
-.grid.center[
-.kol-1-2.bold[Sequence classification]
-.kol-1-2[$f: S(\mathcal{X}) \to \bigtriangleup^C$]
-]
-.grid.center[
-.kol-1-2.bold[Sequence synthesis]
-.kol-1-2[$f: \mathbb{R}^d \to S(\mathcal{X})$]
-]
-.grid.center[
-.kol-1-2.bold[Sequence-to-sequence translation]
-.kol-1-2[$f: S(\mathcal{X}) \to S(\mathcal{Y})$]
-]
+A few tips when using convnets for classifying images.
+
+---
+
+class: middle
+
+## Convolutional neural networks
+
+- Convolutional neural networks combine convolution, pooling and fully connected layers.
+- They achieve state-of-the-art results for **spatially structured** data, such as images, sound or text.
+
+.center.width-110[![](figures/lec5/lenet.svg)]
+
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
+
+---
+
+class: middle
+
+For classification,
+- the activation in the output layer is a Softmax activation producing a vector $\mathbf{h} \in \bigtriangleup^C$ of probability estimates $P(Y=i|\mathbf{x})$, where $C$ is the number of classes;
+- the loss function is the cross-entropy loss.
+
+---
+
+class: middle
+
+## Image augmentation
+
+The lack of data is the biggest limit for performance of deep learning models.
+- Collecting more data is usually expensive and laborious.
+- Synthesizing data is complicated and may not represent the true distribution.
+- **Augmenting** the data with base transformations is simple and efficient (e.g., as demonstrated with AlexNet).
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec6/augmentation.png)]
+
+.footnote[Credits: [DeepAugment](https://github.com/barisozmen/deepaugment), 2020.]
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec6/deepaugment.png)]
+
+.footnote[Credits: [DeepAugment](https://github.com/barisozmen/deepaugment), 2020.]
+
+---
+
+class: middle
+
+## Pre-trained models
+
+- Training a model on natural images, from scratch, takes **days or weeks**.
+- Many models trained on ImageNet are publicly available for download. These models can be used as *feature extractors* or for smart *initialization*.
+- The models themselves should be considered as generic and re-usable assets.
+
+---
+
+class: middle
+
+## Transfer learning
+
+- Take a pre-trained network, remove the last layer(s) and then treat the rest of the network as a **fixed** feature extractor.
+- Train a model from these features on a new task.
+- Often better than handcrafted feature extraction for natural images, or better than training from data of the new task only.
 
 <br>
-In the rest of the slides, we consider only time-indexed signal, although it generalizes to arbitrary sequences.
+.center.width-100[![](figures/lec6/feature-extractor.png)]
+
+.footnote[Credits: Mormont et al, [Comparison of deep transfer learning strategies for digital pathology](http://hdl.handle.net/2268/222511), 2018.]
+
+---
+
+class: middle
+
+.center.width-65[![](figures/lec6/finetune.svg)]
+
+## Fine-tuning
+
+- Same as for transfer learning, but also *fine-tune* the weights of the pre-trained network by continuing backpropagation.
+- All or only some of the layers can be tuned.
+
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
+
+---
+
+class: middle
+
+In the case of models pre-trained on ImageNet, transferred/fine-tuned networks usually work even when the input images for the new task are not photographs of objects or animals, such as biomedical images, satellite images or paintings.
+
+
+.center.width-70[![](figures/lec6/fine-tuning-results.png)]
+
+.footnote[Credits: Matthia Sabatelli et al, [Deep Transfer Learning for Art Classification Problems](http://openaccess.thecvf.com/content_ECCVW_2018/papers/11130/Sabatelli_Deep_Transfer_Learning_for_Art_Classification_Problems_ECCVW_2018_paper.pdf), 2018.]
+
+---
+
+class: middle
+
+# Object detection
+
+---
+
+class: middle
+
+The simplest strategy to move from image classification to object detection is to classify local regions, at multiple scales and locations.
+
+.center.width-80[![](figures/lec6/sliding.gif)]
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
@@ -71,210 +152,58 @@ In the rest of the slides, we consider only time-indexed signal, although it gen
 
 class: middle
 
-# Temporal convolutions
+## Intersection over Union (IoU)
 
----
+A standard performance indicator for object detection is to evaluate the **intersection over union** (IoU) between a predicted bounding box $\hat{B}$ and an annotated bounding box $B$,
+$$\text{IoU}(B,\hat{B}) = \frac{\text{area}(B \cap \hat{B})}{\text{area}(B \cup \hat{B})}.$$
 
-class: middle
+.center.width-45[![](figures/lec6/iou.png)]
 
-The simplest approach to sequence processing is to use **temporal convolutional networks** (TCNs).
-
-TCNs correspond to standard 1D convolutional networks.
-They process input sequences as fixed-size vectors of the maximum possible length.
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
 ---
 
-class: middle
+class: middle 
 
-.center.width-80[![](figures/lec6/tcn.png)]
+## Mean Average Precision (mAP)
 
-Increasing exponentially the kernel sizes makes the required number of layers grow as $O(\log T)$ of the time window $T$ taken into account. 
+If $\text{IoU}(B,\hat{B})$ is larger than a fixed threshold (usually $\frac{1}{2}$), then the predicted bounding-box is valid (true positive) and wrong otherwise (false positive).
 
-Dilated convolutions make the model size grow as $O(\log T)$, while the memory footprint and computation are $O(T\log T)$.
+TP and FP values are accumulated for all thresholds on the predicted confidence.
+The area under the resulting precision-recall curve is the *average precision* for the considered class.
 
-.footnote[Credits: Philippe Remy, [keras-tcn](https://github.com/philipperemy/keras-tcn), 2018; Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+The mean over the classes is the **mean average precision**.
 
----
+.center.width-50[![](figures/lec6/interpolated_precision.png)]
 
-class: middle
+.footnote[Credits: [Rafael Padilla](https://github.com/rafaelpadilla/Object-Detection-Metrics), 2018.]
 
-.center.width-100[![](figures/lec6/tcn-results.png)]
+???
 
-
-.footnote[Credits: Bai et al, [An Empirical Evaluation of Generic Convolutional and Recurrent Networks for Sequence Modeling](https://arxiv.org/abs/1803.01271), 2018.]
-
----
-
-class: middle
-
-# Recurrent neural networks
+- Precision = TP / all detections 
+- Recall = TP / all ground truths
 
 ---
 
-class: middle
+class: middle 
 
-When the input is a sequence $\mathbf{x} \in S(\mathbb{R}^p)$ of *variable* length $T(\mathbf{x})$, a standard approach is to use a recurrent model which maintains a **recurrent state** $\mathbf{h}\_t \in \mathbb{R}^q$ updated at each time step $t$.
+The sliding window approach evaluates a classifier at large number of locations and scales. 
 
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-
-Formally, for $t=1, ..., T(\mathbf{x})$,
-$$
-\mathbf{h}\_t = \phi(\mathbf{x}\_t, \mathbf{h}\_{t-1};\theta),
-$$
-where $\phi : \mathbb{R}^p \times \mathbb{R}^q \to \mathbb{R}^q$ and $\mathbf{h}\_0 \in \mathbb{R}^q$.
-
-Predictions can be computed at any time step $t$ from the recurrent state,
-$$y\_t = \psi(\mathbf{h}\_t;\theta),$$
-with $\psi : \mathbb{R}^q \to \mathbb{R}^C$.
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+This approach is usually **very computationally expensive** as performance directly depends on the resolution and number of the windows fed to the classifier (the more the better, but also the more costly). 
 
 ---
 
-class: middle
-
-.width-95[![](figures/lec6/rnn-activation.svg)]
-
----
-
-count: false
-class: middle
-
-.width-100[![](figures/lec6/rnn-hiddens.svg)]
-
----
-
-count: false
-class: middle
-
-.width-100[![](figures/lec6/rnn-single-output.svg)]
-
----
-
-count: false
-class: middle
-
-.width-100[![](figures/lec6/rnn-sequence-output.svg)]
-
----
-
-class: middle
-
-Even though the number of steps $T$ depends on $\mathbf{x}$, this is a standard computational graph, and automatic differentiation can deal with it as usual.
-
-In the case of recurrent neural networks, this is referred to as **backpropagation through time**.
-
----
-
-class: middle
-
-.width-100[![](figures/lec6/rnn-backprop.svg)]
-
----
-
-# Elman networks
-
-Elman networks consist of $\phi$ and $\psi$ defined as primitive neuron units, such as logistic regression units:
-$$
-\begin{aligned}
-&\mathbf{h}\_t = \sigma\_h\left( \mathbf{W}^T\_{xh} \mathbf{x}\_t + \mathbf{W}^T\_{hh} \mathbf{h}\_{t-1} + \mathbf{b}\_h \right) \\\\
-&y\_t = \sigma\_y\left( \mathbf{W}\_y^T \mathbf{h}\_t + b\_y \right) \\\\
-&\mathbf{W}^T\_{xh} \in \mathbb{R}^{p\times q}, \mathbf{W}^T\_{hh} \in \mathbb{R}^{q\times q}, \mathbf{b}\_{h} \in \mathbb{R}^{q}, b\_{y} \in \mathbb{R}, \mathbf{h}\_0 = 0
-\end{aligned}
-$$
-
-where $\sigma\_h$ and $\sigma\_y$ are non-linear activation functions, such as the sigmoid function, $\text{tanh}$ or $\text{ReLU}$.
-
----
-
-class: middle
-
-## Benchmark example
-
-Learn to recognize variable-length sequences that are palindromes.
-For training, we will use sequences of random sizes, from $1$ to $10$.
+# OverFeat 
 
 .grid[
-.kol-1-4[]
-.kol-1-4.center[
-$\mathbf{x}$
+.kol-2-3[
 
-$(1,2,3,2,1)$<br>
-$(2,1,2)$<br>
-$(3,4,1,2)$<br>
-$(0)$<br>
-$(1,4)$
+- The complexity of the sliding window approach was mitigated in the pioneer OverFeat network (Sermanet et al, 2013) by adding a **regression head** to predict the object *bounding box* $(x,y,w,h)$.
+- For training, the convolutional layers are fixed and the regression network is trained using an $\ell\_2$ loss between the predicted and the true bounding box for each example.
 ]
-.kol-1-4.center[
-$y$
-
-$1$<br>
-$1$<br>
-$0$<br>
-$1$<br>
-$0$
+.kol-1-3[.center.width-100[![](figures/lec6/overfeat.png)]]
 ]
-]
-
-
----
-
-class: middle
-
-.center.width-80[![](figures/lec6/palindrome-1.png)]
-
----
-
-# Stacked RNNs
-
-Recurrent networks can be viewed as layers producing sequences $\mathbf{h}\_{1:T}^l$ of activations.
-
-As for dense layers, recurrent layers can be composed in series to form a .bold[stack] of recurrent networks.
-
-<br>
-
-.center.width-100[![](figures/lec6/rnn-stacked.svg)]
-
----
-
-class: middle
-
-.center.width-80[![](figures/lec6/palindrome-2.png)]
-
----
-
-# Bidirectional RNNs
-
-Computing the recurrent states forward in time does not make use of future input values $\mathbf{x}\_{t+1:T}$, even though there are known.
-- RNNs can be made **bidirectional** by consuming the sequence in both directions.
-- Effectively, this amounts to run the same (single direction) RNN twice:
-    - once over the original sequence $\mathbf{x}\_{1:T}$,
-    - once over the reversed sequence $\mathbf{x}\_{T:1}$.
-- The resulting recurrent states of the bidirectional RNN is the concatenation of two resulting sequences of recurrent states.
-
----
-
-
-class: middle
-
-.center.width-80[![](figures/lec6/palindrome-3.png)]
-
----
-
-# Gating
-
-When unfolded through time, the graph of computation of a recurrent network can grow very deep, and training involves dealing with **vanishing gradients**.
-- RNN cells should include a *pass-through*, or additive paths, so that the recurrent state does not go repeatedly through a squashing non-linearity.
-- This is identical to skip connections in ResNet.
-
-<br><br><br>
-.center.width-70[![](figures/lec6/skip.svg)]
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
@@ -282,16 +211,39 @@ When unfolded through time, the graph of computation of a recurrent network can 
 
 class: middle
 
-For instance, the recurrent state update can be a per-component weighted average of its previous value $\mathbf{h}\_{t-1}$ and a full update $\bar{\mathbf{h}}\_t$, with the weighting $\mathbf{z}\_t$ depending on the input and the recurrent state, hence acting as a **forget gate**.
+.center.width-80[![](figures/lec6/overfeat-grid.png)]
 
-Formally,
-$$
-\begin{aligned}
-\bar{\mathbf{h}}\_t &= \phi(\mathbf{x}\_t, \mathbf{h}\_{t-1};\theta) \\\\
-\mathbf{z}\_t &= f(\mathbf{x}\_t, \mathbf{h}\_{t-1};\theta) \\\\
-\mathbf{h}\_t &= \mathbf{z}\_t \odot \mathbf{h}\_{t-1} + (1-\mathbf{z}\_t) \odot \bar{\mathbf{h}}\_t.
-\end{aligned}
-$$
+The classifier head outputs a class and a confidence for each location and scale pre-defined from a coarse grid. Each window is resized to fit with the input dimensions of the classifier.
+
+.footnote[Credits: Sermanet et al, 2013.]
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec6/overfeat-predictions.png)]
+
+The regression head then predicts the location of the object with respect to each window.
+
+.footnote[Credits: Sermanet et al, 2013.]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec6/overfeat-merge.png)]
+
+These bounding boxes are finally merged with an *ad-hoc greedy procedure* to produce the final predictions over a small number of objects.
+
+.footnote[Credits: Sermanet et al, 2013.]
+
+---
+
+class: middle
+
+The OverFeat architecture can be adapted to object detection by adding a "background" class to the object classes.
+
+Negative samples are taken in each scene either at random or by selecting the ones with the worst miss-classification.
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
@@ -299,565 +251,410 @@ $$
 
 class: middle
 
-.center.width-80[![](figures/lec6/gating.svg)]
+Although OverFeat is one of the earliest successful networks for object detection, its architecture comes with several **drawbacks**:
+- it is a disjoint system (2 disjoint heads with their respective losses, ad-hoc merging procedure);
+- it optimizes for localization rather than detection;
+- it cannot reason about global context and thus requires significant post-processing to produce coherent detections.
+
+---
+
+# YOLO
+
+.center.width-65[![](figures/lec6/yolo-model.png)]
+
+YOLO (You Only Look Once; Redmon et al, 2015) models detection as a regression problem. 
+
+It divides the image into an $S\times S$ grid and for each grid cell predicts $B$ bounding boxes, confidence for those boxes, and $C$ class probabilities. These predictions are encoded as an $S \times S \times (5B + C)$ tensor.
+
+.footnote[Credits: Redmon et al, 2015.]
 
 ---
 
 class: middle
 
-## LSTM
+For $S=7$, $B=2$, $C=20$, the network predicts a vector of size $30$ for each cell.
 
-The long short-term memory model (LSTM; Hochreiter and Schmidhuber, 1997) is an instance of the previous gated recurrent cell, with the following changes:
-- The recurrent state is split into two parts $\mathbf{c}\_t$ and $\mathbf{h}\_t$, where
-    - $\mathbf{c}\_t$ is the cell state and
-    - $\mathbf{h}\_t$ is output state.
-- A forget gate $\mathbf{f}\_t$ selects the cell state information to erase.
-- An input gate $\mathbf{i}\_t$ selects the cell state information to update.
-- An output gate $\mathbf{o}\_t$ selects the cell state information to output.
-
----
-
-<br><br>
-
-.center.width-80[![](figures/lec6/lstm1.svg)]
-
-$$
-\begin{aligned}
-\mathbf{f}\_t &= \sigma\left( \mathbf{W}\_f^T \[ \mathbf{h}\_{t-1}, \mathbf{x}\_t \] + \mathbf{b}\_f \right)
-\end{aligned}
-$$
-
----
-
-<br><br>
-
-.center.width-80[![](figures/lec6/lstm2.svg)]
-
-$$
-\begin{aligned}
-\mathbf{i}\_t &= \sigma\left( \mathbf{W}\_i^T \[ \mathbf{h}\_{t-1}, \mathbf{x}\_t \] + \mathbf{b}\_i \right) \\\\
-\bar{\mathbf{c}}\_t &= \text{tanh}\left( \mathbf{W}\_c^T \[ \mathbf{h}\_{t-1}, \mathbf{x}\_t \] + \mathbf{b}\_c \right)
-\end{aligned}
-$$
-
----
-
-<br><br>
-
-.center.width-80[![](figures/lec6/lstm3.svg)]
-
-$$
-\begin{aligned}
-\mathbf{c}\_t &= \mathbf{f}\_t \odot \mathbf{c}\_{t-1} + \mathbf{i}\_t \odot \bar{\mathbf{c}}\_t
-\end{aligned}
-$$
-
----
-
-<br><br>
-
-.center.width-80[![](figures/lec6/lstm4.svg)]
-
-$$
-\begin{aligned}
-\mathbf{o}\_t &= \sigma\left( \mathbf{W}\_o^T \[ \mathbf{h}\_{t-1}, \mathbf{x}\_t \] + \mathbf{b}\_o \right) \\\\
-\mathbf{h}\_t &= \mathbf{o}\_t \odot \text{tanh}(\mathbf{c}\_{t})
-\end{aligned}
-$$
-
----
-
-class: middle
-
-.center.width-80[![](figures/lec6/palindrome-4.png)]
-
----
-
-class: middle
-
-## GRU
-
-The gated recurrent unit (GRU; Cho et al, 2014) is another gated recurrent cell.
-- It uses two gates instead of three: an update gate $\mathbf{z}\_t$ and a reset gate $\mathbf{r}\_t$.
-- GRUs perform similarly as LSTMs for language or speech modeling sequences, but with fewer parameters.
-- However, LSTMs remain strictly stronger than GRUs.
-
----
-
-class: middle
-
-.center.width-70[![](figures/lec6/gru.svg)]
-
-$$
-\begin{aligned}
-\mathbf{z}\_t &= \sigma\left( \mathbf{W}\_z^T  \[ \mathbf{h}\_{t-1}, \mathbf{x}\_t \] + \mathbf{b}\_z \right) \\\\
-\mathbf{r}\_t &= \sigma\left( \mathbf{W}\_r^T  \[ \mathbf{h}\_{t-1}, \mathbf{x}\_t \] + \mathbf{b}\_r \right) \\\\
-\bar{\mathbf{h}}\_t &= \text{tanh}\left( \mathbf{W}\_h^T  \[ \mathbf{r}\_t \odot \mathbf{h}\_{t-1}, \mathbf{x}\_t \] + \mathbf{b}\_h \right) \\\\
-\mathbf{h}\_t &= (1-\mathbf{z}\_t) \odot \mathbf{h}\_{t-1} + \mathbf{z}\_t \odot \bar{\mathbf{h}}\_t
-\end{aligned}
-$$
-
----
-
-class: middle
-
-.center.width-80[![](figures/lec6/palindrome-5.png)]
-
----
-
-class: middle
-
-.center.width-80[![](figures/lec6/length-lstm-gru.png)]
-
-.center[The models do not generalize to sequences longer than those in the training set!]
-
----
-
-# Exploding gradients
-
-Gated units prevent gradients from vanishing, but not from **exploding**.
-
-<br>
-
-.center.width-90[![](figures/lec6/loss-exploding.png)]
-
-.footnote[Credits: [pat-coady](https://pat-coady.github.io/rnn/).]
-
----
-
-class: middle
-
-.center.width-60[![](figures/lec6/gradclip.png)]
-
-The standard strategy to solve this issue is *gradient norm clipping*, which rescales the norm of the gradient to a fixed threshold $\delta$ when it is above:
-$$\tilde{\nabla} f = \frac{\nabla f}{||\nabla f||} \min(||\nabla f||, \delta).$$
+.center.width-100[![](figures/lec6/yolo-architecture.png)]
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
 ---
 
-# Orthogonal initialization
+class: middle
 
-Let us consider a simplified RNN, with no inputs, no bias, an identity activation function $\sigma$ (as in the positive part of a ReLU) and the initial recurrent state $\mathbf{h}\_0$ set to the identity matrix.
+The network predicts class scores and bounding-box regressions, and .bold[although the output comes from fully connected layers, it has a 2D structure].
 
-We have,
+- Unlike sliding window techniques, YOLO is therefore capable of reasoning globally about the image when making predictions. 
+- It sees the entire image during training and test time, so it implicitly encodes contextual information about classes as well as their appearance.
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+During training, YOLO makes the assumptions that any of the $S\times S$ cells contains at most (the center of) a single object. We define for every image, cell index $i=1, ..., S\times S$, predicted box $j=1, ..., B$ and class index $c=1, ..., C$,
+- $\mathbb{1}\_i^\text{obj}$ is $1$ if there is an object in cell $i$, and $0$ otherwise;
+- $\mathbb{1}\_{i,j}^\text{obj}$ is $1$ if there is an object in cell $i$ and predicted box $j$ is the most fitting one, and $0$ otherwise;
+- $p\_{i,c}$ is $1$ if there is an object of class $c$ in cell $i$, and $0$ and otherwise;
+- $x\_i, y\_i, w\_i, h\_i$ the annoted bouding box (defined only if $\mathbb{1}\_i^\text{obj}=1$, and relative in location and scale to the cell);
+- $c\_{i,j}$ is the IoU between the predicted box and the ground truth target.
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+The training procedure first computes on each image the value of the $\mathbb{1}\_{i,j}^\text{obj}$'s and $c\_{i,j}$, and then does one step to minimize the multi-part loss function
+.smaller-x[
 $$
 \begin{aligned}
-\mathbf{h}\_t &= \sigma\left( \mathbf{W}^T\_{xh} \mathbf{x}\_t + \mathbf{W}^T\_{hh} \mathbf{h}\_{t-1} + \mathbf{b}\_h \right) \\\\
-&= \mathbf{W}^T\_{hh} \mathbf{h}\_{t-1} \\\\
-&= \mathbf{W}^T \mathbf{h}\_{t-1}.
+& \lambda\_\text{coord} \sum\_{i=1}^{S \times S} \sum\_{j=1}^B \mathbb{1}\_{i,j}^\text{obj} \left( (x\_i - \hat{x}\_{i,j})^2 + (y\_i - \hat{y}\_{i,j})^2 + (\sqrt{w\_i} - \sqrt{\hat{w}\_{i,j}})^2 + (\sqrt{h\_i} - \sqrt{\hat{h}\_{i,j}})^2\right)\\\\
+& + \lambda\_\text{obj} \sum\_{i=1}^{S \times S} \sum\_{j=1}^B \mathbb{1}\_{i,j}^\text{obj} (c\_{i,j} - \hat{c}\_{i,j})^2 + \lambda\_\text{noobj} \sum\_{i=1}^{S \times S} \sum\_{j=1}^B (1-\mathbb{1}\_{i,j}^\text{obj}) \hat{c}\_{i,j}^2  \\\\
+& + \lambda\_\text{classes} \sum\_{i=1}^{S \times S} \mathbb{1}\_i^\text{obj} \sum\_{c=1}^C (p\_{i,c} - \hat{p}\_{i,c})^2 
 \end{aligned}
 $$
+]
 
-For a sequence of size $n$, it comes
-$$\mathbf{h}\_n = \mathbf{W}(\mathbf{W}(\mathbf{W}(...(\mathbf{W}\mathbf{h}\_0)...))) = \mathbf{W}^n\mathbf{h}\_0 = \mathbf{W}^n I = \mathbf{W}^n.$$
+where $\hat{p}\_{i,c}$, $\hat{x}\_{i,j}$, $\hat{y}\_{i,j}$, $\hat{w}\_{i,j}$, $\hat{h}\_{i,j}$ and $\hat{c}\_{i,j}$ are the network outputs.
 
-Ideally, we would like $\mathbf{W}^n$ to neither vanish nor explode as $n$ increases.
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle 
+
+Training YOLO relies on many engineering choices that illustrate well how involved is deep learning in practice:
+
+- pre-train the 20 first convolutional layers on ImageNet classification;
+- use $448 \times 448$ input for detection, instead of $224 \times 224$;
+- use Leaky ReLUs for all layers;
+- dropout after the first convolutional layer;
+- normalize bounding boxes parameters in $[0,1]$;
+- use a quadratic loss not only for the bounding box coordinates, but also for the confidence and the class scores;
+- reduce weight of large bounding boxes by using the square roots of the size in the loss;
+- reduce the importance of empty cells by weighting less the confidence-related loss on them;
+- data augmentation with scaling, translation and HSV transformation.
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/YmbhRxQkLMg" frameborder="0" allowfullscreen></iframe>
+
+Redmon, 2017.
 
 ---
 
 class: middle
 
-## Fibonacci digression
+## SSD
 
-The Fibonacci sequence is
-$$0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, ...$$
-It grows fast! But how fast?
+The Single Short Multi-box Detector (SSD; Liu et al, 2015) improves upon YOLO by using a fully-convolutional architecture and multi-scale maps.
+
+.center.width-80[![](figures/lec6/ssd.png)]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+# Region-based CNNs
+
+An alternative strategy to having a huge predefined set of box proposals, as in OverFeat or YOLO, is to rely on *region proposals* first extracted from the image.
+
+The main family of architectures following this principle are **region-based** convolutional neural networks:
+- (Slow) R-CNN (Girshick et al, 2014)
+- Fast R-CNN (Girshick et al, 2015)
+- Faster R-CNN (Ren et al, 2015)
+- Mask R-CNN (He et al, 2017)
 
 ---
 
 class: middle
 
-In matrix form, the Fibonacci sequence is equivalently expressed as
+## R-CNN
+
+This architecture is made of four parts:
+1. Selective search is performed on the input image to select multiple high-quality region proposals.
+2. A pre-trained CNN is selected and put before the output layer. It resizes each proposed region into the input dimensions required by the network and uses a forward pass to output features for the proposals.
+3. The features are fed to an SVM for predicting the class.
+4. The features are fed to a linear regression model for predicting the bounding-box.
+
+.center.width-90[![](figures/lec6/r-cnn.svg)]
+
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec6/selective-search.png)]
+
+Selective search (Uijlings et al, 2013) looks at the image through windows of different sizes, and for each size tries to group together adjacent pixels that are similar by texture, color or intensity.
+
+---
+
+class: middle
+
+## Fast R-CNN
+
+.grid[
+.kol-3-5[
+- The main performance bottleneck of an R-CNN model is the need to independently extract features for each proposed region.
+- Fast R-CNN uses the entire image as input to the CNN for feature extraction, rather than each proposed region.
+- Fast R-CNN introduces RoI pooling for producing feature vectors of fixed size from region proposals of different sizes.
+
+]
+.kol-2-5[.width-100[![](figures/lec6/fast-rcnn.svg)]]
+]
+
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
+
+---
+
+class: middle
+
+.center.width-75[![](figures/lec6/faster-rcnn.svg)]
+
+## Faster R-CNN
+
+- The performance of both R-CNN and Fast R-CNN is tied to the quality of the region proposals from selective search.
+- Faster R-CNN replaces selective search with a region proposal network.
+- This network reduces the number of proposed regions generated, while ensuring precise object detection.
+
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
+
+---
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/V4P_ptn2FF4" frameborder="0" allowfullscreen></iframe>
+
+YOLO (v2) vs YOLO 9000 vs SSD vs Faster RCNN
+
+---
+
+class: middle
+
+## Takeaways
+
+- One-stage detectors (YOLO, SSD, RetinaNet, etc) are fast for inference but are usually not the most accurate object detectors.
+- Two-stage detectors (Fast R-CNN, Faster R-CNN, R-FCN, Light head R-CNN, etc) are usually slower but are often more accurate.
+- All networks depend on lots of engineering decisions.
+
+---
+
+class: middle
+
+# Segmentation
+
+---
+
+class: middle
+
+Semantic **segmentation** is the task of partitioning an image into regions of different semantic categories. 
+
+These semantic regions label and predict objects at the pixel level.
+
+.center.width-70[![](figures/lec6/segmentation.svg)]
+
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
+
+---
+
+# Fully convolutional networks
+
+The historical approach to image segmentation was to define a measure of
+similarity between pixels, and to cluster groups of similar pixels. Such
+approaches account poorly for semantic content.
+
+The deep-learning approach re-casts semantic segmentation as pixel
+classification, and re-uses networks trained for image classification by making
+them **fully convolutional** (FCNs).
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec6/fcn-1.png)]
+
+.footnote[Credits: [CS231n, Lecture 11](http://cs231n.stanford.edu/slides/2018/cs231n_2018_lecture11.pdf), 2018.]
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec6/fcn-2.png)]
+
+.footnote[Credits: [CS231n, Lecture 11](http://cs231n.stanford.edu/slides/2018/cs231n_2018_lecture11.pdf), 2018.]
+
+---
+
+# Transposed convolution
+
+The convolution and pooling layers introduced so far often reduce the input width and height, or keep them unchanged.
+- Semantic segmentation requires to predict values for each pixel, and therefore needs to increase input width and height.
+- Fully connected layers could be used for that purpose but would face the same limitations as before (spatial specialization, too many parameters).
+- Ideally, we would like layers that implement the inverse of convolutional
+ and pooling layers.
+
+---
+
+class: middle
+
+A **transposed convolution** is a convolution where the implementation of the forward and backward passes
+are swapped.
+
+Given a convolutional kernel $\mathbf{u}$,
+- the forward pass is implemented as $v(\mathbf{h}) = \mathbf{U}^T v(\mathbf{x})$ with appropriate reshaping, thereby effectively up-sampling an input $v(\mathbf{x})$ into a larger one;
+- the backward pass is computed by multiplying the loss by $\mathbf{U}$ instead of $\mathbf{U}^T$.
+
+Transposed convolutions are also referred to as fractionally-strided convolutions or deconvolutions (mistakenly).
+
+.center.width-70[![](figures/lec6/transposed-convolution.svg)]
+
+---
+
+class: middle
+
+.pull-right[<br><br>![](figures/lec6/no_padding_no_strides_transposed.gif)]
 
 $$
+\begin{aligned}
+\mathbf{U}^T v(\mathbf{x}) &= v(\mathbf{h}) \\\\
 \begin{pmatrix}
-f\_{k+2} \\\\
-f\_{k+1}
-\end{pmatrix} =
-\begin{pmatrix}
-1 & 1 \\\\
-1 & 0
-\end{pmatrix}\begin{pmatrix}
-f\_{k+1} \\\\
-f\_{k}
-\end{pmatrix}.
-$$
-
-With $\mathbf{f}\_0 = \begin{pmatrix}
-1 \\\\
-0
-\end{pmatrix}$, we have
-$$\mathbf{f}\_{k+1} = \mathbf{A} \mathbf{f}\_{k} = \mathbf{A}^{k+1} \mathbf{f}\_{0}.$$
-
----
-
-class: middle
-
-The matrix $\mathbf{A}$ can be diagonalized as
-$$\mathbf{A} = \mathbf{S} \Lambda \mathbf{S}^{-1},$$
-where
-$$
-\begin{aligned}
-\Lambda &= \begin{pmatrix}
-\varphi & 0 \\\\
-0 & -\varphi^{-1}
-\end{pmatrix}\\\\
-\mathbf{S} &= \begin{pmatrix}
-\varphi & -\varphi^{-1} \\\\
-1 & 1
+1 & 0 & 0 & 0 \\\\
+4 & 1 & 0 & 0 \\\\
+1 & 4 & 0 & 0 \\\\
+0 & 1 & 0 & 0 \\\\
+1 & 0 & 1 & 0 \\\\
+4 & 1 & 4 & 1 \\\\
+3 & 4 & 1 & 4 \\\\
+0 & 3 & 0 & 1 \\\\
+3 & 0 & 1 & 0 \\\\
+3 & 3 & 4 & 1 \\\\
+1 & 3 & 3 & 4 \\\\
+0 & 1 & 0 & 3 \\\\
+0 & 0 & 3 & 0 \\\\
+0 & 0 & 3 & 3 \\\\
+0 & 0 & 1 & 3 \\\\
+0 & 0 & 0 & 1
 \end{pmatrix}
-\end{aligned}.
-$$
+\begin{pmatrix}
+2 \\\\
+1 \\\\
+4 \\\\
+4
+\end{pmatrix} &=
+\begin{pmatrix}
+2 \\\\
+9 \\\\
+6 \\\\
+1 \\\\
+6 \\\\
+29 \\\\
+30 \\\\
+7 \\\\
+10 \\\\
+29 \\\\
+33 \\\\
+13 \\\\
+12 \\\\
+24 \\\\
+16 \\\\
+4
+\end{pmatrix}
+\end{aligned}$$
 
-In particular,
-$$\mathbf{A}^n = \mathbf{S} \Lambda^n \mathbf{S}^{-1}.$$
-
-Therefore, the Fibonacci sequence grows **exponentially fast** with the golden ratio $\varphi$.
+.footnote[Credits: Dumoulin and Visin, [A guide to convolution arithmetic for deep learning](https://arxiv.org/abs/1603.07285), 2016.]
 
 ---
 
-class: middle
+# FCNs for segmentation
 
-## Theorem
-
-Let $\rho(\mathbf{A})$ be the spectral radius of the matrix $\mathbf{A}$, defined as
-$$\rho(\mathbf{A}) = \max\\\{ |\lambda\_1|,...,|\lambda\_d| \\\}.$$
-
-We have:
-- if $\rho(\mathbf{A}) < 1$ then $\lim\_{n\to\infty} ||\mathbf{A}^n|| = \mathbf{0}$ (= vanishing activations),
-- if $\rho(\mathbf{A}) > 1$ then $\lim\_{n\to\infty} ||\mathbf{A}^n|| = \infty$ (= exploding activations).
-
----
-
-class: middle
-
-.center[
-<video loop controls preload="auto" height="400" width="600">
-  <source src="./figures/lec6/eigenvalue_vanish.m4v" type="video/mp4">
-</video>
-
-$\rho(\mathbf{A}) < 1$, $\mathbf{A}^n$ vanish.
+.grid[
+.kol-3-4[
+The simplest design of a fully convolutional network for semantic segmentation consists in:
+- using a (pre-trained) convolutional network for downsampling and extracting image features;
+- replacing the dense layers with a  $1 \times 1$ convolution layer to  transform the number of channels into the number of categories;
+- upsampling the feature map to the size of the input image by using one (or several) transposed convolution layer(s).
+]
+.kol-1-4[.center.width-90[![](figures/lec6/fcn.svg)]]
 ]
 
-.footnote[Credits: Stephen Merety, [Explaining and illustrating orthogonal initialization for recurrent neural networks](https://smerity.com/articles/2016/orthogonal_init.html), 2016.]
+---
+
+class: middle
+
+Contrary to fully connected networks, the dimensions of the output of a fully convolutional network is not fixed. It directly depends on the dimensions of the input, which can be images of arbitrary sizes.
 
 ---
 
 class: middle
 
-.center[
-<video loop controls preload="auto" height="400" width="600">
-  <source src="./figures/lec6/eigenvalue_explode.m4v" type="video/mp4">
-</video>
+.center.width-100[![](figures/lec6/fcn-convdeconv.png)]
 
-$\rho(\mathbf{A}) > 1$, $\mathbf{A}^n$ explode.
-]
-
-.footnote[Credits: Stephen Merety, [Explaining and illustrating orthogonal initialization for recurrent neural networks](https://smerity.com/articles/2016/orthogonal_init.html), 2016.]
+.footnote[Credits: [Noh et al](https://arxiv.org/abs/1505.04366), 2015.]
 
 ---
 
 class: middle
 
-## Orthogonal initialization
+## UNet
 
-If $\mathbf{A}$ is orthogonal, then it is diagonalizable and all its eigenvalues are equal to $-1$ or $1$. In this case, the norm of
-$$\mathbf{A}^n = \mathbf{S} \Lambda^n \mathbf{S}^{-1}$$
-remains bounded.
+The UNet architecture builds upon the previous FCN architecture. 
 
-- Therefore, initializing $\mathbf{W}$ as a random orthogonal matrix will guarantee that activations will neither vanish nor explode.
-- In practice, a random orthogonal matrix can be found through the SVD decomposition or the QR factorization of a random matrix.
-- This initialization strategy is known as **orthogonal initialization**.
+It consists in symmetric contraction and expansion paths, along with a concatenation of high resolution features from the contracting path to the unsampled features from the expanding path. These connections allow for localization.
 
----
+.center.width-80[![](figures/lec6/unet.png)]
 
-class: middle
-
-In Tensorflow's `Orthogonal` initializer:
-
-```python
-# Generate a random matrix
-a = random_ops.random_normal(flat_shape, dtype=dtype, seed=self.seed)
-# Compute the qr factorization
-q, r = gen_linalg_ops.qr(a, full_matrices=False)
-# Make Q uniform
-d = array_ops.diag_part(r)
-q *= math_ops.sign(d)
-if num_rows < num_cols:
-  q = array_ops.matrix_transpose(q)
-return self.gain * array_ops.reshape(q, shape)
-```
-
-.footnote[Credits: Tensorflow, [tensorflow/python/ops/init_ops.py](https://github.com/tensorflow/tensorflow/blob/r1.13/tensorflow/python/ops/init_ops.py#L581).]
-
+.footnote[Credits: [Ronneberger et al](https://arxiv.org/abs/1505.04597), 2015.]
 
 ---
 
 class: middle
 
-.center[
-<video loop controls preload="auto" height="400" width="600">
-  <source src="./figures/lec6/eigenvalue_orthogonal.m4v" type="video/mp4">
-</video>
+.center.width-50[![](figures/lec6/mask-rcnn.svg)]
 
-$\mathbf{A}$ is orthogonal.
-]
+## Mask R-CNN
 
-.footnote[Credits: Stephen Merety, [Explaining and illustrating orthogonal initialization for recurrent neural networks](https://smerity.com/articles/2016/orthogonal_init.html), 2016.]
+Mask R-CNN extends the Faster R-CNN model for semantic segmentation. 
+- The RoI pooling layer is replaced with an RoI alignment layer. 
+- It branches off to an FCN for predicting a segmentation mask.
+- Object detection combined with mask prediction enables *instance segmentation*.
 
----
-
-class: middle
-
-Exploding activations are also the reason why squashing non-linearity functions (such as $\text{tanh}$) are preferred in RNNs.
-- They avoid recurrent states from exploding by upper bounding $||\mathbf{h}\_t||$.
-- (At least when running the network forward.)
-
-???
-
-https://github.com/nyu-dl/NLP_DL_Lecture_Note/blob/master/lecture_note.pdf
-
----
-
-class:  middle
-
-# Applications
-
-(some)
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
 
 ---
 
 class: middle
 
-## Sentiment analysis
+.center.width-100[![](figures/lec6/mask-rcnn-results.png)]
 
-.center[
-.width-100[![](figures/lec6/app-sentiment-analysis.png)]
+.footnote[Credits: [He et al](https://arxiv.org/abs/1703.06870), 2017.]
 
-Document-level modeling for sentiment analysis (= text classification), <br>with stacked, bidirectional and gated recurrent networks.
-]
+---
 
-.footnote[Credits: Duyu Tang et al, [Document Modeling with Gated Recurrent Neural Network for Sentiment Classification](http://www.aclweb.org/anthology/D15-1167), 2015.]
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/OOT3UIXZztE" frameborder="0" allowfullscreen></iframe>
 
 ---
 
 class: middle
 
-## Language models
+It is noteworthy that for detection and semantic segmentation, there is an heavy
+re-use of large networks trained for classification.
 
-Model language as a Markov chain, such that sentences are sequences of words $\mathbf{w}\_{1:T}$ drawn repeatedly from
-$$p(\mathbf{w}\_t | \mathbf{w}\_{1:t-1}).$$
-This is an instance of sequence synthesis, for which predictions are computed at all time steps $t$.
+.bold[The models themselves, as much as the source code of the algorithm that
+produced them, or the training data, are generic and re-usable assets.]
 
----
-
-class: middle
-
-.center[
-.width-80[![](figures/lec6/app-generating-sequences.png)]
-]
-
-.footnote[Credits: Alex Graves, [Generating Sequences With Recurrent Neural Networks](https://arxiv.org/abs/1308.0850), 2013.]
-
----
-
-class: middle
-
-.center[
-.width-80[![](figures/lec6/textgenrnn_console.gif)]
-]
-
-.footnote[Credits: [Max Woolf](https://drive.google.com/file/d/1mMKGnVxirJnqDViH7BDJxFqWrsXlPSoK/view?usp=sharing), 2018.]
-
----
-
-class: middle
-
-## Sequence synthesis
-
-The same generative architecture applies to any kind of sequences.
-
-E.g., [`sketch-rnn-demo`](https://magenta.tensorflow.org/assets/sketch_rnn_demo/index.html) for sketches defined as sequences of strokes.
-
-.center.width-40[![](figures/lec6/sketch-rnn.png)]
-
----
-
-class: middle
-
-## Neural machine translation
-
-.center[
-.width-100[![](figures/lec6/nmt.png)]
-]
-
-.footnote[Credits: Yonghui Wu et al, [Google’s Neural Machine Translation System: Bridging the Gap between Human and Machine Translation](https://arxiv.org/abs/1609.08144), 2016.]
-
----
-
-class: middle
-
-.center[
-.width-100[![](figures/lec6/nmt2.gif)]
-]
-
-.footnote[Credits: Yonghui Wu et al, [Google’s Neural Machine Translation System: Bridging the Gap between Human and Machine Translation](https://arxiv.org/abs/1609.08144), 2016.]
-
----
-
-class: middle
-
-## Text-to-speech synthesis
-
-.width-80.center[![](figures/lec6/tacotron.png)]
-
-.footnote[Image credits: [Shen et al, 2017. arXiv:1712.05884](https://arxiv.org/abs/1712.05884).]
-
----
-
-class: middle, black-slide
-
-.center[
-<iframe width="640" height="400" src="https://www.youtube.com/embed/Ipi40cb_RsI?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
-]
-
-## Learning to control 
-
-A recurrent network playing Mario Kart.
-
----
-
-
-class: middle
-
-# Beyond sequences 
-
----
-
-class: middle
-
-.center.circle.width-30[![](figures/lec6/lecun.jpg)]
-
-.italic[
-An increasingly large number of .bold[people are defining the networks procedurally in a data-dependent way (with loops and conditionals)], allowing them to change dynamically as a function of the input data fed to them. It's really .bold[very much like a regular program, except it's parameterized].
-]
-
-.pull-right[Yann LeCun (Director of AI Research, Facebook, 2018)]
-
----
-
-# Neural computers
-
-.center.width-55[![](figures/lec6/turing-net.png)]
-
-.center[Any Turing machine can be simulated by a recurrent neural network<br>
-(Siegelmann and Sontag, 1995)]
-
-???
-
-This implies that usual programs can all be equivalently implemented as a neural network, in theory.
-
----
-
-class: middle
-
-.center.width-80[![](figures/lec6/dnc.png)]
-
-Networks can be coupled with memory storage to produce **neural computers**: 
-- The controller processes the input sequence and interacts with the memory to generate the output. 
-- The read and write operations *attend to* all the memory addresses.
-
-???
-
-- A Turing machine is not very practical to implement useful programs.
-- However, we can simulate the general architecture of a computer in a neural network.
-
----
-
-class: middle
-
-.width-100[![](figures/lec6/DNC_training_recall_task.gif)]
-
-A differentiable neural computer being trained to store and recall dense binary numbers.
-Upper left: the input (red) and target (blue), as 5-bit words and a 1 bit interrupt signal.
-Upper right: the model's output
-
----
-
-# Programs as neural nets
-
-The topology of a recurrent network unrolled through time is *dynamic*. 
-
-It depends on:
-- the input sequence and its size
-- a graph construction algorithms which consumes input tokens in sequence to add layers to the graph of computation.
-
-This principle generalizes to:
-- arbitrarily structured data (e.g., sequences, trees, **graphs**)
-- arbitrary graph of computation construction algorithm that traverses these structures (e.g., including for-loops or recursive calls).
-
----
-
-class: middle
-
-## Neural message passing
-
-.center[
-.width-50[![](figures/lec6/graph.png)] .width-60[![](figures/lec6/nmp.png)]
-]
-
-Even though the graph topology is dynamic, the unrolled computation is fully differentiable. The program is trainable.
-
-.footnote[Credits: [Henrion et al](https://dl4physicalsciences.github.io/files/nips_dlps_2017_29.pdf), 2017.]
-
-
----
-
-class: middle
-
-## Graph neural network for object detection in point clouds
-
-.center.width-100[![](figures/lec6/cloud.png)] 
-
-.footnote[Credits: Shi and Rajkumar, [Point-GNN](https://arxiv.org/abs/2003.01251), 2020.]
-
----
-
-class: middle 
-
-## Quantum chemistry with graph networks
-
-.center.width-65[![](figures/lec6/chemistry.png)] 
-
-.footnote[Credits: [Schutt et al](https://www.nature.com/articles/ncomms13890), 2017.]
-
-???
-
-quantum-mechanical properties of molecular systems
-
----
-
-class: middle 
-
-## Learning to simulate physics with graph networks
-
-.center.width-100[![](figures/lec6/physics.png)] 
-
-.footnote[Credits: [Sanchez-Gonzalez et al](https://arxiv.org/abs/2002.09405), 2020.]
-
----
-
-
-class: middle, black-slide
-
-.center[
-<video loop controls preload="auto" height="400" width="600">
-  <source src="./figures/lec6/physics-simulation.mp4" type="video/mp4">
-</video>
-]
-
-.footnote[Credits: [Sanchez-Gonzalez et al](https://arxiv.org/abs/2002.09405), 2020.]
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
 ---
 
@@ -865,11 +662,3 @@ class: end-slide, center
 count: false
 
 The end.
-
----
-
-count: false
-
-# References
-
-- Kyunghyun Cho, "Natural Language Understanding with Distributed Representation", 2015.

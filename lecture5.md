@@ -2,7 +2,7 @@ class: middle, center, title-slide
 
 # Deep Learning
 
-Lecture 5: Training neural networks
+Lecture 5: Convolutional networks
 
 <br><br>
 Prof. Gilles Louppe<br>
@@ -10,275 +10,121 @@ Prof. Gilles Louppe<br>
 
 ???
 
-https://drive.google.com/file/d/1e_9W8q9PL20iqOR-pfK89eILc_VtYaw1/view
+R: argue for inductive bias
+R: symmetries conv https://www.youtube.com/watch?v=0_O8PdZBc5s
+R: https://www.pnas.org/content/116/4/1074
 
 ---
 
 # Today
 
-How to **optimize parameters** efficiently?
+How to **make neural networks see**?
 
-- Optimizers
-- Initialization
-- Normalization
-
----
-
-class: middle
-
-## A practical recommendation
-
-Training a massive deep neural network is long, complex and sometimes confusing. 
-
-A first step towards understanding, debugging and optimizing neural networks is to make use of visualization tools such as TensorBoard for
-- plotting losses and metrics, 
-- visualizing computational graphs,
-- or show additional data as the network is being trained.
-
-.center.width-45[![](figures/lec5/tensorboard.png)]
+- A little history
+- Convolutions
+- Pooling
+- Convolutional networks
+- Under the hood
 
 ---
 
 class: middle
 
-# Optimizers
-
----
-
-# Gradient descent
-
-To minimize a loss $\mathcal{L}(\theta)$ of the form
-$$\mathcal{L}(\theta) = \frac{1}{N} \sum\_{n=1}^N \ell(y\_n, f(\mathbf{x}\_n; \theta)),$$
-standard **batch gradient descent** (GD) consists in applying the update rule
-$$\begin{aligned}
-g\_t &= \frac{1}{N} \sum\_{n=1}^N \nabla\_\theta \ell(y\_n, f(\mathbf{x}\_n; \theta\_t)) \\\\
-\theta\_{t+1} &= \theta\_t - \gamma g\_t,
-\end{aligned}$$
-where $\gamma$ is the learning rate.
+# A little history
 
 ---
 
 class: middle
 
-.center[
-<video loop controls preload="auto" height="600" width="600">
-  <source src="./figures/lec5/opt-gd.mp4" type="video/mp4">
-</video>
+## Visual perception (Hubel and Wiesel, 1959-1962)
+
+- David Hubel and Torsten Wiesel discover the neural basis of **visual perception**.
+- Awarded the Nobel Prize of Medicine in 1981 for their discovery.
+
+.grid.center[
+.kol-4-5.center[.width-80[![](figures/lec5/cat.png)]]
+.kol-1-5[<br>.width-100.circle[![](figures/lec5/hw1.jpg)].width-100.circle[![](figures/lec5/hw2.jpg)]]
 ]
 
 ---
 
-class: middle
-
-While it makes sense to compute the gradient exactly,
-- it takes time to compute and becomes inefficient for large $N$,
-- it is an empirical estimation of an hidden quantity (the expected risk), and any partial sum is also an unbiased estimate, although of greater variance.
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-
-To illustrate how partial sums are good estimates, consider an ideal case where the training set is the same set of $M \ll N$ samples replicated $K$ times. Then,
-$$\begin{aligned}
-\mathcal{L}(\theta) &= \frac{1}{N} \sum\_{i=n}^N \ell(y\_n, f(\mathbf{x}\_n; \theta)) \\\\
-&=\frac{1}{N} \sum\_{k=1}^K \sum\_{m=1}^M \ell(y\_m, f(\mathbf{x}\_m; \theta)) \\\\
-&=\frac{1}{N} K \sum\_{m=1}^M \ell(y\_m, f(\mathbf{x}\_m; \theta)).
-\end{aligned}$$
-Then, instead of summing over all the samples and moving by $\gamma$, we can visit only $M=N/K$ samples and move by $K\gamma$, which would cut the computation by $K$.
-
-Although this is an ideal case, there is redundancy in practice that results in similar behaviors.
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-
-## Stochastic gradient descent
-
-To reduce the computational complexity, **stochastic gradient descent** (SGD) consists in updating the parameters after every sample
-$$\begin{aligned}
-g\_t &= \nabla\_\theta \ell(y\_{n(t)}, f(\mathbf{x}\_{n(t)}; \theta\_t)) \\\\
-\theta\_{t+1} &= \theta\_t - \gamma g\_t.
-\end{aligned}$$
-
----
-
-class: middle
+class: middle, black-slide
 
 .center[
-<video loop controls preload="auto" height="600" width="600">
-  <source src="./figures/lec5/opt-sgd.mp4" type="video/mp4">
-</video>
+
+<iframe width="640" height="480" src="https://www.youtube.com/embed/IOHayh06LJ4?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
+
 ]
 
----
-
-class: middle
-
-The stochastic behavior of SGD helps **evade local minima**.
-
-While being computationally faster than batch gradient descent,
-- gradient estimates used by SGD can be *very noisy*,
-- SGD does not benefit from the speed-up of **batch-processing**.
+.center[Hubel and Wiesel]
 
 ---
 
-class: middle
-
-## Mini-batching
-
-Instead, **mini-batch** SGD consists of visiting the samples in mini-batches and updating the parameters each time
-$$
-\begin{aligned}
-g\_t &= \frac{1}{B} \sum\_{b=1}^B \nabla\_\theta \ell(y\_{n(t,b)}, f(\mathbf{x}\_{n(t,b)}; \theta\_t)) \\\\
-\theta\_{t+1} &= \theta\_t - \gamma g\_t,
-\end{aligned}
-$$
-where the order ${n(t,b)}$ to visit the samples can be either sequential or random.
-
-- Increasing the batch size $B$ reduces the variance of the gradient estimates and enables the speed-up of batch processing.
-- The interplay between $B$ and $\gamma$ is still unclear.
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-
-## Limitations
-
-The gradient descent method makes strong assumptions about
-- the magnitude of the local curvature to set the step size,
-- the isotropy of the curvature, so that the same step size $\gamma$ makes sense in all directions.
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
+class: middle, black-slide
 
 .center[
-<video loop controls preload="auto" height="550" width="550">
-  <source src="./figures/lec5/opt-gd-easy-0.01.mp4" type="video/mp4">
-</video>
-<br>$\gamma=0.01$
+
+<iframe width="640" height="480" src="https://www.youtube.com/embed/y_l4kQ5wjiw?&loop=1&start=97" frameborder="0" volume="0" allowfullscreen></iframe>
+
 ]
 
----
-
-class: middle
-
-.center[
-<video loop controls preload="auto" height="550" width="550">
-  <source src="./figures/lec5/opt-gd-difficult-0.01.mp4" type="video/mp4">
-</video>
-<br>$\gamma=0.01$
-]
-
----
-
-class: middle
-
-.center[
-<video loop controls preload="auto" height="550" width="550">
-  <source src="./figures/lec5/opt-gd-difficult-0.1.mp4" type="video/mp4">
-</video>
-<br>$\gamma=0.1$
-]
-
----
-
-class: middle
-
-.center[
-<video loop controls preload="auto" height="550" width="550">
-  <source src="./figures/lec5/opt-gd-difficult-0.4.mp4" type="video/mp4">
-</video>
-<br>$\gamma=0.4$
-]
-
----
-
-class: middle
-
-## Wolfe conditions
-
-Let us consider a function $f$ to minimize along $x$, following a direction of descent $p$.
-
-For $0 < c\_1 < c\_2 < 1$, the Wolfe conditions on the step size $\gamma$ are as follows:
-- Sufficient decrease condition:
-$$f(x + \gamma p) \leq f(x) + c\_1 \gamma p^T \nabla f(x)$$
-- Curvature condition:
-$$c\_2 p^T \nabla f(x) \leq p^T \nabla f(x + \gamma p)$$
-
-Typical values are $c\_1 = 10^{-4}$ and $c\_2 = 0.9$.
+.center[Hubel and Wiesel]
 
 ???
 
-- The sufficient decrease condition ensures that the function decreases sufficiently, as predicted by the slope of f in the direction p.
-- The curvature condition ensures that steps are not too short by ensuring that the slope has decreased (in magnitude) by some relative amount.
+During their recordings, they noticed a few interesting things:
+1. the neurons fired only when the line was in a particular place on the retina,
+2. the activity of these neurons changed depending on the orientation of the line, and
+3. sometimes the neurons fired only when the line was moving in a particular direction.
 
 ---
 
 class: middle
 
-.center[
-.width-100[![](figures/lec5/wolfe-i.png)]
-The sufficient decrease condition ensures that $f$ decreases sufficiently.<br>
-($\alpha$ is the step size.)
-]
+.width-100.center[![](figures/lec5/hw-simple.png)]
 
-.footnote[Credits: Wikipedia, [Wolfe conditions](https://en.wikipedia.org/wiki/Wolfe_conditions).]
+.footnote[Credits: Hubel and Wiesel, [Receptive fields, binocular interaction and functional architecture in the cat's visual cortex](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1359523/), 1962.]
 
 ---
 
 class: middle
 
-.center[
-.width-100[![](figures/lec5/wolfe-ii.png)]
-The curvature condition ensures that the slope has been reduced sufficiently.
-]
+.width-100.center[![](figures/lec5/hw-complex.png)]
 
-.footnote[Credits: Wikipedia, [Wolfe conditions](https://en.wikipedia.org/wiki/Wolfe_conditions).]
+.footnote[Credits: Hubel and Wiesel, [Receptive fields, binocular interaction and functional architecture in the cat's visual cortex](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1359523/), 1962.]
 
 ---
 
 class: middle
 
-The Wolfe conditions can be used to design **line search** algorithms to automatically determine a step size $\gamma\_t$, hence *ensuring convergence* towards a local minima.
+## The Mark-1 Perceptron (Rosenblatt, 1957-61)
 
-However, in deep learning,
-- these algorithms are impractical because of the size of the parameter space and the overhead it would induce,
-- they might lead to *overfitting* when the empirical risk is minimized too well.
+.center.width-80[![](figures/lec5/perceptron1.png)]
 
----
+- Rosenblatt builds the first implementation of a neural network.
+- The network is an anlogic circuit. Parameters are potentiometers.
+  
+.footnote[Credits: Frank Rosenblatt, [Principle of Neurodynamics](http://www.dtic.mil/dtic/tr/fulltext/u2/256582.pdf), 1961.]
 
-class: middle
+???
 
-## The tradeoffs large-scale learning 
 
-A fundamental result due to Bottou and Bousquet (2011) states that stochastic optimization algorithms (e.g., SGD) yield the best generalization performance (in terms of excess error) despite being the worst optimization algorithms for minimizing the empirical risk.
-
-That is, for a fixed computational budget, stochastic optimization algorithms reach a lower test error than more sophisticated algorithms (2nd order methods, line search algorithms, etc) that would fit the training error too well or would consume too large a part of the computational budget at every step.
 
 ---
 
 class: middle
 
-.center.width-80[![](figures/lec5/tradeoffs.svg)]
+.center.width-60[![](figures/lec5/perceptron2.png)]
 
-.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
+.italic["If we show the perceptron a stimulus, say a square, and associate a response to that square, this response will immediately **generalize perfectly to all
+transforms** of the square under the transformation group [...]."]
 
----
+.footnote[Credits: Frank Rosenblatt, [Principle of Neurodynamics](http://www.dtic.mil/dtic/tr/fulltext/u2/256582.pdf), 1961.]
 
-# Momentum
+???
 
-.center.width-80[![](figures/lec5/floor.png)]
 
-In the situation of small but consistent gradients, as through valley floors, gradient descent moves **very slowly**.
+This is quite similar to Hubel and Wiesel's simple and complex cells!
 
 ---
 
@@ -286,25 +132,132 @@ class: middle
 
 
 
-An improvement to gradient descent is to use **momentum** to add inertia in the choice of the step direction, that is
+## AI winter (Minsky and Papert, 1969+)
 
-$$\begin{aligned}
-u\_t  &= \alpha u\_{t-1} - \gamma g\_t \\\\
-\theta\_{t+1} &= \theta\_t + u\_t.
-\end{aligned}$$
+- Minsky and Papert prove a series of impossibility results for the perceptron (or rather, a narrowly defined variant thereof).
+- **AI winter** follows.
+
+.center[.width-80[![](figures/lec5/minsky.png)] .width-20[![](figures/lec5/minsky-shape.png)]]
+
+.footnote[Credits: Minsky and Papert, Perceptrons: an Introduction to Computational Geometry, 1969.]
+
+---
+
+class: middle
+
+.center.width-40[![](figures/lec5/werbos.png)]
+
+## Automatic differentiation (Werbos, 1974)
+
+- Werbos formulate an arbitrary function as a computational graph.
+- Symbolic derivatives are computed by dynamic programming.
+
+.footnote[Credits: Paul Werbos, Beyond regression: new tools for prediction and analysis in the behavioral sciences, 1974.]
+
+---
+
+class: middle
+
+## Neocognitron (Fukushima, 1980)
+
+.center.width-90[![](figures/lec5/neocognitron1.png)]
+
+Fukushima proposes a direct neural network implementation of the hierarchy model of the visual nervous system of Hubel and Wiesel.
+
+.footnote[Credits: Kunihiko Fukushima, [Neocognitron: A Self-organizing Neural Network Model](https://www.rctn.org/bruno/public/papers/Fukushima1980.pdf), 1980.]
+
+---
+
+class: middle
 
 .grid[
-.kol-2-3[
-- The new variable $u\_t$ is the velocity. It corresponds to the direction and speed by which the parameters move as the learning dynamics progresses, modeled as an exponentially decaying moving average of negative gradients.
-- Gradient descent with momentum has three nice properties:
-    - it can go through local barriers,
-    - it accelerates if the gradient does not change much,
-    - it dampens oscillations in narrow valleys.
+.kol-1-3.center[.width-100[![](figures/lec5/neocognitron2.png)]
+Convolutions]
+.kol-2-3.center[.width-100[![](figures/lec5/neocognitron3.png)]
+Feature hierarchy]
 ]
-.kol-1-3[
-.center.width-100[![](figures/lec5/momentum.svg)]
+
+.footnote[Credits: Kunihiko Fukushima, [Neocognitron: A Self-organizing Neural Network Model](https://www.rctn.org/bruno/public/papers/Fukushima1980.pdf), 1980.]
+
+???
+
+- Built upon **convolutions** and enables the composition of a *feature hierarchy*.
+- Biologically-inspired training algorithm, which proves to be largely **inefficient**.
+
+---
+
+class: middle
+
+## Backpropagation (Rumelhart et al, 1986)
+
+.grid[
+.kol-1-2[
+- Rumelhart and Hinton introduce **backpropagation** in multi-layer networks with sigmoid non-linearities and sum of squares loss function.
+- They advocate for batch gradient descent in supervised learning.
+- Discuss online gradient descent, momentum and random initialization.
+- Depart from *biologically plausible* training algorithms.
+]
+.kol-1-2[
+.center.width-100[![](figures/lec5/rumelhart.png)]
 ]
 ]
+
+
+
+.footnote[Credits: Rumelhart et al, [Learning representations by back-propagating errors](http://www.cs.toronto.edu/~hinton/absps/naturebp.pdf), 1986.]
+
+---
+
+class: middle
+
+## Convolutional networks (LeCun, 1990)
+
+- LeCun trains a convolutional network by backpropagation.
+- He advocates for end-to-end feature learning in image classification.
+
+.center.width-70[![](figures/lec5/lenet-1990.png)]
+
+.footnote[Credits: LeCun et al, [Handwritten Digit Recognition with a Back-Propagation Network](http://yann.lecun.com/exdb/publis/pdf/lecun-90c.pdf), 1990.]
+
+---
+
+class: middle, black-slide
+
+.center[
+
+<iframe width="640" height="480" src="https://www.youtube.com/embed/FwFduRA_L6Q?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
+
+]
+
+.center[LeNet-1 (LeCun et al, 1993)]
+
+---
+
+class: middle
+
+## AlexNet (Krizhevsky et al, 2012)
+
+- Krizhevsky trains a convolutional network on ImageNet with two GPUs.
+- 16.4% top-5 error on ILSVRC'12, outperforming all other entries by 10% or more.
+- This event triggers the deep learning revolution.
+
+.center.width-100[![](figures/lec5/alexnet.png)]
+
+---
+
+class: middle
+
+# Convolutions
+
+---
+
+class: middle
+
+If they were handled as normal "unstructured" vectors, high-dimensional signals such as sound samples or images would require models of intractable size.
+
+E.g., a linear layer taking $256\times 256$ RGB images as input and producing an image of same size would require
+$$(256 \times 256 \times 3)^2 \approx 3.87e+10$$
+parameters, with the corresponding memory footprint (150Gb!), and excess of capacity.
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
@@ -312,412 +265,900 @@ u\_t  &= \alpha u\_{t-1} - \gamma g\_t \\\\
 
 class: middle
 
-The hyper-parameter $\alpha$ controls how recent gradients affect the current update.
-- Usually, $\alpha=0.9$, with $\alpha > \gamma$.
-- If at each update we observed $g$, the step would (eventually) be
-$$u = -\frac{\gamma}{1-\alpha} g.$$
-- Therefore, for $\alpha=0.9$, it is like multiplying the maximum speed by $10$ relative to the current direction.
+This requirement is also inconsistent with the intuition that such large signals have some "invariance in translation". .bold[A representation meaningful at a certain location can / should be used everywhere].
+
+A convolution layer embodies this idea. It applies the same linear transformation locally everywhere while preserving the signal structure.
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
 ---
 
 class: middle
+
+.center[![](figures/lec5/1d-conv.gif)]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+# Convolutions
+
+For one-dimensional tensors, given an input vector $\mathbf{x} \in \mathbb{R}^W$ and a convolutional kernel $\mathbf{u} \in \mathbb{R}^w$,
+the discrete **convolution** $\mathbf{x} \circledast \mathbf{u}$ is a vector of size $W - w + 1$ such that
+$$\begin{aligned}
+(\mathbf{x} \circledast \mathbf{u})[i] &= \sum\_{m=0}^{w-1} x\_{m+i}  u\_m .
+\end{aligned}
+$$
+
+## Note
+Technically, $\circledast$ denotes the cross-correlation operator.
+However, most machine learning libraries call it convolution.
+
+---
+
+class: middle 
+
+Convolutions can implement differential operators:
+$$(0,0,0,0,1,2,3,4,4,4,4) \circledast (-1,1) = (0,0,0,1,1,1,1,0,0,0) $$
+.center.width-100[![](figures/lec5/conv-op1.png)]
+or crude template matchers:
+.center.width-100[![](figures/lec5/conv-op2.png)]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+
+---
+
+class: middle
+
+Convolutions generalize to multi-dimensional tensors:
+- In its most usual form, a convolution takes as input a 3D tensor $\mathbf{x} \in \mathbb{R}^{C \times H \times W}$, called the **input feature map**.
+- A kernel $\mathbf{u} \in \mathbb{R}^{C \times h \times w}$ slides across the input feature map, along its height and width. The size $h \times w$ is the size of the *receptive field*.
+- At each location,  the element-wise product between the kernel and the input elements it overlaps is computed and the results are summed up.
+
+---
+
+class: middle
+
+.center[![](figures/lec5/3d-conv.gif)]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+- The final output $\mathbf{o}$ is a 2D tensor of size $(H-h+1) \times (W-w+1)$ called the **output feature map** and such that:
+$$\begin{aligned}
+\mathbf{o}\_{j,i} &= \mathbf{b}\_{j,i} + \sum\_{c=0}^{C-1} (\mathbf{x}\_c \circledast \mathbf{u}\_c)[j,i] = \mathbf{b}\_{j,i} + \sum\_{c=0}^{C-1}  \sum\_{n=0}^{h-1} \sum\_{m=0}^{w-1}    \mathbf{x}\_{c,n+j,m+i} \mathbf{u}\_{c,n,m}
+\end{aligned}$$
+where $\mathbf{u}$ and $\mathbf{b}$ are shared parameters to learn.
+- $D$ convolutions can be applied in the same way to produce a $D \times (H-h+1) \times (W-w+1)$ feature map,
+where $D$ is the depth.
+- Swiping across channels with a 3D convolution usually makes no sense, unless the channel index has some metric mearning.
+
+---
+
+class: middle
+
+Convolutions have three additional parameters:
+- The *padding* specifies the size of a zeroed frame added arount the input.
+- The **stride** specifies a step size when moving the kernel across the signal.
+- The *dilation* modulates the expansion of the filter without adding weights.
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+## Padding
+
+Padding is useful to control the spatial dimension of the feature map, for example to keep it constant across layers.
 
 .center[
-<video loop controls preload="auto" height="600" width="600">
-  <source src="./figures/lec5/opt-momentum.mp4" type="video/mp4">
-</video>
+.width-45[![](figures/lec5/same_padding_no_strides.gif)]
+.width-45[![](figures/lec5/full_padding_no_strides.gif)]
 ]
+
+.footnote[Credits: Dumoulin and Visin, [A guide to convolution arithmetic for deep learning](https://arxiv.org/abs/1603.07285), 2016.]
 
 ---
 
 class: middle
 
-## Nesterov momentum
+## Strides
 
-An alternative consists in simulating a step in the direction of the velocity, then calculate the gradient and make a correction.
+Stride is useful to reduce the spatial dimension of the feature map by a constant factor.
+
+.center[
+.width-45[![](figures/lec5/no_padding_strides.gif)]
+]
+
+
+.footnote[Credits: Dumoulin and Visin, [A guide to convolution arithmetic for deep learning](https://arxiv.org/abs/1603.07285), 2016.]
+
+
+---
+
+class: middle 
+
+## Dilation
+
+The dilation modulates the expansion of the kernel support by adding rows and columns of zeros between coefficients. 
+
+Having a dilation coefficient greater than one increases the units receptive field size without increasing the number of parameters. 
+
+.center[
+.width-45[![](figures/lec5/dilation.gif)]
+]
+
+.footnote[Credits: Dumoulin and Visin, [A guide to convolution arithmetic for deep learning](https://arxiv.org/abs/1603.07285), 2016.]
+
+---
+
+# Equivariance
+
+A function $f$ is **equivariant** to $g$ if $f(g(\mathbf{x})) = g(f(\mathbf{x}))$.
+- Parameter sharing used in a convolutional layer causes the layer to be equivariant to translation.
+- That is, if $g$ is any function that translates the input, the convolution function is equivariant to $g$.
+
+.center.width-50[![](figures/lec5/atrans.gif)]
+
+.caption[If an object moves in the input image, its representation will move the same amount in the output.]
+
+.footnote[Credits: LeCun et al, Gradient-based learning applied to document recognition, 1998.]
+
+---
+
+class: middle
+
+- Equivariance is useful when we know some local function is useful everywhere (e.g., edge detectors).
+- Convolution is not equivariant to other operations such as change in scale or rotation.
+
+---
+
+# Convolutions as matrix multiplications
+
+As a guiding example, let us consider the convolution of single-channel tensors $\mathbf{x} \in \mathbb{R}^{4 \times 4}$ and $\mathbf{u} \in \mathbb{R}^{3 \times 3}$:
 
 $$
-\begin{aligned}
-g\_t &= \frac{1}{N} \sum\_{n=1}^N \nabla\_\theta \ell(y\_n, f(\mathbf{x}\_n; \theta\_t + \alpha u\_{t-1}))\\\\
-u\_t &= \alpha u\_{t-1} - \gamma g\_t \\\\
-\theta\_{t+1} &= \theta\_t + u\_t
-\end{aligned}$$
-
-.center.width-30[![](figures/lec5/nesterov.svg)]
-
----
-
-class: middle
-
-.center[
-<video loop controls preload="auto" height="600" width="600">
-  <source src="./figures/lec5/opt-nesterov.mp4" type="video/mp4">
-</video>
-]
-
----
-
-# Adaptive learning rate
-
-Vanilla gradient descent assumes the isotropy of the curvature, so that the same step size $\gamma$ applies to all parameters.
-
-.center[
-.width-45[![](figures/lec5/isotropic.png)]
-.width-45[![](figures/lec5/anisotropic.png)]
-
-Isotropic vs. Anistropic
-]
-
+\mathbf{x} \circledast \mathbf{u} =
+\begin{pmatrix}
+4 & 5 & 8 & 7 \\\\
+1 & 8 & 8 & 8 \\\\
+3 & 6 & 6 & 4 \\\\
+6 & 5 & 7 & 8
+\end{pmatrix} \circledast \begin{pmatrix}
+1 & 4 & 1 \\\\
+1 & 4 & 3 \\\\
+3 & 3 & 1
+\end{pmatrix} =
+\begin{pmatrix}
+122 & 148 \\\\
+126 & 134
+\end{pmatrix}$$
 
 ---
 
 class: middle
 
-## AdaGrad
+The convolution operation can be equivalently re-expressed as a single matrix multiplication:
+- the convolutional kernel $\mathbf{u}$ is rearranged as a **sparse Toeplitz circulant matrix**, called the convolution matrix:
+$$\mathbf{U} = \begin{pmatrix}
+1 & 4 & 1 & 0 & 1 & 4 & 3 & 0 & 3 & 3 & 1 & 0 & 0 & 0 & 0 & 0 \\\\
+0 & 1 & 4 & 1 & 0 & 1 & 4 & 3 & 0 & 3 & 3 & 1 & 0 & 0 & 0 & 0 \\\\
+0 & 0 & 0 & 0 & 1 & 4 & 1 & 0 & 1 & 4 & 3 & 0 & 3 & 3 & 1 & 0 \\\\
+0 & 0 & 0 & 0 & 0 & 1 & 4 & 1 & 0 & 1 & 4 & 3 & 0 & 3 & 3 & 1
+\end{pmatrix}$$
+- the input $\mathbf{x}$ is flattened row by row, from top to bottom:
+$$v(\mathbf{x}) =
+\begin{pmatrix}
+4 & 5 & 8 & 7 & 1 & 8 & 8 & 8 & 3 & 6 & 6 & 4 & 6 & 5 & 7 & 8
+\end{pmatrix}^T$$
 
-Per-parameter downscale by square-root of sum of squares of all its historical values.
-
-$$\begin{aligned}
-r\_t  &=  r\_{t-1} + g\_t \odot g\_t \\\\
-\theta\_{t+1} &= \theta\_t - \frac{\gamma}{\delta + \sqrt{r\_t}} \odot g\_t.
-\end{aligned}$$
-
-- AdaGrad eliminates the need to manually tune the learning rate.
-  Most implementation use $\gamma=0.01$ as default.
-- It is good when the objective is convex.
-- $r_t$ grows unboundedly during training, which may cause the step size to shrink and eventually become infinitesimally small.
-
----
-
-class: middle
-
-## RMSProp
-
-Same as AdaGrad but accumulate an exponentially decaying average of the gradient.
-
-$$\begin{aligned}
-r\_t  &=  \rho r\_{t-1} + (1-\rho) g\_t \odot g\_t \\\\
-\theta\_{t+1} &= \theta\_t - \frac{\gamma}{\delta + \sqrt{r\_t}} \odot g\_t.
-\end{aligned}$$
-
-- Perform better in non-convex settings.
-- Does not grow unboundedly.
+Then,
+$$\mathbf{U}v(\mathbf{x}) =
+\begin{pmatrix}
+122 & 148 & 126 & 134
+\end{pmatrix}^T$$
+which we can reshape to a $2 \times 2$ matrix to obtain $\mathbf{x} \circledast \mathbf{u}$.
 
 ---
 
 class: middle
 
-## Adam
+The same procedure generalizes to $\mathbf{x} \in \mathbb{R}^{H \times W}$ and convolutional kernel $\mathbf{u} \in \mathbb{R}^{h \times w}$, such that:
+- the convolutional kernel is rearranged as a sparse Toeplitz circulant matrix $\mathbf{U}$ of shape $(H-h+1)(W-w+1) \times HW$ where
+    - each row $i$ identifies an element of the output feature map,
+    - each column $j$ identifies an element of the input feature map,
+    - the value $\mathbf{U}\_{i,j}$ corresponds to the kernel value the element $j$ is multiplied with in output $i$;
+- the input $\mathbf{x}$ is flattened into a column vector $v(\mathbf{x})$ of shape $HW \times 1$;
+- the output feature map $\mathbf{x} \circledast \mathbf{u}$ is obtained by reshaping the $(H-h+1)(W-w+1) \times 1$ column vector $\mathbf{U}v(\mathbf{x})$ as a $(H-h+1) \times (W-w+1)$ matrix.
 
-Similar to RMSProp with momentum, but with bias correction terms for the first and second moments.
-
-$$\begin{aligned}
-s\_t  &=  \rho\_1 s\_{t-1} + (1-\rho\_1) g\_t \\\\
-\hat{s}\_t &= \frac{s\_t}{1-\rho\_1^t} \\\\
-r\_t  &=  \rho\_2 r\_{t-1} + (1-\rho\_2) g\_t \odot g\_t \\\\
-\hat{r}\_t &= \frac{r\_t}{1-\rho\_2^t} \\\\
-\theta\_{t+1} &= \theta\_t - \gamma \frac{\hat{s}\_t}{\delta+\sqrt{\hat{r}\_t}}
-\end{aligned}$$
-
-- Good defaults are $\rho\_1=0.9$ and $\rho\_2=0.999$.
-- Adam is one of the **default optimizers** in deep learning, along with SGD with momentum.
-
-
----
-
-.center[
-<video loop controls preload="auto" height="600" width="600">
-  <source src="./figures/lec5/opt-adaptive.mp4" type="video/mp4">
-</video>
-]
-
----
-
-class: middle
-
-.center.width-60[![](figures/lec5/adam-plots.png)]
-
-.footnote[Credits: Kingma and Ba, [Adam: A Method for Stochastic Optimization](https://arxiv.org/abs/1412.6980), 2014.]
-
----
-
-# Scheduling
-
-Despite per-parameter adaptive learning rate methods, it is usually helpful to **anneal the learning rate** $\gamma$ over time.
-
-- Step decay: reduce the learning rate by some factor every few epochs
-  (e.g, by half every 10 epochs).
-- Exponential decay: $\gamma\_t = \gamma\_0 \exp(-kt)$ where $\gamma\_0$ and $k$ are hyper-parameters.
-- $1/t$ decay: $\gamma\_t = \gamma\_0 / (1+kt)$ where $\gamma\_0$ and $k$ are hyper-parameters.
-
----
-
-class: middle
-
-.center[
-.width-70[![](figures/lec5/resnet.png)]<br>
-.caption[Step decay scheduling for training ResNets.]
-]
-
----
-
-class: middle
-
-# Initialization
-
----
-
-class: middle
-
-- In convex problems, provided a good learning rate $\gamma$, convergence is guaranteed regardless of the *initial parameter values*.
-- In the non-convex regime, initialization is **much more important**!
-- Little is known on the mathematics of initialization strategies of neural networks.
-    - What is known: initialization should break symmetry.
-    - What is known: the scale of weights is important.
+Therefore, a convolutional layer is a special case of a fully
+connected layer: $$\mathbf{h} = \mathbf{x} \circledast \mathbf{u} \Leftrightarrow v(\mathbf{h}) = \mathbf{U}v(\mathbf{x}) \Leftrightarrow  v(\mathbf{h}) = \mathbf{W}^T v(\mathbf{x})$$
 
 ---
 
 class: middle, center
 
-See [demo](https://www.deeplearning.ai/ai-notes/initialization/).
+![](figures/lec5/convolution.svg)
+
+$$\Leftrightarrow$$
+
+![](figures/lec5/convolution-linear.svg)
+
+---
+
+class: middle 
+
+# Pooling 
 
 ---
 
 class: middle
 
-## Controlling for the variance in the forward pass
+When the input volume is large, **pooling layers** can be used to reduce the input dimension while
+preserving its global structure, in a way similar to a down-scaling operation.
 
-A first strategy is to initialize the network parameters such that activations preserve the **same variance across layers**.
+---
 
-Intuitively, this ensures that the information keeps flowing during the *forward pass*, without reducing or magnifying the magnitude of input signals exponentially.
+# Pooling
+
+Consider a pooling area of size $h \times w$ and a 3D input tensor $\mathbf{x} \in \mathbb{R}^{C\times(rh)\times(sw)}$.
+- Max-pooling produces a tensor $\mathbf{o} \in \mathbb{R}^{C \times r \times s}$
+such that
+$$\mathbf{o}\_{c,j,i} = \max\_{n < h, m < w} \mathbf{x}_{c,rj+n,si+m}.$$
+- Average pooling produces a tensor $\mathbf{o} \in \mathbb{R}^{C \times r \times s}$ such that
+$$\mathbf{o}\_{c,j,i} = \frac{1}{hw} \sum\_{n=0}^{h-1} \sum\_{m=0}^{w-1} \mathbf{x}_{c,rj+n,si+m}.$$
+
+Pooling is very similar in its formulation to convolution.
 
 ---
 
 class: middle
 
-Let us assume that
-- we are in a linear regime at initialization (e.g., the positive part of a ReLU or the middle of a sigmoid),
-- weights $w\_{ij}^l$ are initialized i.i.d,
-- biases $b\_l$ are initialized to be $0$,
-- input features are i.i.d, with a variance denoted as $\mathbb{V}[x]$.
+.center[![](figures/lec5/pooling.gif)]
 
-Then, the variance of the activation $h\_i^l$ of unit $i$ in layer $l$ is
-$$
-\begin{aligned}
-\mathbb{V}\left[h\_i^l\right] &= \mathbb{V}\left[ \sum\_{j=0}^{q\_{l-1}-1} w\_{ij}^l h\_j^{l-1} \right] \\\\
-&= \sum\_{j=0}^{q\_{l-1}-1} \mathbb{V}\left[ w\_{ij}^l \right] \mathbb{V}\left[ h\_j^{l-1} \right]
-\end{aligned}
-$$
-where $q\_l$ is the width of layer $l$ and $h^0_j = x_j$ for all $j=0,..., p-1$.
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+# Invariance
+
+A function $f$ is **invariant** to $g$ if $f(g(\mathbf{x})) = f(\mathbf{x})$.
+- Pooling layers provide invariance to any permutation inside one cell.
+- It results in (pseudo-)invariance to local translations.
+- This helpful if we care more about the presence of a pattern rather than its exact position.
+
+.center.width-60[![](figures/lec5/pooling-invariance.png)]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+# Convolutional networks
+
+---
+
+class: middle
+
+A **convolutional network** is generically defined as a composition of convolutional layers ($\texttt{CONV}$), pooling layers ($\texttt{POOL}$), linear rectifiers ($\texttt{RELU}$) and fully connected layers ($\texttt{FC}$).
+
+.center.width-100[![](figures/lec5/convnet-pattern.png)]
+
+---
+
+class: middle
+
+The most common convolutional network architecture follows the pattern:
+
+$$\texttt{INPUT} \to [[\texttt{CONV} \to \texttt{RELU}]\texttt{\*}N \to \texttt{POOL?}]\texttt{\*}M \to [\texttt{FC} \to \texttt{RELU}]\texttt{\*}K \to \texttt{FC}$$
+
+where:
+- $\texttt{\*}$ indicates repetition;
+- $\texttt{POOL?}$ indicates an optional pooling layer;
+- $N \geq 0$ (and usually $N \leq 3$), $M \geq 0$, $K \geq 0$ (and usually $K < 3$);
+- the last fully connected layer holds the output (e.g., the class scores).
+
+---
+
+class: middle
+
+Some common architectures for convolutional networks following this pattern include:
+- $\texttt{INPUT} \to \texttt{FC}$, which implements a linear classifier ($N=M=K=0$).
+- $\texttt{INPUT} \to [\texttt{FC} \to \texttt{RELU}]{\*K} \to \texttt{FC}$, which implements a $K$-layer MLP.
+- $\texttt{INPUT} \to \texttt{CONV} \to \texttt{RELU} \to \texttt{FC}$.
+- $\texttt{INPUT} \to [\texttt{CONV} \to \texttt{RELU} \to \texttt{POOL}]\texttt{\*2} \to \texttt{FC} \to \texttt{RELU} \to \texttt{FC}$.
+- $\texttt{INPUT} \to [[\texttt{CONV} \to \texttt{RELU}]\texttt{\*2} \to \texttt{POOL}]\texttt{\*3} \to [\texttt{FC} \to \texttt{RELU}]\texttt{\*2} \to \texttt{FC}$.
 
 ???
 
-Use
-- V(AB) = V(A)V(B)+V(A)E(B)+V(B)E(A)
-- V(A+B) = V(A)+V(B)+Cov(A,B)
+Note that for the last architecture, two $\texttt{CONV}$ layers are stacked before every $\texttt{POOL}$ layer. This is generally a good idea for larger and deeper networks, because multiple stacked $\texttt{CONV}$  layers can develop more complex features of the input volume before the destructive pooling operation.
+
+---
+
+class: center, middle, black-slide
+
+.width-100[![](figures/lec5/convnet.gif)]
 
 ---
 
 class: middle
 
-Since the weights $w\_{ij}^l$ at layer $l$ share the same variance $\mathbb{V}\left[ w^l \right]$ and the variance of the activations in the previous layer are the same, we can drop the indices and write
-$$\mathbb{V}\left[h^l\right] = q\_{l-1} \mathbb{V}\left[ w^l \right] \mathbb{V}\left[ h^{l-1} \right].$$
+## LeNet-5 (LeCun et al, 1998)
 
-Therefore, the variance of the activations is preserved across layers when
-$$\mathbb{V}\left[ w^l \right] = \frac{1}{q\_{l-1}} \quad \forall l.$$
+Composition of two $\texttt{CONV}+\texttt{POOL}$ layers, followed by a block of fully-connected layers.
 
-This condition is enforced in **LeCun's uniform initialization**, which is defined as
-$$w\_{ij}^l \sim \mathcal{U}\left[-\sqrt{\frac{3}{q\_{l-1}}}, \sqrt{\frac{3}{q\_{l-1}}}\right].$$
+.center.width-110[![](figures/lec5/lenet.svg)]
 
-???
-
-Var[ U(a,b) ] = 1/12 (b-a)^2
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
 
 ---
 
 class: middle
 
-## Controlling for the variance in the backward pass
+.smaller-x.center[
+```
+----------------------------------------------------------------
+        Layer (type)               Output Shape         Param #
+================================================================
+            Conv2d-1            [-1, 6, 28, 28]             156
+              ReLU-2            [-1, 6, 28, 28]               0
+         MaxPool2d-3            [-1, 6, 14, 14]               0
+            Conv2d-4           [-1, 16, 10, 10]           2,416
+              ReLU-5           [-1, 16, 10, 10]               0
+         MaxPool2d-6             [-1, 16, 5, 5]               0
+            Conv2d-7            [-1, 120, 1, 1]          48,120
+              ReLU-8            [-1, 120, 1, 1]               0
+            Linear-9                   [-1, 84]          10,164
+             ReLU-10                   [-1, 84]               0
+           Linear-11                   [-1, 10]             850
+       LogSoftmax-12                   [-1, 10]               0
+================================================================
+Total params: 61,706                                            
+Trainable params: 61,706                                        
+Non-trainable params: 0                                         
+----------------------------------------------------------------
+Input size (MB): 0.00                                           
+Forward/backward pass size (MB): 0.11                           
+Params size (MB): 0.24                                          
+Estimated Total Size (MB): 0.35                                 
+----------------------------------------------------------------
+```
+]
 
-A similar idea can be applied to ensure that the gradients flow in the *backward pass* (without vanishing nor exploding), by maintaining the variance of the gradient with respect to the activations fixed across layers.
+---
 
-Under the same assumptions as before,
+class: middle
+
+.grid[
+.kol-3-5[
+<br><br><br><br>
+
+## AlexNet (Krizhevsky et al, 2012)
+
+Composition of a 8-layer convolutional neural network with a 3-layer MLP.
+
+The original implementation was made of two parts such that it could fit within two GPUs.
+]
+.kol-2-5.center[.width-100[![](figures/lec5/alexnet.svg)]
+.caption[LeNet vs. AlexNet]
+]
+]
+
+
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
+
+---
+
+class: middle
+
+.smaller-x.center[
+```
+----------------------------------------------------------------
+        Layer (type)               Output Shape         Param #
+================================================================
+            Conv2d-1           [-1, 64, 55, 55]          23,296
+              ReLU-2           [-1, 64, 55, 55]               0
+         MaxPool2d-3           [-1, 64, 27, 27]               0
+            Conv2d-4          [-1, 192, 27, 27]         307,392
+              ReLU-5          [-1, 192, 27, 27]               0
+         MaxPool2d-6          [-1, 192, 13, 13]               0
+            Conv2d-7          [-1, 384, 13, 13]         663,936
+              ReLU-8          [-1, 384, 13, 13]               0
+            Conv2d-9          [-1, 256, 13, 13]         884,992
+             ReLU-10          [-1, 256, 13, 13]               0
+           Conv2d-11          [-1, 256, 13, 13]         590,080
+             ReLU-12          [-1, 256, 13, 13]               0
+        MaxPool2d-13            [-1, 256, 6, 6]               0
+          Dropout-14                 [-1, 9216]               0
+           Linear-15                 [-1, 4096]      37,752,832
+             ReLU-16                 [-1, 4096]               0
+          Dropout-17                 [-1, 4096]               0
+           Linear-18                 [-1, 4096]      16,781,312
+             ReLU-19                 [-1, 4096]               0
+           Linear-20                 [-1, 1000]       4,097,000
+================================================================
+Total params: 61,100,840                                        
+Trainable params: 61,100,840                                    
+Non-trainable params: 0                                         
+----------------------------------------------------------------
+Input size (MB): 0.57                                           
+Forward/backward pass size (MB): 8.31                           
+Params size (MB): 233.08                                        
+Estimated Total Size (MB): 241.96                               
+----------------------------------------------------------------
+```
+]
+
+---
+
+class: middle
+
+.grid[
+.kol-2-5[
+  <br>
+
+## VGG (Simonyan and Zisserman, 2014)
+
+Composition of 5 VGG blocks consisting of $\texttt{CONV}+\texttt{POOL}$ layers, followed by a block of fully connected layers.
+
+The network depth increased up to 19 layers, while the kernel sizes reduced to 3.
+]
+.kol-3-5.center[.width-100[![](figures/lec5/vgg.svg)]
+.caption[AlexNet vs. VGG]
+]
+]
+
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec5/effective-receptive-field.png)]
+
+The **effective receptive field** is the part of the visual input that affects a given unit indirectly through previous convolutional layers. It grows linearly with depth. 
+
+E.g., a stack of two $3 \times 3$ kernels of stride $1$ has the same effective receptive field as a single $5 \times 5$ kernel, but fewer parameters.
+
+---
+
+class: middle
+
+.smaller-xx.center[
+```
+----------------------------------------------------------------
+        Layer (type)               Output Shape         Param #
+================================================================
+            Conv2d-1         [-1, 64, 224, 224]           1,792
+              ReLU-2         [-1, 64, 224, 224]               0
+            Conv2d-3         [-1, 64, 224, 224]          36,928
+              ReLU-4         [-1, 64, 224, 224]               0
+         MaxPool2d-5         [-1, 64, 112, 112]               0
+            Conv2d-6        [-1, 128, 112, 112]          73,856
+              ReLU-7        [-1, 128, 112, 112]               0
+            Conv2d-8        [-1, 128, 112, 112]         147,584
+              ReLU-9        [-1, 128, 112, 112]               0
+        MaxPool2d-10          [-1, 128, 56, 56]               0
+           Conv2d-11          [-1, 256, 56, 56]         295,168
+             ReLU-12          [-1, 256, 56, 56]               0
+           Conv2d-13          [-1, 256, 56, 56]         590,080
+             ReLU-14          [-1, 256, 56, 56]               0
+           Conv2d-15          [-1, 256, 56, 56]         590,080
+             ReLU-16          [-1, 256, 56, 56]               0
+        MaxPool2d-17          [-1, 256, 28, 28]               0
+           Conv2d-18          [-1, 512, 28, 28]       1,180,160
+             ReLU-19          [-1, 512, 28, 28]               0
+           Conv2d-20          [-1, 512, 28, 28]       2,359,808
+             ReLU-21          [-1, 512, 28, 28]               0
+           Conv2d-22          [-1, 512, 28, 28]       2,359,808
+             ReLU-23          [-1, 512, 28, 28]               0
+        MaxPool2d-24          [-1, 512, 14, 14]               0
+           Conv2d-25          [-1, 512, 14, 14]       2,359,808
+             ReLU-26          [-1, 512, 14, 14]               0
+           Conv2d-27          [-1, 512, 14, 14]       2,359,808
+             ReLU-28          [-1, 512, 14, 14]               0
+           Conv2d-29          [-1, 512, 14, 14]       2,359,808
+             ReLU-30          [-1, 512, 14, 14]               0
+        MaxPool2d-31            [-1, 512, 7, 7]               0
+           Linear-32                 [-1, 4096]     102,764,544
+             ReLU-33                 [-1, 4096]               0
+          Dropout-34                 [-1, 4096]               0
+           Linear-35                 [-1, 4096]      16,781,312
+             ReLU-36                 [-1, 4096]               0
+          Dropout-37                 [-1, 4096]               0
+           Linear-38                 [-1, 1000]       4,097,000
+================================================================
+Total params: 138,357,544                                       
+Trainable params: 138,357,544                                   
+Non-trainable params: 0                                         
+----------------------------------------------------------------
+Input size (MB): 0.57                                           
+Forward/backward pass size (MB): 218.59                         
+Params size (MB): 527.79                                        
+Estimated Total Size (MB): 746.96                               
+----------------------------------------------------------------
+```
+]
+
+---
+
+class: middle
+
+.grid[
+.kol-4-5[
+## GoogLeNet (Szegedy et al, 2014)
+
+Composition of two $\texttt{CONV}+\texttt{POOL}$ layers, a stack of 9 inception blocks, and a global average pooling layer.
+
+Each inception block is itself defined as a convolutional network with 4 parallel paths.
+
+.center.width-80[![](figures/lec5/inception.svg)]
+.caption[Inception block]
+]
+.kol-1-5.center[.width-100[![](figures/lec5/inception-full.svg)]]
+]
+
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
+
+---
+
+class: middle
+
+.grid[
+.kol-4-5[
+
+## ResNet (He et al, 2015)
+
+Composition of first layers similar to GoogLeNet, a stack of 4 residual blocks, and a global average pooling layer. Extensions consider more residual blocks, up to a total of 152 layers (ResNet-152).
+
+.center.width-80[![](figures/lec5/resnet-block.svg)]
+.center.caption[Regular ResNet block vs. ResNet block with $1\times 1$ convolution.]
+]
+.kol-1-5[.center.width-100[![](figures/lec5/ResNetFull.svg)]]
+]
+
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
+
+---
+
+class: middle
+
+Training networks of this depth is made possible because of the **skip connections** in the residual blocks. They allow the gradients to shortcut the layers and pass through without vanishing.
+
+.center.width-60[![](figures/lec5/residual-block.svg)]
+
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
+
+
+---
+
+class: middle
+
+.grid[
+.kol-1-2[
+
+.smaller-xx.center[
+```
+----------------------------------------------------------------
+        Layer (type)               Output Shape         Param #
+================================================================
+            Conv2d-1         [-1, 64, 112, 112]           9,408
+       BatchNorm2d-2         [-1, 64, 112, 112]             128
+              ReLU-3         [-1, 64, 112, 112]               0
+         MaxPool2d-4           [-1, 64, 56, 56]               0
+            Conv2d-5           [-1, 64, 56, 56]           4,096
+       BatchNorm2d-6           [-1, 64, 56, 56]             128
+              ReLU-7           [-1, 64, 56, 56]               0
+            Conv2d-8           [-1, 64, 56, 56]          36,864
+       BatchNorm2d-9           [-1, 64, 56, 56]             128
+             ReLU-10           [-1, 64, 56, 56]               0
+           Conv2d-11          [-1, 256, 56, 56]          16,384
+      BatchNorm2d-12          [-1, 256, 56, 56]             512
+           Conv2d-13          [-1, 256, 56, 56]          16,384
+      BatchNorm2d-14          [-1, 256, 56, 56]             512
+             ReLU-15          [-1, 256, 56, 56]               0
+       Bottleneck-16          [-1, 256, 56, 56]               0
+           Conv2d-17           [-1, 64, 56, 56]          16,384
+      BatchNorm2d-18           [-1, 64, 56, 56]             128
+             ReLU-19           [-1, 64, 56, 56]               0
+           Conv2d-20           [-1, 64, 56, 56]          36,864
+      BatchNorm2d-21           [-1, 64, 56, 56]             128
+             ReLU-22           [-1, 64, 56, 56]               0
+           Conv2d-23          [-1, 256, 56, 56]          16,384
+      BatchNorm2d-24          [-1, 256, 56, 56]             512
+             ReLU-25          [-1, 256, 56, 56]               0
+       Bottleneck-26          [-1, 256, 56, 56]               0
+           Conv2d-27           [-1, 64, 56, 56]          16,384
+      BatchNorm2d-28           [-1, 64, 56, 56]             128
+             ReLU-29           [-1, 64, 56, 56]               0
+           Conv2d-30           [-1, 64, 56, 56]          36,864
+      BatchNorm2d-31           [-1, 64, 56, 56]             128
+             ReLU-32           [-1, 64, 56, 56]               0
+           Conv2d-33          [-1, 256, 56, 56]          16,384
+      BatchNorm2d-34          [-1, 256, 56, 56]             512
+             ReLU-35          [-1, 256, 56, 56]               0
+       Bottleneck-36          [-1, 256, 56, 56]               0
+           Conv2d-37          [-1, 128, 56, 56]          32,768
+      BatchNorm2d-38          [-1, 128, 56, 56]             256
+             ReLU-39          [-1, 128, 56, 56]               0
+           Conv2d-40          [-1, 128, 28, 28]         147,456
+      BatchNorm2d-41          [-1, 128, 28, 28]             256
+             ReLU-42          [-1, 128, 28, 28]               0
+           Conv2d-43          [-1, 512, 28, 28]          65,536
+      BatchNorm2d-44          [-1, 512, 28, 28]           1,024
+           Conv2d-45          [-1, 512, 28, 28]         131,072
+      BatchNorm2d-46          [-1, 512, 28, 28]           1,024
+             ReLU-47          [-1, 512, 28, 28]               0
+       Bottleneck-48          [-1, 512, 28, 28]               0
+           Conv2d-49          [-1, 128, 28, 28]          65,536
+      BatchNorm2d-50          [-1, 128, 28, 28]             256
+             ReLU-51          [-1, 128, 28, 28]               0
+           Conv2d-52          [-1, 128, 28, 28]         147,456
+      BatchNorm2d-53          [-1, 128, 28, 28]             256
+
+...
+```
+]
+
+]
+.kol-1-2[
+
+.smaller-xx.center[
+```
+
+...
+
+Bottleneck-130         [-1, 1024, 14, 14]               0
+    Conv2d-131          [-1, 256, 14, 14]         262,144
+BatchNorm2d-132          [-1, 256, 14, 14]             512
+      ReLU-133          [-1, 256, 14, 14]               0
+    Conv2d-134          [-1, 256, 14, 14]         589,824
+BatchNorm2d-135          [-1, 256, 14, 14]             512
+      ReLU-136          [-1, 256, 14, 14]               0
+    Conv2d-137         [-1, 1024, 14, 14]         262,144
+BatchNorm2d-138         [-1, 1024, 14, 14]           2,048
+      ReLU-139         [-1, 1024, 14, 14]               0
+Bottleneck-140         [-1, 1024, 14, 14]               0
+    Conv2d-141          [-1, 512, 14, 14]         524,288
+BatchNorm2d-142          [-1, 512, 14, 14]           1,024
+      ReLU-143          [-1, 512, 14, 14]               0
+    Conv2d-144            [-1, 512, 7, 7]       2,359,296
+BatchNorm2d-145            [-1, 512, 7, 7]           1,024
+      ReLU-146            [-1, 512, 7, 7]               0
+    Conv2d-147           [-1, 2048, 7, 7]       1,048,576
+BatchNorm2d-148           [-1, 2048, 7, 7]           4,096
+    Conv2d-149           [-1, 2048, 7, 7]       2,097,152
+BatchNorm2d-150           [-1, 2048, 7, 7]           4,096
+      ReLU-151           [-1, 2048, 7, 7]               0
+Bottleneck-152           [-1, 2048, 7, 7]               0
+    Conv2d-153            [-1, 512, 7, 7]       1,048,576
+BatchNorm2d-154            [-1, 512, 7, 7]           1,024
+      ReLU-155            [-1, 512, 7, 7]               0
+    Conv2d-156            [-1, 512, 7, 7]       2,359,296
+BatchNorm2d-157            [-1, 512, 7, 7]           1,024
+      ReLU-158            [-1, 512, 7, 7]               0
+    Conv2d-159           [-1, 2048, 7, 7]       1,048,576
+BatchNorm2d-160           [-1, 2048, 7, 7]           4,096
+      ReLU-161           [-1, 2048, 7, 7]               0
+Bottleneck-162           [-1, 2048, 7, 7]               0
+    Conv2d-163            [-1, 512, 7, 7]       1,048,576
+BatchNorm2d-164            [-1, 512, 7, 7]           1,024
+      ReLU-165            [-1, 512, 7, 7]               0
+    Conv2d-166            [-1, 512, 7, 7]       2,359,296
+BatchNorm2d-167            [-1, 512, 7, 7]           1,024
+      ReLU-168            [-1, 512, 7, 7]               0
+    Conv2d-169           [-1, 2048, 7, 7]       1,048,576
+BatchNorm2d-170           [-1, 2048, 7, 7]           4,096
+      ReLU-171           [-1, 2048, 7, 7]               0
+Bottleneck-172           [-1, 2048, 7, 7]               0
+ AvgPool2d-173           [-1, 2048, 1, 1]               0
+    Linear-174                 [-1, 1000]       2,049,000
+================================================================
+Total params: 25,557,032                                        
+Trainable params: 25,557,032                                    
+Non-trainable params: 0                                         
+----------------------------------------------------------------
+Input size (MB): 0.57                                           
+Forward/backward pass size (MB): 286.56                         
+Params size (MB): 97.49                                         
+Estimated Total Size (MB): 384.62                               
+----------------------------------------------------------------
+```
+]
+
+]
+]
+
+---
+
+class: middle
+
+## The benefits of depth
+
+.center.width-100[![](figures/lec5/imagenet.png)]
+
+---
+
+class: middle
+
+# Under the hood
+
+---
+
+class: middle
+
+Understanding what is happening in deep neural networks after training is complex and the tools we have are limited.
+
+In the case of convolutional neural networks, we can look at:
+- the network's kernels as images
+- internal activations on a single sample as images
+- distributions of activations on a population of samples
+- derivatives of the response with respect to the input
+- maximum-response synthetic samples
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+# Looking at filters
+
+<br><br><br><br><br>
+
+LeNet's first convolutional layer, all filters.
+
+.width-100[![](figures/lec5/filters-lenet1.png)]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+
+---
+
+class: middle
+
+LeNet's second convolutional layer, first 32 filters.
+
+.center.width-70[![](figures/lec5/filters-lenet2.png)]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+AlexNet's first convolutional layer, first 20 filters.
+
+.center.width-100[![](figures/lec5/filters-alexnet.png)]
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+
+
+---
+
+# Maximum response samples
+
+Convolutional networks can be inspected by looking for synthetic input images $\mathbf{x}$ that maximize the activation $\mathbf{h}\_{\ell,d}(\mathbf{x})$ of a chosen convolutional kernel $\mathbf{u}$ at layer $\ell$ and index $d$ in the layer filter bank.
+
+These samples can be found by gradient ascent on the input space:
 $$\begin{aligned}
-\mathbb{V}\left[ \frac{\text{d}\hat{y}}{\text{d} h\_i^l} \right] &= \mathbb{V}\left[ \sum\_{j=0}^{q\_{l+1}-1} \frac{\text{d} \hat{y}}{\text{d} h\_j^{l+1}} \frac{\partial h\_j^{l+1}}{\partial h\_i^l} \right] \\\\
-&= \mathbb{V}\left[ \sum\_{j=0}^{q\_{l+1}-1} \frac{\text{d} \hat{y}}{\text{d} h\_j^{l+1}} w\_{j,i}^{l+1} \right] \\\\
-&= \sum\_{j=0}^{q\_{l+1}-1} \mathbb{V}\left[\frac{\text{d} \hat{y}}{\text{d} h\_j^{l+1}}\right] \mathbb{V}\left[ w\_{ji}^{l+1} \right]
+\mathcal{L}\_{\ell,d}(\mathbf{x}) &= ||\mathbf{h}\_{\ell,d}(\mathbf{x})||\_2\\\\
+\mathbf{x}\_0 &\sim U[0,1]^{C \times H \times W } \\\\
+\mathbf{x}\_{t+1} &= \mathbf{x}\_t + \gamma \nabla\_{\mathbf{x}} \mathcal{L}\_{\ell,d}(\mathbf{x}\_t)
 \end{aligned}$$
 
 ---
 
 class: middle
 
-If we further assume that
-- the gradients of the activations at layer $l$ share the same variance
-- the weights at layer $l+1$ share the same variance $\mathbb{V}\left[ w^{l+1} \right]$,
+.width-100[![](figures/lec5/vgg16-conv1.jpg)]
 
-then we can drop the indices and write
-$$
-\mathbb{V}\left[ \frac{\text{d}\hat{y}}{\text{d} h^l} \right] = q\_{l+1} \mathbb{V}\left[ \frac{\text{d}\hat{y}}{\text{d} h^{l+1}} \right] \mathbb{V}\left[ w^{l+1} \right].
-$$
+.center[VGG-16, convolutional layer 1-1, a few of the 64 filters]
 
-Therefore, the variance of the gradients with respect to the activations is preserved across layers when
-$$\mathbb{V}\left[ w^{l} \right] = \frac{1}{q\_{l}} \quad \forall l.$$
+.footnote[Credits: Francois Chollet, [How convolutional neural networks see the world](https://blog.keras.io/how-convolutional-neural-networks-see-the-world.html), 2016.]
 
 ---
 
 class: middle
 
-## Xavier initialization
+.width-100[![](figures/lec5/vgg16-conv2.jpg)]
 
-We have derived two different conditions on the variance of $w^l$,
-- $\mathbb{V}\left[w^l\right] = \frac{1}{q\_{l-1}}$
-- $\mathbb{V}\left[w^l\right] = \frac{1}{q\_{l}}$.
+.center[VGG-16, convolutional layer 2-1, a few of the 128 filters]
 
-A compromise is the **Xavier initialization**, which initializes $w^l$ randomly from a distribution with variance
-$$\mathbb{V}\left[w^l\right] = \frac{1}{\frac{q\_{l-1}+q\_l}{2}} = \frac{2}{q\_{l-1}+q\_l}.$$
-
-For example, *normalized initialization* is defined as
-$$w\_{ij}^l \sim \mathcal{U}\left[-\sqrt{\frac{6}{q\_{l-1}+q\_l}}, \sqrt{\frac{6}{q\_{l-1}+q\_l}}\right].$$
+.footnote[Credits: Francois Chollet, [How convolutional neural networks see the world](https://blog.keras.io/how-convolutional-neural-networks-see-the-world.html), 2016.]
 
 ---
 
 class: middle
 
-.center.width-70[![](figures/lec5/xavier1.png)]
+.width-100[![](figures/lec5/vgg16-conv3.jpg)]
 
-.footnote[Credits: Glorot and Bengio, [Understanding the difficulty of training deep feedforward neural networks](http://proceedings.mlr.press/v9/glorot10a.html), 2010.]
+.center[VGG-16, convolutional layer 3-1, a few of the 256 filters]
 
----
-
-class: middle
-
-.center.width-70[![](figures/lec5/xavier2.png)]
-
-.footnote[Credits: Glorot and Bengio, [Understanding the difficulty of training deep feedforward neural networks](http://proceedings.mlr.press/v9/glorot10a.html), 2010.]
+.footnote[Credits: Francois Chollet, [How convolutional neural networks see the world](https://blog.keras.io/how-convolutional-neural-networks-see-the-world.html), 2016.]
 
 ---
 
 class: middle
 
-# Normalization
+.width-100[![](figures/lec5/vgg16-conv4.jpg)]
 
----
+.center[VGG-16, convolutional layer 4-1, a few of the 512 filters]
 
-# Data normalization
-
-Previous weight initialization strategies rely on preserving the activation variance constant across layers, under the initial assumption that the **input feature variances are the same**.
-
-That is,
-$$\mathbb{V}\left[x\_i\right] = \mathbb{V}\left[x\_j\right] \triangleq \mathbb{V}\left[x\right]$$
-for all pairs of features $i,j$.
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+.footnote[Credits: Francois Chollet, [How convolutional neural networks see the world](https://blog.keras.io/how-convolutional-neural-networks-see-the-world.html), 2016.]
 
 ---
 
 class: middle
 
-In general, this constraint is not satisfied but can be enforced by **standardizing** the input data feature-wise,
-$$\mathbf{x}' = (\mathbf{x} - \hat{\mu}) \odot \frac{1}{\hat{\sigma}},$$
-where
-$$
-\begin{aligned}
-\hat{\mu} = \frac{1}{N} \sum\_{\mathbf{x} \in \mathbf{d}} \mathbf{x} \quad\quad\quad \hat{\sigma}^2 = \frac{1}{N} \sum\_{\mathbf{x} \in \mathbf{d}} (\mathbf{x} - \hat{\mu})^2.
-\end{aligned}
-$$
+.width-100[![](figures/lec5/vgg16-conv5.jpg)]
 
-.center.width-100[![](figures/lec5/scaling.png)]
+.center[VGG-16, convolutional layer 5-1, a few of the 512 filters]
 
-.footnote[Credits: Scikit-Learn, [Compare the effect of different scalers on data with outliers](https://scikit-learn.org/stable/auto_examples/preprocessing/plot_all_scaling.html#standardscaler).]
-
----
-
-# Batch normalization
-
-Maintaining proper statistics of the activations and derivatives is critical for training neural networks.
-
-This constraint can be enforced explicitly during the forward pass by re-normalizing them.
-**Batch normalization** was the first method introducing this idea.
-
-<br>
-.center.width-80[![](figures/lec5/bn.png)]
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL; Ioffe and Szegedy, [Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift](https://arxiv.org/abs/1502.03167), 2015.]
+.footnote[Credits: Francois Chollet, [How convolutional neural networks see the world](https://blog.keras.io/how-convolutional-neural-networks-see-the-world.html), 2016.]
 
 ---
 
 class: middle
 
-During training, batch normalization shifts and rescales according to the mean and variance estimated on the batch.
+Some observations:
+- The first layers appear to encode direction and color.
+- The direction and color filters get combined into grid and spot textures.
+- These textures gradually get combined into increasingly complex patterns.
 
-During test, it shifts and rescales according to the empirical moments estimated during training.
+The network appears to learn a .bold[hierarchical composition of patterns].
 
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-
-.center.width-50[![](figures/lec5/bn.svg)]
-
-Let us consider a minibatch of samples at training, for which $\mathbf{u}\_b \in \mathbb{R}^q$, $b=1, ..., B$, are intermediate values computed at some location in the computational graph.
-
-In batch normalization following the node $\mathbf{u}$, the per-component mean and variance are first computed on the batch
-$$
-\hat{\mu}\_\text{batch} = \frac{1}{B} \sum\_{b=1}^B \mathbf{u}\_b \quad\quad\quad \hat{\sigma}^2\_\text{batch} = \frac{1}{B} \sum\_{b=1}^B (\mathbf{u}\_b - \hat{\mu}\_\text{batch})^2,
-$$
-from which the standardized $\mathbf{u}'\_b \in \mathbb{R}^q$ are computed such that
-$$
-\begin{aligned}
-\mathbf{u}'\_b &= \gamma\odot (\mathbf{u}\_b - \hat{\mu}\_\text{batch}) \odot \frac{1}{\hat{\sigma}\_\text{batch} + \epsilon} + \beta
-\end{aligned}
-$$
-where $\gamma, \beta \in \mathbb{R}^q$ are parameters to optimize.
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+.width-70.center[![](figures/lec5/lecun-filters.png)]
 
 ---
 
-class: middle
+<br><br><br>
 
-.center[Exercise: How does batch normalization combine with backpropagation?]
+What if we build images that maximize the activation of a chosen class output?
 
----
+--
 
-class: middle
+count: false
 
-During inference, batch normalization shifts and rescales each component according to the empirical moments estimated during training:
-$$\mathbf{u}' = \gamma \odot (\mathbf{u} - \hat{\mu}) \odot \frac{1}{\hat{\sigma}} + \beta.$$
+The left image is predicted **with 99.9% confidence** as a magpie!
 
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+.grid[
+.kol-1-2.center[![](figures/lec5/magpie.jpg)]
+.kol-1-2.center[![](figures/lec5/magpie2.jpg)]
+]
 
----
-
-class: middle
-
-.center.width-100[![](figures/lec5/bn-results.png)]
-
-.footnote[Credits: Ioffe and Szegedy, [Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift](https://arxiv.org/abs/1502.03167), 2015.]
+.footnote[Credits: Francois Chollet, [How convolutional neural networks see the world](https://blog.keras.io/how-convolutional-neural-networks-see-the-world.html), 2016.]
 
 ---
 
-class: middle
+class: middle, black-slide
 
-The position of batch normalization relative to the non-linearity is not clear.
+.center[
 
-.center.width-50[![](figures/lec5/bn2.png)]
+<iframe width="600" height="400" src="https://www.youtube.com/embed/SCE-QeDfXtA?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
 
-.footnote[Credits: Ioffe and Szegedy, [Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift](https://arxiv.org/abs/1502.03167), 2015.]
+]
+
+.bold[Deep Dream.] Start from an image $\mathbf{x}\_t$, offset by a random jitter, enhance some layer activation at multiple scales, zoom in, repeat on the produced image $\mathbf{x}\_{t+1}$.
 
 ---
 
-class: middle
+# Biological plausibility
 
-## Layer normalization
+.center.width-80[![](figures/lec5/bio.png)]
 
-Given a single input sample $\mathbf{x}$, a similar approach can be applied
- to standardize the activations $\mathbf{u}$ across a layer instead of doing it over the batch.
+.italic["Deep hierarchical neural networks are beginning to transform
+neuroscientists’ ability to produce quantitatively accurate computational
+models of the sensory systems, especially in higher cortical areas
+where neural response properties had previously been enigmatic."]
+
+.footnote[Credits: Yamins et al, Using goal-driven deep learning models to understand
+sensory cortex, 2016.]
 
 ---
 
@@ -725,3 +1166,14 @@ class: end-slide, center
 count: false
 
 The end.
+
+---
+
+count: false
+
+# References
+
+- Francois Fleuret, Deep Learning Course, [4.4. Convolutions](https://fleuret.org/ee559/ee559-slides-4-4-convolutions.pdf), EPFL, 2018.
+- Yannis Avrithis, Deep Learning for Vision, [Lecture 1: Introduction](https://sif-dlv.github.io/slides/intro.pdf), University of Rennes 1, 2018.
+- Yannis Avrithis, Deep Learning for Vision, [Lecture 7: Convolution and network architectures ](https://sif-dlv.github.io/slides/conv.pdf), University of Rennes 1, 2018.
+- Olivier Grisel and Charles Ollion, Deep Learning, [Lecture 4: Convolutional Neural Networks for Image Classification ](https://m2dsupsdlclass.github.io/lectures-labs/slides/04_conv_nets/index.html#1), Université Paris-Saclay, 2018.

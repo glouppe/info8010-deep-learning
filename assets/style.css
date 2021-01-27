@@ -1,7 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Lato:400,900);
 
 body {
-    font-family: 'Lato', 'Avenir Next', 'Avenir', 'Trebuchet MS', 'Segoe UI', sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family:  'Lato', 'Avenir Next', 'Avenir', 'Trebuchet MS', 'Segoe UI', sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     color: #354046; /*#455a64;*/
     line-height: 1.4;
     font-size: 11pt;
@@ -17,14 +17,14 @@ body {
 
 .remark-slide-content {
     font-size: 1.4em;
-    border-top: solid 5px #20707e;
+    border-top: solid 5px #356aaf;
 }
 
 .remark-slide-content h1 {
     font-weight: bold;
     font-size: 2.25em;
     margin: 0 0 .5em 0;
-    color: #17525d;
+    color: #113e79;
 }
 
 .remark-slide-content h2 {
@@ -48,7 +48,7 @@ body {
 /* Styles ------------------------------------------------------------------- */
 
 .footnote:before {
-    content: "\2015\2015\2015";
+    content: "\2015";
     display: block;
 }
 
@@ -65,7 +65,7 @@ a:hover {
     color: #d11a01;
 }
 
-.Q {
+.Q, .green {
     color: #009933;
 }
 
@@ -88,6 +88,9 @@ strong {
     font-weight: normal;
 }
 
+.highlight{ 
+    background-color: #FFFF00; 
+}
 
 .smaller {
     font-size: 1.2em;
@@ -97,21 +100,28 @@ strong {
     font-size: 0.8em;
 }
 
-
 .smaller-xx {
+    font-size: 0.7em;
+}
+
+.smaller-xxx {
     font-size: 0.5em;
 }
 
 .katex {
-    color: #1a7082;
+    color: #356aaf;
 }
 
-.black-slide  .katex, .black-slide h1, .black-slide a {
+.black-slide .katex, .black-slide h1 {
     color: white;
 }
 
-.remark-code {
-    font-size: 0.8em;
+.black-slide a, .black-slide .footnote a {
+    color: #89c2ce;
+}
+
+.remark-code, .remark-inline-code {
+    font-size: 0.9em;
 }
 
 ul > li, ol > li {
@@ -180,6 +190,14 @@ td {
     height: auto;
 }
 
+.solid {
+  border-style: solid;
+}
+
+.dashed {
+  border-style: dashed;
+}
+
 .footnote {
   position: absolute;
   bottom: 2em;
@@ -209,6 +227,15 @@ td {
     content: "Exercise";
     font-weight: bold;
     display: block;
+}
+
+.question {
+    background-color: rgba(40,167,69,0.25);
+    border: 2px solid rgb(40,167,69);
+    border-radius: 5px;
+    width: 95%;
+    display: block;
+    padding: 1em;
 }
 
 .alert {
@@ -409,12 +436,12 @@ td {
     display: inline-block;
 }
 
-.title-slide {
+.title-slide, .section {
     vertical-align: middle;
 }
 
 .end-slide {
-    background-color: #20707e;
+    background-color: #1452a3;
     color: white;
     vertical-align: middle;
 }

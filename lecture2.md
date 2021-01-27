@@ -2,7 +2,7 @@ class: middle, center, title-slide
 
 # Deep Learning
 
-Lecture 2: Neural networks
+Lecture 2: Multi-layer perceptron
 
 <br><br>
 Prof. Gilles Louppe<br>
@@ -10,9 +10,14 @@ Prof. Gilles Louppe<br>
 
 ???
 
+R: folding trick
+R: expand on activation functions (see Lecun's)
+R: act functions https://www.youtube.com/watch?v=bj1fh3BvqSU&feature=youtu.be
+R: delay some backprop stuff for autodiff
+
 R: regenerate all svg files from draw.io
 
-R: backprop -> check https://mathematical-tours.github.io/book-sources/optim-ml/OptimML.pdf
+
 
 ---
 
