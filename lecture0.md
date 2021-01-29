@@ -47,9 +47,10 @@ class: middle
 ## My mission
 
 By the end of this course, you will have acquired a solid and detailed understanding of the field of deep learning. 
-You will have learned how to use and architecture deep neural networks for a wide range of probabilistic inference problems, including classification, regression, detection, generation or reinforcement learning.
 
-The techniques you will learn in this course apply to a wide variety of artificial intelligence problems, with plenty of applications in engineering and science.
+You will have learned how to use and architecture deep neural networks for a wide range of advanced probabilistic inference tasks, including supervised learning on high-dimensional and structured data, unsupervised representation learning, or conditional data generation. 
+
+These techniques apply to a wide variety of artificial intelligence problems, with plenty of applications in engineering and science.
 
 ---
 

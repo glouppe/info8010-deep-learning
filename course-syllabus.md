@@ -130,8 +130,8 @@ Project of your choosing. Details to be announced soon.
 - Oral exam (50%)
 - Reading assignment (10%)
 - Projects (40%)
-  - Homeworks (10%)
-  - Programming project (30%)
+  - Homeworks (10%) (optional)
+  - Programming project (30% or 40%)
 
 The reading assignment and the projects are **mandatory** for presenting the exam.
 
