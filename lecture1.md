@@ -353,7 +353,7 @@ Let $\mathcal{Y}^{\mathcal X}$ be the set of all functions $f : \mathcal{X} \to 
 
 We define the **Bayes risk** as the minimal expected risk over all possible functions,
 $$R\_B = \min\_{f \in \mathcal{Y}^{\mathcal X}} R(f),$$
-and call **Bayes model** the model $f_B$ that achieves this minimum.
+and call the **Bayes optimal model** the model $f_B$ that achieves this minimum.
 
 No model $f$ can perform better than $f\_B$.
 

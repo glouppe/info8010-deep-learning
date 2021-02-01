@@ -190,15 +190,29 @@ The common approach used in practice consists of:
 
 class: middle
 
-## A change of paradigm
+.center.circle.width-30[![](figures/lec0/bishop.jpg)]
 
-We used to program computers. We will now train them.
+.italic[For the last forty years we have programmed computers; for the next forty years we will train them.]
+
+.pull-right[Chris Bishop, 2020.]
 
 ---
 
 class: middle
 
 # Applications and successes
+
+---
+
+class: middle, center, black-slide
+
+class: middle, black-slide
+
+.center[
+<video loop controls preload="auto" height="500" width="600">
+  <source src="./figures/lec0/yann-dl.mp4" type="video/mp4">
+</video>
+]
 
 ---
 
@@ -267,6 +281,14 @@ Physics simulation (Sanchez-Gonzalez et al, 2020)
 
 ---
 
+class: middle, black-slide, center
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/gg7WjuFs8F4" frameborder="0" allowfullscreen></iframe>
+
+AI for Science (Deepmind, AlphaFold, 2020)
+
+---
+
 class: middle, center, black-slide
 
 <iframe width="600" height="450" src="https://www.youtube.com/embed/Khuj4ASldmU" frameborder="0" allowfullscreen></iframe>
@@ -304,18 +326,6 @@ class: middle, center
 .width-70[![](figures/lec0/turing-award.png)]
 
 .italic["ACM named .bold[Yoshua Bengio], .bold[Geoffrey Hinton], and .bold[Yann LeCun] recipients of the .bold[2018 ACM A.M. Turing Award] for conceptual and engineering breakthroughs that have made deep neural networks a critical component of computing."]
-
----
-
-class: middle, center, black-slide
-
-class: middle, black-slide
-
-.center[
-<video loop controls preload="auto" height="500" width="600">
-  <source src="./figures/lec0/yann-dl.mp4" type="video/mp4">
-</video>
-]
 
 ---
 
