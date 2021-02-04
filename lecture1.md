@@ -65,14 +65,6 @@ $\bigtriangleup^C$ is the simplex $\\{\mathbf{p} \in \mathbb{R}^C_+ : ||\mathbf{
 
 ---
 
-class: middle
-
-Or more generally, inference is concerned with the conditional estimation
-$$P(Y=y|X=\mathbf{x})$$
-for any new $(\mathbf{x},y)$.
-
----
-
 class: middle, center
 
 ![](figures/lec1/classification.png)
@@ -87,6 +79,14 @@ class: middle, center
 ![](figures/lec1/regression.png)
 
 Regression aims at estimating relationships among (usually continuous) variables.
+
+---
+
+class: middle
+
+Or more generally, inference is concerned with the conditional estimation
+$$P(Y=y|X=\mathbf{x})$$
+for any new $(\mathbf{x},y)$.
 
 ---
 
@@ -133,7 +133,7 @@ However, if we have i.i.d. training data $\mathbf{d} = \\\{(\mathbf{x}\_i, y\_i)
 compute an estimate, the **empirical risk** (or training error)
 $$\hat{R}(f, \mathbf{d}) = \frac{1}{N} \sum\_{(\mathbf{x}\_i, y\_i) \in \mathbf{d}} \ell(y\_i, f(\mathbf{x}\_i)).$$
 
-This estimate is *unbiased* and can be used for finding a good enough approximation of $f\_\*$. This results into the **empirical risk minimization principle**:
+This estimator is *unbiased* and can be used for finding a good enough approximation of $f\_\*$. This results into the **empirical risk minimization principle**:
 $$f\_\*^{\mathbf{d}} = \arg \min\_{f \in \mathcal{F}} \hat{R}(f, \mathbf{d})$$
 
 ???
@@ -279,6 +279,32 @@ count: false
 # Under-fitting and over-fitting
 
 What if we consider a hypothesis space $\mathcal{F}$ in which candidate functions $f$ are either too "simple" or too "complex" with respect to the true data generating process?
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec1/model-selection.png)]
+
+## Which model would you choose?
+
+.grid[
+.kol-1-3[
+
+$f\_1(x) = w\_0 + w\_1 x$
+
+]
+.kol-1-3[
+    
+$f\_2(x) = \sum\_{j=0}^3 w\_j x^j$
+
+]
+.kol-1-3[
+    
+$f\_3(x) = \sum\_{j=0}^{10^4} w\_j x^j$
+
+]
+]
 
 ---
 

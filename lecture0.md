@@ -48,9 +48,9 @@ class: middle
 
 By the end of this course, you will have acquired a solid and detailed understanding of the field of deep learning. 
 
-You will have learned how to use and architecture deep neural networks for a wide range of advanced probabilistic inference tasks, including supervised learning on high-dimensional and structured data, unsupervised representation learning, or conditional data generation. 
+You will have learned how to design deep neural networks for a wide range of advanced probabilistic inference tasks and how to train them.
 
-These techniques apply to a wide variety of artificial intelligence problems, with plenty of applications in engineering and science.
+These models seen in the course apply to a wide variety of artificial intelligence problems, with plenty of applications in engineering and science.
 
 ---
 
@@ -188,22 +188,6 @@ The common approach used in practice consists of:
 
 ---
 
-class: middle
-
-.center.circle.width-30[![](figures/lec0/bishop.jpg)]
-
-.italic[For the last forty years we have programmed computers; for the next forty years we will train them.]
-
-.pull-right[Chris Bishop, 2020.]
-
----
-
-class: middle
-
-# Applications and successes
-
----
-
 class: middle, center, black-slide
 
 class: middle, black-slide
@@ -213,6 +197,12 @@ class: middle, black-slide
   <source src="./figures/lec0/yann-dl.mp4" type="video/mp4">
 </video>
 ]
+
+---
+
+class: middle
+
+# Applications and successes
 
 ---
 
@@ -260,14 +250,6 @@ A full build of Autopilot neural networks involves 48 networks that take 70,000 
 
 ---
 
-class: middle, center, black-slide
-
-<iframe width="600" height="450" src="https://www.youtube.com/embed/7gh6_U7Nfjs" frameborder="0" allowfullscreen></iframe>
-
-Speech synthesis and question answering (Google, 2018)
-
----
-
 class: middle, black-slide
 
 .center[
@@ -286,6 +268,14 @@ class: middle, black-slide, center
 <iframe width="600" height="450" src="https://www.youtube.com/embed/gg7WjuFs8F4" frameborder="0" allowfullscreen></iframe>
 
 AI for Science (Deepmind, AlphaFold, 2020)
+
+---
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/7gh6_U7Nfjs" frameborder="0" allowfullscreen></iframe>
+
+Speech synthesis and question answering (Google, 2018)
 
 ---
 
@@ -387,6 +377,17 @@ From a practical perspective, deep learning
 - makes large trained networks a commodity.
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+.center.circle.width-30[![](figures/lec0/bishop.jpg)]
+
+.italic[For the last forty years we have programmed computers; for the next forty years we will train them.]
+
+.pull-right[Chris Bishop, 2020.]
+
 
 ---
 
