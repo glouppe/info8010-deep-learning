@@ -10,14 +10,11 @@ Prof. Gilles Louppe<br>
 
 ???
 
-- R: NeurIPS Bishop Posner -> we used to program computers, we will now train them
-
 R: folding trick
 R: expand on activation functions (see Lecun's)
 R: act functions https://www.youtube.com/watch?v=bj1fh3BvqSU&feature=youtu.be
 R: delay some backprop stuff for autodiff
 
-R: regenerate all svg files from draw.io
 
 
 
@@ -31,7 +28,7 @@ Explain and motivate the basic constructs of neural networks.
 - Stochastic gradient descent
 - From logistic regression to the multi-layer perceptron
 - Vanishing gradients and rectified networks
-- Universal approximation theorem (teaser)
+- Universal approximation theorem 
 
 ---
 
@@ -650,15 +647,6 @@ class: middle, center
 
 ---
 
-
-class: middle
-
-.width-100[![](figures/lec2/mlp.png)]
-
-.footnote[Credits: [PyTorch Deep Learning Minicourse](https://atcold.github.io/pytorch-Deep-Learning-Minicourse/), Alfredo Canziani, 2020.]
-
----
-
 class: middle
 
 ## Output layer 
@@ -735,12 +723,12 @@ $$
 
 class: middle
 
-## Reverse automatic differentiation
+## Backpropagation
 
 - Since a neural network is a **composition of differentiable functions**, the total
 derivatives of the loss can be evaluated backward, by applying the chain rule
 recursively over its computational graph.
-- The implementation of this procedure is called reverse *automatic differentiation*.
+- The implementation of this procedure is called reverse *automatic differentiation* or **backpropagation**.
 
 ---
 
@@ -788,14 +776,6 @@ $$\begin{aligned}
 &= \frac{\partial \sigma(u\_3)}{\partial u\_3} \frac{\partial \mathbf{W}\_2^T u\_2}{\partial u\_2} \frac{\partial \sigma(u\_1)}{\partial u\_1} \frac{\partial \mathbf{W}\_1^T \mathbf{x}}{\partial \mathbf{W}\_1}
 \end{aligned}$$
 Note how evaluating the partial derivatives requires the intermediate values computed forward.
-
----
-
-class: middle
-
-- This algorithm is also known as **backpropagation**.
-- An equivalent procedure can be defined to evaluate the derivatives in *forward mode*, from inputs to outputs.
-- Since differentiation is a linear operator, automatic differentiation can be implemented efficiently in terms of tensor operations.
 
 ---
 
@@ -900,7 +880,7 @@ Note that:
 
 ---
 
-# Universal approximation (teaser)
+# Universal approximation 
 
 
 Let us consider the 1-layer MLP
@@ -999,9 +979,19 @@ count: false
 
 ---
 
-class: middle, center
+class: middle
 
-(demo)
+.bold[Universal approximation theorem.] (Cybenko 1989; Hornik et al, 1991) Let $\sigma(\cdot)$ be a
+bounded, non-constant continuous function. Let $I\_p$ denote the $p$-dimensional hypercube, and
+$C(I\_p)$ denote the space of continuous functions on $I\_p$. Given any $f \in C(I\_p)$ and $\epsilon > 0$, there exists $q > 0$ and $v\_i, w\_i, b\_i, i=1, ..., q$ such that
+$$F(x) = \sum\_{i \leq q} v\_i \sigma(w\_i^T x + b\_i)$$
+satisfies
+$$\sup\_{x \in I\_p} |f(x) - F(x)| < \epsilon.$$
+
+- It guarantees that even a single hidden-layer network can represent any classification
+  problem in which the boundary is locally linear (smooth);
+- It does not inform about good/bad architectures, nor how they relate to the optimization procedure.
+- The universal approximation theorem generalizes to any non-polynomial (possibly unbounded) activation function, including the ReLU (Leshno, 1993).
 
 ---
 
