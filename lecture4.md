@@ -12,6 +12,8 @@ Prof. Gilles Louppe<br>
 
 https://drive.google.com/file/d/1e_9W8q9PL20iqOR-pfK89eILc_VtYaw1/view
 
+R: optimization is overparameterize nets
+
 ---
 
 # Today

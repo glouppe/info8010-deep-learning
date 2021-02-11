@@ -28,10 +28,10 @@ class: middle
 
 # Supervised learning
 
-Consider an unknown joint probability distribution $P(X,Y)$.
+Consider an unknown joint probability distribution $p\_{X,Y}$.
 
 Assume training data
-$$(\mathbf{x}\_i,y\_i) \sim P(X,Y),$$
+$$(\mathbf{x}\_i,y\_i) \sim p\_{X,Y},$$
 with $\mathbf{x}\_i \in \mathcal{X}$, $y\_i \in \mathcal{Y}$, $i=1, ..., N$.
 
 - In most cases,
@@ -39,7 +39,7 @@ with $\mathbf{x}\_i \in \mathcal{X}$, $y\_i \in \mathcal{Y}$, $i=1, ..., N$.
     - $y\_i$ is a scalar (e.g., a category or a real value).
 - The training data is generated i.i.d.
 - The training data can be of any finite size $N$.
-- In general, we do not have any prior information about $P(X,Y)$.
+- In general, we do not have any prior information about $p\_{X,Y}$.
 
 ???
 
@@ -54,7 +54,7 @@ class: middle
 Supervised learning is usually concerned with the two following inference problems:
 - **Classification**:
 Given $(\mathbf{x}\_i, y\_i) \in \mathcal{X}\times\mathcal{Y} = \mathbb{R}^p \times \bigtriangleup^C$, for $i=1, ..., N$,
-we want to estimate for any new $\mathbf{x}$, $$\arg \max\_y P(Y=y|X=\mathbf{x}).$$
+we want to estimate for any new $\mathbf{x}$, $$\arg \max\_y p(Y=y|X=\mathbf{x}).$$
 - **Regression**:
 Given $(\mathbf{x}\_i, y\_i) \in \mathcal{X}\times\mathcal{Y} =  \mathbb{R}^p \times \mathbb{R}$, for $i=1, ..., N$,
 we want to estimate for any new $\mathbf{x}$, $$\mathbb{E}\left[ Y|X=\mathbf{x} \right].$$
@@ -84,8 +84,8 @@ Regression aims at estimating relationships among (usually continuous) variables
 
 class: middle
 
-Or more generally, inference is concerned with the conditional estimation
-$$P(Y=y|X=\mathbf{x})$$
+Or more generally, inference is concerned with the estimation of the conditional 
+$$p(Y=y|X=\mathbf{x})$$
 for any new $(\mathbf{x},y)$.
 
 ---
@@ -116,9 +116,9 @@ class: middle
 Let $\mathcal{F}$ denote the hypothesis space, i.e. the set of all functions $f$ than can be produced by the chosen learning algorithm.
 
 We are looking for a function $f \in \mathcal{F}$ with a small **expected risk** (or generalization error)
-$$R(f) = \mathbb{E}\_{(\mathbf{x},y)\sim P(X,Y)}\left[ \ell(y, f(\mathbf{x})) \right].$$
+$$R(f) = \mathbb{E}\_{(\mathbf{x},y)\sim p\_{X,Y}}\left[ \ell(y, f(\mathbf{x})) \right].$$
 
-This means that for a given data generating distribution $P(X,Y)$ and for a given hypothesis space $\mathcal{F}$,
+This means that for a given data generating distribution $p\_{X,Y}$ and for a given hypothesis space $\mathcal{F}$,
 the optimal model is
 $$f\_\* = \arg \min\_{f \in \mathcal{F}} R(f).$$
 
@@ -126,7 +126,7 @@ $$f\_\* = \arg \min\_{f \in \mathcal{F}} R(f).$$
 
 class: middle
 
-Unfortunately, since $P(X,Y)$ is unknown, the expected risk cannot be evaluated and the optimal
+Unfortunately, since $p\_{X,Y}$ is unknown, the expected risk cannot be evaluated and the optimal
 model cannot be determined.
 
 However, if we have i.i.d. training data $\mathbf{d} = \\\{(\mathbf{x}\_i, y\_i) | i=1,\ldots,N\\\}$, we can
@@ -162,16 +162,16 @@ This is why tuning the parameters of the model to make it work on the training d
 
 .center[![](figures/lec1/data.png)]
 
-Consider the joint probability distribution $P(X,Y)$ induced by the data generating
+Consider the joint probability distribution $p\_{X,Y}$ induced by the data generating
 process
-$$(x,y) \sim P(X,Y) \Leftrightarrow x \sim U[-10;10], \epsilon \sim \mathcal{N}(0, \sigma^2), y = g(x) + \epsilon$$
+$$(x,y) \sim p\_{X,Y} \Leftrightarrow x \sim U[-10;10], \epsilon \sim \mathcal{N}(0, \sigma^2), y = g(x) + \epsilon$$
 where $x \in \mathbb{R}$, $y\in\mathbb{R}$ and $g$ is an unknown polynomial of degree 3.
 
 ---
 
 class: middle
 
-Our goal is to find a function $f$ that makes good predictions on average over $P(X,Y)$.
+Our goal is to find a function $f$ that makes good predictions on average over $p\_{X,Y}$.
 
 Consider the hypothesis space $f \in \mathcal{F}$ of polynomials of degree 3 defined through their parameters $\mathbf{w} \in \mathbb{R}^4$ such that
 $$\hat{y} \triangleq f(x; \mathbf{w}) = \sum\_{d=0}^3 w\_d x^d$$  
@@ -187,7 +187,7 @@ to measure how wrong the predictions are.
 Therefore, our goal is to find the best value $\mathbf{w}\_\*$ such that
 $$\begin{aligned}
 \mathbf{w}\_\* &= \arg\min\_\mathbf{w} R(\mathbf{w}) \\\\
-&= \arg\min\_\mathbf{w}  \mathbb{E}\_{(x,y)\sim P(X,Y)}\left[ (y-f(x;\mathbf{w}))^2 \right]
+&= \arg\min\_\mathbf{w}  \mathbb{E}\_{(x,y)\sim p\_{X,Y}}\left[ (y-f(x;\mathbf{w}))^2 \right]
 \end{aligned}$$
 
 ---
@@ -493,9 +493,9 @@ Consider a fixed point $x$ and the prediction $\hat{Y}=f\_*^\mathbf{d}(x)$ of th
 
 Then the local expected risk of $f\_\*^{\mathbf{d}}$ is
 $$\begin{aligned}
-R(f\_\*^{\mathbf{d}}|x) &= \mathbb{E}\_{y \sim P(Y|x)} \left[ (y - f\_\*^{\mathbf{d}}(x))^2 \right] \\\\
-&= \mathbb{E}\_{y \sim P(Y|x)} \left[ (y - f\_B(x) + f\_B(x) - f\_\*^{\mathbf{d}}(x))^2 \right]  \\\\
-&= \mathbb{E}\_{y \sim P(Y|x)} \left[ (y - f\_B(x))^2 \right] + \mathbb{E}\_{y \sim P(Y|x)} \left[ (f\_B(x) - f\_\*^{\mathbf{d}}(x))^2 \right] \\\\
+R(f\_\*^{\mathbf{d}}|x) &= \mathbb{E}\_{y \sim p\_{Y|x}} \left[ (y - f\_\*^{\mathbf{d}}(x))^2 \right] \\\\
+&= \mathbb{E}\_{y \sim p\_{Y|x}} \left[ (y - f\_B(x) + f\_B(x) - f\_\*^{\mathbf{d}}(x))^2 \right]  \\\\
+&= \mathbb{E}\_{y \sim p\_{Y|x}} \left[ (y - f\_B(x))^2 \right] + \mathbb{E}\_{y \sim p\_{Y|x}} \left[ (f\_B(x) - f\_\*^{\mathbf{d}}(x))^2 \right] \\\\
 &= R(f\_B|x) + (f\_B(x) - f\_\*^{\mathbf{d}}(x))^2
 \end{aligned}$$
 where
@@ -506,7 +506,7 @@ where
 
 class: middle
 
-If $\mathbf{d} \sim P(X,Y)$ is itself considered as a random variable, then $f\_*^\mathbf{d}$ is also a random variable, along with its predictions $\hat{Y}$.
+If $\mathbf{d} \sim p\_{X,Y}$ is itself considered as a random variable, then $f\_*^\mathbf{d}$ is also a random variable, along with its predictions $\hat{Y}$.
 
 ---
 

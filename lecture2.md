@@ -8,16 +8,6 @@ Lecture 2: Multi-layer perceptron
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-R: folding trick
-R: expand on activation functions (see Lecun's)
-R: act functions https://www.youtube.com/watch?v=bj1fh3BvqSU&feature=youtu.be
-R: delay some backprop stuff for autodiff
-
-
-
-
 ---
 
 # Today
@@ -40,6 +30,8 @@ class: middle
 
 # Threshold Logic Unit
 
+.grid[
+.kol-3-5[
 The Threshold Logic Unit (McCulloch and Pitts, 1943) was the first mathematical model for a **neuron**.
 
 
@@ -54,15 +46,11 @@ This unit can implement:
 - $\text{not}(a) = 1\_{\\\{-a + 0.5 \geq 0\\\}}$
 
 Therefore, any Boolean function can be built with such units.
-
----
-
-class: middle
-
-.center.width-40[![](figures/lec2/tlu.png)]
+]
+.kol-2-5.width-100[![](figures/lec2/tlu.png)]
+]
 
 .footnote[Credits: McCulloch and Pitts, [A logical calculus of ideas immanent in nervous activity](http://www.cse.chalmers.se/~coquand/AUTOMATA/mcp.pdf), 1943.]
-
 
 ---
 
@@ -76,12 +64,7 @@ $$f(\mathbf{x}) = \begin{cases}
 \end{cases}$$
 
 This model was originally motivated by biology, with $w_i$ being synaptic weights and $x_i$ and $f$ firing rates.
-
----
-
-class: middle
-
-.center.width-100[![](figures/lec2/perceptron.jpg)]
+.center.width-65[![](figures/lec2/perceptron.jpg)]
 
 .footnote[Credits: Frank Rosenblatt, [Mark I Perceptron operators' manual](https://apps.dtic.mil/dtic/tr/fulltext/u2/236965.pdf), 1960.]
 
@@ -171,13 +154,13 @@ for which the corresponding computational graph of $f$ is:
 
 # Linear discriminant analysis
 
-Consider training data $(\mathbf{x}, y) \sim P(X,Y)$, with
+Consider training data $(\mathbf{x}, y) \sim p\_{X,Y}$, with
 - $\mathbf{x} \in \mathbb{R}^p$,
 - $y \in \\\{0,1\\\}$.
 
 Assume class populations are Gaussian, with same covariance matrix $\Sigma$ (homoscedasticity):
 
-$$P(\mathbf{x}|y) = \frac{1}{\sqrt{(2\pi)^p |\Sigma|}} \exp \left(-\frac{1}{2}(\mathbf{x} - \mathbf{\mu}_y)^T \Sigma^{-1}(\mathbf{x} - \mathbf{\mu}_y) \right)$$
+$$p(\mathbf{x}|y) = \frac{1}{\sqrt{(2\pi)^p |\Sigma|}} \exp \left(-\frac{1}{2}(\mathbf{x} - \mathbf{\mu}_y)^T \Sigma^{-1}(\mathbf{x} - \mathbf{\mu}_y) \right)$$
 
 ---
 
@@ -185,9 +168,9 @@ $$P(\mathbf{x}|y) = \frac{1}{\sqrt{(2\pi)^p |\Sigma|}} \exp \left(-\frac{1}{2}(\
 Using the Bayes' rule, we have:
 
 $$\begin{aligned}
-P(Y=1|\mathbf{x}) &= \frac{P(\mathbf{x}|Y=1) P(Y=1)}{P(\mathbf{x})} \\\\
-         &= \frac{P(\mathbf{x}|Y=1) P(Y=1)}{P(\mathbf{x}|Y=0)P(Y=0) + P(\mathbf{x}|Y=1)P(Y=1)} \\\\
-         &= \frac{1}{1 + \frac{P(\mathbf{x}|Y=0)P(Y=0)}{P(\mathbf{x}|Y=1)P(Y=1)}}.
+p(y=1|\mathbf{x}) &= \frac{p(\mathbf{x}|y=1) p(y=1)}{p(\mathbf{x})} \\\\
+         &= \frac{p(\mathbf{x}|y=1) p(y=1)}{p(\mathbf{x}|y=0)p(y=0) + p(\mathbf{x}|y=1)p(y=1)} \\\\
+         &= \frac{1}{1 + \frac{p(\mathbf{x}|y=0)p(y=0)}{p(\mathbf{x}|y=1)p(y=1)}}.
 \end{aligned}$$
 
 --
@@ -200,7 +183,7 @@ $$\sigma(x) = \frac{1}{1 + \exp(-x)},$$
 
 we get
 
-$$P(Y=1|\mathbf{x}) = \sigma\left(\log \frac{P(\mathbf{x}|Y=1)}{P(\mathbf{x}|Y=0)} + \log \frac{P(Y=1)}{P(Y=0)}\right).$$
+$$p(y=1|\mathbf{x}) = \sigma\left(\log \frac{p(\mathbf{x}|y=1)}{p(\mathbf{x}|y=0)} + \log \frac{p(y=1)}{p(y=0)}\right).$$
 
 ---
 
@@ -209,9 +192,9 @@ class: middle
 Therefore,
 
 $$\begin{aligned}
-&P(Y=1|\mathbf{x}) \\\\
-&= \sigma\left(\log \frac{P(\mathbf{x}|Y=1)}{P(\mathbf{x}|Y=0)} + \underbrace{\log \frac{P(Y=1)}{P(Y=0)}}\_{a}\right) \\\\
-    &= \sigma\left(\log P(\mathbf{x}|Y=1) - \log P(\mathbf{x}|Y=0) + a\right) \\\\
+&p(y=1|\mathbf{x}) \\\\
+&= \sigma\left(\log \frac{p(\mathbf{x}|y=1)}{p(\mathbf{x}|y=0)} + \underbrace{\log \frac{p(y=1)}{p(y=0)}}\_{a}\right) \\\\
+    &= \sigma\left(\log p(\mathbf{x}|y=1) - \log p(\mathbf{x}|y=0) + a\right) \\\\
     &= \sigma\left(-\frac{1}{2}(\mathbf{x} - \mathbf{\mu}\_1)^T \Sigma^{-1}(\mathbf{x} - \mathbf{\mu}\_1) + \frac{1}{2}(\mathbf{x} - \mathbf{\mu}\_0)^T \Sigma^{-1}(\mathbf{x} - \mathbf{\mu}\_0) + a\right) \\\\
     &= \sigma\left(\underbrace{(\mu\_1-\mu\_0)^T \Sigma^{-1}}\_{\mathbf{w}^T}\mathbf{x} + \underbrace{\frac{1}{2}(\mu\_0^T \Sigma^{-1} \mu\_0 - \mu\_1^T \Sigma^{-1} \mu\_1) + a}\_{b} \right) \\\\
     &= \sigma\left(\mathbf{w}^T \mathbf{x} + b\right)
@@ -263,7 +246,7 @@ This unit is the main **primitive** of all neural networks!
 
 # Logistic regression
 
-Same model $$P(Y=1|\mathbf{x}) = \sigma\left(\mathbf{w}^T \mathbf{x} + b\right)$$ as for linear discriminant analysis.
+Same model $$p(y=1|\mathbf{x}) = \sigma\left(\mathbf{w}^T \mathbf{x} + b\right)$$ as for linear discriminant analysis.
 
 But,
 - **ignore** model assumptions (Gaussian class populations, homoscedasticity);
@@ -276,13 +259,13 @@ class: middle
 We have,
 
 $$\begin{aligned}
-&\arg \max\_{\mathbf{w},b} P(\mathbf{d}|\mathbf{w},b) \\\\
-&= \arg \max\_{\mathbf{w},b} \prod\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} P(Y=y\_i|\mathbf{x}\_i, \mathbf{w},b) \\\\
+&\arg \max\_{\mathbf{w},b} p(\mathbf{d}|\mathbf{w},b) \\\\
+&= \arg \max\_{\mathbf{w},b} \prod\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} p(y=y\_i|\mathbf{x}\_i, \mathbf{w},b) \\\\
 &= \arg \max\_{\mathbf{w},b} \prod\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} \sigma(\mathbf{w}^T \mathbf{x}\_i + b)^{y\_i}  (1-\sigma(\mathbf{w}^T \mathbf{x}\_i + b))^{1-y\_i}  \\\\
 &= \arg \min\_{\mathbf{w},b} \underbrace{\sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} -{y\_i} \log\sigma(\mathbf{w}^T \mathbf{x}\_i + b) - {(1-y\_i)} \log (1-\sigma(\mathbf{w}^T \mathbf{x}\_i + b))}\_{\mathcal{L}(\mathbf{w}, b) = \sum\_i \ell(y\_i, \hat{y}(\mathbf{x}\_i; \mathbf{w}, b))}
 \end{aligned}$$
 
-This loss is an instance of the **cross-entropy** $$H(p,q) = \mathbb{E}_p[-\log q]$$ for  $p=Y|\mathbf{x}\_i$ and $q=\hat{Y}|\mathbf{x}\_i$.
+This loss is an instance of the **cross-entropy** $$H(p,q) = \mathbb{E}\_p[-\log q]$$ for  $p=p\_{Y|\mathbf{x}\_i}$ and $q=p\_{\hat{Y}|\mathbf{x}\_i}$.
 
 ---
 
@@ -651,8 +634,8 @@ class: middle
 
 ## Output layer 
 
-- For binary classification, the width $q$ of the last layer $L$ is set to $1$, which results in a single output $h\_L \in [0,1]$ that models the probability $P(Y=1|\mathbf{x})$.
-- For multi-class classification, the sigmoid action $\sigma$ in the last layer can be generalized to produce a vector $\mathbf{h}\_L \in \bigtriangleup^C$ of probability estimates $P(Y=i|\mathbf{x})$.
+- For binary classification, the width $q$ of the last layer $L$ is set to $1$, which results in a single output $h\_L \in [0,1]$ that models the probability $p(y=1|\mathbf{x})$.
+- For multi-class classification, the sigmoid action $\sigma$ in the last layer can be generalized to produce a vector $\mathbf{h}\_L \in \bigtriangleup^C$ of probability estimates $p(y=i|\mathbf{x})$.
 <br><br>
 This activation is the $\text{Softmax}$ function, where its $i$-th output is defined as
 $$\text{Softmax}(\mathbf{z})\_i = \frac{\exp(z\_i)}{\sum\_{j=1}^C \exp(z\_j)},$$
@@ -664,7 +647,7 @@ for $i=1, ..., C$.
 # Regression
 
 For regression problems, one usually starts with the assumption that
-$$P(y|\mathbf{x}) = \mathcal{N}(y; \mu=f(\mathbf{x}; \theta), \sigma^2=1),$$
+$$p(y|\mathbf{x}) = \mathcal{N}(y; \mu=f(\mathbf{x}; \theta), \sigma^2=1),$$
 where $f$ is parameterized with a neural network which last layer does not contain any final activation.
 
 ---
@@ -673,9 +656,9 @@ class: middle
 
 We have,
 $$\begin{aligned}
-&\arg \max\_{\theta} P(\mathbf{d}|\theta) \\\\
-&= \arg \max\_{\theta} \prod\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} P(Y=y\_i|\mathbf{x}\_i, \theta) \\\\
-&= \arg \min\_{\theta} -\sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} \log P(Y=y\_i|\mathbf{x}\_i, \theta) \\\\
+&\arg \max\_{\theta} p(\mathbf{d}|\theta) \\\\
+&= \arg \max\_{\theta} \prod\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} p(y=y\_i|\mathbf{x}\_i, \theta) \\\\
+&= \arg \min\_{\theta} -\sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} \log p(y=y\_i|\mathbf{x}\_i, \theta) \\\\
 &= \arg \min\_{\theta} -\sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} \log\left( \frac{1}{\sqrt{2\pi}} \exp\(-\frac{1}{2}(y\_i - f(\mathbf{x};\theta))^2\) \right)\\\\
 &= \arg \min\_{\theta} \sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} (y\_i - f(\mathbf{x};\theta))^2,
 \end{aligned}$$
@@ -683,13 +666,20 @@ which recovers the common **squared error** loss $\ell(y, \hat{y}) = (y-\hat{y})
 
 ---
 
-# Automatic differentiation
+# Automatic differentiation (teaser)
 
-To minimize $\mathcal{L}(\theta)$ with stochastic gradient descent, we need the gradient $\nabla_\theta \mathcal{\ell}(\theta_t)$.
+To minimize $\mathcal{L}(\theta)$ with stochastic gradient descent, we need the gradient 
+$$\nabla \mathcal{\ell}(\theta) = 
+\begin{bmatrix}
+\frac{\partial \mathcal{\ell}}{\partial \theta\_0}(\theta) \\\\
+\\\\
+\vdots \\\\
+\\\\
+\frac{\partial \mathcal{\ell}}{\partial \theta\_{K-1}}(\theta) 
+\end{bmatrix} 
+$$
+i.e., a vector that gathers the partial derivatives of the loss for each model parameter $\theta\_k$ for $k=0, \ldots, K-1$.
 
-Therefore, we require the evaluation of the (total) derivatives
-$$\frac{\text{d} \ell}{\text{d} \mathbf{W}\_k}  \,\text{and}\,  \frac{\text{d} \mathcal{\ell}}{\text{d} \mathbf{b}\_k}$$
-of the loss $\ell$ with respect to all model parameters $\mathbf{W}\_k$, $\mathbf{b}\_k$, for $k=1, ..., L$.
 
 These derivatives can be evaluated automatically from the *computational graph* of $\ell$ using **automatic differentiation**.
 
@@ -697,26 +687,10 @@ These derivatives can be evaluated automatically from the *computational graph* 
 
 class: middle
 
-## Chain rule
-
-.center.width-60[![](figures/lec2/graphs/ad-example.svg)]
-
-Let us consider a 1-dimensional output composition $f \circ g$, such that
-$$\begin{aligned}
-y &= f(\mathbf{u}) \\\\
-\mathbf{u} &= g(x) = (g\_1(x), ..., g\_m(x)).
-\end{aligned}$$
-
----
-
-class: middle
-
-The **chain rule** states that $(f \circ g)' = (f' \circ g) g'.$
-
-For the total derivative, the chain rule generalizes to
+In Leibniz notations, the **chain rule** states that
 $$
 \begin{aligned}
-\frac{\text{d} y}{\text{d} x} &= \sum\_{k=1}^m \frac{\partial y}{\partial u\_k} \underbrace{\frac{\text{d} u\_k}{\text{d} x}}\_{\text{recursive case}}
+\frac{\partial \ell}{\partial \theta\_i} &= \sum\_{k \in \text{parents}(\ell)} \frac{\partial \ell}{\partial u\_k} \underbrace{\frac{\partial u\_k}{\partial \theta\_i}}\_{\text{recursive case}}
 \end{aligned}$$
 
 ---
@@ -753,10 +727,11 @@ In the *forward pass*, intermediate values are all computed from inputs to outpu
 
 class: middle
 
-The total derivative can be computed through a **backward pass**, by walking through all paths from outputs to parameters in the computational graph and accumulating the terms. For example, for $\frac{\text{d} \ell}{\text{d} \mathbf{W}\_1}$  we have:
+The partial derivatives can be computed through a **backward pass**, by walking through all paths from outputs to parameters in the computational graph and accumulating the terms. 
+For example, for $\frac{\partial \ell}{\partial \mathbf{W}\_1}$  we have:
 $$\begin{aligned}
-\frac{\text{d} \ell}{\text{d} \mathbf{W}\_1} &= \frac{\partial \ell}{\partial u\_8}\frac{\text{d} u\_8}{\text{d} \mathbf{W}\_1} + \frac{\partial \ell}{\partial u\_4}\frac{\text{d} u\_4}{\text{d} \mathbf{W}\_1} \\\\
-\frac{\text{d} u\_8}{\text{d} \mathbf{W}\_1} &= ...
+\frac{\partial \ell}{\partial \mathbf{W}\_1} &= \frac{\partial \ell}{\partial u\_8}\frac{\partial u\_8}{\partial \mathbf{W}\_1} + \frac{\partial \ell}{\partial u\_4}\frac{\partial u\_4}{\partial \mathbf{W}\_1} \\\\
+\frac{\partial u\_8}{\partial \mathbf{W}\_1} &= ...
 \end{aligned}$$
 
 .width-100[![](figures/lec2/graphs/backprop2.svg)]
@@ -772,7 +747,7 @@ Let us zoom in on the computation of the network output $\hat{y}$ and of its der
 - *Forward pass*: values $u\_1$, $u\_2$, $u\_3$ and $\hat{y}$ are computed by traversing the graph from inputs to outputs given $\mathbf{x}$, $\mathbf{W}\_1$ and $\mathbf{W}\_2$.
 - **Backward pass**: by the chain rule we have
 $$\begin{aligned}
-\frac{\text{d} \hat{y}}{\text{d} \mathbf{W}\_1} &= \frac{\partial \hat{y}}{\partial u\_3} \frac{\partial u\_3}{\partial u\_2} \frac{\partial u\_2}{\partial u\_1} \frac{\partial u\_1}{\partial \mathbf{W}\_1} \\\\
+\frac{\partial \hat{y}}{\partial \mathbf{W}\_1} &= \frac{\partial \hat{y}}{\partial u\_3} \frac{\partial u\_3}{\partial u\_2} \frac{\partial u\_2}{\partial u\_1} \frac{\partial u\_1}{\partial \mathbf{W}\_1} \\\\
 &= \frac{\partial \sigma(u\_3)}{\partial u\_3} \frac{\partial \mathbf{W}\_2^T u\_2}{\partial u\_2} \frac{\partial \sigma(u\_1)}{\partial u\_1} \frac{\partial \mathbf{W}\_1^T \mathbf{x}}{\partial \mathbf{W}\_1}
 \end{aligned}$$
 Note how evaluating the partial derivatives requires the intermediate values computed forward.
@@ -804,8 +779,8 @@ u\_4 &= \sigma(u\_3) \\\\
 u\_5 &= w\_3 u\_4 \\\\
 \hat{y} &= \sigma(u\_5)
 \end{aligned}$$
-and its derivative $\frac{\text{d}\hat{y}}{\text{d}w\_1}$ as
-$$\begin{aligned}\frac{\text{d}\hat{y}}{\text{d}w\_1} &= \frac{\partial \hat{y}}{\partial u\_5} \frac{\partial u\_5}{\partial u\_4} \frac{\partial u\_4}{\partial u\_3} \frac{\partial u\_3}{\partial u\_2}\frac{\partial u\_2}{\partial u\_1}\frac{\partial u\_1}{\partial w\_1}\\\\
+and its derivative $\frac{\partial\hat{y}}{\partial w\_1}$ as
+$$\begin{aligned}\frac{\partial\hat{y}}{\partial w\_1} &= \frac{\partial \hat{y}}{\partial u\_5} \frac{\partial u\_5}{\partial u\_4} \frac{\partial u\_4}{\partial u\_3} \frac{\partial u\_3}{\partial u\_2}\frac{\partial u\_2}{\partial u\_1}\frac{\partial u\_1}{\partial w\_1}\\\\
 &= \frac{\partial \sigma(u\_5)}{\partial u\_5} w\_3 \frac{\partial \sigma(u\_3)}{\partial u\_3} w\_2 \frac{\partial \sigma(u\_1)}{\partial u\_1} x
 \end{aligned}$$
 
@@ -817,9 +792,9 @@ The derivative of the sigmoid activation function $\sigma$ is:
 
 .center[![](figures/lec2/activation-grad-sigmoid.png)]
 
-$$\frac{\text{d} \sigma}{\text{d} x}(x) = \sigma(x)(1-\sigma(x))$$
+$$\frac{\partial  \sigma}{\partial  x}(x) = \sigma(x)(1-\sigma(x))$$
 
-Notice that $0 \leq \frac{\text{d} \sigma}{\text{d} x}(x) \leq \frac{1}{4}$ for all $x$.
+Notice that $0 \leq \frac{\partial  \sigma}{\partial  x}(x) \leq \frac{1}{4}$ for all $x$.
 
 ---
 
@@ -829,9 +804,9 @@ Assume that weights $w\_1, w\_2, w\_3$ are initialized randomly from a Gaussian 
 
 Then,
 
-$$\frac{\text{d}\hat{y}}{\text{d}w\_1} = \underbrace{\frac{\partial \sigma(u\_5)}{\partial u\_5}}\_{\leq \frac{1}{4}} \underbrace{w\_3}\_{\leq 1} \underbrace{\frac{\partial \sigma(u\_3)}{\partial u\_3}}\_{\leq \frac{1}{4}} \underbrace{w\_2}\_{\leq 1} \underbrace{\frac{\sigma(u\_1)}{\partial u\_1}}\_{\leq \frac{1}{4}} x$$
+$$\frac{\partial \hat{y}}{\partial w\_1} = \underbrace{\frac{\partial \sigma(u\_5)}{\partial u\_5}}\_{\leq \frac{1}{4}} \underbrace{w\_3}\_{\leq 1} \underbrace{\frac{\partial \sigma(u\_3)}{\partial u\_3}}\_{\leq \frac{1}{4}} \underbrace{w\_2}\_{\leq 1} \underbrace{\frac{\sigma(u\_1)}{\partial u\_1}}\_{\leq \frac{1}{4}} x$$
 
-This implies that the gradient $\frac{\text{d}\hat{y}}{\text{d}w\_1}$ **exponentially** shrinks to zero as the number of layers in the network increases.
+This implies that the derivative $\frac{\partial \hat{y}}{\partial w\_1}$ **exponentially** shrinks to zero as the number of layers in the network increases.
 
 Hence the vanishing gradient problem.
 
@@ -855,7 +830,7 @@ class: middle
 
 Note that the derivative of the ReLU function is
 
-$$\frac{\text{d}}{\text{d}x} \text{ReLU}(x) = \begin{cases}
+$$\frac{\partial }{\partial x} \text{ReLU}(x) = \begin{cases}
    0 &\text{if } x \leq 0  \\\\
    1 &\text{otherwise}
 \end{cases}$$
@@ -869,7 +844,7 @@ class: middle
 
 Therefore,
 
-$$\frac{\text{d}\hat{y}}{\text{d}w\_1} = \underbrace{\frac{\partial \sigma(u\_5)}{\partial u\_5}}\_{= 1} w\_3 \underbrace{\frac{\partial \sigma(u\_3)}{\partial u\_3}}\_{= 1} w\_2 \underbrace{\frac{\partial \sigma(u\_1)}{\partial u\_1}}\_{= 1} x$$
+$$\frac{\partial \hat{y}}{\partial w\_1} = \underbrace{\frac{\partial \sigma(u\_5)}{\partial u\_5}}\_{= 1} w\_3 \underbrace{\frac{\partial \sigma(u\_3)}{\partial u\_3}}\_{= 1} w\_2 \underbrace{\frac{\partial \sigma(u\_1)}{\partial u\_1}}\_{= 1} x$$
 
 This **solves** the vanishing gradient problem, even for deep networks! (provided proper initialization)
 
@@ -992,6 +967,12 @@ $$\sup\_{x \in I\_p} |f(x) - F(x)| < \epsilon.$$
   problem in which the boundary is locally linear (smooth);
 - It does not inform about good/bad architectures, nor how they relate to the optimization procedure.
 - The universal approximation theorem generalizes to any non-polynomial (possibly unbounded) activation function, including the ReLU (Leshno, 1993).
+
+---
+
+class: middle, center
+
+(demo)
 
 ---
 
