@@ -855,6 +855,12 @@ Note that:
 
 ---
 
+class: middle, center
+
+(demo)
+
+---
+
 # Universal approximation 
 
 
@@ -967,12 +973,6 @@ $$\sup\_{x \in I\_p} |f(x) - F(x)| < \epsilon.$$
   problem in which the boundary is locally linear (smooth);
 - It does not inform about good/bad architectures, nor how they relate to the optimization procedure.
 - The universal approximation theorem generalizes to any non-polynomial (possibly unbounded) activation function, including the ReLU (Leshno, 1993).
-
----
-
-class: middle, center
-
-(demo)
 
 ---
 
