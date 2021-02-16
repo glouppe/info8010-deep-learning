@@ -229,7 +229,7 @@ td {
     display: block;
 }
 
-.question {
+.question, .success {
     background-color: rgba(40,167,69,0.25);
     border: 2px solid rgb(40,167,69);
     border-radius: 5px;

@@ -15,6 +15,8 @@ R: argue for inductive bias
 R: symmetries conv https://www.youtube.com/watch?v=0_O8PdZBc5s
 R: https://www.pnas.org/content/116/4/1074
 
+R: loss surfaces for skip connections https://jithinjk.github.io/blog/nn_loss_visualized.md.html
+
 ---
 
 # Today
