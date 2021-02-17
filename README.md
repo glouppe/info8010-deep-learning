@@ -38,9 +38,9 @@ TBD.
 
 Your task is to read and summarize a major scientific paper in the field of deep learning. You are free to select one among the following three papers:
 
-> - A. Vaswani et al, "Attention is all you need", 2017. [[pdf](https://arxiv.org/abs/1706.03762)]
 > - T. Karras al, "Analyzing and improving the image quality of StyleGAN", 2020. [[pdf](https://openaccess.thecvf.com/content_CVPR_2020/papers/Karras_Analyzing_and_Improving_the_Image_Quality_of_StyleGAN_CVPR_2020_paper.pdf)]
-> - Y. Ovadia, "Can You Trust Your Model's Uncertainty? Evaluating Predictive Uncertainty Under Dataset Shift", 2019 [[pdf](https://arxiv.org/pdf/1906.02530)]
+> - E. Nalisnick, "Do Deep Generative Models Know What They Don't Know?", 2019 [[pdf](https://arxiv.org/pdf/1810.09136)]
+> - M. Cranmer et al, "Discovering Symbolic Models from Deep Learning with Inductive Biases", 2020. [[pdf](https://arxiv.org/pdf/2006.11287.pdf)]
  
 You should produce a report that summarizes the problem that is tackled by the paper and explains why it is challenging or important. The report should outline the main contributions and results with respect to the problem that is addressed. It should also include a critical discussion of the advantages and shortcomings of the contributions of the paper.
 Further guidelines for writing a good summary can be found [here](https://web.stanford.edu/class/cs224n/project/project-proposal-instructions.pdf) (Section 2, "The summary").
