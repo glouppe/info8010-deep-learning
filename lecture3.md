@@ -36,7 +36,7 @@ class: middle
 
 ## Motivation
 
-- Gradient-based training algorithms are the workhose of deep learning.
+- Gradient-based training algorithms are the workhorse of deep learning.
 - Deriving gradients by hand is tedious and error prone.
   This becomes quickly impractical for complex models.
 - Changes to the model require rederiving the gradient.
@@ -76,7 +76,7 @@ def predict(params, inputs):
 
 def loss_fun(params, inputs, targets):
     preds = predict(params, inputs)
-    return jnp.sum((preds - targets)**2)
+    return jnp.mean((preds - targets)**2)
 
 grad_fun = grad(loss_fun)
 ```
@@ -110,7 +110,7 @@ class: middle
 Let $f: \mathbb{R} \to \mathbb{R}$. 
 
 The derivative of $f$ is
-$$f'(x) = \frac{\partial f}{\partial x}(x) = \lim\_{h \to 0} \frac{f(x + h) - f(x)}{h},$$
+$$f'(x) = \frac{\partial f}{\partial x}(x) \triangleq \lim\_{h \to 0} \frac{f(x + h) - f(x)}{h},$$
 where
 - $f'(x)$ is the Lagrange notation,
 - $\frac{\partial f}{\partial x}(x)$ is the Leibniz notation.
@@ -128,7 +128,7 @@ The derivative $\frac{\partial f(x)}{\partial x}$ of $f$ represents its instanta
 # Gradient
 
 The gradient of $f : \mathbb{R}^n \to \mathbb{R}$ is
-$$\nabla f(\mathbf{x}) = 
+$$\nabla f(\mathbf{x}) \triangleq 
 \begin{bmatrix}
 \frac{\partial f}{\partial x\_1}(\mathbf{x}) \\\\
 \\\\
@@ -148,7 +148,7 @@ where $\mathbf{e}\_j$ is the $j$-th basis vector.
 
 The Jacobian of $\mathbf{f} : \mathbb{R}^n \to \mathbb{R}^m$ is
 $$\begin{aligned}
-J\_\mathbf{f}(\mathbf{x}) = \frac{\partial \mathbf{f}}{\partial \mathbf{x}}(\mathbf{x}) &=
+J\_\mathbf{f}(\mathbf{x}) = \frac{\partial \mathbf{f}}{\partial \mathbf{x}}(\mathbf{x}) &\triangleq
 \begin{bmatrix}
 \frac{\partial f\_1}{\partial x\_1}(\mathbf{x}) & \ldots & \frac{\partial f\_1}{\partial x\_n}(\mathbf{x})\\\\
 \\\\
@@ -216,8 +216,8 @@ class: middle
 
 ## Complexity
 
-The complexity of the forward and backward accumulations are
-$$n\_0 \sum\_{k=1}^{t-1} n\_k n\_{k+1} \quad \text{and} \quad n\_t \sum\_{k=0}^{t-2} n\_k n\_{k+1}.$$
+The time complexity of the forward and reverse accumulations are
+$$\mathcal{O}\left( n\_0 \sum\_{k=1}^{t-1} n\_k n\_{k+1} \right) \quad \text{and} \quad  \mathcal{O}\left( n\_t \sum\_{k=0}^{t-2} n\_k n\_{k+1} \right).$$
 
 (Prove it!)
 
@@ -234,7 +234,7 @@ Prove it.
 
 Chain compositions can be generalized to feedforward neural networks of the form
 $$\mathbf{x}\_k = \mathbf{f}\_k(\mathbf{x}\_{k-1}, \theta\_{k-1})$$
-for $k=1, \ldots, t$, and where $\theta\_{k-1}$ are vectors of parameters and $\mathbf{x}\_0 \in \mathbb{R}^{n\_0}$ is given.
+for $k=1, \ldots, t$, and where $\theta\_{k-1}$ are vectors of parameters and $\mathbf{x}\_0 \in \mathbb{R}^{n\_0}$ is given. In supervised learning, $\mathbf{f}\_t$ usually corresponds to a scalar loss $\ell$, hence $n\_t = 1$.
 
 <br><br>
 .center.width-100[![](figures/lec3/feedforward-nn.svg)]
@@ -273,8 +273,8 @@ class: middle
 
 .center.width-100[![](figures/lec3/computationa-graph.svg)]
 
-This computation can represented by a **directed acyclic graph** where 
-- nodes are the variables $\mathbf{x}\_k$,
+This computation can be represented by a **directed acyclic graph** where 
+- the nodes are the variables $\mathbf{x}\_k$,
 - an edge connects $x\_i$ to $x\_k$ if $x\_i$ is an argument of $\mathbf{f}\_k$.
 
 The evaluation of $\mathbf{x}\_t = \mathbf{f}(\mathbf{x}\_1, \ldots, \mathbf{x}\_s)$ thus corresponds to a forward traversal of this graph.
@@ -327,11 +327,13 @@ class: middle
 
 .alert[Forward mode automatic differentiation needs to be repeated for $k=1, \ldots, s$. For a large $s$, this is prohibitive.]
 
+.success[However, the cost in terms of memory is limited since temporary variables can be freed as soon as their child nodes have all been computed.]
+
 ---
 
 # Backward mode
 
-Instead evaluating the Jacobians $\frac{\partial \mathbf{x}\_k}{\partial \mathbf{x}\_1} \in \mathbb{R}^{n\_k \times n\_1}$ for $k=s+1, \ldots, t$, the **reverse mode** of automatic differentation consists in computing
+Instead of evaluating the Jacobians $\frac{\partial \mathbf{x}\_k}{\partial \mathbf{x}\_1} \in \mathbb{R}^{n\_k \times n\_1}$ for $k=s+1, \ldots, t$, the **reverse mode** of automatic differentation consists in computing
 $$\frac{\partial \mathbf{x}\_t}{\partial \mathbf{x}\_k} \in \mathbb{R}^{n\_t \times n\_k}$$
 recursively from $k=t$ down to $k=1$.
 
@@ -368,6 +370,8 @@ class: middle, center
 class: middle
 
 .success[The advantage of backward mode automatic differentiation is that a single traversal of the graph allows to compute all $\frac{\partial \mathbf{x}\_t}{\partial \mathbf{x}\_k}$.]
+
+.alert[However, the cost in terms of memory is significant since all the temporary variables computed during the forward pass must be kept in memory.]
 
 ---
 
@@ -412,22 +416,6 @@ The computational graph is either built
 
 class: middle
 
-```python
-import jax.numpy as jnp
-from jax import grad
-
-def add(a, b):
-    return a + b
-
-a = jnp.array([1, 2, 3])
-b = jnp.array([4, 5, 6])
-print(grad(add)(a, b))
-```
-
----
-
-class: middle
-
 .center.width-35[![](figures/lec3/vjp.svg)]
 ## VJPs
 
@@ -435,7 +423,7 @@ In the backward recursive update, in the situation above, we have when $\mathbf{
 $$\frac{\partial \mathbf{x}\_t}{\partial \mathbf{x}\_k} = \underbrace{\frac{\partial \mathbf{x}\_t}{\partial \mathbf{x}\_m}}\_{1 \times n\_m} \underbrace{\left[ \frac{\partial \mathbf{x}\_m}{\partial \mathbf{x}\_k} \right]}\_{n\_m \times n\_k}$$
 
 - Therefore, each primitive only needs to define its **vector-Jacobian product** (VJP).
-The Jacobian $\left[ \frac{\partial \mathbf{x}\_m}{\partial \mathbf{x}\_k} \right]$ is never explicitly built. It is usually simpler and more (memory) efficient to compute the VJP directly.
+The Jacobian $\left[ \frac{\partial \mathbf{x}\_m}{\partial \mathbf{x}\_k} \right]$ is never explicitly built. It is usually simpler, faster, and more memory efficient to compute the VJP directly.
 - Most reverse mode AD systems compose VJPs backward to compute $\frac{\partial \mathbf{x}\_t}{\partial \mathbf{x}\_1}$.
 
 
@@ -447,7 +435,7 @@ class: middle
 
 Similarly, when $n\_1 = 1$, the forward recursive update
 $$\frac{\partial \mathbf{x}\_k}{\partial \mathbf{x}\_1} = \underbrace{\left[ \frac{\partial \mathbf{x}\_k}{\partial \mathbf{x}\_l} \right]}\_{n\_k \times n\_l} \underbrace{\frac{\partial \mathbf{x}\_l}{\partial \mathbf{x}\_1}}\_{n\_l \times 1}$$
-is usually implemented in terms of Jacobian-vector products (JVP) locally defined at each primitive.
+is usually implemented in terms of **Jacobian-vector products** (JVP) locally defined at each primitive.
 
 ---
 
@@ -490,18 +478,32 @@ You should be using automatic differentiation (Ryan Adams, 2016)
 
 ---
 
-class: middle
+class: middle, center, black-slide
 
-## Optimizing a wing
+<iframe width="600" height="450" src="https://www.youtube.com/embed/1ohtSlux9EQ?start=3440" frameborder="0" allowfullscreen></iframe>
+
+Learning protein structure with a differentiable simulator (Ingraham et al, 2019)
+
+---
+
+class: middle
 
 .center[
 
 .width-100[![](figures/lec3/wing.png)]
 
-(Sam Greydanus, 2020)
+Optimizing a wing (Sam Greydanus, 2020)
 
 [[Run in browser](https://bit.ly/3j3Wcu4)]
 ]
+
+---
+
+class: middle, center
+
+.width-75[![](figures/lec3/tweet.png)]
+
+... and plenty of other applications! (See this [thread](https://twitter.com/glouppe/status/1361941266901131265))
 
 ---
 

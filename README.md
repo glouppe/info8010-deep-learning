@@ -36,7 +36,22 @@ TBD.
 
 ## Reading assignment
 
-TBD.
+Your task is to read and summarize a major scientific paper in the field of deep learning. You are free to select one among the following three papers:
+
+> - A. Vaswani et al, "Attention is all you need", 2017. [[pdf](https://arxiv.org/abs/1706.03762)]
+> - T. Karras al, "Analyzing and improving the image quality of StyleGAN", 2020. [[pdf](https://openaccess.thecvf.com/content_CVPR_2020/papers/Karras_Analyzing_and_Improving_the_Image_Quality_of_StyleGAN_CVPR_2020_paper.pdf)]
+> - Y. Ovadia, "Can You Trust Your Model's Uncertainty? Evaluating Predictive Uncertainty Under Dataset Shift", 2019 [[pdf](https://arxiv.org/pdf/1906.02530)]
+ 
+You should produce a report that summarizes the problem that is tackled by the paper and explains why it is challenging or important. The report should outline the main contributions and results with respect to the problem that is addressed. It should also include a critical discussion of the advantages and shortcomings of the contributions of the paper.
+Further guidelines for writing a good summary can be found [here](https://web.stanford.edu/class/cs224n/project/project-proposal-instructions.pdf) (Section 2, "The summary").
+
+Constraints:
+- You can work in groups of maximum 3 students.
+- You report must be written in English.
+- 2 pages (excluding references, if any).
+- Formatted using the LaTeX template [`template-report.tex`](https://glouppe.github.io/info8010-deep-learning/template-report.tex).
+
+Your report should be submitted  by **April 30, 2021 at 23:59** on the [submission platform](https://submit.montefiore.ulg.ac.be/). This is a **hard** deadline.
 
 ## Archives
 
