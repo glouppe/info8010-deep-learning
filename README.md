@@ -42,7 +42,7 @@ Your task is to read and summarize a major scientific paper in the field of deep
 > - E. Nalisnick, "Do Deep Generative Models Know What They Don't Know?", 2019 [[pdf](https://arxiv.org/pdf/1810.09136)]
 > - M. Cranmer et al, "Discovering Symbolic Models from Deep Learning with Inductive Biases", 2020. [[pdf](https://arxiv.org/pdf/2006.11287.pdf)]
  
-You should produce a report that summarizes the problem that is tackled by the paper and explains why it is challenging or important. The report should outline the main contributions and results with respect to the problem that is addressed. It should also include a critical discussion of the advantages and shortcomings of the contributions of the paper.
+You should produce a report that summarizes the problem that is tackled by the paper and explains why it is challenging or important, from the perspective of the wider research context. The report should outline the main contributions and results with respect to the problem that is addressed. It should also include a critical discussion of the advantages and shortcomings of the contributions of the paper.
 Further guidelines for writing a good summary can be found [here](https://web.stanford.edu/class/cs224n/project/project-proposal-instructions.pdf) (Section 2, "The summary").
 
 Constraints:
