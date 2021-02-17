@@ -62,7 +62,7 @@ class: middle
 
 ## Programs as differentiable functions
 
-A program is defined as the composition of primitive operations that we know how to derive.
+A program is defined as a composition of primitive operations that we know how to derive individually.
 
 ```python
 import jax.numpy as jnp
@@ -405,7 +405,7 @@ class: middle
 
 Primitive functions are composed together into a graph that describes the computation.
 The computational graph is either built 
-- *ahead of time*, using a dedicated API (e.g., Tensorflow 1), or
+- *ahead of time*, from the abstract syntax tree of the program or using a dedicated API (e.g., Tensorflow 1), or
 - **just in time**, by tracing the program execution (e.g., Tensorflow Eager, JAX, PyTorch).
 
 ---
@@ -434,9 +434,20 @@ class: middle
 In the backward recursive update, in the situation above, we have when $\mathbf{x}\_t \in \mathbb{R}$
 $$\frac{\partial \mathbf{x}\_t}{\partial \mathbf{x}\_k} = \underbrace{\frac{\partial \mathbf{x}\_t}{\partial \mathbf{x}\_m}}\_{1 \times n\_m} \underbrace{\left[ \frac{\partial \mathbf{x}\_m}{\partial \mathbf{x}\_k} \right]}\_{n\_m \times n\_k}$$
 
-- That is, the primitive only needs to define its **vector-Jacobian product** (VJP).
-- Reverse mode AD actually composes JVPs backward to obtain the derivatives.
-- The Jacobian $\left[ \frac{\partial \mathbf{x}\_m}{\partial \mathbf{x}\_k} \right]$ is never explicitly built. It is usually simpler and more efficient to compute the JVP directly.
+- Therefore, each primitive only needs to define its **vector-Jacobian product** (VJP).
+The Jacobian $\left[ \frac{\partial \mathbf{x}\_m}{\partial \mathbf{x}\_k} \right]$ is never explicitly built. It is usually simpler and more (memory) efficient to compute the VJP directly.
+- Most reverse mode AD systems compose VJPs backward to compute $\frac{\partial \mathbf{x}\_t}{\partial \mathbf{x}\_1}$.
+
+
+---
+
+class: middle
+
+## JVPs
+
+Similarly, when $n\_1 = 1$, the forward recursive update
+$$\frac{\partial \mathbf{x}\_k}{\partial \mathbf{x}\_1} = \underbrace{\left[ \frac{\partial \mathbf{x}\_k}{\partial \mathbf{x}\_l} \right]}\_{n\_k \times n\_l} \underbrace{\frac{\partial \mathbf{x}\_l}{\partial \mathbf{x}\_1}}\_{n\_l \times 1}$$
+is usually implemented in terms of Jacobian-vector products (JVP) locally defined at each primitive.
 
 ---
 
@@ -454,9 +465,8 @@ fpp = grad(grad(tanh))    # what sorcery is this?!
 ...
 ``` 
 
-<br>
 
-.center[The backward pass can itself be traced... <br>and reverse mode AD run on its computational graph!]
+.alert[The backward pass is itself a composition of primitives. Its execution can be traced, and reverse mode AD can run on its computational graph!]
 
 ---
 
@@ -472,15 +482,34 @@ class: middle
 
 ---
 
-deriving through simulation
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/sq2gPzlrM0g?start=1240" frameborder="0" allowfullscreen></iframe>
+
+You should be using automatic differentiation (Ryan Adams, 2016)
 
 ---
 
-gradient-based hyper-opt
+class: middle
+
+## Optimizing a wing
+
+.center[
+
+.width-100[![](figures/lec3/wing.png)]
+
+(Sam Greydanus, 2020)
+
+[[Run in browser](https://bit.ly/3j3Wcu4)]
+]
 
 ---
 
 # Summary
+
+- Automatic differentiation is one of the keys that enabled the deep learning revolution.
+- Backward mode automatic differentiation is more efficient when the function has more inputs than outputs.
+- Applications of AD go beyond deep learning.
 
 ---
 
