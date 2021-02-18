@@ -16,6 +16,7 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2021.
 | February 12 | Lecture 2: [Multi-layer perceptron](https://glouppe.github.io/info8010-deep-learning/?p=lecture2.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec2.pdf)] [[video](https://www.youtube.com/watch?v=OF6AkE9Fnjc)] |
 | February 19<br>[Live stream](https://youtu.be/Qo-0PgQGPeM) | Lecture 3: [Automatic differentiation](https://glouppe.github.io/info8010-deep-learning/?p=lecture3.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec3.pdf)] |
 | February 26 | Lecture 4: Training neural networks |
+| March 1 | [Homework 1](https://github.com/glouppe/info8010-deep-learning/raw/master/homeworks/homework1.zip) |
 | March 5 | Lecture 5: Convolutional neural networks |
 | March 12 | Lecture 6: Computer vision |
 | March 19 | Lecture 7: Recurrent neural networks |
@@ -31,7 +32,7 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2021.
 The goal of these two homeworks is to get you familiar with the PyTorch library.
 Each homework should be done in groups of 2 or 3 (the same as for the project) and must be submitted on the [Montefiore submission platform](https://submit.montefiore.ulg.ac.be/) before 23:59 on the due date.
 
-- [Homework 1]([link_to_archive](https://github.com/glouppe/info8010-deep-learning/raw/master/homeworks/homework1.zip)): Tensor operations, `autograd` and `nn`. Due by March 1.
+- [Homework 1](https://github.com/glouppe/info8010-deep-learning/raw/master/homeworks/homework1.zip): Tensor operations, `autograd` and `nn`. Due by March 1.
 - Homework 2: TBD.
 
 Homeworks are optional. If submitted, each homework will account for 5% of the final grade.
