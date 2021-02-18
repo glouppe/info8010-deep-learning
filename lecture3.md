@@ -97,6 +97,11 @@ fp = grad(tanh)
 fpp = grad(grad(tanh))
 ...
 ```
+
+???
+
+Will show a demo later on.
+
 ---
 
 class: middle
@@ -195,7 +200,13 @@ for functions $\mathbf{f}\_k : \mathbb{R}^{n\_{k-1}} \times \mathbb{R}^{n\_k}$, 
 class: middle
 
 By the **chain rule**, 
-$$\frac{\partial \mathbf{x}\_t}{\partial \mathbf{x}\_0} = \frac{\partial \mathbf{x}\_t}{\partial \mathbf{x}\_{t-1}} \frac{\partial \mathbf{x}\_{t-1}}{\partial \mathbf{x}\_{t-2}} \ldots \frac{\partial \mathbf{x}\_2}{\partial \mathbf{x}\_1} \frac{\partial \mathbf{x}\_1}{\partial \mathbf{x}\_0}.$$
+$$
+\begin{aligned}
+\frac{\partial \mathbf{x}\_t}{\partial \mathbf{x}\_0} &= \frac{\partial \mathbf{x}\_t}{\partial \mathbf{x}\_{t-1}} \underbrace{\frac{\partial \mathbf{x}\_{t-1}}{\partial \mathbf{x}\_{0}}}\_{\text{recursive case}}   \\\\
+\\\\
+&= \frac{\partial \mathbf{x}\_t}{\partial \mathbf{x}\_{t-1}} \frac{\partial \mathbf{x}\_{t-1}}{\partial \mathbf{x}\_{t-2}} \ldots \frac{\partial \mathbf{x}\_2}{\partial \mathbf{x}\_1} \frac{\partial \mathbf{x}\_1}{\partial \mathbf{x}\_0}
+\end{aligned}
+$$
 
 ---
 
@@ -307,12 +318,12 @@ class: middle
 For all $k=s+1, \ldots, t$,
 $$\frac{\partial \mathbf{x}\_k}{\partial \mathbf{x}\_1} = \sum\_{l \in \text{parents}(k)}\left[ \frac{\partial \mathbf{x}\_k}{\partial \mathbf{x}\_l} \right] \times \frac{\partial \mathbf{x}\_l}{\partial \mathbf{x}\_1},$$
 .grid[
-.kol-2-5[
+.kol-1-2[
 where 
 - $\left[ \frac{\partial \mathbf{x}\_k}{\partial \mathbf{x}\_l} \right]$ denotes the on-the-fly computation of the Jacobian locally associated to the primitive $\mathbf{f}\_k$,
 - $\frac{\partial \mathbf{x}\_l}{\partial \mathbf{x}\_1}$ is obtained from the previous iterations (in topological order).
 ]
-.kol-3-5[<br>.width-100[![](figures/lec3/forward-parents.svg)]]
+.kol-1-2[<br>.width-100[![](figures/lec3/forward-parents.svg)]]
 ]
 
 ---
@@ -351,12 +362,12 @@ class: middle
 For all $k=t-1, \ldots, 1$,
 $$\frac{\partial \mathbf{x}\_t}{\partial \mathbf{x}\_k} = \sum\_{m \in \text{children}(k)} \frac{\partial \mathbf{x}\_t}{\partial \mathbf{x}\_m} \times \left[ \frac{\partial \mathbf{x}\_m}{\partial \mathbf{x}\_k} \right]$$
 .grid[
-.kol-2-5[
+.kol-1-2[
 where
-- $\frac{\partial \mathbf{x}\_t}{\partial \mathbf{x}\_m}$ is obtained from previous iterations (in reverse topological order),
+- $\frac{\partial \mathbf{x}\_t}{\partial \mathbf{x}\_m}$ is obtained from previous iterations (in reverse topological order) and is known as the adjoint,
 - $\left[ \frac{\partial \mathbf{x}\_m}{\partial \mathbf{x}\_k} \right]$ denotes the on-the-fly computation of the Jacobian locally associated to the primitive $\mathbf{f}\_m$.
 ]
-.kol-3-5[<br>.center.width-100[![](figures/lec3/backward-children.svg)]]
+.kol-1-2[<br>.center.width-100[![](figures/lec3/backward-children.svg)]]
 ]
 
 ---
