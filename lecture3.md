@@ -244,8 +244,8 @@ Prove it.
 # Multi-layer perceptron
 
 Chain compositions can be generalized to feedforward neural networks of the form
-$$\mathbf{x}\_k = \mathbf{f}\_k(\mathbf{x}\_{k-1}, \theta\_{k-1})$$
-for $k=1, \ldots, t$, and where $\theta\_{k-1}$ are vectors of parameters and $\mathbf{x}\_0 \in \mathbb{R}^{n\_0}$ is given. In supervised learning, $\mathbf{f}\_t$ usually corresponds to a scalar loss $\ell$, hence $n\_t = 1$.
+$$\mathbf{x}\_k = \mathbf{f}\_k(\mathbf{x}\_{k-1}, \theta\_{k})$$
+for $k=1, \ldots, t$, and where $\theta\_{k}$ are vectors of parameters and $\mathbf{x}\_0 \in \mathbb{R}^{n\_0}$ is given. In supervised learning, $\mathbf{f}\_t$ usually corresponds to a scalar loss $\ell$, hence $n\_t = 1$.
 
 <br><br>
 .center.width-100[![](figures/lec3/feedforward-nn.svg)]
