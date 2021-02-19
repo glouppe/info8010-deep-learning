@@ -28,7 +28,7 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2021.
 
 ## Homeworks
 
-The goal of these two homeworks is to get you familiar with the PyTorch library.
+The goal of these two assignments is to get you familiar with the PyTorch library.
 Each homework should be done in groups of 2 or 3 (the same as for the project) and must be submitted on the [Montefiore submission platform](https://submit.montefiore.ulg.ac.be/) before 23:59 on the due date.
 
 - [Homework 1](https://github.com/glouppe/info8010-deep-learning/raw/master/homeworks/homework1.zip): Tensor operations, `autograd` and `nn`. Due by March 1.
