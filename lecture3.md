@@ -350,7 +350,7 @@ recursively from $k=t$ down to $k=1$.
 
 ## Initialization 
 
-Set the Jacobian of the out node to
+Set the Jacobian of the output node to
 $$\frac{\partial \mathbf{x}\_t}{\partial \mathbf{x}\_t} = 1\_{n\_t \times n\_t}.$$
 
 ---
@@ -408,7 +408,7 @@ class: middle
 
 ## Primitives
 
-Most automatically-differentiable frameworks are defined by a collection of composable of *primitive* operations.
+Most automatically-differentiable frameworks are defined by a collection of composable *primitive* operations.
 
 .center.width-80[![](figures/lec3/jax-primitives.png)]
 
@@ -505,7 +505,7 @@ class: middle
 
 Optimizing a wing (Sam Greydanus, 2020)
 
-[[Run in browser](https://bit.ly/3j3Wcu4)]
+[[Run in browser](https://bit.ly/2H5r401)]
 ]
 
 ---
