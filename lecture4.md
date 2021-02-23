@@ -10,9 +10,8 @@ Prof. Gilles Louppe<br>
 
 ???
 
-https://drive.google.com/file/d/1e_9W8q9PL20iqOR-pfK89eILc_VtYaw1/view
-
-R: optimization is overparameterize nets
+R: optimization in overparameterized nets
+R: loss surface
 
 ---
 
@@ -23,21 +22,6 @@ How to **optimize parameters** efficiently?
 - Optimizers
 - Initialization
 - Normalization
-
----
-
-class: middle
-
-## A practical recommendation
-
-Training a massive deep neural network is long, complex and sometimes confusing. 
-
-A first step towards understanding, debugging and optimizing neural networks is to make use of visualization tools such as TensorBoard for
-- plotting losses and metrics, 
-- visualizing computational graphs,
-- or show additional data as the network is being trained.
-
-.center.width-45[![](figures/lec4/tensorboard.png)]
 
 ---
 
@@ -72,6 +56,33 @@ class: middle
 
 class: middle
 
+## A practical recommendation
+
+Training a massive deep neural network is long, complex and sometimes confusing. 
+
+A first step towards understanding, debugging and optimizing neural networks is to make use of visualization tools for
+- plotting losses and metrics, 
+- visualizing computational graphs,
+- or showing additional data as the network is being trained.
+
+---
+
+background-image: url(figures/lec4/tensorboard.png)
+
+
+
+---
+
+class: middle, red-slide, center
+
+Let me say this once again: .bold[plot your losses].
+
+---
+
+class: middle
+
+## Stochastic gradient descent
+
 While it makes sense to compute the gradient exactly,
 - it takes time to compute and becomes inefficient for large $N$,
 - it is an empirical estimation of an hidden quantity (the expected risk), and any partial sum is also an unbiased estimate, although of greater variance.
@@ -80,6 +91,7 @@ While it makes sense to compute the gradient exactly,
 
 ---
 
+exclude: True
 class: middle
 
 To illustrate how partial sums are good estimates, consider an ideal case where the training set is the same set of $M \ll N$ samples replicated $K$ times. Then,
@@ -98,7 +110,7 @@ Although this is an ideal case, there is redundancy in practice that results in 
 
 class: middle
 
-## Stochastic gradient descent
+
 
 To reduce the computational complexity, **stochastic gradient descent** (SGD) consists in updating the parameters after every sample
 $$\begin{aligned}
@@ -120,10 +132,8 @@ class: middle
 
 class: middle
 
-The stochastic behavior of SGD helps **evade local minima**.
-
 While being computationally faster than batch gradient descent,
-- gradient estimates used by SGD can be *very noisy*,
+- gradient estimates used by SGD can be *very noisy*, which may help escape from local minima;
 - SGD does not benefit from the speed-up of **batch-processing**.
 
 ---
@@ -158,6 +168,10 @@ The gradient descent method makes strong assumptions about
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
+???
+
+Draw plot from lecture 2 (loss and surrogate).
+
 ---
 
 class: middle
@@ -179,6 +193,10 @@ class: middle
 </video>
 <br>$\gamma=0.01$
 ]
+
+???
+
+Draw each slice.
 
 ---
 
@@ -264,7 +282,7 @@ class: middle
 
 A fundamental result due to Bottou and Bousquet (2011) states that stochastic optimization algorithms (e.g., SGD) yield the best generalization performance (in terms of excess error) despite being the worst optimization algorithms for minimizing the empirical risk.
 
-That is, for a fixed computational budget, stochastic optimization algorithms reach a lower test error than more sophisticated algorithms (2nd order methods, line search algorithms, etc) that would fit the training error too well or would consume too large a part of the computational budget at every step.
+That is,  .bold[for a fixed computational budget, stochastic optimization algorithms reach a lower test error than more sophisticated algorithms] (2nd order methods, line search algorithms, etc) that would fit the training error too well or would consume too large a part of the computational budget at every step.
 
 ---
 
@@ -278,9 +296,22 @@ class: middle
 
 # Momentum
 
-.center.width-80[![](figures/lec4/floor.png)]
+<br>
+.center.width-70[![](figures/lec4/floor.png)]
 
 In the situation of small but consistent gradients, as through valley floors, gradient descent moves **very slowly**.
+
+---
+
+class: middle, black-slide
+
+.center[
+<video loop controls preload="auto" height="500" width="600">
+  <source src="./figures/lec4/sgd-momentum.mp4" type="video/mp4">
+</video>
+]
+
+.footnote[Image credits: Kosta Derpanis, [Deep Learning in Computer Vision](https://www.cs.ryerson.ca/~kosta/CP8309-F2018/index.html), 2018]
 
 ---
 
@@ -435,14 +466,6 @@ r\_t  &=  \rho\_2 r\_{t-1} + (1-\rho\_2) g\_t \odot g\_t \\\\
 
 ---
 
-class: middle
-
-.center.width-60[![](figures/lec4/adam-plots.png)]
-
-.footnote[Credits: Kingma and Ba, [Adam: A Method for Stochastic Optimization](https://arxiv.org/abs/1412.6980), 2014.]
-
----
-
 # Scheduling
 
 Despite per-parameter adaptive learning rate methods, it is usually helpful to **anneal the learning rate** $\gamma$ over time.
@@ -471,17 +494,18 @@ class: middle
 
 class: middle
 
-- In convex problems, provided a good learning rate $\gamma$, convergence is guaranteed regardless of the *initial parameter values*.
-- In the non-convex regime, initialization is **much more important**!
-- Little is known on the mathematics of initialization strategies of neural networks.
-    - What is known: initialization should break symmetry.
-    - What is known: the scale of weights is important.
+In convex problems, provided a good learning rate $\gamma$, convergence is guaranteed regardless of the *initial parameter values*.
+
+In the non-convex regime, initialization is **much more important**!
+Little is known on the mathematics of initialization strategies of neural networks.
+- What is known: initialization should break symmetry.
+- What is known: the scale of weights is important.
 
 ---
 
 class: middle, center
 
-See [demo](https://www.deeplearning.ai/ai-notes/initialization/).
+([demo](https://www.deeplearning.ai/ai-notes/initialization/))
 
 ---
 
@@ -606,7 +630,9 @@ class: middle
 
 ---
 
-# Data normalization
+class: middle
+
+## Data normalization
 
 Previous weight initialization strategies rely on preserving the activation variance constant across layers, under the initial assumption that the **input feature variances are the same**.
 
@@ -635,15 +661,14 @@ $$
 
 ---
 
-# Batch normalization
+class: middle
+
+## Batch normalization
 
 Maintaining proper statistics of the activations and derivatives is critical for training neural networks.
 
 This constraint can be enforced explicitly during the forward pass by re-normalizing them.
 **Batch normalization** was the first method introducing this idea.
-
-<br>
-.center.width-80[![](figures/lec4/bn.png)]
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL; Ioffe and Szegedy, [Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift](https://arxiv.org/abs/1502.03167), 2015.]
 
@@ -701,25 +726,6 @@ class: middle
 .center.width-100[![](figures/lec4/bn-results.png)]
 
 .footnote[Credits: Ioffe and Szegedy, [Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift](https://arxiv.org/abs/1502.03167), 2015.]
-
----
-
-class: middle
-
-The position of batch normalization relative to the non-linearity is not clear.
-
-.center.width-50[![](figures/lec4/bn2.png)]
-
-.footnote[Credits: Ioffe and Szegedy, [Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift](https://arxiv.org/abs/1502.03167), 2015.]
-
----
-
-class: middle
-
-## Layer normalization
-
-Given a single input sample $\mathbf{x}$, a similar approach can be applied
- to standardize the activations $\mathbf{u}$ across a layer instead of doing it over the batch.
 
 ---
 
