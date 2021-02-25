@@ -31,28 +31,14 @@ class: middle
 
 ---
 
-# Gradient descent
-
-To minimize a loss $\mathcal{L}(\theta)$ of the form
-$$\mathcal{L}(\theta) = \frac{1}{N} \sum\_{n=1}^N \ell(y\_n, f(\mathbf{x}\_n; \theta)),$$
-standard **batch gradient descent** (GD) consists in applying the update rule
-$$\begin{aligned}
-g\_t &= \frac{1}{N} \sum\_{n=1}^N \nabla\_\theta \ell(y\_n, f(\mathbf{x}\_n; \theta\_t)) \\\\
-\theta\_{t+1} &= \theta\_t - \gamma g\_t,
-\end{aligned}$$
-where $\gamma$ is the learning rate.
-
----
-
 class: middle
 
-.center[
-<video loop controls preload="auto" height="600" width="600">
-  <source src="./figures/lec4/opt-gd.mp4" type="video/mp4">
-</video>
-]
+## Empirical risk minimization
+
+$$\theta\_\*^\{\mathbf{d}} = \arg \min\_\theta \mathcal{L}(\theta) = \frac{1}{N} \sum\_{n=1}^N \ell(y\_n, f(\mathbf{x}\_n; \theta)).$$
 
 ---
+
 
 class: middle
 
@@ -76,6 +62,29 @@ background-image: url(figures/lec4/tensorboard.png)
 class: middle, red-slide, center
 
 Let me say this once again: .bold[plot your losses].
+
+---
+
+# Gradient descent
+
+To minimize $\mathcal{L}(\theta)$, 
+standard **batch gradient descent** (GD) consists in applying the update rule
+$$\begin{aligned}
+g\_t &= \frac{1}{N} \sum\_{n=1}^N \nabla\_\theta \ell(y\_n, f(\mathbf{x}\_n; \theta\_t)) \\\\
+\theta\_{t+1} &= \theta\_t - \gamma g\_t,
+\end{aligned}$$
+where $\gamma$ is the learning rate.
+.center.width-60[![](figures/lec2/gd-good-2.png)]
+
+---
+
+class: middle
+
+.center[
+<video loop controls preload="auto" height="600" width="600">
+  <source src="./figures/lec4/opt-gd.mp4" type="video/mp4">
+</video>
+]
 
 ---
 
@@ -142,7 +151,7 @@ class: middle
 
 ## Mini-batching
 
-Instead, **mini-batch** SGD consists of visiting the samples in mini-batches and updating the parameters each time
+Instead, **mini-batch** SGD consists in visiting the samples in mini-batches and updating the parameters each time
 $$
 \begin{aligned}
 g\_t &= \frac{1}{B} \sum\_{b=1}^B \nabla\_\theta \ell(y\_{n(t,b)}, f(\mathbf{x}\_{n(t,b)}; \theta\_t)) \\\\
@@ -220,8 +229,13 @@ class: middle
 <br>$\gamma=0.4$
 ]
 
+???
+
+Draw plots too fast/just right/too slow.
+
 ---
 
+exclude: True
 class: middle
 
 ## Wolfe conditions
@@ -243,6 +257,7 @@ Typical values are $c\_1 = 10^{-4}$ and $c\_2 = 0.9$.
 
 ---
 
+exclude: True
 class: middle
 
 .center[
@@ -255,6 +270,7 @@ The sufficient decrease condition ensures that $f$ decreases sufficiently.<br>
 
 ---
 
+exclude: True
 class: middle
 
 .center[
@@ -268,7 +284,7 @@ The curvature condition ensures that the slope has been reduced sufficiently.
 
 class: middle
 
-The Wolfe conditions can be used to design **line search** algorithms to automatically determine a step size $\gamma\_t$, hence *ensuring convergence* towards a local minima.
+Wolfe conditions could be used to design **line search** algorithms to automatically determine a step size $\gamma\_t$, hence *ensuring convergence* towards a local minima.
 
 However, in deep learning,
 - these algorithms are impractical because of the size of the parameter space and the overhead it would induce,
@@ -278,7 +294,7 @@ However, in deep learning,
 
 class: middle
 
-## The tradeoffs large-scale learning 
+## The tradeoffs of large-scale learning 
 
 A fundamental result due to Bottou and Bousquet (2011) states that stochastic optimization algorithms (e.g., SGD) yield the best generalization performance (in terms of excess error) despite being the worst optimization algorithms for minimizing the empirical risk.
 
@@ -340,6 +356,10 @@ u\_t  &= \alpha u\_{t-1} - \gamma g\_t \\\\
 ]
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+???
+
+Dampening arises because of the accumulation of the gradients, which make them cancel each other.
 
 ---
 
@@ -537,6 +557,8 @@ $$
 where $q\_l$ is the width of layer $l$ and $h^0_j = x_j$ for all $j=0,..., p-1$.
 
 ???
+
+Do it on blackboard.
 
 Use
 - V(AB) = V(A)V(B)+V(A)E(B)+V(B)E(A)
