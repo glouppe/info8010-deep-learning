@@ -486,6 +486,12 @@ r\_t  &=  \rho\_2 r\_{t-1} + (1-\rho\_2) g\_t \odot g\_t \\\\
 
 ---
 
+class: middle, center
+
+([demo](https://losslandscape.com/explorer))
+
+---
+
 # Scheduling
 
 Despite per-parameter adaptive learning rate methods, it is usually helpful to **anneal the learning rate** $\gamma$ over time.
