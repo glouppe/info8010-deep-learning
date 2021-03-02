@@ -8,22 +8,13 @@ Lecture 5: Convolutional networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-R: https://zetane.com/gallery
-R: argue for inductive bias
-R: symmetries conv https://www.youtube.com/watch?v=0_O8PdZBc5s
-R: https://www.pnas.org/content/116/4/1074
-
-R: loss surfaces for skip connections https://jithinjk.github.io/blog/nn_loss_visualized.md.html
-
 ---
 
 # Today
 
 How to **make neural networks see**?
 
-- A little history
+- Machines that see
 - Convolutions
 - Pooling
 - Convolutional networks
@@ -33,16 +24,14 @@ How to **make neural networks see**?
 
 class: middle
 
-# A little history
+# Machines that see
 
 ---
 
-class: middle
+# Visual perception 
 
-## Visual perception (Hubel and Wiesel, 1959-1962)
-
-- David Hubel and Torsten Wiesel discover the neural basis of **visual perception**.
-- Awarded the Nobel Prize of Medicine in 1981 for their discovery.
+In 1959-1962, David Hubel and Torsten Wiesel discover the neural basis of **visual perception**.
+They are awarded the Nobel Prize of Medicine in 1981 for their discovery.
 
 .grid.center[
 .kol-4-5.center[.width-80[![](figures/lec5/cat.png)]]
@@ -98,126 +87,44 @@ class: middle
 
 ---
 
-class: middle
+# Inductive biases 
 
-## The Mark-1 Perceptron (Rosenblatt, 1957-61)
+Can we equip neural networks with **inductive biases** tailored for vision?
 
-.center.width-80[![](figures/lec5/perceptron1.png)]
-
-- Rosenblatt builds the first implementation of a neural network.
-- The network is an anlogic circuit. Parameters are potentiometers.
-  
-.footnote[Credits: Frank Rosenblatt, [Principle of Neurodynamics](http://www.dtic.mil/dtic/tr/fulltext/u2/256582.pdf), 1961.]
-
-???
-
-
+- Locality
+- Invariance to translation
+- Hierarchical compositionality
 
 ---
 
 class: middle
 
-.center.width-60[![](figures/lec5/perceptron2.png)]
+## Neocognitron 
 
-.italic["If we show the perceptron a stimulus, say a square, and associate a response to that square, this response will immediately **generalize perfectly to all
-transforms** of the square under the transformation group [...]."]
-
-.footnote[Credits: Frank Rosenblatt, [Principle of Neurodynamics](http://www.dtic.mil/dtic/tr/fulltext/u2/256582.pdf), 1961.]
-
-???
-
-
-This is quite similar to Hubel and Wiesel's simple and complex cells!
-
----
-
-class: middle
-
-
-
-## AI winter (Minsky and Papert, 1969+)
-
-- Minsky and Papert prove a series of impossibility results for the perceptron (or rather, a narrowly defined variant thereof).
-- **AI winter** follows.
-
-.center[.width-80[![](figures/lec5/minsky.png)] .width-20[![](figures/lec5/minsky-shape.png)]]
-
-.footnote[Credits: Minsky and Papert, Perceptrons: an Introduction to Computational Geometry, 1969.]
-
----
-
-class: middle
-
-.center.width-40[![](figures/lec5/werbos.png)]
-
-## Automatic differentiation (Werbos, 1974)
-
-- Werbos formulate an arbitrary function as a computational graph.
-- Symbolic derivatives are computed by dynamic programming.
-
-.footnote[Credits: Paul Werbos, Beyond regression: new tools for prediction and analysis in the behavioral sciences, 1974.]
-
----
-
-class: middle
-
-## Neocognitron (Fukushima, 1980)
-
-.center.width-90[![](figures/lec5/neocognitron1.png)]
-
-Fukushima proposes a direct neural network implementation of the hierarchy model of the visual nervous system of Hubel and Wiesel.
-
-.footnote[Credits: Kunihiko Fukushima, [Neocognitron: A Self-organizing Neural Network Model](https://www.rctn.org/bruno/public/papers/Fukushima1980.pdf), 1980.]
-
----
-
-class: middle
+In 1980, Fukushima proposes a direct neural network implementation of the hierarchy model of the visual nervous system of Hubel and Wiesel.
 
 .grid[
-.kol-1-3.center[.width-100[![](figures/lec5/neocognitron2.png)]
-Convolutions]
-.kol-2-3.center[.width-100[![](figures/lec5/neocognitron3.png)]
-Feature hierarchy]
-]
-
-.footnote[Credits: Kunihiko Fukushima, [Neocognitron: A Self-organizing Neural Network Model](https://www.rctn.org/bruno/public/papers/Fukushima1980.pdf), 1980.]
-
-???
+.kol-2-3.width-90.center[![](figures/lec5/neocognitron1.png)]
+.kol-1-3[
 
 - Built upon **convolutions** and enables the composition of a *feature hierarchy*.
 - Biologically-inspired training algorithm, which proves to be largely **inefficient**.
 
----
-
-class: middle
-
-## Backpropagation (Rumelhart et al, 1986)
-
-.grid[
-.kol-1-2[
-- Rumelhart and Hinton introduce **backpropagation** in multi-layer networks with sigmoid non-linearities and sum of squares loss function.
-- They advocate for batch gradient descent in supervised learning.
-- Discuss online gradient descent, momentum and random initialization.
-- Depart from *biologically plausible* training algorithms.
-]
-.kol-1-2[
-.center.width-100[![](figures/lec5/rumelhart.png)]
 ]
 ]
 
-
-
-.footnote[Credits: Rumelhart et al, [Learning representations by back-propagating errors](http://www.cs.toronto.edu/~hinton/absps/naturebp.pdf), 1986.]
+.footnote[Credits: Kunihiko Fukushima, [Neocognitron: A Self-organizing Neural Network Model](https://www.rctn.org/bruno/public/papers/Fukushima1980.pdf), 1980.]
 
 ---
 
 class: middle
 
-## Convolutional networks (LeCun, 1990)
+## Convolutional networks 
 
-- LeCun trains a convolutional network by backpropagation.
-- He advocates for end-to-end feature learning in image classification.
+In 1990, LeCun trains a convolutional network by backpropagation.
+He advocates for end-to-end feature learning in image classification.
 
+<br>
 .center.width-70[![](figures/lec5/lenet-1990.png)]
 
 .footnote[Credits: LeCun et al, [Handwritten Digit Recognition with a Back-Propagation Network](http://yann.lecun.com/exdb/publis/pdf/lecun-90c.pdf), 1990.]
@@ -238,53 +145,43 @@ class: middle, black-slide
 
 class: middle
 
-## AlexNet (Krizhevsky et al, 2012)
-
-- Krizhevsky trains a convolutional network on ImageNet with two GPUs.
-- 16.4% top-5 error on ILSVRC'12, outperforming all other entries by 10% or more.
-- This event triggers the deep learning revolution.
-
-.center.width-100[![](figures/lec5/alexnet.png)]
-
----
-
-class: middle
-
 # Convolutions
 
 ---
 
 class: middle
 
+.center.width-80[![](figures/lec5/mlp-image1.png)]
+
 If they were handled as normal "unstructured" vectors, high-dimensional signals such as sound samples or images would require models of intractable size.
 
-E.g., a linear layer taking $256\times 256$ RGB images as input and producing an image of same size would require
-$$(256 \times 256 \times 3)^2 \approx 3.87e+10$$
-parameters, with the corresponding memory footprint (150Gb!), and excess of capacity.
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL; Michael Bronstein, [Geometric Deep Learning](https://drive.google.com/file/d/14H8KXBpkJBlqINTLOTvlTRMh-WLkGo4-/view), 2020.]
 
 ---
 
 class: middle
 
-This requirement is also inconsistent with the intuition that such large signals have some "invariance in translation". .bold[A representation meaningful at a certain location can / should be used everywhere].
+.center.width-80[![](figures/lec5/mlp-image2.png)]
+
+Large signals have some "invariance in translation". A representation meaningful at a certain location **should be used everywhere**.
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL; Michael Bronstein, [Geometric Deep Learning](https://drive.google.com/file/d/14H8KXBpkJBlqINTLOTvlTRMh-WLkGo4-/view), 2020.]
+---
+
+# Convolutions
 
 A convolution layer embodies this idea. It applies the same linear transformation locally everywhere while preserving the signal structure.
 
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-
+<br>
 .center[![](figures/lec5/1d-conv.gif)]
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
 ---
 
-# Convolutions
+class: middle
+
+## 1D convolution
 
 For one-dimensional tensors, given an input vector $\mathbf{x} \in \mathbb{R}^W$ and a convolutional kernel $\mathbf{u} \in \mathbb{R}^w$,
 the discrete **convolution** $\mathbf{x} \circledast \mathbf{u}$ is a vector of size $W - w + 1$ such that
@@ -293,9 +190,10 @@ $$\begin{aligned}
 \end{aligned}
 $$
 
-## Note
+.italic[
 Technically, $\circledast$ denotes the cross-correlation operator.
 However, most machine learning libraries call it convolution.
+]
 
 ---
 
@@ -313,6 +211,8 @@ or crude template matchers:
 ---
 
 class: middle
+
+## n-D convolution
 
 Convolutions generalize to multi-dimensional tensors:
 - In its most usual form, a convolution takes as input a 3D tensor $\mathbf{x} \in \mathbb{R}^{C \times H \times W}$, called the **input feature map**.
@@ -345,9 +245,9 @@ where $D$ is the depth.
 class: middle
 
 Convolutions have three additional parameters:
-- The *padding* specifies the size of a zeroed frame added arount the input.
-- The **stride** specifies a step size when moving the kernel across the signal.
-- The *dilation* modulates the expansion of the filter without adding weights.
+- The padding specifies the size of a zeroed frame added arount the input.
+- The stride specifies a step size when moving the kernel across the signal.
+- The dilation modulates the expansion of the filter without adding weights.
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
@@ -441,6 +341,10 @@ $$
 122 & 148 \\\\
 126 & 134
 \end{pmatrix}$$
+
+???
+
+Do this on the tablet for 1D convolutions. Draw the MLP and Wx product.
 
 ---
 
@@ -590,6 +494,12 @@ class: center, middle, black-slide
 
 ---
 
+class: middle, center
+
+(demo)
+
+---
+
 class: middle
 
 ## LeNet-5 (LeCun et al, 1998)
@@ -599,40 +509,6 @@ Composition of two $\texttt{CONV}+\texttt{POOL}$ layers, followed by a block of 
 .center.width-110[![](figures/lec5/lenet.svg)]
 
 .footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
-
----
-
-class: middle
-
-.smaller-x.center[
-```
-----------------------------------------------------------------
-        Layer (type)               Output Shape         Param #
-================================================================
-            Conv2d-1            [-1, 6, 28, 28]             156
-              ReLU-2            [-1, 6, 28, 28]               0
-         MaxPool2d-3            [-1, 6, 14, 14]               0
-            Conv2d-4           [-1, 16, 10, 10]           2,416
-              ReLU-5           [-1, 16, 10, 10]               0
-         MaxPool2d-6             [-1, 16, 5, 5]               0
-            Conv2d-7            [-1, 120, 1, 1]          48,120
-              ReLU-8            [-1, 120, 1, 1]               0
-            Linear-9                   [-1, 84]          10,164
-             ReLU-10                   [-1, 84]               0
-           Linear-11                   [-1, 10]             850
-       LogSoftmax-12                   [-1, 10]               0
-================================================================
-Total params: 61,706                                            
-Trainable params: 61,706                                        
-Non-trainable params: 0                                         
-----------------------------------------------------------------
-Input size (MB): 0.00                                           
-Forward/backward pass size (MB): 0.11                           
-Params size (MB): 0.24                                          
-Estimated Total Size (MB): 0.35                                 
-----------------------------------------------------------------
-```
-]
 
 ---
 
@@ -653,50 +529,7 @@ The original implementation was made of two parts such that it could fit within 
 ]
 ]
 
-
 .footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
-
----
-
-class: middle
-
-.smaller-x.center[
-```
-----------------------------------------------------------------
-        Layer (type)               Output Shape         Param #
-================================================================
-            Conv2d-1           [-1, 64, 55, 55]          23,296
-              ReLU-2           [-1, 64, 55, 55]               0
-         MaxPool2d-3           [-1, 64, 27, 27]               0
-            Conv2d-4          [-1, 192, 27, 27]         307,392
-              ReLU-5          [-1, 192, 27, 27]               0
-         MaxPool2d-6          [-1, 192, 13, 13]               0
-            Conv2d-7          [-1, 384, 13, 13]         663,936
-              ReLU-8          [-1, 384, 13, 13]               0
-            Conv2d-9          [-1, 256, 13, 13]         884,992
-             ReLU-10          [-1, 256, 13, 13]               0
-           Conv2d-11          [-1, 256, 13, 13]         590,080
-             ReLU-12          [-1, 256, 13, 13]               0
-        MaxPool2d-13            [-1, 256, 6, 6]               0
-          Dropout-14                 [-1, 9216]               0
-           Linear-15                 [-1, 4096]      37,752,832
-             ReLU-16                 [-1, 4096]               0
-          Dropout-17                 [-1, 4096]               0
-           Linear-18                 [-1, 4096]      16,781,312
-             ReLU-19                 [-1, 4096]               0
-           Linear-20                 [-1, 1000]       4,097,000
-================================================================
-Total params: 61,100,840                                        
-Trainable params: 61,100,840                                    
-Non-trainable params: 0                                         
-----------------------------------------------------------------
-Input size (MB): 0.57                                           
-Forward/backward pass size (MB): 8.31                           
-Params size (MB): 233.08                                        
-Estimated Total Size (MB): 241.96                               
-----------------------------------------------------------------
-```
-]
 
 ---
 
@@ -728,66 +561,6 @@ class: middle
 The **effective receptive field** is the part of the visual input that affects a given unit indirectly through previous convolutional layers. It grows linearly with depth. 
 
 E.g., a stack of two $3 \times 3$ kernels of stride $1$ has the same effective receptive field as a single $5 \times 5$ kernel, but fewer parameters.
-
----
-
-class: middle
-
-.smaller-xx.center[
-```
-----------------------------------------------------------------
-        Layer (type)               Output Shape         Param #
-================================================================
-            Conv2d-1         [-1, 64, 224, 224]           1,792
-              ReLU-2         [-1, 64, 224, 224]               0
-            Conv2d-3         [-1, 64, 224, 224]          36,928
-              ReLU-4         [-1, 64, 224, 224]               0
-         MaxPool2d-5         [-1, 64, 112, 112]               0
-            Conv2d-6        [-1, 128, 112, 112]          73,856
-              ReLU-7        [-1, 128, 112, 112]               0
-            Conv2d-8        [-1, 128, 112, 112]         147,584
-              ReLU-9        [-1, 128, 112, 112]               0
-        MaxPool2d-10          [-1, 128, 56, 56]               0
-           Conv2d-11          [-1, 256, 56, 56]         295,168
-             ReLU-12          [-1, 256, 56, 56]               0
-           Conv2d-13          [-1, 256, 56, 56]         590,080
-             ReLU-14          [-1, 256, 56, 56]               0
-           Conv2d-15          [-1, 256, 56, 56]         590,080
-             ReLU-16          [-1, 256, 56, 56]               0
-        MaxPool2d-17          [-1, 256, 28, 28]               0
-           Conv2d-18          [-1, 512, 28, 28]       1,180,160
-             ReLU-19          [-1, 512, 28, 28]               0
-           Conv2d-20          [-1, 512, 28, 28]       2,359,808
-             ReLU-21          [-1, 512, 28, 28]               0
-           Conv2d-22          [-1, 512, 28, 28]       2,359,808
-             ReLU-23          [-1, 512, 28, 28]               0
-        MaxPool2d-24          [-1, 512, 14, 14]               0
-           Conv2d-25          [-1, 512, 14, 14]       2,359,808
-             ReLU-26          [-1, 512, 14, 14]               0
-           Conv2d-27          [-1, 512, 14, 14]       2,359,808
-             ReLU-28          [-1, 512, 14, 14]               0
-           Conv2d-29          [-1, 512, 14, 14]       2,359,808
-             ReLU-30          [-1, 512, 14, 14]               0
-        MaxPool2d-31            [-1, 512, 7, 7]               0
-           Linear-32                 [-1, 4096]     102,764,544
-             ReLU-33                 [-1, 4096]               0
-          Dropout-34                 [-1, 4096]               0
-           Linear-35                 [-1, 4096]      16,781,312
-             ReLU-36                 [-1, 4096]               0
-          Dropout-37                 [-1, 4096]               0
-           Linear-38                 [-1, 1000]       4,097,000
-================================================================
-Total params: 138,357,544                                       
-Trainable params: 138,357,544                                   
-Non-trainable params: 0                                         
-----------------------------------------------------------------
-Input size (MB): 0.57                                           
-Forward/backward pass size (MB): 218.59                         
-Params size (MB): 527.79                                        
-Estimated Total Size (MB): 746.96                               
-----------------------------------------------------------------
-```
-]
 
 ---
 
@@ -838,145 +611,11 @@ Training networks of this depth is made possible because of the **skip connectio
 
 .footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
 
-
 ---
 
 class: middle
 
-.grid[
-.kol-1-2[
-
-.smaller-xx.center[
-```
-----------------------------------------------------------------
-        Layer (type)               Output Shape         Param #
-================================================================
-            Conv2d-1         [-1, 64, 112, 112]           9,408
-       BatchNorm2d-2         [-1, 64, 112, 112]             128
-              ReLU-3         [-1, 64, 112, 112]               0
-         MaxPool2d-4           [-1, 64, 56, 56]               0
-            Conv2d-5           [-1, 64, 56, 56]           4,096
-       BatchNorm2d-6           [-1, 64, 56, 56]             128
-              ReLU-7           [-1, 64, 56, 56]               0
-            Conv2d-8           [-1, 64, 56, 56]          36,864
-       BatchNorm2d-9           [-1, 64, 56, 56]             128
-             ReLU-10           [-1, 64, 56, 56]               0
-           Conv2d-11          [-1, 256, 56, 56]          16,384
-      BatchNorm2d-12          [-1, 256, 56, 56]             512
-           Conv2d-13          [-1, 256, 56, 56]          16,384
-      BatchNorm2d-14          [-1, 256, 56, 56]             512
-             ReLU-15          [-1, 256, 56, 56]               0
-       Bottleneck-16          [-1, 256, 56, 56]               0
-           Conv2d-17           [-1, 64, 56, 56]          16,384
-      BatchNorm2d-18           [-1, 64, 56, 56]             128
-             ReLU-19           [-1, 64, 56, 56]               0
-           Conv2d-20           [-1, 64, 56, 56]          36,864
-      BatchNorm2d-21           [-1, 64, 56, 56]             128
-             ReLU-22           [-1, 64, 56, 56]               0
-           Conv2d-23          [-1, 256, 56, 56]          16,384
-      BatchNorm2d-24          [-1, 256, 56, 56]             512
-             ReLU-25          [-1, 256, 56, 56]               0
-       Bottleneck-26          [-1, 256, 56, 56]               0
-           Conv2d-27           [-1, 64, 56, 56]          16,384
-      BatchNorm2d-28           [-1, 64, 56, 56]             128
-             ReLU-29           [-1, 64, 56, 56]               0
-           Conv2d-30           [-1, 64, 56, 56]          36,864
-      BatchNorm2d-31           [-1, 64, 56, 56]             128
-             ReLU-32           [-1, 64, 56, 56]               0
-           Conv2d-33          [-1, 256, 56, 56]          16,384
-      BatchNorm2d-34          [-1, 256, 56, 56]             512
-             ReLU-35          [-1, 256, 56, 56]               0
-       Bottleneck-36          [-1, 256, 56, 56]               0
-           Conv2d-37          [-1, 128, 56, 56]          32,768
-      BatchNorm2d-38          [-1, 128, 56, 56]             256
-             ReLU-39          [-1, 128, 56, 56]               0
-           Conv2d-40          [-1, 128, 28, 28]         147,456
-      BatchNorm2d-41          [-1, 128, 28, 28]             256
-             ReLU-42          [-1, 128, 28, 28]               0
-           Conv2d-43          [-1, 512, 28, 28]          65,536
-      BatchNorm2d-44          [-1, 512, 28, 28]           1,024
-           Conv2d-45          [-1, 512, 28, 28]         131,072
-      BatchNorm2d-46          [-1, 512, 28, 28]           1,024
-             ReLU-47          [-1, 512, 28, 28]               0
-       Bottleneck-48          [-1, 512, 28, 28]               0
-           Conv2d-49          [-1, 128, 28, 28]          65,536
-      BatchNorm2d-50          [-1, 128, 28, 28]             256
-             ReLU-51          [-1, 128, 28, 28]               0
-           Conv2d-52          [-1, 128, 28, 28]         147,456
-      BatchNorm2d-53          [-1, 128, 28, 28]             256
-
-...
-```
-]
-
-]
-.kol-1-2[
-
-.smaller-xx.center[
-```
-
-...
-
-Bottleneck-130         [-1, 1024, 14, 14]               0
-    Conv2d-131          [-1, 256, 14, 14]         262,144
-BatchNorm2d-132          [-1, 256, 14, 14]             512
-      ReLU-133          [-1, 256, 14, 14]               0
-    Conv2d-134          [-1, 256, 14, 14]         589,824
-BatchNorm2d-135          [-1, 256, 14, 14]             512
-      ReLU-136          [-1, 256, 14, 14]               0
-    Conv2d-137         [-1, 1024, 14, 14]         262,144
-BatchNorm2d-138         [-1, 1024, 14, 14]           2,048
-      ReLU-139         [-1, 1024, 14, 14]               0
-Bottleneck-140         [-1, 1024, 14, 14]               0
-    Conv2d-141          [-1, 512, 14, 14]         524,288
-BatchNorm2d-142          [-1, 512, 14, 14]           1,024
-      ReLU-143          [-1, 512, 14, 14]               0
-    Conv2d-144            [-1, 512, 7, 7]       2,359,296
-BatchNorm2d-145            [-1, 512, 7, 7]           1,024
-      ReLU-146            [-1, 512, 7, 7]               0
-    Conv2d-147           [-1, 2048, 7, 7]       1,048,576
-BatchNorm2d-148           [-1, 2048, 7, 7]           4,096
-    Conv2d-149           [-1, 2048, 7, 7]       2,097,152
-BatchNorm2d-150           [-1, 2048, 7, 7]           4,096
-      ReLU-151           [-1, 2048, 7, 7]               0
-Bottleneck-152           [-1, 2048, 7, 7]               0
-    Conv2d-153            [-1, 512, 7, 7]       1,048,576
-BatchNorm2d-154            [-1, 512, 7, 7]           1,024
-      ReLU-155            [-1, 512, 7, 7]               0
-    Conv2d-156            [-1, 512, 7, 7]       2,359,296
-BatchNorm2d-157            [-1, 512, 7, 7]           1,024
-      ReLU-158            [-1, 512, 7, 7]               0
-    Conv2d-159           [-1, 2048, 7, 7]       1,048,576
-BatchNorm2d-160           [-1, 2048, 7, 7]           4,096
-      ReLU-161           [-1, 2048, 7, 7]               0
-Bottleneck-162           [-1, 2048, 7, 7]               0
-    Conv2d-163            [-1, 512, 7, 7]       1,048,576
-BatchNorm2d-164            [-1, 512, 7, 7]           1,024
-      ReLU-165            [-1, 512, 7, 7]               0
-    Conv2d-166            [-1, 512, 7, 7]       2,359,296
-BatchNorm2d-167            [-1, 512, 7, 7]           1,024
-      ReLU-168            [-1, 512, 7, 7]               0
-    Conv2d-169           [-1, 2048, 7, 7]       1,048,576
-BatchNorm2d-170           [-1, 2048, 7, 7]           4,096
-      ReLU-171           [-1, 2048, 7, 7]               0
-Bottleneck-172           [-1, 2048, 7, 7]               0
- AvgPool2d-173           [-1, 2048, 1, 1]               0
-    Linear-174                 [-1, 1000]       2,049,000
-================================================================
-Total params: 25,557,032                                        
-Trainable params: 25,557,032                                    
-Non-trainable params: 0                                         
-----------------------------------------------------------------
-Input size (MB): 0.57                                           
-Forward/backward pass size (MB): 286.56                         
-Params size (MB): 97.49                                         
-Estimated Total Size (MB): 384.62                               
-----------------------------------------------------------------
-```
-]
-
-]
-]
+.center.width-100[![](figures/lec5/loss-surface.jpg)]
 
 ---
 
