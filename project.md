@@ -13,7 +13,7 @@ Some general potential problems could be the following:
 
 ### Agenda
 
-- Project proposal, due by **March 19, 2021 at 23:59**.
+- Project proposal, due by **March 26, 2021 at 23:59**.
 - Project code and report, due by **May 14, 2021 at 23:59**.
 - Project presentations (TBD).
 
@@ -22,7 +22,7 @@ Projects should be submitted through the [Montefiore submission platform](https:
 ### Instructions and evaluation guidelines
 
 - Students can work in groups of maximum 3 students.
-- Each group must write a short (1-2 pages) research project proposal. It should include a description of a minimum viable project, the data you will use or collect, the computing resources you think you will need, some nice-to-haves if time allows, and a short review of related work.
+- Each group must write a short (1-2 pages) research project proposal. It should include a description of a minimum viable project, the data you will use or collect, the computing resources you think you will need, some nice-to-haves if time allows, and a short review of related work. Project proposals must be approved before working on the project. 
 - Towards the end of the class, you will submit a project report (around 8 pages), in the format of a machine learning conference paper which **has** to include the following sections:
 	* Introduction: which states the problem which has been tackled
 	* Related Work: which covers research that is related to the considered problem
