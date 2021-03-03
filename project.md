@@ -1,31 +1,20 @@
 # Project
 
 The course project is an opportunity for you to apply what you have learned in class to a problem of your interest. 
-You can consider any kind of project which has to be solved via any deep learning method that we have seen.
+You can consider any kind of project which has to be solved via any deep learning method.
 We recommend you to tackle the problem from a very applicative perspective where you should focus on building and training a deep neural network from scratch.
 
 Some general potential problems could be the following:
 
 - Computer vision applications (classification, object detection, segmentation)
-- Natural language processing applications (machine translation, image captioning, chatbot, recommendation systems)
+- Natural language processing applications (machine translation, image captioning, recommendation systems)
 - Conditional generative models (image synthesis, style-transfer, drug-discovery)
 - Deep reinforcement learning (video games, robotics)
 
-... some more inspiration:
-- [Stanford CS231n Project instructions (Spring 2018)](http://cs231n.stanford.edu/2018/project.html)
-- [Stanford CS231n Project reports (Spring 2017)](http://cs231n.stanford.edu/2017/reports.html)
-- [Stanford CS231n Project reports (Winter 2016)](http://cs231n.stanford.edu/2016/reports.html)
-- [Stanford CS231n Project reports (Winter 2015)](http://cs231n.stanford.edu/2015/reports.html)
-- [Stanford CS229 Projects](http://cs229.stanford.edu/projects.html)
-
-If you happen to have any idea you would like to work on, we are open to any kind of project proposal as long as it stays within the scope of the course.
-Examples of such ideas could revolve around more theoretical projects such as optimization, interpretability, etc.
-
-
 ### Agenda
 
-- Project proposal, due by **March 6, 2020 at 23:59**.
-- Project code and report, due by **May 22, 2020 at 23:59**.
+- Project proposal, due by **March 19, 2021 at 23:59**.
+- Project code and report, due by **May 14, 2021 at 23:59**.
 - Project presentations (TBD).
 
 Projects should be submitted through the [Montefiore submission platform](https://submit.montefiore.ulg.ac.be).
@@ -51,7 +40,7 @@ Feel free to change the structure of the latex template if needed.
 
 ### Honor code
 
-You may consult any papers, books, online references, or publicly available implementations for ideas and code that you may want to incorporate into your strategy or algorithm, so long as you clearly cite your sources in your code and your writeup. However, under no circumstances may you look at another group’s code or incorporate their code into your project.
+You may consult papers, books, online references, or publicly available implementations for ideas that you may want to adapt and incorporate into your project, so long as you clearly cite your sources in your code and your writeup. **However, under no circumstances, may you base your project on someone else's implementation.** One of the main learning outcomes of this project is indeed for you to gain experience in designing and implementing a deep learning system **by yourself**.
 
 If you are combining your course project with the project from another class, you must receive permission from the instructors, and clearly explain in the proposal, final report the exact portion of the project that is being counted for INFO8010. In this case you must prepare separate reports for each course, and submit your final report for the other course as well.
 

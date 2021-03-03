@@ -39,7 +39,7 @@ Homeworks are optional. If submitted, each homework will account for 5% of the f
 
 ## Project
 
-TBD.
+See instructions in [`project.md`](https://github.com/glouppe/info8010-deep-learning/blob/master/project.md).
 
 ## Reading assignment
 
