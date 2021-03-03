@@ -20,11 +20,12 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2021.
 | March 5<br>[Live stream](https://youtu.be/cCD5khSTQ0o)  | Lecture 5: [Convolutional neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture5.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec5.pdf)] |
 | March 12 | Lecture 6: [Computer vision](https://glouppe.github.io/info8010-deep-learning/?p=lecture6.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec6.pdf)] |
 | March 19 | Lecture 7: Recurrent neural networks |
-| March 26 | Lecture 8: Attention and transformer networks |
+| March 26 | Lecture 8: Attention and transformer networks<br>Deadline for the project proposal |
 | April 2 | Lecture 9: Generative models (part 1) |
 | April 23 | Lecture 10: Generative models (part 2) |
 | April 30 | Lecture 11: Uncertainty |
 | May 7 | Lecture 12: Deep reinforcement learning | 
+| May 14 | Deadline for the project (code and report) | 
 
 
 ## Homeworks
