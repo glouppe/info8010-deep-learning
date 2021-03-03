@@ -23,7 +23,7 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2021.
 | March 26 | Lecture 8: Attention and transformer networks<br>Deadline for the project proposal |
 | April 2 | Lecture 9: Generative models (part 1) |
 | April 23 | Lecture 10: Generative models (part 2) |
-| April 30 | Lecture 11: Uncertainty |
+| April 30 | Lecture 11: Uncertainty<br>Deadline for the reading assignment |
 | May 7 | Lecture 12: Deep reinforcement learning | 
 | May 14 | Deadline for the project (code and report) | 
 
