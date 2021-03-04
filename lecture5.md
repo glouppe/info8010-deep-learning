@@ -14,7 +14,7 @@ Prof. Gilles Louppe<br>
 
 How to **make neural networks see**?
 
-- Machines that see
+- Visual perception
 - Convolutions
 - Pooling
 - Convolutional networks
@@ -24,13 +24,13 @@ How to **make neural networks see**?
 
 class: middle
 
-# Machines that see
+# Visual perception
 
 ---
 
 # Visual perception 
 
-In 1959-1962, David Hubel and Torsten Wiesel discover the neural basis of **visual perception**.
+In 1959-1962, David Hubel and Torsten Wiesel discover the neural basis of information processing in the **visual system**.
 They are awarded the Nobel Prize of Medicine in 1981 for their discovery.
 
 .grid.center[
@@ -176,6 +176,10 @@ A convolution layer embodies this idea. It applies the same linear transformatio
 .center[![](figures/lec5/1d-conv.gif)]
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+???
+
+Draw on tablet, but vertically.
 
 ---
 
