@@ -12,7 +12,7 @@ Prof. Gilles Louppe<br>
 
 # Today 
 
-Computer vision with deep learning:
+Advanced deep neural networks for computer vision:
 - Classification
 - Object detection
 - Semantic segmentation
@@ -62,7 +62,7 @@ class: middle
 
 ## Image augmentation
 
-The lack of data is the biggest limit for performance of deep learning models.
+The lack of data is the biggest limit to the performance of deep learning models.
 - Collecting more data is usually expensive and laborious.
 - Synthesizing data is complicated and may not represent the true distribution.
 - **Augmenting** the data with base transformations is simple and efficient (e.g., as demonstrated with AlexNet).
@@ -173,7 +173,7 @@ If $\text{IoU}(B,\hat{B})$ is larger than a fixed threshold (usually $\frac{1}{2
 TP and FP values are accumulated for all thresholds on the predicted confidence.
 The area under the resulting precision-recall curve is the *average precision* for the considered class.
 
-The mean over the classes is the **mean average precision**.
+The mean over the classes is the **mean average precision** (mAP).
 
 .center.width-50[![](figures/lec6/interpolated_precision.png)]
 
@@ -188,7 +188,7 @@ The mean over the classes is the **mean average precision**.
 
 class: middle 
 
-The sliding window approach evaluates a classifier at large number of locations and scales. 
+The sliding window approach evaluates a classifier at a large number of locations and scales. 
 
 This approach is usually **very computationally expensive** as performance directly depends on the resolution and number of the windows fed to the classifier (the more the better, but also the more costly). 
 
@@ -199,8 +199,9 @@ This approach is usually **very computationally expensive** as performance direc
 .grid[
 .kol-2-3[
 
-- The complexity of the sliding window approach was mitigated in the pioneer OverFeat network (Sermanet et al, 2013) by adding a **regression head** to predict the object *bounding box* $(x,y,w,h)$.
-- For training, the convolutional layers are fixed and the regression network is trained using an $\ell\_2$ loss between the predicted and the true bounding box for each example.
+The complexity of the sliding window approach was mitigated in the pioneer OverFeat network (Sermanet et al, 2013) by adding a **regression head** to predict the object *bounding box* $(x,y,w,h)$.
+
+For training, the convolutional layers are fixed and the regression network is trained using an $\ell\_2$ loss between the predicted and the true bounding box for each example.
 ]
 .kol-1-3[.center.width-100[![](figures/lec6/overfeat.png)]]
 ]
@@ -233,19 +234,9 @@ class: middle
 
 .center.width-60[![](figures/lec6/overfeat-merge.png)]
 
-These bounding boxes are finally merged with an *ad-hoc greedy procedure* to produce the final predictions over a small number of objects.
+These bounding boxes are finally merged with an *ad-hoc greedy procedure* (e.g., Non-maximum suppression) to produce the final predictions over a small number of objects.
 
 .footnote[Credits: Sermanet et al, 2013.]
-
----
-
-class: middle
-
-The OverFeat architecture can be adapted to object detection by adding a "background" class to the object classes.
-
-Negative samples are taken in each scene either at random or by selecting the ones with the worst miss-classification.
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
 ---
 
@@ -264,7 +255,7 @@ Although OverFeat is one of the earliest successful networks for object detectio
 
 YOLO (You Only Look Once; Redmon et al, 2015) models detection as a regression problem. 
 
-It divides the image into an $S\times S$ grid and for each grid cell predicts $B$ bounding boxes, confidence for those boxes, and $C$ class probabilities. These predictions are encoded as an $S \times S \times (5B + C)$ tensor.
+The image is divided into an $S\times S$ grid and for each grid cell predicts $B$ bounding boxes, confidence for those boxes, and $C$ class probabilities. These predictions are encoded as an $S \times S \times (5B + C)$ tensor.
 
 .footnote[Credits: Redmon et al, 2015.]
 
@@ -353,7 +344,7 @@ class: middle
 
 ## SSD
 
-The Single Short Multi-box Detector (SSD; Liu et al, 2015) improves upon YOLO by using a fully-convolutional architecture and multi-scale maps.
+The Single Shot Multi-box Detector (SSD; Liu et al, 2015) improves upon YOLO by using a fully-convolutional architecture and multi-scale maps.
 
 .center.width-80[![](figures/lec6/ssd.png)]
 
@@ -379,7 +370,7 @@ class: middle
 
 This architecture is made of four parts:
 1. Selective search is performed on the input image to select multiple high-quality region proposals.
-2. A pre-trained CNN is selected and put before the output layer. It resizes each proposed region into the input dimensions required by the network and uses a forward pass to output features for the proposals.
+2. A pre-trained CNN (the **backbone**) is selected and put before the output layer. It resizes each proposed region into the input dimensions required by the network and uses a forward pass to output features for the proposals.
 3. The features are fed to an SVM for predicting the class.
 4. The features are fed to a linear regression model for predicting the bounding-box.
 
@@ -399,16 +390,20 @@ Selective search (Uijlings et al, 2013) looks at the image through windows of di
 
 class: middle
 
-## Fast R-CNN
-
 .grid[
 .kol-3-5[
+<br><br>
+
+## Fast R-CNN
+
 - The main performance bottleneck of an R-CNN model is the need to independently extract features for each proposed region.
 - Fast R-CNN uses the entire image as input to the CNN for feature extraction, rather than each proposed region.
 - Fast R-CNN introduces RoI pooling for producing feature vectors of fixed size from region proposals of different sizes.
 
 ]
-.kol-2-5[.width-100[![](figures/lec6/fast-rcnn.svg)]]
+.kol-2-5[.width-100[![](figures/lec6/fast-rcnn.svg)]
+
+.width-100[![](figures/lec6/fast-rcnn.png)]]
 ]
 
 .footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
@@ -444,6 +439,12 @@ class: middle
 - One-stage detectors (YOLO, SSD, RetinaNet, etc) are fast for inference but are usually not the most accurate object detectors.
 - Two-stage detectors (Fast R-CNN, Faster R-CNN, R-FCN, Light head R-CNN, etc) are usually slower but are often more accurate.
 - All networks depend on lots of engineering decisions.
+
+---
+
+class: middle, center
+
+([demo](https://colab.research.google.com/drive/1xdjyBiY75MAVRSjgmiqI7pbRLn58VrbE?usp=sharing#scrollTo=TwfFDhs5TMhi))
 
 ---
 
