@@ -2,7 +2,7 @@
 
 Lectures for INFO8010 - Deep Learning, ULiège, Spring 2021.
 
-- Instructor: Gilles Louppe 
+- Instructor: Gilles Louppe
 - Teaching assistants: Matthia Sabatelli, Antoine Wehenkel
 - When: Spring 2021, Friday 9:00 AM
 - Classroom: Lectures are virtual and broadcast on [Youtube](https://www.youtube.com/channel/UCJWL9RHD2nZa85lK-k0v8lA).
@@ -24,8 +24,8 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2021.
 | April 2 | Lecture 9: Generative models (part 1) |
 | April 23 | Lecture 10: Generative models (part 2) |
 | April 30 | Lecture 11: Uncertainty<br>Deadline for the reading assignment |
-| May 7 | Lecture 12: Deep reinforcement learning | 
-| May 14 | Deadline for the project (code and report) | 
+| May 7 | Lecture 12: Deep reinforcement learning |
+| May 14 | Deadline for the project (code and report) |
 
 
 ## Homeworks
@@ -34,7 +34,7 @@ The goal of these two assignments is to get you familiar with the PyTorch librar
 Each homework should be done in groups of 2 or 3 (the same as for the project) and must be submitted on the [Montefiore submission platform](https://submit.montefiore.ulg.ac.be/) before 23:59 on the due date.
 
 - [Homework 1](https://github.com/glouppe/info8010-deep-learning/raw/master/homeworks/homework1.zip): Tensor operations, `autograd` and `nn`. Due by March 1.
-- Homework 2: TBD.
+- Homework 2: [Homework 2](https://github.com/glouppe/info8010-deep-learning/raw/master/homeworks/homework12zip): Dataset, Dataloader, running on GPU, training a convolutional neural network. Due by March 22.
 
 Homeworks are optional. If submitted, each homework will account for 5% of the final grade.
 
@@ -49,7 +49,7 @@ Your task is to read and summarize a major scientific paper in the field of deep
 > - T. Karras al, "Analyzing and improving the image quality of StyleGAN", 2020. [[pdf](https://openaccess.thecvf.com/content_CVPR_2020/papers/Karras_Analyzing_and_Improving_the_Image_Quality_of_StyleGAN_CVPR_2020_paper.pdf)]
 > - E. Nalisnick, "Do Deep Generative Models Know What They Don't Know?", 2019 [[pdf](https://arxiv.org/pdf/1810.09136)]
 > - M. Cranmer et al, "Discovering Symbolic Models from Deep Learning with Inductive Biases", 2020. [[pdf](https://arxiv.org/pdf/2006.11287.pdf)]
- 
+
 You should produce a report that summarizes the problem that is tackled by the paper and explains why it is challenging or important, from the perspective of the wider research context. The report should outline the main contributions and results with respect to the problem that is addressed. It should also include a critical discussion of the advantages and shortcomings of the contributions of the paper.
 Further guidelines for writing a good summary can be found [here](https://web.stanford.edu/class/cs224n/project/project-proposal-instructions.pdf) (Section 2, "The summary").
 
