@@ -34,7 +34,7 @@ The goal of these two assignments is to get you familiar with the PyTorch librar
 Each homework should be done in groups of 2 or 3 (the same as for the project) and must be submitted on the [Montefiore submission platform](https://submit.montefiore.ulg.ac.be/) before 23:59 on the due date.
 
 - [Homework 1](https://github.com/glouppe/info8010-deep-learning/raw/master/homeworks/homework1.zip): Tensor operations, `autograd` and `nn`. Due by March 1.
-- Homework 2: [Homework 2](https://github.com/glouppe/info8010-deep-learning/raw/master/homeworks/homework12zip): Dataset, Dataloader, running on GPU, training a convolutional neural network. Due by March 22.
+- [Homework 2](https://github.com/glouppe/info8010-deep-learning/raw/master/homeworks/homework12zip): Dataset, Dataloader, running on GPU, training a convolutional neural network. Due by March 22.
 
 Homeworks are optional. If submitted, each homework will account for 5% of the final grade.
 
