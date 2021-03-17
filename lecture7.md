@@ -8,17 +8,12 @@ Lecture 7: Recurrent neural networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-R: expand on graph networks
-
 ---
 
 # Today
 
 How to make sense of *sequential data*?
 
-- Temporal convolutions
 - Recurrent neural networks
 - Applications
 - Beyond sequences
@@ -30,10 +25,9 @@ class: middle
 Many real-world problems require to process a signal with a **sequence** structure.
 
 - Sequence classification:
-    - sentiment analysis
-    - activity/action recognition
+    - sentiment analysis in text
+    - activity/action recognition in videos
     - DNA sequence classification
-    - action selection
 - Sequence synthesis:
     - text synthesis
     - music synthesis
@@ -75,51 +69,13 @@ In the rest of the slides, we consider only time-indexed signal, although it gen
 
 class: middle
 
-# Temporal convolutions
-
----
-
-class: middle
-
-The simplest approach to sequence processing is to use **temporal convolutional networks** (TCNs).
-
-TCNs correspond to standard 1D convolutional networks.
-They process input sequences as fixed-size vectors of the maximum possible length.
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-
-.center.width-80[![](figures/lec7/tcn.png)]
-
-Increasing exponentially the kernel sizes makes the required number of layers grow as $O(\log T)$ of the time window $T$ taken into account. 
-
-Dilated convolutions make the model size grow as $O(\log T)$, while the memory footprint and computation are $O(T\log T)$.
-
-.footnote[Credits: Philippe Remy, [keras-tcn](https://github.com/philipperemy/keras-tcn), 2018; Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-
-.center.width-100[![](figures/lec7/tcn-results.png)]
-
-
-.footnote[Credits: Bai et al, [An Empirical Evaluation of Generic Convolutional and Recurrent Networks for Sequence Modeling](https://arxiv.org/abs/1803.01271), 2018.]
-
----
-
-class: middle
-
 # Recurrent neural networks
 
 ---
 
 class: middle
 
-When the input is a sequence $\mathbf{x} \in S(\mathbb{R}^p)$ of *variable* length $T(\mathbf{x})$, a standard approach is to use a recurrent model which maintains a **recurrent state** $\mathbf{h}\_t \in \mathbb{R}^q$ updated at each time step $t$.
+When the input is a sequence $\mathbf{x} \in S(\mathbb{R}^p)$ of *variable* length $T(\mathbf{x})$, the historical approach is to use a recurrent model which maintains a **recurrent state** $\mathbf{h}\_t \in \mathbb{R}^q$ updated at each time step $t$.
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
@@ -143,7 +99,7 @@ with $\psi : \mathbb{R}^q \to \mathbb{R}^C$.
 
 class: middle
 
-.width-95[![](figures/lec7/rnn-activation.svg)]
+.width-93[![](figures/lec7/rnn-activation.svg)]
 
 ---
 
@@ -184,16 +140,14 @@ class: middle
 
 # Elman networks
 
-Elman networks consist of $\phi$ and $\psi$ defined as primitive neuron units, such as logistic regression units:
+Elman networks consist of $\phi$ and $\psi$ defined as primitive neuron units, such as logistic regression units
 $$
 \begin{aligned}
-&\mathbf{h}\_t = \sigma\_h\left( \mathbf{W}^T\_{xh} \mathbf{x}\_t + \mathbf{W}^T\_{hh} \mathbf{h}\_{t-1} + \mathbf{b}\_h \right) \\\\
-&y\_t = \sigma\_y\left( \mathbf{W}\_y^T \mathbf{h}\_t + b\_y \right) \\\\
-&\mathbf{W}^T\_{xh} \in \mathbb{R}^{p\times q}, \mathbf{W}^T\_{hh} \in \mathbb{R}^{q\times q}, \mathbf{b}\_{h} \in \mathbb{R}^{q}, b\_{y} \in \mathbb{R}, \mathbf{h}\_0 = 0
+\mathbf{h}\_t &= \sigma\_h\left( \mathbf{W}^T\_{xh} \mathbf{x}\_t + \mathbf{W}^T\_{hh} \mathbf{h}\_{t-1} + \mathbf{b}\_h \right) \\\\
+y\_t &= \sigma\_y\left( \mathbf{W}\_y^T \mathbf{h}\_t + b\_y \right) 
 \end{aligned}
 $$
-
-where $\sigma\_h$ and $\sigma\_y$ are non-linear activation functions, such as the sigmoid function, $\text{tanh}$ or $\text{ReLU}$.
+where $\mathbf{W}^T\_{xh} \in \mathbb{R}^{p\times q}, \mathbf{W}^T\_{hh} \in \mathbb{R}^{q\times q}, \mathbf{b}\_{h} \in \mathbb{R}^{q}, b\_{y} \in \mathbb{R}, \mathbf{h}\_0=0$, and where $\sigma\_h$ and $\sigma\_y$ are non-linear activation functions, such as the sigmoid function, $\text{tanh}$ or $\text{ReLU}$.
 
 ---
 
@@ -202,11 +156,11 @@ class: middle
 ## Benchmark example
 
 Learn to recognize variable-length sequences that are palindromes.
-For training, we will use sequences of random sizes, from $1$ to $10$.
+For training, we use sequences of random sizes, from $1$ to $10$.
 
 .grid[
 .kol-1-4[]
-.kol-1-4.center[
+.kol-1-4[
 $\mathbf{x}$
 
 $(1,2,3,2,1)$<br>
@@ -235,24 +189,6 @@ class: middle
 
 ---
 
-# Stacked RNNs
-
-Recurrent networks can be viewed as layers producing sequences $\mathbf{h}\_{1:T}^l$ of activations.
-
-As for dense layers, recurrent layers can be composed in series to form a .bold[stack] of recurrent networks.
-
-<br>
-
-.center.width-100[![](figures/lec7/rnn-stacked.svg)]
-
----
-
-class: middle
-
-.center.width-80[![](figures/lec7/palindrome-2.png)]
-
----
-
 # Bidirectional RNNs
 
 Computing the recurrent states forward in time does not make use of future input values $\mathbf{x}\_{t+1:T}$, even though there are known.
@@ -264,6 +200,25 @@ Computing the recurrent states forward in time does not make use of future input
 
 ---
 
+
+class: middle
+
+.center.width-80[![](figures/lec7/palindrome-2.png)]
+
+
+---
+
+# Stacked RNNs
+
+Recurrent networks can be viewed as layers producing sequences $\mathbf{h}\_{1:T}^\ell$ of activations.
+
+As for dense layers, recurrent layers can be composed in series to form a .bold[stack] of recurrent networks.
+
+<br>
+
+.center.width-100[![](figures/lec7/rnn-stacked.svg)]
+
+---
 
 class: middle
 
@@ -417,13 +372,18 @@ class: middle
 
 ---
 
+class: middle, center
+
+(demo)
+
+---
+
 # Exploding gradients
 
 Gated units prevent gradients from vanishing, but not from **exploding**.
 
 <br>
-
-.center.width-90[![](figures/lec7/loss-exploding.png)]
+.center.width-95[![](figures/lec7/loss-exploding.png)]
 
 .footnote[Credits: [pat-coady](https://pat-coady.github.io/rnn/).]
 
@@ -578,28 +538,6 @@ remains bounded.
 
 class: middle
 
-In Tensorflow's `Orthogonal` initializer:
-
-```python
-# Generate a random matrix
-a = random_ops.random_normal(flat_shape, dtype=dtype, seed=self.seed)
-# Compute the qr factorization
-q, r = gen_linalg_ops.qr(a, full_matrices=False)
-# Make Q uniform
-d = array_ops.diag_part(r)
-q *= math_ops.sign(d)
-if num_rows < num_cols:
-  q = array_ops.matrix_transpose(q)
-return self.gain * array_ops.reshape(q, shape)
-```
-
-.footnote[Credits: Tensorflow, [tensorflow/python/ops/init_ops.py](https://github.com/tensorflow/tensorflow/blob/r1.13/tensorflow/python/ops/init_ops.py#L581).]
-
-
----
-
-class: middle
-
 .center[
 <video loop controls preload="auto" height="400" width="600">
   <source src="./figures/lec7/eigenvalue_orthogonal.m4v" type="video/mp4">
@@ -614,9 +552,9 @@ $\mathbf{A}$ is orthogonal.
 
 class: middle
 
-Exploding activations are also the reason why squashing non-linearity functions (such as $\text{tanh}$) are preferred in RNNs.
-- They avoid recurrent states from exploding by upper bounding $||\mathbf{h}\_t||$.
-- (At least when running the network forward.)
+Exploding activations are also the reason why squashing non-linearity functions (such as $\text{tanh}$ or sigmoids) are preferred in RNNs, since they avoid recurrent states from exploding by upper bounding $||\mathbf{h}\_t||$.
+
+(At least when running the network forward.)
 
 ???
 
@@ -650,16 +588,13 @@ class: middle
 
 ## Language models
 
-Model language as a Markov chain, such that sentences are sequences of words $\mathbf{w}\_{1:T}$ drawn repeatedly from
-$$p(\mathbf{w}\_t | \mathbf{w}\_{1:t-1}).$$
+Language models model language as a Markov chain, in which sentences are sequences of words $\mathbf{w}\_{1:T}$ drawn repeatedly from
+$p(\mathbf{w}\_t | \mathbf{w}\_{1:t-1}).$
+
+
 This is an instance of sequence synthesis, for which predictions are computed at all time steps $t$.
-
----
-
-class: middle
-
 .center[
-.width-80[![](figures/lec7/app-generating-sequences.png)]
+.width-60[![](figures/lec7/app-generating-sequences.png)]
 ]
 
 .footnote[Credits: Alex Graves, [Generating Sequences With Recurrent Neural Networks](https://arxiv.org/abs/1308.0850), 2013.]
@@ -681,10 +616,9 @@ class: middle
 ## Sequence synthesis
 
 The same generative architecture applies to any kind of sequences.
-
 E.g., [`sketch-rnn-demo`](https://magenta.tensorflow.org/assets/sketch_rnn_demo/index.html) for sketches defined as sequences of strokes.
 
-.center.width-40[![](figures/lec7/sketch-rnn.png)]
+.center.width-80[![](figures/lec7/sketch-rnn2.png)]
 
 ---
 
@@ -751,51 +685,16 @@ An increasingly large number of .bold[people are defining the networks procedura
 
 ---
 
-# Neural computers
-
-.center.width-55[![](figures/lec7/turing-net.png)]
-
-.center[Any Turing machine can be simulated by a recurrent neural network<br>
-(Siegelmann and Sontag, 1995)]
-
-???
-
-This implies that usual programs can all be equivalently implemented as a neural network, in theory.
-
----
-
-class: middle
-
-.center.width-80[![](figures/lec7/dnc.png)]
-
-Networks can be coupled with memory storage to produce **neural computers**: 
-- The controller processes the input sequence and interacts with the memory to generate the output. 
-- The read and write operations *attend to* all the memory addresses.
-
-???
-
-- A Turing machine is not very practical to implement useful programs.
-- However, we can simulate the general architecture of a computer in a neural network.
-
----
-
-class: middle
-
-.width-100[![](figures/lec7/DNC_training_recall_task.gif)]
-
-A differentiable neural computer being trained to store and recall dense binary numbers.
-Upper left: the input (red) and target (blue), as 5-bit words and a 1 bit interrupt signal.
-Upper right: the model's output
-
----
-
 # Programs as neural nets
 
-The topology of a recurrent network unrolled through time is *dynamic*. 
-
+The topology of a recurrent network unrolled through time is not fixed, but **dynamic**. 
 It depends on:
 - the input sequence and its size
 - a graph construction algorithms which consumes input tokens in sequence to add layers to the graph of computation.
+
+---
+
+class: middle
 
 This principle generalizes to:
 - arbitrarily structured data (e.g., sequences, trees, **graphs**)
@@ -865,15 +764,45 @@ class: middle, black-slide
 
 ---
 
+# Neural computers
+
+.center.width-55[![](figures/lec7/turing-net.png)]
+
+.center[Any Turing machine can be simulated by a recurrent neural network<br>
+(Siegelmann and Sontag, 1995)]
+
+???
+
+This implies that usual programs can all be equivalently implemented as a neural network, in theory.
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec7/dnc.png)]
+
+Networks can be coupled with memory storage to produce **neural computers**: 
+- The controller processes the input sequence and interacts with the memory to generate the output. 
+- The read and write operations *attend to* all the memory addresses.
+
+???
+
+- A Turing machine is not very practical to implement useful programs.
+- However, we can simulate the general architecture of a computer in a neural network.
+
+---
+
+class: middle
+
+.width-100[![](figures/lec7/DNC_training_recall_task.gif)]
+
+A differentiable neural computer being trained to store and recall dense binary numbers.
+Upper left: the input (red) and target (blue), as 5-bit words and a 1 bit interrupt signal.
+Upper right: the model's output
+
+---
+
 class: end-slide, center
 count: false
 
 The end.
-
----
-
-count: false
-
-# References
-
-- Kyunghyun Cho, "Natural Language Understanding with Distributed Representation", 2015.
