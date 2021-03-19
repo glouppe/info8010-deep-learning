@@ -418,6 +418,10 @@ $$\mathbf{h}\_n = \mathbf{W}(\mathbf{W}(\mathbf{W}(...(\mathbf{W}\mathbf{h}\_0).
 
 Ideally, we would like $\mathbf{W}^n$ to neither vanish nor explode as $n$ increases.
 
+???
+
+Do on the iPad
+
 ---
 
 class: middle
