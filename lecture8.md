@@ -8,7 +8,32 @@ Lecture 8: Attention and transformers
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+---
 
-???
+# Today
 
-R: energy consideration
+---
+
+class: middle
+
+# Attention for sequence-to-sequence
+
+---
+
+class: middle
+
+# Attention mechanisms
+
+---
+
+class: middle
+
+# Transformers
+
+---
+
+class: end-slide, center
+count: false
+
+The end.
+
