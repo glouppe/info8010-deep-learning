@@ -8,6 +8,11 @@ Lecture 7: Recurrent neural networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+R: move NTM to Attention lecture?
+R: sort the applications and delay/move stuff for Lec8?
+
 ---
 
 # Today
@@ -37,7 +42,7 @@ Many real-world problems require to process a signal with a **sequence** structu
     - text translation
     - part-of-speech tagging
 
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+.footnote[Credits: Francois Fleuret, [14x050/EE559 Deep Learning](https://fleuret.org/dlc/), EPFL.]
 
 ---
 
