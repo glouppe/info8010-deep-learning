@@ -8,6 +8,10 @@ Lecture 8: Attention and transformers
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+xxx permutation equivariance
+
 ---
 
 # Today
@@ -68,9 +72,7 @@ Under the assumption that each output token comes from one or a handful of input
 
 Following Bahdanau et al. (2014), the encoder is specified as a bidirectional RNN that computes an annotation vector for each input token,
 $$\mathbf{h}\_i = (\overrightarrow{\mathbf{h}}\_i, \overleftarrow{\mathbf{h}}\_i)$$
-for $i = 1, \ldots, T$.
-
-From this, they compute a new process $\mathbf{s}\_i$, $i=1, \ldots, T$, which looks at weighted averages of the $\mathbf{h}\_j$, where **the weights are functions of the signal**.
+for $i = 1, \ldots, T$, where $\overrightarrow{\mathbf{h}}\_i$ and $\overleftarrow{\mathbf{h}}\_i$ respectively denote the forward and backward hidden recurrent states of the bidirectional RNN.
 
 .footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
@@ -78,11 +80,13 @@ From this, they compute a new process $\mathbf{s}\_i$, $i=1, \ldots, T$, which l
 
 class: middle
 
-Given $\mathbf{y}\_1, \ldots, \mathbf{y}\_{i-1}$ and $\mathbf{s}\_1, \ldots, \mathbf{s}\_{i-1}$, first compute an attention vector
+From this, they compute a new process $\mathbf{s}\_i$ ($i=1, \ldots, T$) which looks at weighted averages of the $\mathbf{h}\_j$ ($j=1, \ldots, T$) where the weights are functions of the signal.
+
+Given $\mathbf{s}\_1, \ldots, \mathbf{s}\_{i-1}$, first compute an attention vector
 $$\mathbf{\alpha}\_{i} = \text{softmax}(\mathbf{e}\_{i,1:T})$$
 where
 $$\mathbf{e}\_{i,j} = a(\mathbf{s}\_{i-1}, \mathbf{h}\_j)$$
-and $a$ is a one hidden layer $\text{tanh}$ MLP.
+and $a$ is an **attention function**, here specified as a one hidden layer $\text{tanh}$ MLP.
 
 Then, compute the context vector from the weighted $\mathbf{h}\_j$'s,
 $$\mathbf{c}\_i = \sum\_{j=1}^T \alpha\_{i, j} \mathbf{h}\_j.$$
@@ -97,7 +101,7 @@ Note that the attention weights depend on the content, rather than on the positi
 
 class: middle
 
-The model can now make the prediction
+The model can now make the prediction $\mathbf{y}\_i$:
 $$
 \begin{aligned}
 \mathbf{s}\_i &= f(\mathbf{s}\_{i-1}, y\_{i-1}, c\_i)  \\\\
@@ -185,11 +189,11 @@ class: middle
 
 ## Context attention
 
-The **context attention** mechanism we saw earlier can be generically defined as follows.
+The previous **context attention** mechanism can be generically defined as follows.
 
-Given a context tensor $\mathbf{C} \in \mathbb{R}^{T \times C}$ and a value tensor $\mathbf{V} \in \mathbb{R}^{S \times D},$ context attention computes an output tensor $\mathbf{Y} \in \mathbb{R}^{T \times D}$
-with $$\mathbf{Y}\_j = \sum\_{i=1}^S \text{softmax}\_i(a(\mathbf{C}\_j, \mathbf{V}\_i; \theta)) \mathbf{V}\_i$$
-and where $a : \mathbb{R}^C \times \mathbb{R}^D \to \mathbb{R}$ is an attention function.
+Given a context tensor $\mathbf{C} \in \mathbb{R}^{T \times C}$ and a value tensor $\mathbf{X} \in \mathbb{R}^{S \times D},$ context attention computes an output tensor $\mathbf{Y} \in \mathbb{R}^{T \times D}$
+with $$\mathbf{Y}\_j = \sum\_{i=1}^S \text{softmax}\_i(a(\mathbf{C}\_j, \mathbf{X}\_i; \theta)) h(\mathbf{X}\_i),$$
+where $a : \mathbb{R}^C \times \mathbb{R}^D \to \mathbb{R}$ is an attention function and $h$ is an embedding function.
 
 <br>
 .center.width-40[![](figures/lec8/context-attention-layer.svg)]
@@ -202,9 +206,9 @@ class: middle
 
 ## Self-attention
 
-When $\mathbf{C} = \mathbf{V}$, context attention is known as **self-attention**.
+When $\mathbf{C} = \mathbf{X}$, context attention is known as **self-attention**.
 
-Given a value tensor $\mathbf{V} \in \mathbb{R}^{S \times D}$, self-attention computes an output tensor $\mathbf{Y} \in \mathbb{R}^{S \times D}$ with $$\mathbf{Y}\_j = \sum\_{i=1}^S \text{softmax}\_i(a(\mathbf{V}\_j, \mathbf{V}\_i; \theta)) \mathbf{V}\_i.$$
+Given a value tensor $\mathbf{X} \in \mathbb{R}^{S \times D}$, self-attention computes an output tensor $\mathbf{Y} \in \mathbb{R}^{S \times D}$ with $$\mathbf{Y}\_j = \sum\_{i=1}^S \text{softmax}\_i(a(\mathbf{X}\_j, \mathbf{X}\_i; \theta)) h(\mathbf{X}\_i).$$
 
 <br>
 .center.width-40[![](figures/lec8/self-attention-layer.svg)]
@@ -231,7 +235,7 @@ where $n$ is the sequence length, $d$ is the embedding dimension, and $k$ is the
 
 Following the terminology of Graves et al. (2014) et Vaswani et al. (2017), attention is an averaging of **values** associated to *keys* matching a *query*. 
 
-With $\mathbf{Q}$ the tensor of row queries, $\mathbf{K}$ the keys, and $\mathbf{V}$ the values,
+With $\mathbf{Q}$ the tensor of row $T$ queries, $\mathbf{K}$ the tensor of $T'$ row keys, and $\mathbf{V}$ the tensor of $T'$ row values,
 $$\mathbf{Q} \in \mathbb{R}^{T \times D}, \mathbf{K} \in \mathbb{R}^{T' \times D}, \mathbf{V} \in \mathbb{R}^{T' \times D'},$$
 and using a dot-product for attention function, an attention operation yields
 $$\mathbf{Y}\_j = \sum\_{i=1}^{T'} \frac{\exp(\mathbf{Q}\_j \mathbf{K}\_i^T)}{\sum\_{r=1}^{T'} \exp(\mathbf{Q}\_j \mathbf{K}\_r^T)} \mathbf{V}\_i$$
@@ -244,9 +248,11 @@ $$\mathbf{Y} = \underbrace{\text{softmax}(\mathbf{QK}^T)}\_{\text{attention matr
 
 class: middle
 
-.center.width-100[![](figures/lec8/qkv-maps.png)]
+.center.width-80[![](figures/lec8/dot-product.png)]
 
-.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+Recall that the dot product is simply a un-normalised cosine similarity, which tells us about the alignment of two vectors.
+
+Therefore, the $\mathbf{QK}^T$ matrix is a **similarity matrix** between queries and keys.
 
 ---
 
@@ -261,6 +267,14 @@ $$\begin{aligned}
 \mathbf{V} &= \mathbf{X'} \mathbf{W}\_V^T \in \mathbb{R}^{T' \times D'}.
 \end{aligned}$$
 As for context attention, we obtain self-attention when $\mathbf{X} = \mathbf{X}'$.
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec8/qkv-maps.png)]
 
 .footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
@@ -282,19 +296,12 @@ class: middle
 
 ---
 
-.grid[
-.kol-1-2[
-
-
 # Transformers
 
 Vaswani et al. (2017) proposed to go one step further: instead of using attention mechanisms as a supplement to standard convolutional and recurrent layers, they designed a model, the **transformer**, combining only attention layers.
 
 The transformer was designed for a sequence-to-sequence translation task, but it is currently key to state-of-the-art approaches across NLP tasks.
 
-]
-.kol-1-2[<br>.width-100[![](figures/lec8/transformer3.png)]]
-]
 
 .footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
@@ -345,26 +352,51 @@ $$\mathbf{W}\_i^Q \in \mathbb{R}^{d\_\text{model} \times d\_k}, \mathbf{W}\_i^K 
 
 class: middle
 
+.grid[
+.kol-2-3[
+
 ## Encoder-decoder architecture
 
 Their complete transformer model is composed of:
 
-- An encoder that combines $N=6$ modules, each composed of a multi-head attention sub-module, and a (per-component) one-hidden-layer NLP, with residual pass-through and layer normalization. All sub- and embedding layers produce outputs of dimension $d\_\text{model}=512$.
-- A decoder that combines $N=6$ modules similar to the encoder, but using masked self-attention to prevent positions from attending to subsequent possition. In addition, the decoder inserts a third sub-layer which performs multi-head attention over the output of the encoder stack.
+- An encoder that combines $N=6$ modules, each composed of a multi-head attention sub-module, and a (per-component) one-hidden-layer MLP, with residual pass-through and layer normalization. All sub-modules and embedding layers produce outputs of dimension $d\_\text{model}=512$.
+- A decoder that combines $N=6$ modules similar to the encoder, but using masked self-attention to prevent positions from attending to subsequent positions. In addition, the decoder inserts a third sub-module which performs multi-head attention over the output of the encoder stack.
 
----
-
-class: middle, center
-
-.width-50[![](figures/lec8/transformer3.png)]
+]
+.kol-1-3.center.width-100[<br><br>![](figures/lec8/transformer3.png)]
+]
 
 ---
 
 class: middle
 
-.center.width-85[![](figures/lec8/transformer-animation.gif)]
+.center.width-80[![](figures/lec8/transformer-decoding-1.gif)]
 
-.footnote[Credits: [Transformer: A Novel Neural Network Architecture for Language Understanding](https://ai.googleblog.com/2017/08/transformer-novel-neural-network.html), 2017.]
+The encoders start by processing the input sequence. The output of the top encoder is then transformed into a set of attention vectors $\mathbf{K}$ and $\mathbf{V}$ that will help the decoders focus on appropriate places in the input sequence.
+
+.footnote[Credits: Jay Alammar, [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/).]
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec8/transformer-decoding-2.gif)]
+
+Each step in the decoding phase produces an output token, until a special symbol is reached indicating the transformer decoder has completed its output.
+
+The output of each step is fed to the bottom decoder in the next time step, and the decoders bubble up their decoding results just like the encoders did. 
+
+.footnote[Credits: Jay Alammar, [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/).]
+
+---
+
+class: middle
+
+In the decoder:
+- The first masked self-attention sub-module is only allowed to attend to earlier positions in the output sequence. This is done by masking future positions.
+- The second multi-head attention sub-module works just like multi-head self-attention, except it creates its query matrix from the layer below it, and takes the keys and values matrices from the output of the encoder stack.
+
+.footnote[Credits: Jay Alammar, [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/).]
   
 ---
 
