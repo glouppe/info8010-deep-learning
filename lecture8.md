@@ -40,7 +40,7 @@ v &= \mathbf{h}\_{T}.
 \end{aligned}$$
 Then, they produce an output sequence $\mathbf{y}\_{1:T'}$ from an autoregressive generative model
 $$\begin{aligned}
-\mathbf{y}\_{i} &\sim p(\cdot | \mathbf{y}\_{1:i-1}, v)
+\mathbf{y}\_{i} &\sim p(\cdot | \mathbf{y}\_{1:i-1}, v),
 \end{aligned}$$
 where $p(\cdot | \mathbf{y}\_{1:i-1}, v)$ is itself an RNN.
 
@@ -50,7 +50,7 @@ class: middle
 
 .center.width-80[![](figures/lec8/bottleneck.svg)]
 
-This architecture assumes that the sole thought vector $v$ carries out enough information in itself to generate entire output sequences. This is often challenging for long sequences.
+This architecture assumes that the sole thought vector $v$ carries out enough information in itself to generate entire output sequences. This is often **challenging** for long sequences.
 
 ???
 
@@ -60,7 +60,7 @@ There are not direct "channels" to transport local information from the input se
 
 class: middle
 
-Instead, attention mechanisms can transport information from parts of the input signal to parts of the output *specified dynamically*.
+Instead, attention mechanisms can transport information from parts of the input signal to parts of the output .bold[specified dynamically].
 
 Under the assumption that each output token comes from one or a handful of input tokens, the decoder should attend to only those tokens that are relevant for producing the next output token.
 
@@ -80,11 +80,11 @@ for $i = 1, \ldots, T$, where $\overrightarrow{\mathbf{h}}\_i$ and $\overleftarr
 
 class: middle
 
-From this, they compute a new process $\mathbf{s}\_i$ ($i=1, \ldots, T$) which looks at weighted averages of the $\mathbf{h}\_j$ ($j=1, \ldots, T$) where the weights are functions of the signal.
+From this, they compute a new process $\mathbf{s}\_i$, $i=1, \ldots, T$, which looks at weighted averages of the $\mathbf{h}\_j$, $j=1, \ldots, T$, where the .bold[weights are functions of the signal].
 
 Given $\mathbf{s}\_1, \ldots, \mathbf{s}\_{i-1}$, first compute an attention vector
-$$\mathbf{\alpha}\_{i} = \text{softmax}(\mathbf{e}\_{i,1:T})$$
-where
+$$\mathbf{\alpha}\_{i,j} = \text{softmax}\_j(\mathbf{e}\_{i,j})$$
+for $j=1, \ldots, T$, where
 $$\mathbf{e}\_{i,j} = a(\mathbf{s}\_{i-1}, \mathbf{h}\_j)$$
 and $a$ is an **attention function**, here specified as a one hidden layer $\text{tanh}$ MLP.
 
@@ -161,7 +161,7 @@ class: middle
 
 .center.width-80[![](figures/lec8/attention-caption1.png)]
 
-Following Xu et al. (2015), the context attention mechanism can be adapted for caption generation:
+Following Xu et al. (2015), the context attention mechanism can be adapted to caption generation:
 - Encoder: a CNN that extracts a feature map over the input image.
 - Decoder: an attention-based RNN that computes at each step an attention map over the entire feature map, effectively deciding which regions to focus on.
 
@@ -191,9 +191,9 @@ class: middle
 
 The previous **context attention** mechanism can be generically defined as follows.
 
-Given a context tensor $\mathbf{C} \in \mathbb{R}^{T \times C}$ and a value tensor $\mathbf{X} \in \mathbb{R}^{S \times D},$ context attention computes an output tensor $\mathbf{Y} \in \mathbb{R}^{T \times D}$
-with $$\mathbf{Y}\_j = \sum\_{i=1}^S \text{softmax}\_i(a(\mathbf{C}\_j, \mathbf{X}\_i; \theta)) h(\mathbf{X}\_i),$$
-where $a : \mathbb{R}^C \times \mathbb{R}^D \to \mathbb{R}$ is an attention function and $h$ is an embedding function.
+Given a context tensor $\mathbf{C} \in \mathbb{R}^{T \times C}$ and a value tensor $\mathbf{V} \in \mathbb{R}^{S \times D},$ context attention computes an output tensor $\mathbf{Y} \in \mathbb{R}^{T \times D}$
+with $$\mathbf{Y}\_j = \sum\_{i=1}^S \text{softmax}\_i(a(\mathbf{C}\_j, \mathbf{V}\_i; \theta)) \mathbf{V}\_i,$$
+where $a : \mathbb{R}^C \times \mathbb{R}^D \to \mathbb{R}$ is a scalar attention function.
 
 <br>
 .center.width-40[![](figures/lec8/context-attention-layer.svg)]
@@ -206,9 +206,9 @@ class: middle
 
 ## Self-attention
 
-When $\mathbf{C} = \mathbf{X}$, context attention is known as **self-attention**.
+When $\mathbf{C} = \mathbf{V}$, context attention is becomes a **self-attention** layer.
 
-Given a value tensor $\mathbf{X} \in \mathbb{R}^{S \times D}$, self-attention computes an output tensor $\mathbf{Y} \in \mathbb{R}^{S \times D}$ with $$\mathbf{Y}\_j = \sum\_{i=1}^S \text{softmax}\_i(a(\mathbf{X}\_j, \mathbf{X}\_i; \theta)) h(\mathbf{X}\_i).$$
+Given a value tensor $\mathbf{V} \in \mathbb{R}^{S \times D}$, self-attention computes an output tensor $\mathbf{Y} \in \mathbb{R}^{S \times D}$ with $$\mathbf{Y}\_j = \sum\_{i=1}^S \text{softmax}\_i(a(\mathbf{V}\_j, \mathbf{V}\_i; \theta)) \mathbf{V}\_i.$$
 
 <br>
 .center.width-40[![](figures/lec8/self-attention-layer.svg)]
@@ -233,7 +233,7 @@ where $n$ is the sequence length, $d$ is the embedding dimension, and $k$ is the
 
 # Key-value store 
 
-Following the terminology of Graves et al. (2014) et Vaswani et al. (2017), attention is an averaging of **values** associated to *keys* matching a *query*. 
+Following the terminology of Graves et al. (2014) et Vaswani et al. (2017), attention can be generalized to an averaging of **values** associated to *keys* matching a *query*. 
 
 With $\mathbf{Q}$ the tensor of row $T$ queries, $\mathbf{K}$ the tensor of $T'$ row keys, and $\mathbf{V}$ the tensor of $T'$ row values,
 $$\mathbf{Q} \in \mathbb{R}^{T \times D}, \mathbf{K} \in \mathbb{R}^{T' \times D}, \mathbf{V} \in \mathbb{R}^{T' \times D'},$$
@@ -282,11 +282,12 @@ class: middle
 
 class: middle, center
 
-(demo)
+([demo](https://hallvagi.github.io/dl-explorer/fastai/attention/lstm/2020/06/29/Attention.html))
 
 ???
 
-Adapt https://fleuret.org/git-extract/pytorch/attentiontoy1d.py
+R: adapt https://fleuret.org/git-extract/pytorch/attentiontoy1d.py
+
 
 ---
 
@@ -581,6 +582,19 @@ class: black-slide, middle
 DALL·E: a 12-billion parameter version of GPT-3 trained to generate images from text descriptions. See OpenAI's [blog post](https://openai.com/blog/dall-e/).
 
 ]
+
+---
+
+class: middle
+
+.center[
+
+.width-100[![](figures/lec8/clip.png)]
+
+CLIP: connecting text and images for zero-shot classification. See [demo](https://clip.backprop.co/).
+
+]
+
 
 ---
 
