@@ -12,6 +12,9 @@ Prof. Gilles Louppe<br>
 
 xxx permutation equivariance
 
+R: improve consistency of notations (i, j; C as output then as input, etc)
+R: review complexity
+
 ---
 
 # Today
