@@ -10,6 +10,12 @@ Prof. Gilles Louppe<br>
 
 ---
 
+class: middle
+
+.center.width-60[![](figures/lec0/map.png)]
+
+---
+
 # Today
 
 How to **make neural networks see**?

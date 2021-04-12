@@ -2,7 +2,7 @@ class: middle, center, title-slide
 
 # Deep Learning
 
-Lecture 9: Auto-encoders and generative models
+Lecture 9: Auto-encoders and variational auto-encoders
 
 <br><br>
 Prof. Gilles Louppe<br>
@@ -18,8 +18,11 @@ R: VAE:
 R: reverse KL https://ermongroup.github.io/cs228-notes/inference/variational/
 R: http://paulrubenstein.co.uk/variational-autoencoders-are-not-autoencoders/
 
-R: latent variable models -> illustrate with the bean machine -> intractability
+---
 
+class: middle
+
+.center.width-60[![](figures/lec0/map.png)]
 
 ---
 
@@ -27,210 +30,10 @@ R: latent variable models -> illustrate with the bean machine -> intractability
 
 Learn a model of the data.
 
-- Auto-encoders
 - Generative models
+- Auto-encoders
 - Variational inference
 - Variational auto-encoders
-
----
-
-class: middle
-
-# Auto-encoders
-
----
-
-class: middle
-
-Many applications such as image synthesis, denoising, super-resolution, speech synthesis or compression, require to **go beyond** classification and regression and model explicitly a high-dimensional signal.
-
-This modeling consists of finding .italic["meaningful degrees of freedom"], or .italic["factors of variations"], that describe the signal and are of lesser dimension.
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-
-.center.width-90[![](figures/lec9/embedding1.png)]
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-count: false
-
-.center.width-90[![](figures/lec9/embedding2.png)]
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-# Auto-encoders
-
-An auto-encoder is a composite function made of
-- an **encoder** $f$ from the original space $\mathcal{X}$ to a latent space $\mathcal{Z}$,
-- a *decoder* $g$ to map back to $\mathcal{X}$,
-
-such that $g \circ f$ is close to the identity on the data.
-
-.center.width-80[![](figures/lec9/ae.png)]
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-
-Let $p(\mathbf{x})$ be the data distribution over $\mathcal{X}$. A good auto-encoder could be characterized with the reconstruction loss
-$$\mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})} \left[ || \mathbf{x} - g \circ f(\mathbf{x}) ||^2 \right] \approx 0.$$
-
-Given two parameterized mappings $f(\cdot; \theta\_f)$ and $g(\cdot;\theta\_g)$, training consists of minimizing an empirical estimate of that loss,
-$$\theta = \arg \min\_{\theta\_f, \theta\_g} \frac{1}{N} \sum_{i=1}^N || \mathbf{x}\_i - g(f(\mathbf{x}\_i,\theta\_f), \theta\_g) ||^2.$$
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-
-For example, when the auto-encoder is linear,
-$$
-\begin{aligned}
-f: \mathbf{z} &= \mathbf{U}^T \mathbf{x} \\\\
-g: \hat{\mathbf{x}} &= \mathbf{U} \mathbf{z},
-\end{aligned}
-$$
-with $\mathbf{U} \in \mathbb{R}^{p\times d}$, the reconstruction error reduces to
-$$\mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})} \left[ || \mathbf{x} - \mathbf{U}\mathbf{U}^T \mathbf{x} ||^2 \right].$$
-
-In this case, an optimal solution is given by PCA.
-
----
-
-class: middle
-
-## Deep auto-encoders
-
-.center.width-80[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](figures/lec9/architecture.svg)]
-
-Better results can be achieved with more sophisticated classes of mappings than linear projections, in particular by designing $f$ and $g$ as deep neural networks.
-
-For instance,
-- by combining a multi-layer perceptron encoder $f : \mathbb{R}^p \to \mathbb{R}^d$ with a multi-layer perceptron decoder $g: \mathbb{R}^d \to \mathbb{R}^p$.
-- by combining a convolutional network encoder $f : \mathbb{R}^{w\times h \times c} \to \mathbb{R}^d$ with a decoder $g : \mathbb{R}^d \to \mathbb{R}^{w\times h \times c}$ composed of the reciprocal transposed convolutional layers.
-
----
-
-class: middle
-
-.center.width-60[![](figures/lec9/samples1.png)]
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-
-.center.width-60[![](figures/lec9/samples2.png)]
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-
-.center.width-60[![](figures/lec9/samples3.png)]
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-
-## Interpolation
-
-To get an intuition of the learned latent representation, we can pick two samples $\mathbf{x}$ and $\mathbf{x}'$ at random and interpolate samples along the line in the latent space.
-
-<br>
-.center.width-80[![](figures/lec9/interpolation.png)]
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-
-.center.width-60[![](figures/lec9/interp1.png)]
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-
-.center.width-60[![](figures/lec9/interp2.png)]
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-# Denoising auto-encoders
-
-Besides dimension reduction, auto-encoders can capture dependencies between signal components to restore degraded or noisy signals. 
-
-In this case, the composition $$h = g \circ f : \mathcal{X} \to \mathcal{X}$$ is referred to as a **denoising** auto-encoder.
-
-The goal is to optimize $h$ such that a perturbation $\tilde{\mathbf{x}}$ of the signal $\mathbf{x}$ is restored to $\mathbf{x}$, hence $$h(\tilde{\mathbf{x}}) \approx \mathbf{x}.$$
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-
-.center.width-60[![](figures/lec9/dae0.png)]
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-
-.center.width-60[![](figures/lec9/dae1.png)]
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-
-.center.width-60[![](figures/lec9/dae2.png)]
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-
-.center.width-60[![](figures/lec9/dae3.png)]
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-
-A fundamental weakness of denoising auto-encoders is that the posterior $p(\mathbf{x}|\tilde{\mathbf{x}})$ is possibly multi-modal.
-
-If we train an auto-encoder with the quadratic loss, then the best reconstruction is 
-$$h(\tilde{\mathbf{x}}) = \mathbb{E}[\mathbf{x}|\tilde{\mathbf{x}}],$$
-which may be very unlikely under $p(\mathbf{x}|\tilde{\mathbf{x}})$.
-
-.center.width-60[![](figures/lec9/dae-posterior.png)]
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
 ---
 
@@ -244,10 +47,29 @@ class: middle
 
 class: middle
 
+.center.circle.width-30[![](figures/lec9/feynman.jpg)]
+
+.italic.center[What I cannot create, I do not understand.]
+
+.pull-right[Richard Feynman]
+
+---
+
+class: middle
+
 A **generative model** is a probabilistic model $p$ that can be used as *a simulator of the data*.
 Its purpose is to generate synthetic but realistic high-dimensional data
 $$\mathbf{x} \sim p(\mathbf{x};\theta),$$
 that is as close as possible from the true but unknown data distribution $p(\mathbf{x})$, but for which we have empirical samples.
+
+---
+
+class: middle
+
+Go beyond estimating $p(y|\mathbf{x})$:
+- Understand and imagine how the world evolves.
+- Recognize objects in the world and their factors of variation.
+- Establish concepts for reasoning and decision making.
 
 ---
 
@@ -259,13 +81,6 @@ that is as close as possible from the true but unknown data distribution $p(\mat
 .width-100[![](figures/lec9/why-gm.png)]
 ]
 .caption[Generative models have a role in many important problems]
-
-???
-
-Go beyond estimating $p(y|\mathbf{x})$:
-- Understand and imagine how the world evolves.
-- Recognize objects in the world and their factors of variation.
-- Establish concepts for reasoning and decision making.
 
 ---
 
@@ -395,13 +210,213 @@ Generative models for applications in astronomy and high-energy physics.
 
 ---
 
+class: middle
+
+# Auto-encoders
+
+---
+
+class: middle
+
+Many applications such as image synthesis, denoising, super-resolution, speech synthesis or compression, require to **go beyond** classification and regression and model explicitly a high-dimensional signal.
+
+This modeling consists of finding .italic["meaningful degrees of freedom"], or .italic["factors of variations"], that describe the signal and are of lesser dimension.
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+.center.width-90[![](figures/lec9/embedding1.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+count: false
+
+.center.width-90[![](figures/lec9/embedding2.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+# Auto-encoders
+
+An auto-encoder is a composite function made of
+- an **encoder** $f$ from the original space $\mathcal{X}$ to a latent space $\mathcal{Z}$,
+- a *decoder* $g$ to map back to $\mathcal{X}$,
+
+such that $g \circ f$ is close to the identity on the data.
+
+.center.width-80[![](figures/lec9/ae.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+Let $p(\mathbf{x})$ be the data distribution over $\mathcal{X}$. A good auto-encoder could be characterized with the reconstruction loss
+$$\mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})} \left[ || \mathbf{x} - g \circ f(\mathbf{x}) ||^2 \right] \approx 0.$$
+
+Given two parameterized mappings $f(\cdot; \theta\_f)$ and $g(\cdot;\theta\_g)$, training consists of minimizing an empirical estimate of that loss,
+$$\theta = \arg \min\_{\theta\_f, \theta\_g} \frac{1}{N} \sum_{i=1}^N || \mathbf{x}\_i - g(f(\mathbf{x}\_i,\theta\_f), \theta\_g) ||^2.$$
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+For example, when the auto-encoder is linear,
+$$
+\begin{aligned}
+f: \mathbf{z} &= \mathbf{U}^T \mathbf{x} \\\\
+g: \hat{\mathbf{x}} &= \mathbf{U} \mathbf{z},
+\end{aligned}
+$$
+with $\mathbf{U} \in \mathbb{R}^{p\times d}$, the reconstruction error reduces to
+$$\mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})} \left[ || \mathbf{x} - \mathbf{U}\mathbf{U}^T \mathbf{x} ||^2 \right].$$
+
+In this case, an optimal solution is given by PCA.
+
+---
+
+class: middle
+
+## Deep auto-encoders
+
+.center.width-80[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](figures/lec9/architecture.svg)]
+
+Better results can be achieved with more sophisticated classes of mappings than linear projections, in particular by designing $f$ and $g$ as deep neural networks.
+
+For instance,
+- by combining a multi-layer perceptron encoder $f : \mathbb{R}^p \to \mathbb{R}^d$ with a multi-layer perceptron decoder $g: \mathbb{R}^d \to \mathbb{R}^p$.
+- by combining a convolutional network encoder $f : \mathbb{R}^{w\times h \times c} \to \mathbb{R}^d$ with a decoder $g : \mathbb{R}^d \to \mathbb{R}^{w\times h \times c}$ composed of the reciprocal transposed convolutional layers.
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec9/samples1.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec9/samples2.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec9/samples3.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+## Interpolation
+
+To get an intuition of the learned latent representation, we can pick two samples $\mathbf{x}$ and $\mathbf{x}'$ at random and interpolate samples along the line in the latent space.
+
+<br>
+.center.width-80[![](figures/lec9/interpolation.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec9/interp1.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec9/interp2.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+# Denoising auto-encoders
+
+Besides dimension reduction, auto-encoders can capture dependencies between signal components to restore degraded or noisy signals. 
+
+In this case, the composition $$h = g \circ f : \mathcal{X} \to \mathcal{X}$$ is referred to as a **denoising** auto-encoder.
+
+The goal is to optimize $h$ such that a perturbation $\tilde{\mathbf{x}}$ of the signal $\mathbf{x}$ is restored to $\mathbf{x}$, hence $$h(\tilde{\mathbf{x}}) \approx \mathbf{x}.$$
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec9/dae0.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec9/dae1.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec9/dae2.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec9/dae3.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+A fundamental weakness of denoising auto-encoders is that the posterior $p(\mathbf{x}|\tilde{\mathbf{x}})$ is possibly multi-modal.
+
+If we train an auto-encoder with the quadratic loss, then the best reconstruction is 
+$$h(\tilde{\mathbf{x}}) = \mathbb{E}[\mathbf{x}|\tilde{\mathbf{x}}],$$
+which may be very unlikely under $p(\mathbf{x}|\tilde{\mathbf{x}})$.
+
+.center.width-60[![](figures/lec9/dae-posterior.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
 # Sampling from an AE's latent space
 
 The generative capability of the decoder $g$ in an auto-encoder can be assessed by introducing a (simple) density model $q$ over the latent space $\mathcal{Z}$, sample there, and map the samples into the data space $\mathcal{X}$ with $g$.
 
 .center.width-80[![](figures/lec9/sampling.png)]
 
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
 ---
 
@@ -417,7 +432,7 @@ class: middle
 
 .center.width-60[![](figures/lec9/samples-bad.png)]
 
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
 ---
 
@@ -427,7 +442,7 @@ These results are not satisfactory because the density model on the latent space
 
 Building a good model in latent space amounts to our original problem of modeling an empirical distribution, although it may now be in a lower dimension space.
 
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
 ---
 
@@ -445,11 +460,7 @@ class: middle
 
 Consider for now a **prescribed latent variable model** that relates a set of observable variables $\mathbf{x} \in \mathcal{X}$ to a set of unobserved variables $\mathbf{z} \in \mathcal{Z}$.
 
-
-
----
-
-class: middle
+???
 
 The probabilistic model is given and motivated by domain knowledge assumptions.
 
@@ -473,6 +484,14 @@ $$p(\mathbf{z}|\mathbf{x}) = \frac{p(\mathbf{x}|\mathbf{z}) p(\mathbf{z})}{p(\ma
 
 For most interesting cases, this is usually intractable since it requires evaluating the evidence
 $$p(\mathbf{x}) = \int p(\mathbf{x}|\mathbf{z})p(\mathbf{z}) d\mathbf{z}.$$
+
+---
+
+class: middle, black-slide
+
+.center[<video controls autoplay loop muted preload="auto" height="480" width="640">
+  <source src="./figures/lec9/galton.mp4" type="video/mp4">
+</video>]
 
 ---
 
@@ -582,7 +601,7 @@ class: middle
 
 .center.width-80[![](figures/lec9/vae.png)]
 
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
 ---
 
@@ -760,15 +779,29 @@ class: middle, center
 
 ---
 
-class: black-slide
+class: middle
 
-# Applications 
+# Applications
 
-<br>
+---
+
+class: black-slide, middle
+
 .center[
 <iframe width="640" height="400" src="https://www.youtube.com/embed/XNZIN7Jh3Sg?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
 
 Random walks in latent space. (Alex Radford, 2015)
+
+]
+
+---
+
+class: black-slide, middle
+
+.center[
+.width-60[![](figures/lec9/nvae.gif)]
+
+Random walks in latent space. (Vahdat and Kautz, 2020)
 
 ]
 

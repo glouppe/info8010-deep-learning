@@ -15,6 +15,12 @@ R: sort the applications and delay/move stuff for Lec8?
 
 ---
 
+class: middle
+
+.center.width-60[![](figures/lec0/map.png)]
+
+---
+
 # Today
 
 How to make sense of *sequential data*?

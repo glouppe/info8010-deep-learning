@@ -16,6 +16,8 @@ https://arxiv.org/pdf/1801.04406.pdf
 
 add refs as footnotes
 
+R: trim a lot a make space for something else?
+
 ---
 
 class: middle 
