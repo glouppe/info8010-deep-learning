@@ -239,14 +239,12 @@ Generative models for proposing candidate molecules and for improving prediction
 
 class: middle
 
-## Locating celestial bodies
-
-Generative models for applications in astronomy and high-energy physics.
+## Improving downstream tasks with un(self)supervised pre-training
 
 .center[
-.width-100[![](figures/lec9/generative-space.png)]
+.width-100[![](figures/lec8/gpt.png)]
 
-(Regier et al, 2015)
+(Radford et al, 2018)
 ]
 
 ---
