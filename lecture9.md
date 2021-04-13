@@ -8,16 +8,6 @@ Lecture 9: Auto-encoders and variational auto-encoders
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-https://deepgenerativemodels.github.io/syllabus.html
-https://courses.cs.washington.edu/courses/cse599i/20au/
-https://sites.google.com/view/berkeley-cs294-158-sp20/home
-
-R: VAE:
-R: reverse KL https://ermongroup.github.io/cs228-notes/inference/variational/
-R: http://paulrubenstein.co.uk/variational-autoencoders-are-not-autoencoders/
-
 ---
 
 class: middle
@@ -47,15 +37,18 @@ class: middle
 
 class: middle
 
-.center.circle.width-30[![](figures/lec9/feynman.jpg)]
+## Deep unsupervised learning
 
-.italic.center[What I cannot create, I do not understand.]
+Deep unsupervised learning is about capturing rich patterns in raw data with deep networks in a **label-free** way.
 
-.pull-right[Richard Feynman]
+- Generative models: recreate raw data distribution.
+- Self-supervised learning: solve "puzzle" tasks that require semantic understanding.
 
 ---
 
 class: middle
+
+## Generative models
 
 A **generative model** is a probabilistic model $p$ that can be used as *a simulator of the data*.
 Its purpose is to generate synthetic but realistic high-dimensional data
@@ -66,14 +59,48 @@ that is as close as possible from the true but unknown data distribution $p(\mat
 
 class: middle
 
-Go beyond estimating $p(y|\mathbf{x})$:
-- Understand and imagine how the world evolves.
-- Recognize objects in the world and their factors of variation.
-- Establish concepts for reasoning and decision making.
+.center[Why do we care?]
 
 ---
 
-# Motivation
+class: middle
+
+.center.circle.width-30[![](figures/lec9/feynman.jpg)]
+
+.italic.center[What I cannot create, I do not understand.]
+
+.pull-right[Richard Feynman]
+
+---
+
+class: middle
+
+.center.circle.width-30[![](figures/lec9/hinton.jpg)]
+
+.italic["The brain has about $10^{14}$ synapses and we only live for about $10^9$
+seconds. So we have a lot more parameters than data. This
+motivates the idea that we must do a lot of unsupervised learning
+since the perceptual input (including proprioception) is the only
+place we can get $10^5$ dimensions of constraint per second."]
+
+.pull-right[Geoffrey Hinton, 2014.]
+
+---
+
+class: middle
+
+.grid[
+.kol-1-3[.circle.width-95[![](figures/lec9/lecun.jpg)]]
+.kol-2-3[.width-100[![](figures/lec9/cake.png)]]
+]
+
+.italic["We need tremendous amount of information to build machines that have common sense and generalize."]
+
+.pull-right[Yann LeCun, 2016.]
+
+---
+
+# Immediate applications
 
 <br>
 
@@ -86,14 +113,14 @@ Go beyond estimating $p(y|\mathbf{x})$:
 
 class: middle
 
-## Image and content generation
+## Machine translation
 
-Generating images and video content.
+Attention-based sequence-to-sequence synthesis.
 
 .center[
-.width-100[![](figures/lec9/generative-content.png)]
+.width-100[![](figures/lec7/nmt2.gif)]
 
-(Gregor et al, 2015; Oord et al, 2016; Dumoulin et al, 2016)
+(Wu et al, 2016)
 ]
 
 ---
@@ -108,6 +135,20 @@ Generating audio conditioned on text.
 .width-100[![](figures/lec9/generative-text-to-speech.png)]
 
 (Oord et al, 2016)
+]
+
+---
+
+class: middle
+
+## Image and content generation
+
+Generating images and video content.
+
+.center[
+.width-100[![](figures/lec9/generative-content.png)]
+
+(Gregor et al, 2015; Oord et al, 2016; Dumoulin et al, 2016)
 ]
 
 ---
