@@ -22,9 +22,11 @@ R: trim a lot a make space for something else?
 
 class: middle 
 
-.center.width-50[![](figures/lec10/christies.jpg)]
+.center.width-40[![](figures/lec10/christies.jpg)]
 
-.italic.center["Generative adversarial networks is the coolest idea<br> in deep learning in the last 20 years." -- Yann LeCun.]
+.italic["Generative adversarial networks is the coolest idea in deep learning in the last 20 years."] 
+
+.pull-right[Yann LeCun]
 
 ---
 
@@ -48,7 +50,7 @@ class: middle
 
 class: middle
 
-.center.width-80[![](figures/lec10/catch-me.jpg)]
+.center.width-70[![](figures/lec10/catch-me.jpg)]
 
 ---
 
@@ -776,9 +778,9 @@ class: middle
 
 ---
 
-class: middle, center
+class: middle
 
-$p(\mathbf{z})$ need not be a random noise distribution.
+.alert[$p(\mathbf{z})$ need not be a random noise distribution.]
 
 ---
 
@@ -895,39 +897,6 @@ class: middle
 
 https://arxiv.org/pdf/1801.09070.pdf
 
----
-
-class: middle
-
-## Brain reading
-
-.center[
-
-.width-100[![](figures/lec10/fmri-reading1.png)]
-
-.center[(Shen et al, 2018)]
-
-]
-
----
-
-class: middle
-
-.center[
-
-.width-100[![](figures/lec10/fmri-reading2.png)]
-
-.center[(Shen et al, 2018)]
-
-]
-
----
-
-class: middle, center, black-slide
-
-<iframe width="600" height="450" src="https://www.youtube.com/embed/jsp1KaM-avU?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
-
-Brain reading (Shen et al, 2018)
 
 ---
 

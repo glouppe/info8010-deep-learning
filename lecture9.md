@@ -41,8 +41,8 @@ class: middle
 
 Deep unsupervised learning is about capturing rich patterns in raw data with deep networks in a **label-free** way.
 
-- Generative models: recreate raw data distribution.
-- Self-supervised learning: solve "puzzle" tasks that require semantic understanding.
+- Generative models: recreate the raw data distribution (e.g., the distribution of natural images).
+- Self-supervised learning: solve puzzle tasks that require semantic understanding (e.g., predict a missing word in a sequence).
 
 ---
 
@@ -53,7 +53,7 @@ class: middle
 A **generative model** is a probabilistic model $p$ that can be used as *a simulator of the data*.
 Its purpose is to generate synthetic but realistic high-dimensional data
 $$\mathbf{x} \sim p(\mathbf{x};\theta),$$
-that is as close as possible from the true but unknown data distribution $p(\mathbf{x})$, but for which we have empirical samples.
+that is as close as possible from the unknown data distribution $p(\mathbf{x})$, but for which we have empirical samples.
 
 ---
 
@@ -157,7 +157,7 @@ class: middle
 
 ## Communication and compression
 
-Hierarchical compression of images and other data.
+Hierarchical compression of images and other data, e.g., in video conferencing systems.
 
 .center[
 .width-100[![](figures/lec9/generative-compression.png)]
@@ -225,21 +225,9 @@ Rapid generalization of novel concepts.
 
 class: middle
 
-## Drug design and response prediction
-
-Generative models for proposing candidate molecules and for improving prediction through semi-supervised learning.
-
-.center[
-.width-100[![](figures/lec9/generative-drug.png)]
-
-(Gomez-Bombarelli et al, 2016)
-]
-
----
-
-class: middle
-
 ## Improving downstream tasks with un(self)supervised pre-training
+
+Transformer architectures have shown to be remarkably effective zero/one-short learners.
 
 .center[
 .width-100[![](figures/lec8/gpt.png)]
@@ -302,7 +290,7 @@ Let $p(\mathbf{x})$ be the data distribution over $\mathcal{X}$. A good auto-enc
 $$\mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})} \left[ || \mathbf{x} - g \circ f(\mathbf{x}) ||^2 \right] \approx 0.$$
 
 Given two parameterized mappings $f(\cdot; \theta\_f)$ and $g(\cdot;\theta\_g)$, training consists of minimizing an empirical estimate of that loss,
-$$\theta = \arg \min\_{\theta\_f, \theta\_g} \frac{1}{N} \sum_{i=1}^N || \mathbf{x}\_i - g(f(\mathbf{x}\_i,\theta\_f), \theta\_g) ||^2.$$
+$$\theta\_f, \theta\_g = \arg \min\_{\theta\_f, \theta\_g} \frac{1}{N} \sum_{i=1}^N || \mathbf{x}\_i - g(f(\mathbf{x}\_i,\theta\_f), \theta\_g) ||^2.$$
 
 .footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
@@ -439,7 +427,7 @@ class: middle
 
 A fundamental weakness of denoising auto-encoders is that the posterior $p(\mathbf{x}|\tilde{\mathbf{x}})$ is possibly multi-modal.
 
-If we train an auto-encoder with the quadratic loss, then the best reconstruction is 
+If we train an auto-encoder with the quadratic loss (i.e., implicitly assuming a Gaussian posterior), then the best reconstruction is 
 $$h(\tilde{\mathbf{x}}) = \mathbb{E}[\mathbf{x}|\tilde{\mathbf{x}}],$$
 which may be very unlikely under $p(\mathbf{x}|\tilde{\mathbf{x}})$.
 
@@ -511,6 +499,14 @@ Examples include:
 
 ---
 
+class: middle, black-slide
+
+.center[<video controls autoplay loop muted preload="auto" height="480" width="640">
+  <source src="./figures/lec9/galton.mp4" type="video/mp4">
+</video>]
+
+---
+
 class: middle
 
 The probabilistic model defines a joint probability distribution $p(\mathbf{x}, \mathbf{z})$, which decomposes as
@@ -523,14 +519,6 @@ $$p(\mathbf{z}|\mathbf{x}) = \frac{p(\mathbf{x}|\mathbf{z}) p(\mathbf{z})}{p(\ma
 
 For most interesting cases, this is usually intractable since it requires evaluating the evidence
 $$p(\mathbf{x}) = \int p(\mathbf{x}|\mathbf{z})p(\mathbf{z}) d\mathbf{z}.$$
-
----
-
-class: middle, black-slide
-
-.center[<video controls autoplay loop muted preload="auto" height="480" width="640">
-  <source src="./figures/lec9/galton.mp4" type="video/mp4">
-</video>]
 
 ---
 
@@ -547,10 +535,11 @@ variational parameters $\nu$ index the family of distributions.
 
 class: middle
 
-Formally, we want to minimize
+Formally, we want to solve
 $$\begin{aligned}
-KL(q\(\mathbf{z}|\mathbf{x};\nu) || p(\mathbf{z}|\mathbf{x})) &= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[\log \frac{q(\mathbf{z}|\mathbf{x} ; \nu)}{p(\mathbf{z}|\mathbf{x})}\right] \\\\
-&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log q(\mathbf{z}|\mathbf{x};\nu) - \log p(\mathbf{x},\mathbf{z}) \right] + \log p(\mathbf{x}).
+&\arg\min\_\nu \text{KL}(q\(\mathbf{z}|\mathbf{x};\nu) || p(\mathbf{z}|\mathbf{x})) \\\\
+=& \arg\min\_\nu  \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[\log \frac{q(\mathbf{z}|\mathbf{x} ; \nu)}{p(\mathbf{z}|\mathbf{x})}\right] \\\\
+=& \arg\min\_\nu  \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log q(\mathbf{z}|\mathbf{x};\nu) - \log p(\mathbf{x},\mathbf{z}) \right] + \log p(\mathbf{x}).
 \end{aligned}$$
 For the same reason as before, the KL divergence cannot be directly minimized because
 of the $\log p(\mathbf{x})$ term.
@@ -560,8 +549,11 @@ of the $\log p(\mathbf{x})$ term.
 class: middle
 
 However, we can write
-$$
-KL(q(\mathbf{z}|\mathbf{x};\nu) || p(\mathbf{z}|\mathbf{x})) = \log p(\mathbf{x}) - \underbrace{\mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log p(\mathbf{x},\mathbf{z}) - \log q(\mathbf{z}|\mathbf{x};\nu) \right]}\_{\text{ELBO}(\mathbf{x};\nu)}
+$$\begin{aligned}
+&\arg\min\_\nu \text{KL}(q(\mathbf{z}|\mathbf{x};\nu) || p(\mathbf{z}|\mathbf{x})) \\\\
+=&\arg\min\_\nu \log p(\mathbf{x}) - \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log p(\mathbf{x},\mathbf{z}) - \log q(\mathbf{z}|\mathbf{x};\nu) \right] \\\\
+=&\arg\max\_\nu \underbrace{\mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log p(\mathbf{x},\mathbf{z}) - \log q(\mathbf{z}|\mathbf{x};\nu) \right]}\_{\text{ELBO}(\mathbf{x};\nu)}
+\end{aligned}
 $$
 where $\text{ELBO}(\mathbf{x};\nu)$ is called the **evidence lower bound objective**.
 
@@ -576,7 +568,7 @@ Remark that
 $$\begin{aligned}
 \text{ELBO}(\mathbf{x};\nu) &= \mathbb{E}\_{q(\mathbf{z};|\mathbf{x}\nu)}\left[ \log p(\mathbf{x},\mathbf{z}) - \log q(\mathbf{z}|\mathbf{x};\nu) \right] \\\\
 &= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log p(\mathbf{x}|\mathbf{z}) p(\mathbf{z}) - \log q(\mathbf{z}|\mathbf{x};\nu) \right] \\\\
-&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log p(\mathbf{x}|\mathbf{z})\right] - KL(q(\mathbf{z}|\mathbf{x};\nu) || p(\mathbf{z}))
+&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log p(\mathbf{x}|\mathbf{z})\right] - \text{KL}(q(\mathbf{z}|\mathbf{x};\nu) || p(\mathbf{z}))
 \end{aligned}$$
 Therefore, maximizing the ELBO:
 - encourages distributions to place their mass on configurations of latent variables that explain the observed data (first term);
@@ -619,6 +611,7 @@ We will now directly learn a stochastic generating process with a neural network
 
 
 A variational auto-encoder is a deep latent variable model where:
+- The prior $p(\mathbf{z})$ is prescribed, and usually chosen to be Gaussian.
 - The likelihood $p(\mathbf{x}|\mathbf{z};\theta)$ is parameterized with a **generative network** $\text{NN}\_\theta$
 (or decoder) that takes as input $\mathbf{z}$ and outputs parameters $\phi = \text{NN}\_\theta(\mathbf{z})$ to the data distribution. E.g.,
 $$\begin{aligned}
@@ -652,7 +645,7 @@ We want
 $$\begin{aligned}
 \theta^{\*}, \varphi^{\*} &= \arg \max\_{\theta,\varphi} \text{ELBO}(\mathbf{x};\theta,\varphi) \\\\
 &= \arg \max\_{\theta,\varphi} \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi)\right] \\\\
-&= \arg \max\_{\theta,\varphi} \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x}|\mathbf{z};\theta)\right] - KL(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z})).
+&= \arg \max\_{\theta,\varphi} \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x}|\mathbf{z};\theta)\right] - \text{KL}(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z})).
 \end{aligned}$$
 
 - Given some generative network $\theta$, we want to put the mass of the latent variables, by adjusting $\varphi$, such that they explain the observed data, while remaining close to the prior.
@@ -784,12 +777,12 @@ class: middle
 Plugging everything together, the objective can be expressed as:
 $$\begin{aligned}
 \text{ELBO}(\mathbf{x};\theta,\varphi) &= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi)\right] \\\\
-&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)} \left[ \log p(\mathbf{x}|\mathbf{z};\theta) \right] - KL(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z})) \\\\
-&= \mathbb{E}\_{p(\epsilon)} \left[  \log p(\mathbf{x}|\mathbf{z}=g(\varphi,\mathbf{x},\epsilon);\theta) \right] - KL(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z}))
+&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)} \left[ \log p(\mathbf{x}|\mathbf{z};\theta) \right] - \text{KL}(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z})) \\\\
+&= \mathbb{E}\_{p(\epsilon)} \left[  \log p(\mathbf{x}|\mathbf{z}=g(\varphi,\mathbf{x},\epsilon);\theta) \right] - \text{KL}(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z}))
 \end{aligned}
 $$
 where the KL divergence can be expressed  analytically as
-$$KL(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z})) = \frac{1}{2} \sum\_{j=1}^d \left( 1 + \log(\sigma\_j^2(\mathbf{x};\varphi)) - \mu\_j^2(\mathbf{x};\varphi) - \sigma\_j^2(\mathbf{x};\varphi)\right),$$
+$$\text{KL}(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z})) = \frac{1}{2} \sum\_{j=1}^d \left( 1 + \log(\sigma\_j^2(\mathbf{x};\varphi)) - \mu\_j^2(\mathbf{x};\varphi) - \sigma\_j^2(\mathbf{x};\varphi)\right),$$
 which allows to evaluate its derivative without approximation.
 
 ---

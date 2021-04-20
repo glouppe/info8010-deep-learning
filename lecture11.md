@@ -31,7 +31,9 @@ class: middle
 .center.circle.width-30[![](figures/lec11/carl.jpg)]
 
 .italic["Every time a scientific paper presents a bit of data, it's accompanied
-by an .bold[error bar] – a quiet but insistent reminder that no knowledge is complete or perfect. It's a .bold[calibration of how much we trust what we think we know]." ― Carl Sagan.]
+by an .bold[error bar] – a quiet but insistent reminder that no knowledge is complete or perfect. It's a .bold[calibration of how much we trust what we think we know]."]
+
+.pull-right[Carl Sagan]
 
 ???
 
@@ -75,7 +77,7 @@ An image classification system erroneously identifies two African Americans as g
 
 class: middle
 
-If both these algorithms were able to assign a high level of **uncertainty** to their erroneous predictions, then the systems may have been able to *make better decisions*, and likely avoid disaster.
+.alert[If both these algorithms were able to assign a high level of **uncertainty** to their erroneous predictions, then the systems may have been able to *make better decisions*, and likely avoid disaster.]
 
 .footnote[Credits: Kendall and Gal, [What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?](https://papers.nips.cc/paper/7141-what-uncertainties-do-we-need-in-bayesian-deep-learning-for-computer-vision.pdf), 2017.]
 
