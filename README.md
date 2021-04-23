@@ -23,8 +23,8 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2021.
 | March 22 | Deadline for [Homework 2](https://github.com/glouppe/info8010-deep-learning/raw/master/homeworks/homework2.ipynb) | 
 | March 26 | (No lecture)<br>Deadline for the project proposal | 
 | April 2 | Lecture 8: [Attention and transformers](https://glouppe.github.io/info8010-deep-learning/?p=lecture8.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec8.pdf)] [[Side notes](https://glouppe.github.io/info8010-deep-learning/pdf/lec8-sidenotes.pdf)] [[video](https://youtu.be/cwFE1pLld-g)] |
-| April 23<br>[Live stream](https://youtu.be/6gWeyUZtHWs) | Lecture 9: [Auto-encoders and variational auto-encoders](https://glouppe.github.io/info8010-deep-learning/?p=lecture9.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec9.pdf)] |
-| April 30 | Lecture 10: Generative models (part 2) |
+| April 23 | Lecture 9: [Auto-encoders and variational auto-encoders](https://glouppe.github.io/info8010-deep-learning/?p=lecture9.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec9.pdf)] [[Side notes](https://glouppe.github.io/info8010-deep-learning/pdf/lec9-sidenotes.pdf)] [[video](https://youtu.be/6gWeyUZtHWs)] |
+| April 30<br>[Live stream](https://youtu.be/G4w7cPp0oLU) | Lecture 10: Generative adversarial networks |
 | May 7 | Lecture 11: Uncertainty<br>Deadline for the reading assignment |
 | May 14 | Deadline for the project (code and report) |
 
