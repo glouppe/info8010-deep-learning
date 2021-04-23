@@ -67,7 +67,7 @@ class: middle
 
 .center.circle.width-30[![](figures/lec9/feynman.jpg)]
 
-.italic.center[What I cannot create, I do not understand.]
+.italic.center["What I cannot create, I do not understand."]
 
 .pull-right[Richard Feynman]
 
@@ -318,7 +318,7 @@ class: middle
 
 .center.width-80[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](figures/lec9/architecture.svg)]
 
-Better results can be achieved with more sophisticated classes of mappings than linear projections, in particular by designing $f$ and $g$ as deep neural networks.
+Better results can be achieved with more sophisticated classes of mappings than linear projections: use deep neural networks for $f$ and $g$.
 
 For instance,
 - by combining a multi-layer perceptron encoder $f : \mathbb{R}^p \to \mathbb{R}^d$ with a multi-layer perceptron decoder $g: \mathbb{R}^d \to \mathbb{R}^p$.
@@ -520,6 +520,10 @@ $$p(\mathbf{z}|\mathbf{x}) = \frac{p(\mathbf{x}|\mathbf{z}) p(\mathbf{z})}{p(\ma
 For most interesting cases, this is usually intractable since it requires evaluating the evidence
 $$p(\mathbf{x}) = \int p(\mathbf{x}|\mathbf{z})p(\mathbf{z}) d\mathbf{z}.$$
 
+???
+
+Switch to iPad.
+
 ---
 
 # Variational inference
@@ -529,7 +533,7 @@ $$p(\mathbf{x}) = \int p(\mathbf{x}|\mathbf{z})p(\mathbf{z}) d\mathbf{z}.$$
 **Variational inference** turns posterior inference into an optimization problem.
 - Consider a family of distributions $q(\mathbf{z}|\mathbf{x}; \nu)$ that approximate the posterior $p(\mathbf{z}|\mathbf{x})$, where the
 variational parameters $\nu$ index the family of distributions.
-- The parameters $\nu$ are fit to minimize the KL divergence between $p(\mathbf{z}|\mathbf{x})$ and the approximation $q(\mathbf{z}|\mathbf{x};\nu)$.
+- The parameters $\nu$ are fit to minimize the KL divergence between the approximation $q(\mathbf{z}|\mathbf{x};\nu)$ and the posterior  $p(\mathbf{z}|\mathbf{x})$.
 
 ---
 
