@@ -13,6 +13,8 @@ Prof. Gilles Louppe<br>
 
 https://arxiv.org/pdf/1801.04406.pdf
 
+R: living portraits
+
 
 add refs as footnotes
 
@@ -26,7 +28,7 @@ class: middle
 
 .italic["Generative adversarial networks is the coolest idea in deep learning in the last 20 years."] 
 
-.pull-right[Yann LeCun]
+.pull-right[Yann LeCun, 2018.]
 
 ---
 
@@ -35,7 +37,7 @@ class: middle
 Learn a model of the data.
 
 - Generative adversarial networks
-- Wasserstein GANs
+- .inactive[Wasserstein GANs]
 - Convergence of GANs
 - State of the art
 - Applications
@@ -50,7 +52,9 @@ class: middle
 
 class: middle
 
-.center.width-70[![](figures/lec10/catch-me.jpg)]
+.center.width-45[![](figures/lec10/catch-me.jpg)]
+
+.center[.width-30[![](figures/lec10/check.jpg)] .width-30[![](figures/lec10/frank.jpg)]]
 
 ---
 
@@ -60,20 +64,18 @@ class: middle
 
 In **generative adversarial networks** (GANs), the task of learning a generative model is expressed as a two-player zero-sum game between two networks.
 
-- The first network is a *generator*  $g(\cdot;\theta) : \mathcal{Z} \to \mathcal{X}$, mapping a latent space equipped with a prior distribution $p(\mathbf{z})$ to the data space, thereby inducing a distribution
-$$\mathbf{x} \sim q(\mathbf{x};\theta) \Leftrightarrow \mathbf{z} \sim p(\mathbf{z}), \mathbf{x} = g(\mathbf{z};\theta).$$
-The generator is trained so that it produces samples following the data distribution as output.
-- The second network $d(\cdot; \phi) : \mathcal{X} \to [0,1]$ is a *classifier* trained to distinguish between true samples $\mathbf{x} \sim p(\mathbf{x})$ and generated samples $\mathbf{x} \sim q(\mathbf{x};\theta)$.
+.center.width-100[![](figures/lec10/gan-setup.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
 ---
 
 class: middle
 
-.center.width-100[![](figures/lec10/gan-setup.png)]
+The first network is a *generator*  $g(\cdot;\theta) : \mathcal{Z} \to \mathcal{X}$, mapping a latent space equipped with a prior distribution $p(\mathbf{z})$ to the data space, thereby inducing a distribution
+$$\mathbf{x} \sim q(\mathbf{x};\theta) \Leftrightarrow \mathbf{z} \sim p(\mathbf{z}), \mathbf{x} = g(\mathbf{z};\theta).$$
 
-The approach is **adversarial** since the two networks have antagonistic objectives.
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+The second network $d(\cdot; \phi) : \mathcal{X} \to [0,1]$ is a **classifier** trained to distinguish between true samples $\mathbf{x} \sim p(\mathbf{x})$ and generated samples $\mathbf{x} \sim q(\mathbf{x};\theta)$.
 
 ---
 
@@ -169,7 +171,7 @@ class: middle
 
 .center.width-100[![](figures/lec10/learning.png)]
 
-.center[(Goodfellow et al, 2014)]
+.footnote[Credits: Goodfellow et al, [Generative Adversarial Networks](https://arxiv.org/abs/1406.2661), 2014.]
 
 ---
 
@@ -189,23 +191,24 @@ class: middle
 
 .center.width-90[![](figures/lec10/gan-gallery.png)]
 
-.center[(Goodfellow et al, 2014)]
+.footnote[Credits: Goodfellow et al, [Generative Adversarial Networks](https://arxiv.org/abs/1406.2661), 2014.]
 
 ---
 
-class: middle, center
+class: middle
 
 .center.width-100[![](figures/lec10/bedrooms1.png)]
 
-.center[(Radford et al, 2015)]
+.footnote[Credits: Radford et al, [Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks](https://arxiv.org/abs/1511.06434), 2015.]
 
 ---
 
-class: middle, center
+class: middle
 
 .center.width-100[![](figures/lec10/bedrooms2.png)]
 
-.center[(Radford et al, 2015)]
+.footnote[Credits: Radford et al, [Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks](https://arxiv.org/abs/1511.06434), 2015.]
+
 
 ---
 
@@ -242,7 +245,9 @@ class: middle
 
 .center.width-90[![](figures/lec10/curiosity-cherrypicks.png)]
 
-.center[Cherry-picks (Goodfellow, 2016)]
+.center[Cherry-picks]
+
+.footnote[Credits: Ian Goodfellow, 2016.]
 
 ---
 
@@ -250,7 +255,9 @@ class: middle
 
 .center.width-90[![](figures/lec10/curiosity-counting.png)]
 
-.center[Problems with counting (Goodfellow, 2016)]
+.center[Problems with counting]
+
+.footnote[Credits: Ian Goodfellow, 2016.]
 
 ---
 
@@ -258,7 +265,9 @@ class: middle
 
 .center.width-90[![](figures/lec10/curiosity-perspective.png)]
 
-.center[Problems with perspective (Goodfellow, 2016)]
+.center[Problems with perspective]
+
+.footnote[Credits: Ian Goodfellow, 2016.]
 
 ---
 
@@ -266,13 +275,17 @@ class: middle
 
 .center.width-90[![](figures/lec10/curiosity-global.png)]
 
-.center[Problems with global structures (Goodfellow, 2016)]
+.center[Problems with global structures]
+
+.footnote[Credits: Ian Goodfellow, 2016.]
 
 ---
 
 class: middle
 
-# Wasserstein GANs
+# .inactive[Wasserstein GANs]
+
+(optional)
 
 ---
 
@@ -344,7 +357,7 @@ the other.
 Then,
 $$\text{W}\_1(p,q) = 4\times\frac{1}{4} + 2\times\frac{1}{4} + 3\times\frac{1}{2}=3$$
 
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
 ---
 
@@ -408,7 +421,7 @@ $$\begin{aligned}
 \end{aligned}
 $$
 
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
 ---
 
@@ -433,7 +446,7 @@ class: middle
 
 .center.width-90[![](figures/lec10/wgan.png)]
 
-.center[(Arjovsky et al, 2017)]
+.footnote[Credits: Arjovsky et al, [Wasserstein GAN](https://arxiv.org/abs/1701.07875), 2017.]
 
 ---
 
@@ -441,7 +454,7 @@ class: middle
 
 .center.width-70[![](figures/lec10/wgan-gallery.png)]
 
-.center[(Arjovsky et al, 2017)]
+.footnote[Credits: Arjovsky et al, [Wasserstein GAN](https://arxiv.org/abs/1701.07875), 2017.]
 
 ---
 
@@ -478,8 +491,11 @@ Following the notations of Mescheder et al (2018), the training objective for th
 $$L(\theta,\phi) = \mathbb{E}\_{p(\mathbf{z})}\left[ f(d(g(\mathbf{z};\theta);\phi)) \right] + \mathbb{E}\_{p(\mathbf{x})}\left[f(-d(\mathbf{x};\phi))\right],$$
 where the goal of the generator is to minimizes the loss, whereas the discriminator tries to maximize it.
 
-- If $f(t)=-\log(1+\exp(-t))$, then we recover the original GAN objective (assuming that $d$ outputs the logits).
-- if $f(t)=-t$ and and if we impose the Lipschitz constraint on $d$, then we recover Wassterstein GAN.
+If $f(t)=-\log(1+\exp(-t))$, then we recover the original GAN objective (assuming that $d$ outputs the logits).
+
+???
+
+If $f(t)=-t$ and and if we impose the Lipschitz constraint on $d$, then we recover Wassterstein GAN.
 
 ---
 
