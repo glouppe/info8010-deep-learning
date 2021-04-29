@@ -8,18 +8,6 @@ Lecture 10: Generative adversarial networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-
-https://arxiv.org/pdf/1801.04406.pdf
-
-R: living portraits
-
-
-add refs as footnotes
-
-R: trim a lot a make space for something else?
-
 ---
 
 class: middle 
@@ -38,7 +26,7 @@ Learn a model of the data.
 
 - Generative adversarial networks
 - .inactive[Wasserstein GANs]
-- Convergence of GANs
+- Numerics of GANs
 - State of the art
 - Applications
 
@@ -111,6 +99,10 @@ the generator is bad at reproducing the data distribution.
 Therefore, the ultimate goal is
 $$\theta^\* = \arg \min\_\theta \max\_\phi V(\phi, \theta).$$
 
+???
+
+Switch to the iPad
+
 ---
 
 class: middle
@@ -161,6 +153,8 @@ $$
 \end{aligned}
 $$
 where gradients are estimated with Monte Carlo integration.
+
+???
 
 - For one step on $\theta$, we can optionally take $k$ steps on $\phi$, since we need the classifier to remain near optimal.
 - Note that to compute $\nabla\_\theta V(\phi, \theta)$, it is necessary to backprop all the way through $d$ before computing the partial derivatives with respect to $g$'s internals.
@@ -281,7 +275,8 @@ class: middle
 
 ---
 
-class: middle
+class: middle, inactive
+count: false
 
 # .inactive[Wasserstein GANs]
 
@@ -290,6 +285,7 @@ class: middle
 ---
 
 class: middle
+count: false
 
 ## Return of the Vanishing Gradients
 
@@ -308,7 +304,7 @@ and $\nabla\_\theta V(\phi,\theta) = 0$, thereby **halting** gradient descent.
 ---
 
 class: middle
-
+count: false
 
 Dilemma :
 - If $d$ is bad, then $g$ does not have accurate feedback and the loss function cannot represent the reality.
@@ -317,6 +313,7 @@ Dilemma :
 ---
 
 class: middle
+count: false
 
 ## Jensen-Shannon divergence
 
@@ -331,17 +328,18 @@ where
 ---
 
 class: middle
+count: false
 
 Notice how the Jensen-Shannon divergence poorly accounts for the metric structure of the space.
 
 Intuitively, instead of comparing distributions "vertically", we would like to compare them "horizontally".
-
 
 .center[![](figures/lec10/jsd-vs-emd.png)]
 
 ---
 
 class: middle
+count: false
 
 ## Wasserstein distance
 
@@ -362,6 +360,7 @@ $$\text{W}\_1(p,q) = 4\times\frac{1}{4} + 2\times\frac{1}{4} + 3\times\frac{1}{2
 ---
 
 class: middle
+count: false
 
 The Earth mover's distance is also known as the Wasserstein-1 distance and is defined as:
 $$\text{W}\_1(p, q) = \inf\_{\gamma \in \Pi(p,q)} \mathbb{E}\_{(x,y)\sim \gamma} \left[||x-y||\right]$$
@@ -373,12 +372,14 @@ where:
 ---
 
 class: middle
+count: false
 
 .center[![](figures/lec10/transport-plan.png)]
 
 ---
 
 class: middle
+count: false
 
 Notice how the $\text{W}\_1$ distance does not saturate. Instead, it
  increases monotonically with the distance between modes:
@@ -394,6 +395,7 @@ For any two distributions $p$ and $q$,
 ---
 
 class: middle
+count: false
 
 ## Wasserstein GANs
 
@@ -410,6 +412,7 @@ $$||f||\_L = \max\_{\mathbf{x},\mathbf{x}'} \frac{||f(\mathbf{x}) - f(\mathbf{x}
 ---
 
 class: middle
+count: false
 
 .center.width-80[![](figures/lec10/kr-duality.png)]
 
@@ -426,6 +429,7 @@ $$
 ---
 
 class: middle
+count: false
 
 Using this result, the Wasserstein GAN algorithm consists in solving the minimax problem:
 $$\theta^\* = \arg \min\_\theta \max\_{\phi:||d(\cdot;\phi)||\_L \leq 1}  \mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ d(\mathbf{x};\phi) \right] - \mathbb{E}\_{\mathbf{x} \sim q(\mathbf{x};\theta)} \left[d(\mathbf{x};\phi)\right]$$$$
@@ -443,6 +447,7 @@ Note that this formulation is very close to the original GANs, except that:
 ---
 
 class: middle
+count: false
 
 .center.width-90[![](figures/lec10/wgan.png)]
 
@@ -451,6 +456,7 @@ class: middle
 ---
 
 class: middle
+count: false
 
 .center.width-70[![](figures/lec10/wgan-gallery.png)]
 
@@ -460,11 +466,11 @@ class: middle
 
 class: middle
 
-# Convergence of GANs
+# Numerics of GANs
 
 ???
 
-Check https://mitliagkas.github.io/ift6085/ift-6085-lecture-14-notes.pdf
+Check https://mitliagkas.github.io/ift6085-2019/ift-6085-lecture-14-notes.pdf
 
 ---
 
@@ -476,12 +482,14 @@ class: middle
 ]
 
 Solving for saddle points is different from gradient descent.
-- Minimization problems yield *conservative* vector fields.
+- Minimization of scalar functions yields *conservative* vector fields.
 - Min-max saddle point problems may yield **non-conservative** vector fields.
 
 .footnote[Credits: Ferenc Huszár, [GANs are Broken in More than One Way](https://www.inference.vc/my-notes-on-the-numerics-of-gans/), 2017.]
 
+???
 
+A vector field is conservative when it can be expressed as the gradient of a scalar function.
 
 ---
 
@@ -507,9 +515,10 @@ Training algorithms can be described as fixed points algorithms that apply some 
 $$F\_h(\theta,\phi) = (\theta,\phi) + h v(\theta,\phi)$$
 where $v(\theta,\phi)$ denotes the **gradient vector field**
 $$v(\theta,\phi):= \begin{pmatrix}
--\nabla\_\theta L(\theta,\phi) \\\\
-\nabla\_\phi L(\theta,\phi)
-\end{pmatrix}.$$
+-\frac{\partial L}{\partial \theta}(\theta,\phi) \\\\
+\frac{\partial L}{\partial \phi}(\theta,\phi)
+\end{pmatrix}$$
+and $h$ is a scalar stepsize.
 - Similarly, alternating gradient descent can be described by an operator $F\_h = F\_{2,h} \circ F\_{1,h}$, where $F\_{1,h}$ and $F\_{2,h}$ perform an update for the generator and discriminator, respectively.
 
 ---
@@ -518,12 +527,12 @@ class: middle
 
 ## Local convergence near an equilibrium point
 
-Let us consider the Jacobian $F'\_h(\theta^\*,\phi^\*)$ at the equilibrium $(\theta^\*,\phi^\*)$:
-- if $F'\_h(\theta^\*,\phi^\*)$ has eigenvalues with absolute value bigger than 1, the training will generally not converge to $(\theta^\*,\phi^\*)$.
+Let us consider the Jacobian $J\_{F\_h}(\theta^\*,\phi^\*)$ at the equilibrium $(\theta^\*,\phi^\*)$:
+- if $J\_{F\_h}(\theta^\*,\phi^\*)$ has eigenvalues with absolute value bigger than 1, the training will generally not converge to $(\theta^\*,\phi^\*)$.
 - if all eigenvalues have absolute value smaller than 1, the training will converge to $(\theta^\*,\phi^\*)$.
 - if all eigenvalues values are on the unit circle, training can be convergent, divergent or neither.
 
-Mescheder et al (2017) show that all eigenvalues can be forced to remain within the unit ball if and only if the learning rate $h$ is made sufficiently small.
+Mescheder et al (2017) show that all eigenvalues can be forced to remain within the unit ball if and only if the stepsize $h$ is made sufficiently small.
 
 ---
 
@@ -556,8 +565,8 @@ $$
 \dot{\phi}(t)
 \end{pmatrix} =
 \begin{pmatrix}
--\nabla\_\theta L(\theta,\phi) \\\\
-\nabla\_\phi L(\theta,\phi)
+-\frac{\partial L}{\partial \theta}(\theta,\phi) \\\\
+\frac{\partial L}{\partial \phi}(\theta,\phi)
 \end{pmatrix},$$
 which corresponds to training GANs with infinitely small learning rate $h \to 0$:
 - if all eigenvalues of the Jacobian $v'(\theta^\*,\phi^\*)$ at a stationary point $(\theta^\*,\phi^\*)$ have negative real-part, the continuous system converges locally to $(\theta^\*,\phi^\*)$;
@@ -834,6 +843,28 @@ GauGAN: Changing sketches into photorealistic masterpieces (NVIDIA, 2019)
 
 class: middle
 
+## Living portraits / deepfakes
+
+.center[
+
+.width-80[![](figures/lec10/portrait.png)]
+
+Few-Shot Adversarial Learning of Realistic Neural Talking Head Models<br> (Zakharov et al, 2019)
+
+]
+
+---
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/rJb0MDrT3SE" frameborder="0" allowfullscreen></iframe>
+
+Few-Shot Adversarial Learning of Realistic Neural Talking Head Models<br> (Zakharov et al, 2019)
+
+---
+
+class: middle
+
 ## Captioning
 
 .width-100[![](figures/lec10/caption1.png)]
@@ -920,11 +951,3 @@ class: end-slide, center
 count: false
 
 The end.
-
----
-
-# References
-
-- Goodfellow, I., Pouget-Abadie, J., Mirza, M., Xu, B., Warde-Farley, D., Ozair, S., ... & Bengio, Y. (2014). Generative adversarial nets. In Advances in neural information processing systems (pp. 2672-2680).
-- Arjovsky, M., Chintala, S., & Bottou, L. (2017). Wasserstein gan. arXiv preprint arXiv:1701.07875.
-- Mescheder, L., Geiger, A., & Nowozin, S. (2018). Which training methods for GANs do actually Converge?. arXiv preprint arXiv:1801.04406.
