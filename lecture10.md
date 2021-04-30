@@ -624,7 +624,7 @@ Therefore convergence is not guaranteed.
 
 class: middle
 
-## Dirac-GAN: Zero-centered gradient penalties
+## Taming the vector field
 
 .width-90.center[![](figures/lec10/dirac-reg.png)]
 
