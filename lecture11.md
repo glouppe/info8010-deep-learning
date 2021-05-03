@@ -389,7 +389,7 @@ Bayesian neural networks are *easy to formulate*,  but notoriously **difficult**
 
 Variational inference can be used for building an approximation $q(\mathbf{\omega};\nu)$ of the posterior $p(\mathbf{\omega}|\mathbf{d})$.
 
-As before (see Lecture 7), we can show that minimizing
+As before (see Lecture 9), we can show that minimizing
 $$\text{KL}(q(\mathbf{\omega};\nu) || p(\mathbf{\omega}|\mathbf{d}))$$
 with respect to the variational parameters $\nu$, is identical to maximizing the evidence lower bound objective (ELBO)
 $$\text{ELBO}(\nu) = \mathbb{E}\_{q(\mathbf{\omega};\nu)} \left[\log p(\mathbf{d}| \mathbf{\omega})\right] - \text{KL}(q(\mathbf{\omega};\nu) || p(\mathbf{\omega})).$$
