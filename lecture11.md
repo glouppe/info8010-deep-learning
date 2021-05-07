@@ -12,6 +12,7 @@ Prof. Gilles Louppe<br>
 
 R: check https://drive.google.com/file/d/1G6I1hOxg9zN3PmKqm7sahXw6DvYmyYW3/view?usp=sharing
 R: check https://www.slideshare.net/perone/uncertainty-estimation-in-deep-learning
+R: https://www.gatsby.ucl.ac.uk/~balaji/berkeley-talk-balaji.pdf
 R: langevin dynamics (welling)
 
 ---
@@ -87,24 +88,9 @@ class: middle
 
 ## Case 1
 
-Let us consider a neural network model trained with several pictures of dog breeds.
-
-We ask the model to decide on a dog breed using a photo of a cat.
-What would you want the model to do?
-
-.grid[
-.kol-1-2[.center.width-90[![](figures/lec11/dogs.jpg)]]
-.kol-1-2[.center.width-70[![](figures/lec11/cat.jpg)]]
-]
-
-
----
-
-class: middle
-
-## Case 2
-
 We have three different types of images to classify, cat, dog, and cow, some of which may be noisy due to the limitations of the acquisition instrument.
+
+$\Rightarrow$ **Aleatoric uncertainty**.
 
 <br>
 .center.width-90[![](figures/lec11/model-uncertainty2.png)]
@@ -113,9 +99,11 @@ We have three different types of images to classify, cat, dog, and cow, some of 
 
 class: middle
 
-## Case 3
+## Case 2
 
 What are the model parameters that best explain a given dataset? What model structure should we use? What are the known unknowns and our prior beliefs?
+
+$\Rightarrow$ **Epistemic uncertainty**.
 
 .center[
 .width-45[![](figures/lec1/poly-3.png)]
@@ -126,31 +114,29 @@ What are the model parameters that best explain a given dataset? What model stru
 
 class: middle
 
-.bold[Case 1:] Given a model trained with several pictures of dog breeds. We ask the model to decide on a dog breed using a photo of a cat.
-
-$\Rightarrow$ **Out of distribution test data**.
-
-<br>
-
-.bold[Case 2:] We have three different types of images to classify, cat, dog, and cow, some of which may be noisy due to the limitations of the acquisition instrument.
-
-$\Rightarrow$ **Aleatoric uncertainty**.
-
-<br>
-
-.bold[Case 3:] What are the model parameters that best explain a given dataset? What model structure should we use? What are the known unknowns and our prior beliefs?
-
-$\Rightarrow$ **Epistemic uncertainty**.
-
----
-
-class: middle
-
 .center.width-90[![](figures/lec11/types.png)]
 
 .italic["Our model exhibits in (d) increased .bold[aleatoric uncertainty on object boundaries and for objects far from the camera]. .bold[Epistemic uncertainty accounts for our ignorance about which model generated our collected data]. In (e) our model exhibits increased epistemic uncertainty for semantically and visually challenging pixels. The bottom row shows a failure case of the segmentation model when the model fails to segment the footpath due to increased epistemic uncertainty, but not aleatoric uncertainty."]
 
 .footnote[Credits: Kendall and Gal, [What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?](https://papers.nips.cc/paper/7141-what-uncertainties-do-we-need-in-bayesian-deep-learning-for-computer-vision.pdf), 2017.]
+
+---
+
+class: middle
+
+## Case 3
+
+Let us consider a neural network model trained with several pictures of dog breeds.
+
+We ask the model to decide on a dog breed using a photo of a cat.
+What would you want the model to do?
+
+$\Rightarrow$ **Out of distribution test data**.
+
+.grid[
+.kol-1-2[.center.width-90[![](figures/lec11/dogs.jpg)]]
+.kol-1-2[.center.width-70[![](figures/lec11/cat.jpg)]]
+]
 
 ---
 
@@ -342,7 +328,7 @@ class: middle
 
 class: middle
 
-**Epistemic** uncertainty accounts for uncertainty in the model parameters.
+**Epistemic** uncertainty accounts for uncertainty in the model or in its parameters.
 - It captures our *ignorance* about which model generated the collected data.
 - It can be explained away given enough data (why?).
 - It is also often referred to as *model uncertainty*.
