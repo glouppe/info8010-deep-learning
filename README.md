@@ -26,7 +26,7 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2021.
 | April 23 | Lecture 9: [Auto-encoders and variational auto-encoders](https://glouppe.github.io/info8010-deep-learning/?p=lecture9.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec9.pdf)] [[Side notes](https://glouppe.github.io/info8010-deep-learning/pdf/lec9-sidenotes.pdf)] [[video](https://youtu.be/6gWeyUZtHWs)] |
 | April 30| Lecture 10: [Generative adversarial networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture10.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec10.pdf)] [[Side notes](https://glouppe.github.io/info8010-deep-learning/pdf/lec10-sidenotes.pdf)] [[video](https://youtu.be/cM6m1eHY5FI)] |
 | May 7 | Lecture 11: [Uncertainty](https://glouppe.github.io/info8010-deep-learning/?p=lecture11.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec11.pdf)]  [[video](https://youtu.be/AxJBY9eRTL4)]<br>Deadline for the reading assignment |
-| May 14 | Deadline for the project (code and report) |
+| May 17 | Deadline for the project (code and report) |
 | -- | All lectures [[PDF](https://drive.google.com/file/d/1ZzAtPsjlVMVg1-vU6CLC02RdunX-ERV8/view?usp=sharing)]<br>All videos [[Playlist](https://youtube.com/playlist?list=PLLqXZ_E-UXlyGPyiWStnC_Y0iizSv5jsG)] |
 
 ## Homeworks
