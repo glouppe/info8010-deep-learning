@@ -8,6 +8,12 @@ Lecture 0: Introduction
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+- Universal approximation theorem? + magic trick
+- https://arxiv.org/abs/2105.04026?s=03 
+- Remove lecture 12 on Deep RL
+
 ---
 
 # Today
