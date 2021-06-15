@@ -248,7 +248,7 @@ $$\begin{aligned}
 where $\mathbf{u}$ and $\mathbf{b}$ are shared parameters to learn.
 - $D$ convolutions can be applied in the same way to produce a $D \times (H-h+1) \times (W-w+1)$ feature map,
 where $D$ is the depth.
-- Swiping across channels with a 3D convolution usually makes no sense, unless the channel index has some metric mearning.
+- Swiping across channels with a 3D convolution usually makes no sense, unless the channel index has some metric meaning.
 
 ---
 

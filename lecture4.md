@@ -12,6 +12,7 @@ Prof. Gilles Louppe<br>
 
 R: optimization in overparameterized nets
 R: loss surface
+R: kaiming he init https://arxiv.org/pdf/1502.01852.pdf
 
 ---
 

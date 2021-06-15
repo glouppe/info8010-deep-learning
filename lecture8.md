@@ -15,6 +15,8 @@ xxx permutation equivariance
 R: improve consistency of notations (i, j; C as output then as input, etc)
 R: review complexity
 
+R: https://twitter.com/pschwllr/status/1260963596412092419
+
 ---
 
 # Today
