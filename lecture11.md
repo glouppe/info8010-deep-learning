@@ -15,6 +15,9 @@ R: check https://www.slideshare.net/perone/uncertainty-estimation-in-deep-learni
 R: https://www.gatsby.ucl.ac.uk/~balaji/berkeley-talk-balaji.pdf
 R: langevin dynamics (welling)
 
+R: Balaji tutorial https://twitter.com/balajiln/status/1421519413988053002?s=03
+R: https://emtiyaz.github.io/papers/Nov9_2021_ACML_summer_school.pdf
+
 ---
 
 # Today

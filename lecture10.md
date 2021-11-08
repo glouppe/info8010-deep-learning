@@ -8,6 +8,14 @@ Lecture 10: Generative adversarial networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+R: https://stylegan-nada.github.io/
+R: https://replicate.ai/yuval-alaluf/restyle_encoder
+R: https://colab.research.google.com/drive/1eYlenR1GHPZXt-YuvXabzO9wfh9CWY36
+R: https://colab.research.google.com/github/ekgren/StructuredDreaming/blob/main/colabs/Structured_Dreaming_Styledreams_faces.ipynb
+R: https://colab.research.google.com/github/hila-chefer/TargetCLIP/blob/main/TargetCLIP_CLIP_guided_image_essence_transfer.ipynb
+
 ---
 
 class: middle 

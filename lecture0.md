@@ -13,6 +13,7 @@ Prof. Gilles Louppe<br>
 - Universal approximation theorem? + magic trick
 - https://arxiv.org/abs/2105.04026?s=03 
 - Remove lecture 12 on Deep RL
+- Tesla AI https://t.co/EMMKOO5FbK?amp=1
 
 ---
 

@@ -8,6 +8,10 @@ Lecture 1: Fundamentals of machine learning
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+R: over-parametrization https://arxiv.org/pdf/2109.02355.pdf
+
 ---
 
 # Today
