@@ -8,13 +8,6 @@ Lecture 0: Introduction
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-- Universal approximation theorem? + magic trick
-- https://arxiv.org/abs/2105.04026?s=03 
-- Remove lecture 12 on Deep RL
-- Tesla AI https://t.co/EMMKOO5FbK?amp=1
-
 ---
 
 # Today
@@ -36,10 +29,10 @@ Prof. Gilles Louppe<br>
 - Lecture 6: Computer vision
 - Lecture 7: Recurrent neural networks
 - Lecture 8: Attention and transformer networks
-- Lecture 9: Generative models (Part 1)
-- Lecture 10: Generative models (Part 2)
-- Lecture 11: Uncertainty
-- Lecture 12: Deep reinforcement learning
+- Lecture 9: Graph neural networks
+- Lecture 10: Auto-encoders and variational auto-encoders
+- Lecture 11: Generative adversarial networks
+- Lecture 12: Uncertainty
 
 ---
 

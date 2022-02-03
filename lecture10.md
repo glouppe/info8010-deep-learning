@@ -2,29 +2,17 @@ class: middle, center, title-slide
 
 # Deep Learning
 
-Lecture 10: Generative adversarial networks
+Lecture 10: Auto-encoders and variational auto-encoders
 
 <br><br>
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-R: https://stylegan-nada.github.io/
-R: https://replicate.ai/yuval-alaluf/restyle_encoder
-R: https://colab.research.google.com/drive/1eYlenR1GHPZXt-YuvXabzO9wfh9CWY36
-R: https://colab.research.google.com/github/ekgren/StructuredDreaming/blob/main/colabs/Structured_Dreaming_Styledreams_faces.ipynb
-R: https://colab.research.google.com/github/hila-chefer/TargetCLIP/blob/main/TargetCLIP_CLIP_guided_image_essence_transfer.ipynb
-
 ---
 
-class: middle 
+class: middle
 
-.center.width-40[![](figures/lec10/christies.jpg)]
-
-.italic["Generative adversarial networks is the coolest idea in deep learning in the last 20 years."] 
-
-.pull-right[Yann LeCun, 2018.]
+.center.width-60[![](figures/lec0/map.png)]
 
 ---
 
@@ -32,35 +20,234 @@ class: middle
 
 Learn a model of the data.
 
-- Generative adversarial networks
-- .inactive[Wasserstein GANs]
-- Numerics of GANs
-- State of the art
-- Applications
+- Generative models
+- Auto-encoders
+- Variational inference
+- Variational auto-encoders
 
 ---
 
 class: middle
 
-# Generative adversarial networks
+# Generative models
+
+.footnote[Credits: slides adapted from .italic["[Tutorial on Deep Generative Models](http://auai.org/uai2017/media/tutorials/shakir.pdf)"], Shakir Mohamed and Danilo Rezende, UAI 2017.]
 
 ---
 
 class: middle
 
-.center.width-45[![](figures/lec10/catch-me.jpg)]
+## Deep unsupervised learning
 
-.center[.width-30[![](figures/lec10/check.jpg)] .width-30[![](figures/lec10/frank.jpg)]]
+Deep unsupervised learning is about capturing rich patterns in raw data with deep networks in a **label-free** way.
+
+- Generative models: recreate the raw data distribution (e.g., the distribution of natural images).
+- Self-supervised learning: solve puzzle tasks that require semantic understanding (e.g., predict a missing word in a sequence).
 
 ---
 
 class: middle
 
-## A two-player game
+## Generative models
 
-In **generative adversarial networks** (GANs), the task of learning a generative model is expressed as a two-player zero-sum game between two networks.
+A **generative model** is a probabilistic model $p$ that can be used as *a simulator of the data*.
+Its purpose is to generate synthetic but realistic high-dimensional data
+$$\mathbf{x} \sim p(\mathbf{x};\theta),$$
+that is as close as possible from the unknown data distribution $p(\mathbf{x})$, but for which we have empirical samples.
 
-.center.width-100[![](figures/lec10/gan-setup.png)]
+---
+
+class: middle
+
+.center[Why do we care?]
+
+---
+
+class: middle
+
+.center.circle.width-30[![](figures/lec10/feynman.jpg)]
+
+.italic.center["What I cannot create, I do not understand."]
+
+.pull-right[Richard Feynman]
+
+---
+
+class: middle
+
+.center.circle.width-30[![](figures/lec10/hinton.jpg)]
+
+.italic["The brain has about $10^{14}$ synapses and we only live for about $10^9$
+seconds. So we have a lot more parameters than data. This
+motivates the idea that we must do a lot of unsupervised learning
+since the perceptual input (including proprioception) is the only
+place we can get $10^5$ dimensions of constraint per second."]
+
+.pull-right[Geoffrey Hinton, 2014.]
+
+---
+
+class: middle
+
+.grid[
+.kol-1-3[.circle.width-95[![](figures/lec10/lecun.jpg)]]
+.kol-2-3[.width-100[![](figures/lec10/cake.png)]]
+]
+
+.italic["We need tremendous amount of information to build machines that have common sense and generalize."]
+
+.pull-right[Yann LeCun, 2016.]
+
+---
+
+# Immediate applications
+
+<br>
+
+.center[
+.width-100[![](figures/lec10/why-gm.png)]
+]
+.caption[Generative models have a role in many important problems]
+
+---
+
+class: middle
+
+## Machine translation
+
+Attention-based sequence-to-sequence synthesis.
+
+.center[
+.width-100[![](figures/lec7/nmt2.gif)]
+
+(Wu et al, 2016)
+]
+
+---
+
+class: middle
+
+## Text-to-speech synthesis
+
+Generating audio conditioned on text.
+
+.center[
+.width-100[![](figures/lec10/generative-text-to-speech.png)]
+
+(Oord et al, 2016)
+]
+
+---
+
+class: middle
+
+## Image and content generation
+
+Generating images and video content.
+
+.center[
+.width-100[![](figures/lec10/generative-content.png)]
+
+(Gregor et al, 2015; Oord et al, 2016; Dumoulin et al, 2016)
+]
+
+---
+
+class: middle
+
+## Communication and compression
+
+Hierarchical compression of images and other data, e.g., in video conferencing systems.
+
+.center[
+.width-100[![](figures/lec10/generative-compression.png)]
+
+(Gregor et al, 2016)
+]
+
+---
+
+class: middle
+
+## Image super-resolution
+
+Photo-realistic single image super-resolution.
+
+.center[
+.width-100[![](figures/lec10/generative-superres.png)]
+
+(Ledig et al, 2016)
+]
+
+---
+
+class: middle
+
+## Visual concept learning
+
+Understanding the factors of variation and invariances.
+
+.center[
+.width-100[![](figures/lec10/generative-factors.png)]
+
+(Higgins et al, 2017)
+]
+
+---
+
+class: middle
+
+## Future simulation
+
+Simulate future trajectories of environments based on actions for planning.
+
+.center[
+.width-40[![](figures/lec10/robot1.gif)] .width-40[![](figures/lec10/robot2.gif)]
+
+(Finn et al, 2016)
+]
+
+---
+
+class: middle
+
+## One-shot generalization
+
+Rapid generalization of novel concepts.
+
+.center[
+.width-100[![](figures/lec10/generative-oneshot.png)]
+
+(Gregor et al, 2016)
+]
+
+---
+
+class: middle
+
+## Improving downstream tasks with un(self)supervised pre-training
+
+Transformer architectures have shown to be remarkably effective zero/one-short learners.
+
+.center[
+.width-100[![](figures/lec8/gpt.png)]
+
+(Radford et al, 2018)
+]
+
+---
+
+class: middle
+
+# Auto-encoders
+
+---
+
+class: middle
+
+Many applications such as image synthesis, denoising, super-resolution, speech synthesis or compression, require to **go beyond** classification and regression and model explicitly a high-dimensional signal.
+
+This modeling consists of finding .italic["meaningful degrees of freedom"], or .italic["factors of variations"], that describe the signal and are of lesser dimension.
 
 .footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
@@ -68,740 +255,563 @@ In **generative adversarial networks** (GANs), the task of learning a generative
 
 class: middle
 
-The first network is a *generator*  $g(\cdot;\theta) : \mathcal{Z} \to \mathcal{X}$, mapping a latent space equipped with a prior distribution $p(\mathbf{z})$ to the data space, thereby inducing a distribution
-$$\mathbf{x} \sim q(\mathbf{x};\theta) \Leftrightarrow \mathbf{z} \sim p(\mathbf{z}), \mathbf{x} = g(\mathbf{z};\theta).$$
+.center.width-90[![](figures/lec10/embedding1.png)]
 
-The second network $d(\cdot; \phi) : \mathcal{X} \to [0,1]$ is a **classifier** trained to distinguish between true samples $\mathbf{x} \sim p(\mathbf{x})$ and generated samples $\mathbf{x} \sim q(\mathbf{x};\theta)$.
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+count: false
+
+.center.width-90[![](figures/lec10/embedding2.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+# Auto-encoders
+
+An auto-encoder is a composite function made of
+- an **encoder** $f$ from the original space $\mathcal{X}$ to a latent space $\mathcal{Z}$,
+- a *decoder* $g$ to map back to $\mathcal{X}$,
+
+such that $g \circ f$ is close to the identity on the data.
+
+.center.width-80[![](figures/lec10/ae.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
 ---
 
 class: middle
 
-For a fixed generator $g$, the classifier $d$ can be trained by generating a two-class training set
-$$\mathbf{d} = \\\{ (\mathbf{x}\_1, y=1), ..., (\mathbf{x}\_N, y=1), (g(\mathbf{z}\_1; \theta), y=0), ..., (g(\mathbf{z}\_N; \theta), y=0)  \\\},$$
-where $\mathbf{x}\_i \sim p(\mathbf{x})$ and $\mathbf{z}\_i \sim p(\mathbf{z})$, and minimizing the cross-entropy loss
-$$\begin{aligned}
-\mathcal{L}(\phi) &= -\frac{1}{2N} \sum\_{i=1}^N \left[ \log d(\mathbf{x}\_i; \phi) + \log\left(1 - d(g(\mathbf{z}\_i;\theta); \phi)\right) \right] \\\\
-&\approx -\mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ \log d(\mathbf{x};\phi) \right] - \mathbb{E}\_{\mathbf{z} \sim p(\mathbf{z})}\left[ \log (1-d(g(\mathbf{z};\theta);\phi)) \right].
-\end{aligned}$$
+Let $p(\mathbf{x})$ be the data distribution over $\mathcal{X}$. A good auto-encoder could be characterized with the reconstruction loss
+$$\mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})} \left[ || \mathbf{x} - g \circ f(\mathbf{x}) ||^2 \right] \approx 0.$$
 
-However, the situation is slightly more complicated since we also want to train $g$ to fool the discriminator, which is equivalent to maximize $d$'s loss.
+Given two parameterized mappings $f(\cdot; \theta\_f)$ and $g(\cdot;\theta\_g)$, training consists of minimizing an empirical estimate of that loss,
+$$\theta\_f, \theta\_g = \arg \min\_{\theta\_f, \theta\_g} \frac{1}{N} \sum_{i=1}^N || \mathbf{x}\_i - g(f(\mathbf{x}\_i,\theta\_f), \theta\_g) ||^2.$$
 
----
-
-
-class: middle
-
-## Game analysis
-
-Let us consider the **value function** 
-$$V(\phi, \theta) = \mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ \log d(\mathbf{x};\phi) \right] + \mathbb{E}\_{\mathbf{z} \sim p(\mathbf{z})}\left[ \log (1-d(g(\mathbf{z};\theta);\phi)) \right].$$
-
-- For a fixed $g$, $V(\phi, \theta)$ is high if $d$ is good at recognizing true from generated samples.
-
-- If $d$ is the best classifier given $g$, and if $V$ is high, then this implies that
-the generator is bad at reproducing the data distribution.
-
-- Conversely, $g$ will be a good generative model if $V$ is low when $d$ is a perfect opponent.
-
-Therefore, the ultimate goal is
-$$\theta^\* = \arg \min\_\theta \max\_\phi V(\phi, \theta).$$
-
-???
-
-Switch to the iPad
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
 ---
 
 class: middle
 
-For a generator $g$ fixed at $\theta$, the classifier $d$ with parameters $\phi^\*\_\theta$ is optimal if and only if
-$$\forall \mathbf{x}, d(\mathbf{x};\phi^\*\_\theta) = \frac{p(\mathbf{x})}{q(\mathbf{x};\theta) + p(\mathbf{x})}.$$
-
----
-
-class: middle
-
-Therefore,
-$$\begin{aligned}
-&\min\_\theta \max\_\phi V(\phi, \theta) = \min\_\theta V(\phi^\*\_\theta, \theta) \\\\
-&= \min\_\theta \mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ \log \frac{p(\mathbf{x})}{q(\mathbf{x};\theta) + p(\mathbf{x})} \right] + \mathbb{E}\_{\mathbf{x} \sim q(\mathbf{x};\theta)}\left[ \log \frac{q(\mathbf{x};\theta)}{q(\mathbf{x};\theta) + p(\mathbf{x})} \right] \\\\
-&= \min\_\theta \text{KL}\left(p(\mathbf{x}) || \frac{p(\mathbf{x}) + q(\mathbf{x};\theta)}{2}\right) \\\\
-&\quad\quad\quad+ \text{KL}\left(q(\mathbf{x};\theta) || \frac{p(\mathbf{x}) + q(\mathbf{x};\theta)}{2}\right) -\log 4\\\\
-&= \min\_\theta 2\, \text{JSD}(p(\mathbf{x}) || q(\mathbf{x};\theta)) - \log 4
-\end{aligned}$$
-where $\text{JSD}$ is the Jensen-Shannon divergence.
-
----
-
-class: middle
-
-In summary,
+For example, when the auto-encoder is linear,
 $$
 \begin{aligned}
-\theta^\* &= \arg \min\_\theta \max\_\phi V(\phi, \theta) \\\\
-&= \arg \min\_\theta \text{JSD}(p(\mathbf{x}) || q(\mathbf{x};\theta)).
-\end{aligned}$$
-
-Since $\text{JSD}(p(\mathbf{x}) || q(\mathbf{x};\theta))$ is minimum if and only if
-$$p(\mathbf{x}) = q(\mathbf{x};\theta)$$ for all $\mathbf{x}$, this proves that the minimax solution
-corresponds to a generative model that perfectly reproduces the true data distribution.
-
----
-
-class: middle
-
-## Learning process
-
-In practice, the minimax solution is approximated using *alternating* stochastic gradient descent:
-$$
-\begin{aligned}
-\theta &\leftarrow \theta - \gamma \nabla\_\theta V(\phi, \theta) \\\\
-\phi &\leftarrow \phi + \gamma \nabla\_\phi V(\phi, \theta),
+f: \mathbf{z} &= \mathbf{U}^T \mathbf{x} \\\\
+g: \hat{\mathbf{x}} &= \mathbf{U} \mathbf{z},
 \end{aligned}
 $$
-where gradients are estimated with Monte Carlo integration.
+with $\mathbf{U} \in \mathbb{R}^{p\times d}$, the reconstruction error reduces to
+$$\mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})} \left[ || \mathbf{x} - \mathbf{U}\mathbf{U}^T \mathbf{x} ||^2 \right].$$
 
-???
-
-- For one step on $\theta$, we can optionally take $k$ steps on $\phi$, since we need the classifier to remain near optimal.
-- Note that to compute $\nabla\_\theta V(\phi, \theta)$, it is necessary to backprop all the way through $d$ before computing the partial derivatives with respect to $g$'s internals.
+In this case, an optimal solution is given by PCA.
 
 ---
 
 class: middle
 
-.center.width-100[![](figures/lec10/learning.png)]
+## Deep auto-encoders
 
-.footnote[Credits: Goodfellow et al, [Generative Adversarial Networks](https://arxiv.org/abs/1406.2661), 2014.]
+.center.width-80[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](figures/lec10/architecture.svg)]
+
+Better results can be achieved with more sophisticated classes of mappings than linear projections: use deep neural networks for $f$ and $g$.
+
+For instance,
+- by combining a multi-layer perceptron encoder $f : \mathbb{R}^p \to \mathbb{R}^d$ with a multi-layer perceptron decoder $g: \mathbb{R}^d \to \mathbb{R}^p$.
+- by combining a convolutional network encoder $f : \mathbb{R}^{w\times h \times c} \to \mathbb{R}^d$ with a decoder $g : \mathbb{R}^d \to \mathbb{R}^{w\times h \times c}$ composed of the reciprocal transposed convolutional layers.
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec10/samples1.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec10/samples2.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec10/samples3.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+## Interpolation
+
+To get an intuition of the learned latent representation, we can pick two samples $\mathbf{x}$ and $\mathbf{x}'$ at random and interpolate samples along the line in the latent space.
+
+<br>
+.center.width-80[![](figures/lec10/interpolation.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec10/interp1.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec10/interp2.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+# Denoising auto-encoders
+
+Besides dimension reduction, auto-encoders can capture dependencies between signal components to restore degraded or noisy signals. 
+
+In this case, the composition $$h = g \circ f : \mathcal{X} \to \mathcal{X}$$ is referred to as a **denoising** auto-encoder.
+
+The goal is to optimize $h$ such that a perturbation $\tilde{\mathbf{x}}$ of the signal $\mathbf{x}$ is restored to $\mathbf{x}$, hence $$h(\tilde{\mathbf{x}}) \approx \mathbf{x}.$$
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec10/dae0.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec10/dae1.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec10/dae2.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec10/dae3.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+A fundamental weakness of denoising auto-encoders is that the posterior $p(\mathbf{x}|\tilde{\mathbf{x}})$ is possibly multi-modal.
+
+If we train an auto-encoder with the quadratic loss (i.e., implicitly assuming a Gaussian posterior), then the best reconstruction is 
+$$h(\tilde{\mathbf{x}}) = \mathbb{E}[\mathbf{x}|\tilde{\mathbf{x}}],$$
+which may be very unlikely under $p(\mathbf{x}|\tilde{\mathbf{x}})$.
+
+.center.width-60[![](figures/lec10/dae-posterior.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+# Sampling from an AE's latent space
+
+The generative capability of the decoder $g$ in an auto-encoder can be assessed by introducing a (simple) density model $q$ over the latent space $\mathcal{Z}$, sample there, and map the samples into the data space $\mathcal{X}$ with $g$.
+
+.center.width-80[![](figures/lec10/sampling.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+For instance, a factored Gaussian model with diagonal covariance matrix,
+$$q(\mathbf{z}) = \mathcal{N}(\hat{\mu}, \hat{\Sigma}),$$
+where both $\\hat{\mu}$ and $\hat{\Sigma}$ are estimated on training data.
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec10/samples-bad.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+These results are not satisfactory because the density model on the latent space is **too simple and inadequate**.
+
+Building a good model in latent space amounts to our original problem of modeling an empirical distribution, although it may now be in a lower dimension space.
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+# Variational inference
+
+---
+
+class: middle
+
+## Latent variable model
+
+.center.width-20[![](figures/lec10/latent-model.svg)]
+
+Consider for now a **prescribed latent variable model** that relates a set of observable variables $\mathbf{x} \in \mathcal{X}$ to a set of unobserved variables $\mathbf{z} \in \mathcal{Z}$.
+
+???
+
+The probabilistic model is given and motivated by domain knowledge assumptions.
+
+Examples include:
+- Linear discriminant analysis
+- Bayesian networks
+- Hidden Markov models
+- Probabilistic programs
+
+---
+
+class: middle, black-slide
+
+.center[<video controls autoplay loop muted preload="auto" height="480" width="640">
+  <source src="./figures/lec10/galton.mp4" type="video/mp4">
+</video>]
+
+---
+
+class: middle
+
+The probabilistic model defines a joint probability distribution $p(\mathbf{x}, \mathbf{z})$, which decomposes as
+$$p(\mathbf{x}, \mathbf{z}) = p(\mathbf{x}|\mathbf{z}) p(\mathbf{z}).$$
+If we interpret $\mathbf{z}$ as causal factors for the high-dimension representations $\mathbf{x}$, then
+sampling from $p(\mathbf{x}|\mathbf{z})$ can be interpreted as **a stochastic generating process** from $\mathcal{Z}$ to $\mathcal{X}$.
+
+For a given model $p(\mathbf{x}, \mathbf{z})$, inference consists in computing the posterior
+$$p(\mathbf{z}|\mathbf{x}) = \frac{p(\mathbf{x}|\mathbf{z}) p(\mathbf{z})}{p(\mathbf{x})}.$$
+
+For most interesting cases, this is usually intractable since it requires evaluating the evidence
+$$p(\mathbf{x}) = \int p(\mathbf{x}|\mathbf{z})p(\mathbf{z}) d\mathbf{z}.$$
+
+???
+
+Switch to iPad.
+
+---
+
+# Variational inference
+
+.center.width-80[![](figures/lec10/vi.png)]
+
+**Variational inference** turns posterior inference into an optimization problem.
+- Consider a family of distributions $q(\mathbf{z}|\mathbf{x}; \nu)$ that approximate the posterior $p(\mathbf{z}|\mathbf{x})$, where the
+variational parameters $\nu$ index the family of distributions.
+- The parameters $\nu$ are fit to minimize the KL divergence between the approximation $q(\mathbf{z}|\mathbf{x};\nu)$ and the posterior  $p(\mathbf{z}|\mathbf{x})$.
+
+---
+
+class: middle
+
+Formally, we want to solve
+$$\begin{aligned}
+&\arg\min\_\nu \text{KL}(q\(\mathbf{z}|\mathbf{x};\nu) || p(\mathbf{z}|\mathbf{x})) \\\\
+=& \arg\min\_\nu  \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[\log \frac{q(\mathbf{z}|\mathbf{x} ; \nu)}{p(\mathbf{z}|\mathbf{x})}\right] \\\\
+=& \arg\min\_\nu  \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log q(\mathbf{z}|\mathbf{x};\nu) - \log p(\mathbf{x},\mathbf{z}) \right] + \log p(\mathbf{x}).
+\end{aligned}$$
+For the same reason as before, the KL divergence cannot be directly minimized because
+of the $\log p(\mathbf{x})$ term.
+
+---
+
+class: middle
+
+However, we can write
+$$\begin{aligned}
+&\arg\min\_\nu \text{KL}(q(\mathbf{z}|\mathbf{x};\nu) || p(\mathbf{z}|\mathbf{x})) \\\\
+=&\arg\min\_\nu \log p(\mathbf{x}) - \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log p(\mathbf{x},\mathbf{z}) - \log q(\mathbf{z}|\mathbf{x};\nu) \right] \\\\
+=&\arg\max\_\nu \underbrace{\mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log p(\mathbf{x},\mathbf{z}) - \log q(\mathbf{z}|\mathbf{x};\nu) \right]}\_{\text{ELBO}(\mathbf{x};\nu)}
+\end{aligned}
+$$
+where $\text{ELBO}(\mathbf{x};\nu)$ is called the **evidence lower bound objective**.
+
+- Since $\log p(\mathbf{x})$ does not depend on $\nu$, it can be considered as a constant, and minimizing the KL divergence is equivalent to maximizing the evidence lower bound, while being computationally tractable.
+- Given a dataset $\mathbf{d} = \\\{\mathbf{x}\_i|i=1, ..., N\\\}$, the final objective is the sum $\sum\_{\\\{\mathbf{x}\_i \in \mathbf{d}\\\}} \text{ELBO}(\mathbf{x}\_i;\nu)$.
+
+---
+
+class: middle
+
+Remark that
+$$\begin{aligned}
+\text{ELBO}(\mathbf{x};\nu) &= \mathbb{E}\_{q(\mathbf{z};|\mathbf{x}\nu)}\left[ \log p(\mathbf{x},\mathbf{z}) - \log q(\mathbf{z}|\mathbf{x};\nu) \right] \\\\
+&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log p(\mathbf{x}|\mathbf{z}) p(\mathbf{z}) - \log q(\mathbf{z}|\mathbf{x};\nu) \right] \\\\
+&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log p(\mathbf{x}|\mathbf{z})\right] - \text{KL}(q(\mathbf{z}|\mathbf{x};\nu) || p(\mathbf{z}))
+\end{aligned}$$
+Therefore, maximizing the ELBO:
+- encourages distributions to place their mass on configurations of latent variables that explain the observed data (first term);
+- encourages distributions close to the prior (second term).
+
+---
+
+class: middle
+
+## Optimization
+
+We want
+$$\begin{aligned}
+\nu^{\*} &= \arg \max\_\nu \text{ELBO}(\mathbf{x};\nu) \\\\
+&= \arg \max\_\nu \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log p(\mathbf{x},\mathbf{z}) - \log q(\mathbf{z}|\mathbf{x};\nu) \right].
+\end{aligned}$$
+
+We can proceed by gradient ascent, provided we can evaluate $\nabla\_\nu \text{ELBO}(\mathbf{x};\nu)$.
+
+In general,
+this gradient is difficult to compute because the expectation is unknown and the parameters $\nu$ are parameters of the distribution $q(\mathbf{z}|\mathbf{x};\nu)$ we integrate over.
+
+---
+
+class: middle
+
+# Variational auto-encoders
+
+---
+
+class: middle
+
+So far we assumed a prescribed probabilistic model motivated by domain knowledge.
+We will now directly learn a stochastic generating process with a neural network.
+
+---
+
+# Variational auto-encoders
+
+
+
+A variational auto-encoder is a deep latent variable model where:
+- The prior $p(\mathbf{z})$ is prescribed, and usually chosen to be Gaussian.
+- The likelihood $p(\mathbf{x}|\mathbf{z};\theta)$ is parameterized with a **generative network** $\text{NN}\_\theta$
+(or decoder) that takes as input $\mathbf{z}$ and outputs parameters $\phi = \text{NN}\_\theta(\mathbf{z})$ to the data distribution. E.g.,
+$$\begin{aligned}
+\mu, \sigma &= \text{NN}\_\theta(\mathbf{z}) \\\\
+p(\mathbf{x}|\mathbf{z};\theta) &= \mathcal{N}(\mathbf{x}; \mu, \sigma^2\mathbf{I})
+\end{aligned}$$
+- The approximate posterior $q(\mathbf{z}|\mathbf{x};\varphi)$ is parameterized
+with an **inference network** $\text{NN}\_\varphi$ (or encoder) that takes as input $\mathbf{x}$ and
+outputs parameters $\nu = \text{NN}\_\varphi(\mathbf{x})$ to the approximate posterior. E.g.,
+$$\begin{aligned}
+\mu, \sigma &= \text{NN}\_\varphi(\mathbf{x}) \\\\
+q(\mathbf{z}|\mathbf{x};\varphi) &= \mathcal{N}(\mathbf{z}; \mu, \sigma^2\mathbf{I})
+\end{aligned}$$
+
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec10/vae.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+As before, we can use variational inference, but to jointly optimize the generative and the inference networks parameters $\theta$ and $\varphi$.
+
+We want
+$$\begin{aligned}
+\theta^{\*}, \varphi^{\*} &= \arg \max\_{\theta,\varphi} \text{ELBO}(\mathbf{x};\theta,\varphi) \\\\
+&= \arg \max\_{\theta,\varphi} \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi)\right] \\\\
+&= \arg \max\_{\theta,\varphi} \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x}|\mathbf{z};\theta)\right] - \text{KL}(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z})).
+\end{aligned}$$
+
+- Given some generative network $\theta$, we want to put the mass of the latent variables, by adjusting $\varphi$, such that they explain the observed data, while remaining close to the prior.
+- Given some inference network $\varphi$, we want to put the mass of the observed variables, by adjusting $\theta$, such that
+they are well explained by the latent variables.
+
+---
+
+class: middle
+
+Unbiased gradients of the ELBO with respect to the generative model parameters $\theta$ are simple to obtain:
+$$\begin{aligned}
+\nabla\_\theta \text{ELBO}(\mathbf{x};\theta,\varphi) &= \nabla\_\theta \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi)\right] \\\\
+&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \nabla\_\theta ( \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi) ) \right] \\\\
+&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \nabla\_\theta \log p(\mathbf{x},\mathbf{z};\theta) \right],
+\end{aligned}$$
+which can be estimated with Monte Carlo integration.
+
+However, gradients with respect to the inference model parameters $\varphi$ are
+more difficult to obtain:
+$$\begin{aligned}
+\nabla\_\varphi \text{ELBO}(\mathbf{x};\theta,\varphi) &= \nabla\_\varphi \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi)\right] \\\\
+&\neq \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \nabla\_\varphi ( \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi) ) \right]
+\end{aligned}$$
+
+---
+
+class: middle
+
+Let us abbreviate
+$$\begin{aligned}
+\text{ELBO}(\mathbf{x};\theta,\varphi) &= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi)\right] \\\\
+&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ f(\mathbf{x}, \mathbf{z}; \varphi) \right].
+\end{aligned}$$
+
+We have
+
+.grid[
+.kol-1-5[]
+.kol-4-5[.center.width-90[![](figures/lec10/reparam-original.svg)]]
+]
+
+
+
+We cannot backpropagate through the stochastic node $\mathbf{z}$ to compute $\nabla\_\varphi f$!
+
+---
+
+# Reparameterization trick
+
+The *reparameterization trick* consists in re-expressing the variable $$\mathbf{z} \sim q(\mathbf{z}|\mathbf{x};\varphi)$$ as some differentiable and invertible transformation
+of another random variable $\epsilon$ given $\mathbf{x}$ and $\varphi$,
+$$\mathbf{z} = g(\varphi, \mathbf{x}, \epsilon),$$
+such that the distribution of $\epsilon$ is independent of $\mathbf{x}$ or $\varphi$.
+
+---
+
+class: middle
+
+.grid[
+.kol-1-5[]
+.kol-4-5[.center.width-90[![](figures/lec10/reparam-reparam.svg)]]
+]
+
+For example, if $q(\mathbf{z}|\mathbf{x};\varphi) = \mathcal{N}(\mathbf{z}; \mu(\mathbf{x};\varphi), \sigma^2(\mathbf{x};\varphi))$, where $\mu(\mathbf{x};\varphi)$ and $\sigma^2(\mathbf{x};\varphi)$
+are the outputs of the inference network $NN\_\varphi$, then a common reparameterization is:
+$$\begin{aligned}
+p(\epsilon) &= \mathcal{N}(\epsilon; \mathbf{0}, \mathbf{I}) \\\\
+\mathbf{z} &= \mu(\mathbf{x};\varphi) + \sigma(\mathbf{x};\varphi) \odot \epsilon
+\end{aligned}$$
+
+---
+
+class: middle
+
+Given such a change of variable, the ELBO can be rewritten as:
+$$\begin{aligned}
+\text{ELBO}(\mathbf{x};\theta,\varphi) &= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ f(\mathbf{x}, \mathbf{z}; \varphi) \right]\\\\
+&= \mathbb{E}\_{p(\epsilon)} \left[ f(\mathbf{x}, g(\varphi,\mathbf{x},\epsilon); \varphi) \right]
+\end{aligned}$$
+Therefore,
+$$\begin{aligned}
+\nabla\_\varphi \text{ELBO}(\mathbf{x};\theta,\varphi) &= \nabla\_\varphi \mathbb{E}\_{p(\epsilon)} \left[  f(\mathbf{x}, g(\varphi,\mathbf{x},\epsilon); \varphi) \right] \\\\
+&= \mathbb{E}\_{p(\epsilon)} \left[ \nabla\_\varphi  f(\mathbf{x}, g(\varphi,\mathbf{x},\epsilon); \varphi) \right],
+\end{aligned}$$
+which we can now estimate with Monte Carlo integration.
+
+The last required ingredient is the evaluation of the likelihood $q(\mathbf{z}|\mathbf{x};\varphi)$ given the change of variable $g$. As long as $g$ is invertible, we have:
+$$\log q(\mathbf{z}|\mathbf{x};\varphi) = \log p(\epsilon) - \log \left| \det\left( \frac{\partial \mathbf{z}}{\partial \epsilon} \right) \right|.$$
+
+---
+
+# Example
+
+Consider the following setup:
+- Generative model:
+$$\begin{aligned}
+\mathbf{z} &\in \mathbb{R}^d \\\\
+p(\mathbf{z}) &= \mathcal{N}(\mathbf{z}; \mathbf{0},\mathbf{I})\\\\
+p(\mathbf{x}|\mathbf{z};\theta) &= \mathcal{N}(\mathbf{x};\mu(\mathbf{z};\theta), \sigma^2(\mathbf{z};\theta)\mathbf{I}) \\\\
+\mu(\mathbf{z};\theta) &= \mathbf{W}\_2^T\mathbf{h} + \mathbf{b}\_2 \\\\
+\log \sigma^2(\mathbf{z};\theta) &= \mathbf{W}\_3^T\mathbf{h} + \mathbf{b}\_3 \\\\
+\mathbf{h} &= \text{ReLU}(\mathbf{W}\_1^T \mathbf{z} + \mathbf{b}\_1)\\\\
+\theta &= \\\{ \mathbf{W}\_1, \mathbf{b}\_1, \mathbf{W}\_2, \mathbf{b}\_2, \mathbf{W}\_3, \mathbf{b}\_3 \\\}
+\end{aligned}$$
+
+---
+
+class: middle
+
+- Inference model:
+$$\begin{aligned}
+q(\mathbf{z}|\mathbf{x};\varphi) &=  \mathcal{N}(\mathbf{z};\mu(\mathbf{x};\varphi), \sigma^2(\mathbf{x};\varphi)\mathbf{I}) \\\\
+p(\epsilon) &= \mathcal{N}(\epsilon; \mathbf{0}, \mathbf{I}) \\\\
+\mathbf{z} &= \mu(\mathbf{x};\varphi) + \sigma(\mathbf{x};\varphi) \odot \epsilon \\\\
+\mu(\mathbf{x};\varphi) &= \mathbf{W}\_5^T\mathbf{h} + \mathbf{b}\_5 \\\\
+\log \sigma^2(\mathbf{x};\varphi) &= \mathbf{W}\_6^T\mathbf{h} + \mathbf{b}\_6 \\\\
+\mathbf{h} &= \text{ReLU}(\mathbf{W}\_4^T \mathbf{x} + \mathbf{b}\_4)\\\\
+\varphi &= \\\{ \mathbf{W}\_4, \mathbf{b}\_4, \mathbf{W}\_5, \mathbf{b}\_5, \mathbf{W}\_6, \mathbf{b}\_6 \\\}
+\end{aligned}$$
+
+Note that there is no restriction on the generative and inference network architectures.
+They could as well be arbitrarily complex convolutional networks.
+
+---
+
+class: middle
+
+Plugging everything together, the objective can be expressed as:
+$$\begin{aligned}
+\text{ELBO}(\mathbf{x};\theta,\varphi) &= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi)\right] \\\\
+&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)} \left[ \log p(\mathbf{x}|\mathbf{z};\theta) \right] - \text{KL}(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z})) \\\\
+&= \mathbb{E}\_{p(\epsilon)} \left[  \log p(\mathbf{x}|\mathbf{z}=g(\varphi,\mathbf{x},\epsilon);\theta) \right] - \text{KL}(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z}))
+\end{aligned}
+$$
+where the KL divergence can be expressed  analytically as
+$$\text{KL}(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z})) = \frac{1}{2} \sum\_{j=1}^d \left( 1 + \log(\sigma\_j^2(\mathbf{x};\varphi)) - \mu\_j^2(\mathbf{x};\varphi) - \sigma\_j^2(\mathbf{x};\varphi)\right),$$
+which allows to evaluate its derivative without approximation.
+
+---
+
+class: middle
+
+Consider as data $\mathbf{d}$ the MNIST digit dataset:
+
+.center.width-100[![](figures/lec10/mnist.png)]
 
 ---
 
 class: middle, center
 
-.width-100[![](figures/lec10/ganlab.png)]
+.width-100[![](figures/lec10/vae-samples.png)]
 
-[[Demo](https://poloclub.github.io/ganlab)]
-
-
+(Kingma and Welling, 2013)
 
 ---
 
-class: middle
+class: middle, center
 
-## Results
+.width-100[![](figures/lec10/vae-interpolation.png)]
 
-.center.width-90[![](figures/lec10/gan-gallery.png)]
-
-.footnote[Credits: Goodfellow et al, [Generative Adversarial Networks](https://arxiv.org/abs/1406.2661), 2014.]
-
----
-
-class: middle
-
-.center.width-100[![](figures/lec10/bedrooms1.png)]
-
-.footnote[Credits: Radford et al, [Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks](https://arxiv.org/abs/1511.06434), 2015.]
-
----
-
-class: middle
-
-.center.width-100[![](figures/lec10/bedrooms2.png)]
-
-.footnote[Credits: Radford et al, [Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks](https://arxiv.org/abs/1511.06434), 2015.]
-
-
----
-
-class: middle
-
-## Open problems
-
-Training a standard GAN often results in pathological behaviors:
-
-- *Oscillations* without convergence: contrary to standard loss minimization,
-  alternating stochastic gradient descent has no guarantee of convergence.
-- **Vanishing gradients**: when the classifier $d$ is too good, the value function saturates
-  and we end up with no gradient to update the generator.
-- *Mode collapse*: the generator $g$ models very well a small sub-population,
-  concentrating on a few modes of the data distribution.
-- Performance is also difficult to assess in practice.
-
-<br>
-.center.width-100[![](figures/lec10/mode-collapse.png)]
-
-.center[Mode collapse (Metz et al, 2016)]
-
----
-
-class: middle
-
-## Cabinet of curiosities
-
-While early results (2014-2016) were already impressive, a close inspection of the fake samples distribution $q(\mathbf{x};\theta)$ often revealed fundamental issues highlighting architectural limitations.
-
----
-
-class: middle
-
-.center.width-90[![](figures/lec10/curiosity-cherrypicks.png)]
-
-.center[Cherry-picks]
-
-.footnote[Credits: Ian Goodfellow, 2016.]
-
----
-
-class: middle
-
-.center.width-90[![](figures/lec10/curiosity-counting.png)]
-
-.center[Problems with counting]
-
-.footnote[Credits: Ian Goodfellow, 2016.]
-
----
-
-class: middle
-
-.center.width-90[![](figures/lec10/curiosity-perspective.png)]
-
-.center[Problems with perspective]
-
-.footnote[Credits: Ian Goodfellow, 2016.]
-
----
-
-class: middle
-
-.center.width-90[![](figures/lec10/curiosity-global.png)]
-
-.center[Problems with global structures]
-
-.footnote[Credits: Ian Goodfellow, 2016.]
-
----
-
-class: middle, inactive
-count: false
-
-# .inactive[Wasserstein GANs]
-
-(optional)
-
----
-
-class: middle
-count: false
-
-## Return of the Vanishing Gradients
-
-For most non-toy data distributions, the fake samples $\mathbf{x} \sim q(\mathbf{x};\theta)$
-may be so bad initially that the response of $d$ saturates.
-
-At the limit, when $d$ is perfect given the current generator $g$,
-$$\begin{aligned}
-d(\mathbf{x};\phi) &= 1, \forall \mathbf{x} \sim p(\mathbf{x}), \\\\
-d(\mathbf{x};\phi) &= 0, \forall \mathbf{x} \sim q(\mathbf{x};\theta).
-\end{aligned}$$
-Therefore,
-$$V(\phi, \theta) =  \mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ \log d(\mathbf{x};\phi) \right] + \mathbb{E}\_{\mathbf{z} \sim p(\mathbf{z})}\left[ \log (1-d(g(\mathbf{z};\theta);\phi)) \right] = 0$$
-and $\nabla\_\theta V(\phi,\theta) = 0$, thereby **halting** gradient descent.
-
----
-
-class: middle
-count: false
-
-Dilemma :
-- If $d$ is bad, then $g$ does not have accurate feedback and the loss function cannot represent the reality.
-- If $d$ is too good, the gradients drop to 0, thereby slowing down or even halting the optimization.
-
----
-
-class: middle
-count: false
-
-## Jensen-Shannon divergence
-
-For any two distributions $p$ and $q$,
-$$0 \leq JSD(p||q) \leq \log 2,$$
-where
-- $JSD(p||q)=0$ if and only if $p=q$,
-- $JSD(p||q)=\log 2$ if and only if $p$ and $q$ have disjoint supports.
-
-.center[![](figures/lec10/jsd.gif)]
-
----
-
-class: middle
-count: false
-
-Notice how the Jensen-Shannon divergence poorly accounts for the metric structure of the space.
-
-Intuitively, instead of comparing distributions "vertically", we would like to compare them "horizontally".
-
-.center[![](figures/lec10/jsd-vs-emd.png)]
-
----
-
-class: middle
-count: false
-
-## Wasserstein distance
-
-An alternative choice is the **Earth mover's distance**, which intuitively
-corresponds to the minimum mass displacement to transform one distribution into
-the other.
-
-.center.width-100[![](figures/lec10/emd-moves.png)]
-
-- $p = \frac{1}{4}\mathbf{1}\_{[1,2]} + \frac{1}{4}\mathbf{1}\_{[3,4]} + \frac{1}{2}\mathbf{1}\_{[9,10]}$
-- $q = \mathbf{1}\_{[5,7]}$
-
-Then,
-$$\text{W}\_1(p,q) = 4\times\frac{1}{4} + 2\times\frac{1}{4} + 3\times\frac{1}{2}=3$$
-
-.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
-
----
-
-class: middle
-count: false
-
-The Earth mover's distance is also known as the Wasserstein-1 distance and is defined as:
-$$\text{W}\_1(p, q) = \inf\_{\gamma \in \Pi(p,q)} \mathbb{E}\_{(x,y)\sim \gamma} \left[||x-y||\right]$$
-where:
-- $\Pi(p,q)$ denotes the set of all joint distributions $\gamma(x,y)$ whose marginals are respectively $p$ and $q$;
-- $\gamma(x,y)$ indicates how much mass must be transported from $x$ to $y$ in order to transform the distribution $p$ into $q$.
-- $||\cdot||$ is the L1 norm and $||x-y||$ represents the cost of moving a unit of mass from $x$ to $y$.
-
----
-
-class: middle
-count: false
-
-.center[![](figures/lec10/transport-plan.png)]
-
----
-
-class: middle
-count: false
-
-Notice how the $\text{W}\_1$ distance does not saturate. Instead, it
- increases monotonically with the distance between modes:
-
-.center[![](figures/lec10/emd.png)]
-
-$$\text{W}\_1(p,q)=d$$
-
-For any two distributions $p$ and $q$,
-- $W\_1(p,q) \in \mathbb{R}^+$,
-- $W\_1(p,q)=0$ if and only if $p=q$.
-
----
-
-class: middle
-count: false
-
-## Wasserstein GANs
-
-Given the attractive properties of the Wasserstein-1 distance, Arjovsky et al (2017) propose
-to learn a generative model by solving instead:
-$$\theta^\* = \arg \min\_\theta \text{W}\_1(p(\mathbf{x})||q(\mathbf{x};\theta))$$
-Unfortunately, the definition of $\text{W}\_1$ does not provide with an operational way of estimating it because of the intractable $\inf$.
-
-On the other hand, the Kantorovich-Rubinstein duality tells us that
-$$\text{W}\_1(p(\mathbf{x})||q(\mathbf{x};\theta)) = \sup\_{||f||\_L \leq 1} \mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ f(\mathbf{x}) \right] - \mathbb{E}\_{\mathbf{x} \sim q(\mathbf{x};\theta)} \left[f(\mathbf{x})\right]$$
-where the supremum is over all the 1-Lipschitz functions $f:\mathcal{X} \to \mathbb{R}$. That is, functions $f$ such that
-$$||f||\_L = \max\_{\mathbf{x},\mathbf{x}'} \frac{||f(\mathbf{x}) - f(\mathbf{x}')||}{||\mathbf{x} - \mathbf{x}'||} \leq 1.$$
-
----
-
-class: middle
-count: false
-
-.center.width-80[![](figures/lec10/kr-duality.png)]
-
-For $p = \frac{1}{4}\mathbf{1}\_{[1,2]} + \frac{1}{4}\mathbf{1}\_{[3,4]} + \frac{1}{2}\mathbf{1}\_{[9,10]}$
-and $q = \mathbf{1}\_{[5,7]}$,
-$$\begin{aligned}
-\text{W}\_1(p,q) &= 4\times\frac{1}{4} + 2\times\frac{1}{4} + 3\times\frac{1}{2}=3 \\\\
-&= \underbrace{\left(3\times \frac{1}{4} + 1\times\frac{1}{4}+2\times\frac{1}{2}\right)}\_{\mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ f(\mathbf{x}) \right]} - \underbrace{\left(-1\times\frac{1}{2}-1\times\frac{1}{2}\right)}\_{\mathbb{E}\_{\mathbf{x} \sim q(\mathbf{x};\theta)}\left[f(\mathbf{x})\right]} = 3
-\end{aligned}
-$$
-
-.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
-
----
-
-class: middle
-count: false
-
-Using this result, the Wasserstein GAN algorithm consists in solving the minimax problem:
-$$\theta^\* = \arg \min\_\theta \max\_{\phi:||d(\cdot;\phi)||\_L \leq 1}  \mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ d(\mathbf{x};\phi) \right] - \mathbb{E}\_{\mathbf{x} \sim q(\mathbf{x};\theta)} \left[d(\mathbf{x};\phi)\right]$$$$
-Note that this formulation is very close to the original GANs, except that:
-- The classifier $d:\mathcal{X} \to [0,1]$ is replaced by a critic function $d:\mathcal{X}\to \mathbb{R}$
-  and its output is not interpreted through the cross-entropy loss;
-- There is a strong regularization on the form of $d$.
-  In practice, to ensure 1-Lipschitzness,
-    - Arjovsky et al (2017) propose to clip the weights of the critic at each iteration;
-    - Gulrajani et al (2017) add a regularization term to the loss.
-- As a result, Wasserstein GANs benefit from:
-    - a meaningful loss metric,
-    - improved stability (no mode collapse is observed).
-
----
-
-class: middle
-count: false
-
-.center.width-90[![](figures/lec10/wgan.png)]
-
-.footnote[Credits: Arjovsky et al, [Wasserstein GAN](https://arxiv.org/abs/1701.07875), 2017.]
-
----
-
-class: middle
-count: false
-
-.center.width-70[![](figures/lec10/wgan-gallery.png)]
-
-.footnote[Credits: Arjovsky et al, [Wasserstein GAN](https://arxiv.org/abs/1701.07875), 2017.]
-
----
-
-class: middle
-
-# Numerics of GANs
-
-???
-
-Check https://mitliagkas.github.io/ift6085-2019/ift-6085-lecture-14-notes.pdf
-
----
-
-class: middle
-
-.center[
-.width-45[![](figures/lec10/animation2.gif)]
-.width-45[![](figures/lec10/animation1.gif)]
-]
-
-Solving for saddle points is different from gradient descent.
-- Minimization of scalar functions yields *conservative* vector fields.
-- Min-max saddle point problems may yield **non-conservative** vector fields.
-
-.footnote[Credits: Ferenc Huszár, [GANs are Broken in More than One Way](https://www.inference.vc/my-notes-on-the-numerics-of-gans/), 2017.]
-
-???
-
-A vector field is conservative when it can be expressed as the gradient of a scalar function.
-
----
-
-class: middle
-
-Following the notations of Mescheder et al (2018), the training objective for the two players can be described by an objective function of the form
-$$L(\theta,\phi) = \mathbb{E}\_{p(\mathbf{z})}\left[ f(d(g(\mathbf{z};\theta);\phi)) \right] + \mathbb{E}\_{p(\mathbf{x})}\left[f(-d(\mathbf{x};\phi))\right],$$
-where the goal of the generator is to minimizes the loss, whereas the discriminator tries to maximize it.
-
-If $f(t)=-\log(1+\exp(-t))$, then we recover the original GAN objective (assuming that $d$ outputs the logits).
-
-???
-
-If $f(t)=-t$ and and if we impose the Lipschitz constraint on $d$, then we recover Wassterstein GAN.
-
----
-
-class: middle
-
-Training algorithms can be described as fixed points algorithms that apply some operator $F\_h(\theta,\phi)$ to the parameters values $(\theta,\phi)$.
-
-- For simultaneous gradient descent,
-$$F\_h(\theta,\phi) = (\theta,\phi) + h v(\theta,\phi)$$
-where $v(\theta,\phi)$ denotes the **gradient vector field**
-$$v(\theta,\phi):= \begin{pmatrix}
--\frac{\partial L}{\partial \theta}(\theta,\phi) \\\\
-\frac{\partial L}{\partial \phi}(\theta,\phi)
-\end{pmatrix}$$
-and $h$ is a scalar stepsize.
-- Similarly, alternating gradient descent can be described by an operator $F\_h = F\_{2,h} \circ F\_{1,h}$, where $F\_{1,h}$ and $F\_{2,h}$ perform an update for the generator and discriminator, respectively.
-
----
-
-class: middle
-
-## Local convergence near an equilibrium point
-
-Let us consider the Jacobian $J\_{F\_h}(\theta^\*,\phi^\*)$ at the equilibrium $(\theta^\*,\phi^\*)$:
-- if $J\_{F\_h}(\theta^\*,\phi^\*)$ has eigenvalues with absolute value bigger than 1, the training will generally not converge to $(\theta^\*,\phi^\*)$.
-- if all eigenvalues have absolute value smaller than 1, the training will converge to $(\theta^\*,\phi^\*)$.
-- if all eigenvalues values are on the unit circle, training can be convergent, divergent or neither.
-
-Mescheder et al (2017) show that all eigenvalues can be forced to remain within the unit ball if and only if the stepsize $h$ is made sufficiently small.
-
----
-
-class: middle
-
-.width-90.center[![](figures/lec10/discrete-diverge.png)]
-
-.center[Discrete system: divergence ($h=1$, too large).]
-
-.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
-
----
-
-class: middle
-
-.width-90.center[![](figures/lec10/discrete-converge.png)]
-
-.center[Discrete system: convergence ($h=0.5$, small enough).]
-
-.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
-
----
-
-class: middle
-
-For the (idealized) continuous system
-$$
-\begin{pmatrix}
-\dot{\theta}(t) \\\\
-\dot{\phi}(t)
-\end{pmatrix} =
-\begin{pmatrix}
--\frac{\partial L}{\partial \theta}(\theta,\phi) \\\\
-\frac{\partial L}{\partial \phi}(\theta,\phi)
-\end{pmatrix},$$
-which corresponds to training GANs with infinitely small learning rate $h \to 0$:
-- if all eigenvalues of the Jacobian $v'(\theta^\*,\phi^\*)$ at a stationary point $(\theta^\*,\phi^\*)$ have negative real-part, the continuous system converges locally to $(\theta^\*,\phi^\*)$;
-- if $v'(\theta^\*,\phi^\*)$ has eigenvalues with positive real-part, the continuous system is not locally convergent.
-- if all eigenvalues have zero real-part, it can be convergent, divergent or neither.
-
----
-
-class: middle
-
-.width-90.center[![](figures/lec10/continuous-diverge.png)]
-
-.center[Continuous system: divergence.]
-
-.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
-
----
-
-
-class: middle
-
-.width-90.center[![](figures/lec10/continuous-converge.png)]
-
-.center[Continuous system: convergence.]
-
-.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
-
----
-
-class: middle
-
-## Dirac-GAN: Vanilla GANs
-
-.width-90.center[![](figures/lec10/dirac-unreg.png)]
-
-On the Dirac-GAN toy problem, eigenvalues are $\\{ -f'(0)i, +f'(0)i \\}$.
-Therefore convergence is not guaranteed.
-
-.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
-
----
-
-class: middle
-
-## Dirac-GAN: Wasserstein GANs
-
-.width-90.center[![](figures/lec10/dirac-wgan.png)]
-
-Eigenvalues are $\\{ -i, +i \\}$.
-Therefore convergence is not guaranteed.
-
-.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
-
----
-
-class: middle
-
-## Taming the vector field
-
-.width-90.center[![](figures/lec10/dirac-reg.png)]
-
-A penalty on the squared norm of the gradients of the discriminator results in the regularization
-$$R\_1(\phi) = \frac{\gamma}{2} \mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ || \nabla\_\mathbf{x} d(\mathbf{x};\phi)||^2 \right].$$
-The resulting eigenvalues are $\\{ -\frac{\gamma}{2} \pm \sqrt{\frac{\gamma}{4} - f'(0)^2}\\}$.
-Therefore, for $\gamma>0$, all eigenvalues have negative real part, hence training is locally convergent!
-
-
-.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
-
----
-
-class: middle
-
-.center.width-70[![](figures/lec10/reg1.png)]
-
-.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
-
----
-
-class: middle
-
-.center.width-70[![](figures/lec10/reg2.png)]
-
-.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
-
----
-
-class: middle
-
-.center.width-70[![](figures/lec10/reg3.png)]
-
-.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
-
----
-
-class: middle
-
-# State of the art
-
----
-
-class: middle
-
-.center.width-70[![](figures/lec10/timeline.png)]
-
----
-
-class: middle
-
-## Progressive growing of GANs
-
-.center[
-
-Wasserstein GANs as baseline (Arjovsky et al, 2017) + <br>Gradient Penalty (Gulrajani, 2017) + (quite a few other tricks)
-
-+
-
-]
-
-.center.width-100[![](figures/lec10/progressive-gan.png)]
-
-.center[(Karras et al, 2017)]
-
----
-
-class: middle
-
-.center.width-100[![](figures/lec10/progressive-gan2.png)]
-
-.center[(Karras et al, 2017)]
-
-
----
-
-class: middle, center, black-slide
-
-<iframe width="600" height="450" src="https://www.youtube.com/embed/XOxxPcy5Gr4" frameborder="0" volume="0" allowfullscreen></iframe>
-
-(Karras et al, 2017)
-
----
-
-class: middle
-
-## BigGANs
-
-.center[
-
-Self-attention GANs as baseline (Zhang et al, 2018) + Hinge loss objective (Lim and Ye, 2017; Tran et al, 2017) + Class information to $g$ with class-conditional batchnorm (de Vries et al, 2017) + Class information to $d$ with projection (Miyato and Koyama, 2018) + Half the learning rate of SAGAN, 2 $d$-steps per $g$-step   + Spectral normalization for both $g$ and $d$ + Orthogonal initialization (Saxe et al, 2014) + Large minibatches (2048) + Large number of convolution filters + Shared embedding and hierarchical latent spaces + Orthogonal regularization + Truncated sampling + (quite a few other tricks)
-
-]
-
-<br>
-.center.width-100[![](figures/lec10/biggan.png)]
-.center[(Brock et al, 2018)]
-
----
-
-class: middle, center, black-slide
-
-<iframe width="600" height="450" src="https://www.youtube.com/embed/YY6LrQSxIbc" frameborder="0" allowfullscreen></iframe>
-
-(Brock et al, 2018)
-
----
-
-class: middle
-
-## StyleGAN (v1)
-
-.center[
-
-Progressive GANs as baseline (Karras et al, 2017) + Non-saturating loss instead of WGAN-GP + $R\_1$ regularization (Mescheder et al, 2018) + (quite a few other tricks)
-
-+
-
-.width-60[![](figures/lec10/stylegan.png)]
-
-]
-
-
----
-
-class: middle, center, black-slide
-
-<iframe width="600" height="450" src="https://www.youtube.com/embed/kSLJriaOumA" frameborder="0" allowfullscreen></iframe>
-
-(Karras et al, 2018)
-
----
-
-class: middle
-
-The StyleGAN generator $g$ is so powerful that it can re-generate arbitrary faces.
-
-.center[
-.width-30[![](figures/lec10/stylegan-gilles.png)] &nbsp;
-.width-30[![](figures/lec10/stylegan-damien.png)]
-]
-
----
-
-class: middle
-
-.center[.width-80[![](figures/lec10/stylegan-interpolation.jpg)]]
-
----
-
-class: middle
-
-.center[
-.width-30[![](figures/lec10/stylegan-damien-1.png)] &nbsp;
-.width-30[![](figures/lec10/stylegan-damien-2.png)]
-
-.width-30[![](figures/lec10/stylegan-damien-3.png)] &nbsp;
-.width-30[![](figures/lec10/stylegan-damien-4.png)]
-]
-
----
-
-class: middle 
-
-## StyleGAN (v2)
-
-.width-60.center[![](figures/lec10/styleganv2.png)]
-
-.center[(Karras et al, 2019)]
+(Kingma and Welling, 2013)
 
 ---
 
@@ -811,99 +821,61 @@ class: middle
 
 ---
 
-class: middle
+class: black-slide, middle
 
-.alert[$p(\mathbf{z})$ need not be a random noise distribution.]
+.center[
+<iframe width="640" height="400" src="https://www.youtube.com/embed/XNZIN7Jh3Sg?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
+
+Random walks in latent space. (Alex Radford, 2015)
+
+]
 
 ---
 
-class: middle
+class: black-slide, middle
 
-## Image-to-image translation
+.center[
+.width-60[![](figures/lec10/nvae.gif)]
+
+Random walks in latent space. (Vahdat and Kautz, 2020)
+
+]
+
+---
+
+class: middle, black-slide
 
 .center[
 
-.width-90[![](figures/lec10/cyclegan.jpeg)]
+<iframe  width="640" height="400"  src="https://int8.io/wp-content/uploads/2016/12/output.mp4" frameborder="0" volume="0" allowfullscreen></iframe>
 
-![](figures/lec10/horse2zebra.gif)
+Impersonation by encoding-decoding an unknown face.
 
-.center[CycleGANs (Zhu et al, 2017)]
-
+(Kamil Czarnogórski, 2016)
 ]
 
 ---
 
-class: middle, center, black-slide
-
-<iframe width="600" height="450" src="https://www.youtube.com/embed/3AIpPlzM_qs" frameborder="0" volume="0" allowfullscreen></iframe>
-
-High-resolution image synthesis (Wang et al, 2017)
-
----
-
-class: middle, center, black-slide
-
-<iframe width="600" height="450" src="https://www.youtube.com/embed/p5U4NgVGAwg" frameborder="0" allowfullscreen></iframe>
-
-GauGAN: Changing sketches into photorealistic masterpieces (NVIDIA, 2019)
-
----
-
-class: middle
-
-## Living portraits / deepfakes
+class: middle 
 
 .center[
 
-.width-80[![](figures/lec10/portrait.png)]
+.width-80[![](figures/lec10/vae-styletransfer.jpg)]
 
-Few-Shot Adversarial Learning of Realistic Neural Talking Head Models<br> (Zakharov et al, 2019)
+Voice style transfer [[demo](https://avdnoord.github.io/homepage/vqvae/)]
 
+(van den Oord et al, 2017)
 ]
 
 ---
 
-class: middle, center, black-slide
-
-<iframe width="600" height="450" src="https://www.youtube.com/embed/rJb0MDrT3SE" frameborder="0" allowfullscreen></iframe>
-
-Few-Shot Adversarial Learning of Realistic Neural Talking Head Models<br> (Zakharov et al, 2019)
-
----
-
-class: middle
-
-## Captioning
-
-.width-100[![](figures/lec10/caption1.png)]
-
-.width-100[![](figures/lec10/caption2.png)]
-
-.center[(Shetty et al, 2017)]
-
----
-
-class: middle
-
-## Text-to-image synthesis
+class: middle, black-slide
 
 .center[
 
-.width-100[![](figures/lec10/stackgan1.png)]
+<iframe width="640" height="400" src="https://www.youtube.com/embed/Wd-1WU8emkw?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
 
-.center[(Zhang et al, 2017)]
-
-]
-
----
-
-class: middle
-
-.center[
-
-.width-100[![](figures/lec10/stackgan2.png)]
-
-.center[(Zhang et al, 2017)]
+(Inoue et al, 2017)
 
 ]
 
@@ -911,47 +883,9 @@ class: middle
 
 class: middle
 
-##  Music generation
+.center.width-100[![](figures/lec10/bombarelli.jpeg)]
 
-.center.width-100[![](figures/lec10/musegan.png)]
-
-.center[
-
-<audio src="https://salu133445.github.io/musegan/audio/best_samples.mp3" type="audio/mpeg" controls="" controlslist="nodownload">Your browser does not support the audio element.</audio>
-
-]
-
-.center[MuseGAN (Dong et al, 2018)]
-
----
-
-class: middle
-
-## Accelerating scientific simulators
-
-.grid[
-.kol-2-3[.width-100[![](figures/lec10/calogan1.png)]]
-.kol-1-3[<br>.width-100[![](figures/lec10/calogan2.png)]]
-]
-
-.center[Learning particle physics (Paganini et al, 2017)]
-
-???
-
-https://arxiv.org/pdf/1712.10321.pdf
-
----
-
-class: middle
-
-.center.width-70[![](figures/lec10/cosmo.png)]
-
-.center[Learning cosmological models (Rodriguez et al, 2018)]
-
-???
-
-https://arxiv.org/pdf/1801.09070.pdf
-
+.center[Design of new molecules with desired chemical properties.<br> (Gomez-Bombarelli et al, 2016)]
 
 ---
 
@@ -959,3 +893,13 @@ class: end-slide, center
 count: false
 
 The end.
+
+---
+
+count: false
+
+# References
+
+- Mohamed and Rezende, "[Tutorial on Deep Generative Models](http://auai.org/uai2017/media/tutorials/shakir.pdf)", UAI 2017.
+- Blei et al, "[Variational inference: Foundations and modern methods](https://media.nips.cc/Conferences/2016/Slides/6199-Slides.pdf)", 2016.
+- Kingma and Welling, "[Auto-Encoding Variational Bayes](https://arxiv.org/pdf/1312.6114.pdf)", 2013.

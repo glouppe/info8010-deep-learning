@@ -13,8 +13,8 @@ Some general potential problems could be the following:
 
 ### Agenda
 
-- Project proposal, due by **March 26, 2021 at 23:59**.
-- Project code and report, due by **May 17, 2021 at 23:59**.
+- Project proposal, due by XXX.
+- Project code and report, due by XXX.
 - Project presentations (TBD).
 
 Projects should be submitted through the [Montefiore submission platform](https://submit.montefiore.ulg.ac.be).

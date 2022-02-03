@@ -2,7 +2,7 @@ class: middle, center, title-slide
 
 # Deep Learning
 
-Lecture 11: Uncertainty
+Lecture 11: Generative adversarial networks
 
 <br><br>
 Prof. Gilles Louppe<br>
@@ -10,826 +10,948 @@ Prof. Gilles Louppe<br>
 
 ???
 
-R: check https://drive.google.com/file/d/1G6I1hOxg9zN3PmKqm7sahXw6DvYmyYW3/view?usp=sharing
-R: check https://www.slideshare.net/perone/uncertainty-estimation-in-deep-learning
-R: https://www.gatsby.ucl.ac.uk/~balaji/berkeley-talk-balaji.pdf
-R: langevin dynamics (welling)
-
-R: Balaji tutorial https://twitter.com/balajiln/status/1421519413988053002?s=03
-R: https://emtiyaz.github.io/papers/Nov9_2021_ACML_summer_school.pdf
-
----
-
-# Today
-
-How to model *uncertainty* in deep learning?
-- Uncertainty
-- Aleatoric uncertainty
-- Epistemic uncertainty
-- Adversarial attacks
-
----
-
-class: middle
-
-.center.circle.width-30[![](figures/lec11/carl.jpg)]
-
-.italic["Every time a scientific paper presents a bit of data, it's accompanied
-by an .bold[error bar] – a quiet but insistent reminder that no knowledge is complete or perfect. It's a .bold[calibration of how much we trust what we think we know]."]
-
-.pull-right[Carl Sagan]
-
-???
-
-Knowledge is an artefact. It is a mental construct.
-
-Uncertainty is how much we trust this construct.
-
----
-
-class: middle
-
-# Uncertainty
-
----
-
-class: middle
-
-## Motivation
-
-In May 2016, there was the **first fatality** from an assisted driving system, caused by the perception system confusing the white side of a trailer for bright sky.
-
-.grid[
-.kol-2-3[.center.width-100[![](figures/lec11/crash.png)]]
-.kol-1-3[.center.width-100[![](figures/lec11/crash2.png)]]
-]
-
-
-.footnote[Credits: Kendall and Gal, [What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?](https://papers.nips.cc/paper/7141-what-uncertainties-do-we-need-in-bayesian-deep-learning-for-computer-vision.pdf), 2017.]
-
----
-
-class: middle
-
-.center.width-70[![](figures/lec11/gorillas.png)]
-
-An image classification system erroneously identifies two African Americans as gorillas, raising concerns of racial discrimination.
-
-.footnote[Credits: Kendall and Gal, [What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?](https://papers.nips.cc/paper/7141-what-uncertainties-do-we-need-in-bayesian-deep-learning-for-computer-vision.pdf), 2017.]
-
----
-
-class: middle
-
-.alert[If both these algorithms were able to assign a high level of **uncertainty** to their erroneous predictions, then the systems may have been able to *make better decisions*, and likely avoid disaster.]
-
-.footnote[Credits: Kendall and Gal, [What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?](https://papers.nips.cc/paper/7141-what-uncertainties-do-we-need-in-bayesian-deep-learning-for-computer-vision.pdf), 2017.]
-
----
-
-# Types of uncertainty
-
-## Case 1
-
-We have three different types of images to classify, cat, dog, and cow, some of which may be noisy due to the limitations of the acquisition instrument.
-
-$\Rightarrow$ **Aleatoric uncertainty**.
-
-<br>
-.center.width-90[![](figures/lec11/model-uncertainty2.png)]
-
----
-
-class: middle
-
-## Case 2
-
-What are the model parameters that best explain a given dataset? What model structure should we use? What are the known unknowns and our prior beliefs?
-
-$\Rightarrow$ **Epistemic uncertainty**.
-
-.center[
-.width-45[![](figures/lec1/poly-3.png)]
-.width-45[![](figures/lec1/poly-10.png)]
-]
-
----
-
-class: middle
-
-.center.width-90[![](figures/lec11/types.png)]
-
-.italic["Our model exhibits in (d) increased .bold[aleatoric uncertainty on object boundaries and for objects far from the camera]. .bold[Epistemic uncertainty accounts for our ignorance about which model generated our collected data]. In (e) our model exhibits increased epistemic uncertainty for semantically and visually challenging pixels. The bottom row shows a failure case of the segmentation model when the model fails to segment the footpath due to increased epistemic uncertainty, but not aleatoric uncertainty."]
-
-.footnote[Credits: Kendall and Gal, [What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?](https://papers.nips.cc/paper/7141-what-uncertainties-do-we-need-in-bayesian-deep-learning-for-computer-vision.pdf), 2017.]
-
----
-
-class: middle
-
-## Case 3
-
-Let us consider a neural network model trained with several pictures of dog breeds.
-
-We ask the model to decide on a dog breed using a photo of a cat.
-What would you want the model to do?
-
-$\Rightarrow$ **Out of distribution test data**.
-
-.grid[
-.kol-1-2[.center.width-90[![](figures/lec11/dogs.jpg)]]
-.kol-1-2[.center.width-70[![](figures/lec11/cat.jpg)]]
-]
-
----
-
-class: middle
-
-# Aleatoric uncertainty
-
----
-
-class: middle
-
-**Aleatoric** uncertainty captures noise inherent in the observations.
-- For example, sensor noise or motion noise result in uncertainty.
-- This uncertainty *cannot be reduced* with more data.
-- However, aleatoric could be reduced with better measurements.
-
-
----
-
-class: middle
-
-Aleatoric uncertainty can further be categorized into *homoscedastic* and *heteroscedastic* uncertainties:
-- Homoscedastic uncertainty relates to the uncertainty that a particular task might cause. It stays constant for different inputs.
-- Heteroscedastic uncertainty depends on the inputs to the model, with some inputs potentially having more noisy outputs than others.
-
----
-
-class: middle
-
-.center.width-100[![](figures/lec11/homo-vs-hetero.png)]
-
-.footnote[Credits: Yarin Gal, [Uncertainty in  Deep Learning](https://pdfs.semanticscholar.org/55cd/9e1bb7ce02cd2bb01b364e7b331fcc1ef2c7.pdf), 2016.]
-
----
-
-# Regression with uncertainty
-
-Consider training data $(\mathbf{x}, y) \sim P(X,Y)$, with
-- $\mathbf{x} \in \mathbb{R}^p$,
-- $y \in \mathbb{R}$.
-
-We model aleatoric uncertainty in the output by modelling the conditional distribution as a Normal distribution,
-$$p(y|\mathbf{x}) = \mathcal{N}(y; \mu(\mathbf{x}), \sigma^2(\mathbf{x})),$$
-where $\mu(x)$ and $\sigma^2(\mathbf{x})$ are parametric functions to be learned, such as neural networks.
-
-We do not wish to learn a function $\hat{y} = f(\mathbf{x})$ that would only produce point estimates.
-
----
-
-class: middle
-
-## Homoscedastic aleatoric uncertainty
-
-.center.width-80[![](figures/lec11/homoscedastic.svg)]
-
----
-
-class: middle
-
-We have,
-$$\begin{aligned}
-&\arg \max\_{\theta,\sigma^2} p(\mathbf{d}|\theta,\sigma^2) \\\\
-&= \arg \max\_{\theta,\sigma^2} \prod\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} p(y\_i|\mathbf{x}\_i, \theta,\sigma^2) \\\\
-&= \arg \max\_{\theta,\sigma^2} \prod\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} \frac{1}{\sqrt{2\pi} \sigma} \exp\left(-\frac{(y\_i-\mu(\mathbf{x}\_i))^2}{2\sigma^2}\right) \\\\
-&= \arg \min\_{\theta,\sigma^2} \sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}}  \frac{(y\_i-\mu(\mathbf{x}\_i))^2}{2\sigma^2} + \log(\sigma) + C
-\end{aligned}$$
-
-.exercise[What if $\sigma^2$ was fixed?]
-
----
-
-class: middle
-
-## Heteroscedastic aleatoric uncertainty
-
-.center.width-80[![](figures/lec11/heteroscedastic.svg)]
-
----
-
-class: middle
-
-Same as for the homoscedastic case, except that that $\sigma^2$ is now a function of $\mathbf{x}\_i$:
-$$\begin{aligned}
-&\arg \max\_{\theta} p(\mathbf{d}|\theta) \\\\
-&= \arg \max\_{\theta} \prod\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} p(y\_i|\mathbf{x}\_i, \theta) \\\\
-&= \arg \max\_{\theta} \prod\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} \frac{1}{\sqrt{2\pi} \sigma(\mathbf{x}\_i)} \exp\left(-\frac{(y\_i-\mu(\mathbf{x}\_i))^2}{2\sigma^2(\mathbf{x}\_i)}\right) \\\\
-&= \arg \min\_{\theta} \sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}}  \frac{(y\_i-\mu(\mathbf{x}\_i))^2}{2\sigma^2(\mathbf{x}\_i)} + \log(\sigma(\mathbf{x}\_i)) + C
-\end{aligned}$$
-
-.exercise[What is the purpose of $2\sigma^2(\mathbf{x}\_i)$? What about $\log(\sigma(\mathbf{x}\_i))$?]
-
----
-
-# Multimodality
-
-Modelling $p(y|\mathbf{x})$ as a unimodal Gaussian is not always a good idea since the conditional distribution may be multimodal.
-
-<br>
-
-.center.width-90[![](figures/lec11/multimodality.png)]
-.caption[(and it would be even worse to have only point estimates for $y$!)]
-
----
-
-class: middle
-
-## Gaussian mixture model
-
-A **Gaussian mixture model** (GMM) defines instead $p(y|\mathbf{x})$ as a mixture of $K$ Gaussian components,
-$$p(y|\mathbf{x}) = \sum\_{k=1}^K \pi\_k \mathcal{N}(y;\mu\_k, \sigma\_k^2),$$
-where $0 \leq \pi\_k \leq 1$ for all $k$ and $\sum\_{k=1}^K \pi\_k = 1$.
-
-.center.width-60[![](figures/lec11/gmm.jpg)]
-
----
-
-class: middle
-
-## Mixture density network
-
-A **mixture density network** is a neural network implementation of the Gaussian mixture model.
-
-.center.width-100[![](figures/lec11/mdn.svg)]
-
----
-
-class: middle
-
-## Illustration
-
-Let us consider training data generated randomly as
-$$y\_i = \mathbf{x}\_i + 0.3\sin(4\pi \mathbf{x}\_i) + \epsilon\_i$$
-with $\epsilon\_i \sim \mathcal{N}$.
-
----
-
-class: middle
-
-.center[
-
-.width-60[![](figures/lec11/illus1.png)]
-
-The data can be fit with a 2-layer network producing point estimates for $y$.
-[[demo](http://otoro.net/ml/mixture/index.html)]
-
-]
-
-.footnote[Credits: David Ha, [Mixture Density Networks](http://blog.otoro.net/2015/06/14/mixture-density-networks/), 2015.]
-
----
-
-class: middle
-
-.center[
-
-.width-60[![](figures/lec11/illus2.png)]
-
-If we flip $\mathbf{x}\_i$ and $y\_i$, the network faces issues since for each input, there are multiple outputs that can work. It produces some sort of average of the correct values.
-[[demo](http://otoro.net/ml/mixture/inverse.html)]
-
-]
-
-.footnote[Credits: David Ha, [Mixture Density Networks](http://blog.otoro.net/2015/06/14/mixture-density-networks/), 2015.]
-
----
-
-class: middle
-
-.center[
-
-.width-60[![](figures/lec11/illus3.png)]
-
-A mixture density network models the data correctly, as it predicts for each input a distribution for the output, rather than a point estimate.
-[[demo](http://otoro.net/ml/mixture/mixture.html)]
-
-]
-
-.footnote[Credits: David Ha, [Mixture Density Networks](http://blog.otoro.net/2015/06/14/mixture-density-networks/), 2015.]
-
-
----
-
-
-class: middle
-
-# Epistemic uncertainty
-
----
-
-class: middle
-
-**Epistemic** uncertainty accounts for uncertainty in the model or in its parameters.
-- It captures our *ignorance* about which model generated the collected data.
-- It can be explained away given enough data (why?).
-- It is also often referred to as *model uncertainty*.
-
-.footnote[Credits: Kendall and Gal, [What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?](https://papers.nips.cc/paper/7141-what-uncertainties-do-we-need-in-bayesian-deep-learning-for-computer-vision.pdf), 2017.]
-
----
-
-# Bayesian neural networks
-
-To capture epistemic uncertainty in a neural network, we model our ignorance with a prior distribution $p(\mathbf{\omega})$ over its weights.
-
-Then we invoke Bayes for making predictions.
-
-<br><br>
-.center[
-.width-60[![](figures/lec11/bnn.png)] &nbsp;&nbsp;&nbsp;&nbsp; .circle.width-30[![](figures/lec11/thomas.png)]
-]
-
----
-
-class: middle
-
-- The prior predictive distribution at $\mathbf{x}$ is given by integrating over all possible weight configurations,
-$$p(y|\mathbf{x}) = \int p(y|\mathbf{x}, \mathbf{\omega}) p(\mathbf{\omega}) d\mathbf{\omega}.$$
-- Given training data $\mathbf{d}=\\{(\mathbf{x}\_1, y\_1), ..., (\mathbf{x}\_N, y\_N)\\}$ a Bayesian update results in the posterior
-$$p(\mathbf{\omega}|\mathbf{d}) = \frac{p(\mathbf{d}|\mathbf{\omega})p(\mathbf{\omega})}{p(\mathbf{d})}$$
-where the likelihood $p(\mathbf{d}|\omega) = \prod\_i p(y\_i | \mathbf{x}\_i, \omega).$
-- The posterior predictive distribution is then given by
-$$p(y|\mathbf{x},\mathbf{d}) = \int p(y|\mathbf{x}, \mathbf{\omega}) p(\mathbf{\omega}|\mathbf{d}) d\mathbf{\omega}.$$
-
----
-
-class: middle
-
-Bayesian neural networks are *easy to formulate*,  but notoriously **difficult** to perform inference in.
-
-- This stems mainly from the fact that the marginal $p(\mathbf{d})$ is intractable to evaluate, which results in the posterior $p(\mathbf{\omega}|\mathbf{d})$ not being tractable either.
-- Therefore, we must rely on approximations.
-
----
-
-# Variational inference
-
-Variational inference can be used for building an approximation $q(\mathbf{\omega};\nu)$ of the posterior $p(\mathbf{\omega}|\mathbf{d})$.
-
-As before (see Lecture 9), we can show that minimizing
-$$\text{KL}(q(\mathbf{\omega};\nu) || p(\mathbf{\omega}|\mathbf{d}))$$
-with respect to the variational parameters $\nu$, is identical to maximizing the evidence lower bound objective (ELBO)
-$$\text{ELBO}(\nu) = \mathbb{E}\_{q(\mathbf{\omega};\nu)} \left[\log p(\mathbf{d}| \mathbf{\omega})\right] - \text{KL}(q(\mathbf{\omega};\nu) || p(\mathbf{\omega})).$$
-
----
-
-class: middle
-
-The integral in the ELBO is not tractable for almost all $q$, but it can be minimized with stochastic gradient descent:
-
-1. Sample $\hat{\omega} \sim q(\mathbf{\omega};\nu)$.
-2. Do one step of maximization with respect to $\nu$ on
-$$\hat{L}(\nu) = \log p(\mathbf{d}|\hat{\omega}) - \text{KL}(q(\mathbf{\omega};\nu) || p(\mathbf{\omega})) $$
-
-In the context of Bayesian neural networks, this procedure is also known as **Bayes by backprop** (Blundell et al, 2015).
-
----
-
-# Dropout
-
-Dropout is an **empirical** technique that was first proposed to avoid overfitting in neural networks.
-
-At *each training step* (i.e., for each sample within a mini-batch):
-- Remove each node in the network with a probability $p$.
-- Update the weights of the remaining nodes with backpropagation.
-
-.center.width-70[![](figures/lec11/dropout1.png)]
-
----
-
-class: middle
-
-At **test time**, either:
-- Make predictions using the trained network *without* dropout but rescaling the weights by the dropout probability $p$ (fast and standard).
-- Sample $T$ neural networks using dropout and average their predictions (slower but better principled).
-
----
-
-class: middle, center
-
-.width-100[![](figures/lec11/dropout2.png)]
-
----
-
-class: middle
-
-## Why does dropout work?
-- It makes the learned weights of a node less sensitive to the weights of the other nodes.
-- This forces the network to learn several independent representations of the patterns and thus decreases overfitting.
-- It approximates **Bayesian model averaging**.
-
----
-
-class: middle
-
-## Dropout does variational inference
-
-What variational family $q$ would correspond to dropout?
-
-- Let us split the weights $\omega$ per layer,
-$\omega = \\{ \mathbf{W}\_1, ..., \mathbf{W}\_L \\},$
-where $\mathbf{W}\_i$ is further split per unit
-$\mathbf{W}\_i = \\{ \mathbf{w}\_{i,1}, ..., \mathbf{w}\_{i,q\_i} \\}.$
-- Variational parameters $\nu$ are split similarly into $\nu = \\{ \mathbf{M}\_1, ..., \mathbf{M}\_L \\}$, with $\mathbf{M}\_i = \\{ \mathbf{m}\_{i,1}, ..., \mathbf{m}\_{i,q\_i} \\}$.
-- Then, the proposed $q(\omega;\nu)$ is defined as follows:
-$$
-\begin{aligned}
-q(\omega;\nu) &= \prod\_{i=1}^L q(\mathbf{W}\_i; \mathbf{M}\_i) \\\\
-q(\mathbf{W}\_i; \mathbf{M}\_i)  &= \prod\_{k=1}^{q\_i} q(\mathbf{w}\_{i,k}; \mathbf{m}\_{i,k}) \\\\
-q(\mathbf{w}\_{i,k}; \mathbf{m}\_{i,k}) &= p\delta\_0(\mathbf{w}\_{i,k}) + (1-p)\delta\_{\mathbf{m}\_{i,k}}(\mathbf{w}\_{i,k})
-\end{aligned}
-$$
-where $\delta\_a(x)$ denotes a (multivariate) Dirac distribution centered at $a$.
-
----
-
-class: middle
-
-Given the previous definition for $q$, sampling parameters $\hat{\omega} = \\{ \hat{\mathbf{W}}\_1, ..., \hat{\mathbf{W}}\_L \\}$ is done as follows:
-- Draw binary  $z\_{i,k} \sim \text{Bernoulli}(1-p)$ for each layer $i$ and unit $k$.
-- Compute $\hat{\mathbf{W}}\_i = \mathbf{M}\_i \text{diag}([z\_{i,k}]\_{k=1}^{q\_i})$,
-where $\mathbf{M}\_i$ denotes a matrix composed of the columns $\mathbf{m}\_{i,k}$.
-
-.grid[
-.kol-3-5[
-That is, $\hat{\mathbf{W}}\_i$ are obtained by setting columns of $\mathbf{M}\_i$ to zero with probability $p$.
-
-This is **strictly equivalent to dropout**, i.e. removing units from the network with probability $p$.
-
-]
-.kol-2-5[.center.width-100[![](figures/lec11/variational-dropout.png)]]
-]
-
----
-
-class: middle
-
-Therefore, one step of stochastic gradient descent on the ELBO becomes:
-1. Sample $\hat{\omega} \sim q(\mathbf{\omega};\nu)$ $\Leftrightarrow$ Randomly set units of the network to zero $\Leftrightarrow$ Dropout.
-2. Do one step of maximization with respect to $\nu = \\{ \mathbf{M}\_i \\}$ on
-$$\hat{L}(\nu) = \log p(\mathbf{d}|\hat{\omega}) - \text{KL}(q(\mathbf{\omega};\nu) || p(\mathbf{\omega})).$$
-
----
-
-class: middle
-
-Maximizing $\hat{L}(\nu)$ is equivalent to minimizing
-$$-\hat{L}(\nu) = -\log p(\mathbf{d}|\hat{\omega}) + \text{KL}(q(\mathbf{\omega};\nu) || p(\mathbf{\omega})) $$
-
-This is also equivalent to one minimization step of a standard classification or regression objective:
-- The first term is the typical objective (such as the cross-entropy).
-- The second term forces $q$ to remain close to the prior $p(\omega)$.
-    - If $p(\omega)$ is Gaussian, minimizing the $\text{KL}$ is equivalent to $\ell\_2$ regularization.
-    - If $p(\omega)$ is Laplacian, minimizing the $\text{KL}$ is equivalent to  $\ell\_1$ regularization.
-
----
-
-class: middle
-
-Conversely, this shows that when **training a network with dropout** with a standard classification or regression objective, one *is actually implicitly doing variational inference* to match the posterior distribution of the weights.
-
----
-
-class: middle
-
-## Uncertainty estimates from dropout
-
-Proper epistemic uncertainty estimates at $\mathbf{x}$ can be obtained in a principled way using Monte-Carlo integration:
-- Draw $T$ sets of network parameters $\hat{\omega}\_t$ from $q(\omega;\nu)$.
-- Compute the predictions for the $T$ networks, $\\{ f(\mathbf{x};\hat{\omega}\_t) \\}\_{t=1}^T$.
-- Approximate the predictive mean and variance as follows:
-$$
-\begin{aligned}
-\mathbb{E}\_{p(y|\mathbf{x},\mathbf{d})}\left[y\right] &\approx \frac{1}{T} \sum\_{t=1}^T f(\mathbf{x};\hat{\omega}\_t) \\\\
-\mathbb{V}\_{p(y|\mathbf{x},\mathbf{d})}\left[y\right] &\approx \sigma^2 + \frac{1}{T} \sum\_{t=1}^T f(\mathbf{x};\hat{\omega}\_t)^2 - \hat{\mathbb{E}}\left[y\right]^2
-\end{aligned}
-$$
-
----
-
-class: middle, center
-
-.center.width-80[![](figures/lec11/gal-demo.png)]
-
-Yarin Gal's [demo](http://mlg.eng.cam.ac.uk/yarin/blog_3d801aa532c1ce.html).
-
----
-
-class: middle
-
-## Pixel-wise depth regression
-
-.center.width-80[![](figures/lec11/depth-regression.png)]
-
-.footnote[Credits: Kendall and Gal, [What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?](https://papers.nips.cc/paper/7141-what-uncertainties-do-we-need-in-bayesian-deep-learning-for-computer-vision.pdf), 2017.]
-
----
-
-# Bayesian Infinite Networks
-
-Consider the 1-layer MLP with a hidden layer of size $q$ and a bounded activation function $\sigma$:
-
-$$\begin{aligned}
-f(x) &= b + \sum\_{j=1}^q v\_j h\_j(x)\\\\
-h\_j(x) &= \sigma\left(a\_j + \sum\_{i=1}^p u\_{i,j}x\_i\right)
-\end{aligned}$$
-
-Assume Gaussian priors $v\_j \sim \mathcal{N}(0, \sigma\_v^2)$, $b \sim \mathcal{N}(0, \sigma\_b^2)$, $u\_{i,j} \sim \mathcal{N}(0, \sigma\_u^2)$ and $a\_j \sim \mathcal{N}(0, \sigma\_a^2)$.
-
----
-
-class: middle
-
-For a fixed value $x^{(1)}$, let us consider the prior distribution of $f(x^{(1)})$ implied by
-the prior distributions for the weights and biases.
-
-We have
-$$\mathbb{E}[v\_j h\_j(x^{(1)})] = \mathbb{E}[v\_j] \mathbb{E}[h\_j(x^{(1)})] = 0,$$
-since $v\_j$ and $h\_j(x^{(1)})$ are statistically independent and $v\_j$ has zero mean by hypothesis.
-
-The variance of the contribution of each hidden unit $h\_j$ is
-$$\begin{aligned}
-\mathbb{V}[v\_j h\_j(x^{(1)})] &= \mathbb{E}[(v\_j h\_j(x^{(1)}))^2] - \mathbb{E}[v\_j h\_j(x^{(1)})]^2 \\\\
-&= \mathbb{E}[v\_j^2] \mathbb{E}[h\_j(x^{(1)})^2] \\\\
-&= \sigma\_v^2 \mathbb{E}[h\_j(x^{(1)})^2],
-\end{aligned}$$
-which must be finite since $h\_j$ is bounded by its activation function.
-
-We define $V(x^{(1)}) = \mathbb{E}[h\_j(x^{(1)})^2]$, and is the same for all $j$.
-
----
-
-class: middle
-
-## What if $q \to \infty$?
-
-By the Central Limit Theorem, as $q \to \infty$, the total contribution
-of the hidden units, $\sum\_{j=1}^q v\_j h\_j(x)$, to the value of $f(x^{(1)})$ becomes a Gaussian with variance $q \sigma_v^2 V(x^{(1)})$.
-
-The bias $b$ is also Gaussian, of variance $\sigma\_b^2$, so for large $q$, the prior
-distribution $f(x^{(1)})$ is a Gaussian of variance $\sigma\_b^2 + q \sigma_v^2 V(x^{(1)})$.
-
----
-
-class: middle
-
-Accordingly, for $\sigma\_v = \omega\_v q^{-\frac{1}{2}}$, for some fixed $\omega\_v$, the prior $f(x^{(1)})$ converges to a Gaussian of mean zero and variance $\sigma\_b^2 + \omega\_v^2 \sigma_v^2 V(x^{(1)})$ as $q \to \infty$.
-
-For two or more fixed values $x^{(1)}, x^{(2)}, ...$, a similar argument shows that,
-as $q \to \infty$, the joint distribution of the outputs converges to a multivariate Gaussian
-with means of zero and covariances of
-$$\begin{aligned}
-\mathbb{E}[f(x^{(1)})f(x^{(2)})] &= \sigma\_b^2 + \sum\_{j=1}^q \sigma\_v^2 \mathbb{E}[h\_j(x^{(1)}) h\_j(x^{(2)})] \\\\
-&= \sigma\_b^2 + \omega_v^2 C(x^{(1)}, x^{(2)})
-\end{aligned}$$
-where $C(x^{(1)}, x^{(2)}) = \mathbb{E}[h\_j(x^{(1)}) h\_j(x^{(2)})]$ and is the same for all $j$.
-
----
-
-class: middle
-
-This result states that for any set of fixed points $x^{(1)}, x^{(2)}, ...$,
-the joint distribution of $f(x^{(1)}), f(x^{(2)}), ...$ is a multivariate
-Gaussian.
-
-In other words,  the *infinitely wide 1-layer MLP* converges towards
-a  **Gaussian process**.
-
-<br>
-
-.center.width-80[![](figures/lec11/in.png)]
-
-.center[(Neal, 1995)]
-
----
-
-class: middle
-
-# Adversarial attacks
-
----
-
-class: middle
-
-## Intriguing properties of neural networks
-
-.italic["We can cause the network to *misclassify an image by applying a certain hardly perceptible perturbation*, which is found
-by maximizing the network’s prediction error. In addition, the specific nature of
-these perturbations is **not a random artifact of learning**: the same perturbation can
-cause a different network, that was trained on a different subset of the dataset, to
-misclassify the same input."
-
-The existence of
-the adversarial negatives appears to be in *contradiction with the network’s ability to achieve high
-generalization performance*. Indeed, if the network can generalize well, how can it be confused
-by these adversarial negatives, which are indistinguishable from the regular examples?"]
-
-.pull-right[(Szegedy et al, 2013)]
-
----
-
-# Attacks
-
-<br><br>
-
-.center.width-100[![](figures/lec11/piggie.png)]
-
----
-
-class: middle
-
-.center.width-60[![](figures/lec11/negative1.png)]
-
-.center[(Left) Original images. (Middle) Adversarial noise. (Right) Modified images.<br>
-All are classified as 'Ostrich'. ]
-
-.footnote[Credits: Szegedy et al, [Intriguing properties of neural networks](https://arxiv.org/abs/1312.6199), 2013.]
-
----
-
-class: middle
-
-## Fooling deep structured prediction models
-
-.center.width-80[![](figures/lec11/houdini1.png)]
-
-.center.width-80[![](figures/lec11/houdini2.png)]
-
-.center[(Cisse et al, 2017)]
-
----
-
-class: middle, black-slide
-
-## Adversarial examples in the physical world
-
-.center[
-<iframe width="600" height="450" src="https://www.youtube.com/embed/zQ_uMenoBCk" frameborder="0" volume="0" allowfullscreen></iframe>
-]
-
----
-
-class: middle, center, black-slide
-
-<iframe width="600" height="450" src="https://www.youtube.com/embed/oeQW5qdeyy8" frameborder="0" volume="0" allowfullscreen></iframe>
-
----
-
-
-class: middle, center, black-slide
-
-<iframe width="600" height="450" src="https://www.youtube.com/embed/YXy6oX1iNoA" frameborder="0" volume="0" allowfullscreen></iframe>
-
----
-
-class: middle
-
-## Creating adversarial examples
-
-"The deep stack of non-linear layers are a way for the model to encode a non-local
-generalization prior over the input space. In other words, it is assumed that is
-possible for the output unit to assign probabilities to regions of the input
-space that contain no training examples in their vicinity.
-
-It is implicit in such arguments that local generalization—in the very proximity
-of the training examples—works as expected. And that in particular, for a small
-enough radius $\epsilon > 0$ in the vicinity of a given training input
-$\mathbf{x}$, an $\mathbf{x} + \mathbf{r}$ satisfying $||\mathbf{r}|| < \epsilon$ will
-get assigned a high probability of the correct class by the model."
-
-.pull-right[(Szegedy et al, 2013)]
-
----
-
-class: middle
-
-$$\begin{aligned}
-\min\_{\mathbf{r}}&\, \ell(y\_\text{target}, f(\mathbf{x}+\mathbf{r};\theta))\\\\
-\text{subject to}&\, ||\mathbf{r}||\leq L
-\end{aligned}$$
+R: https://stylegan-nada.github.io/
+R: https://replicate.ai/yuval-alaluf/restyle_encoder
+R: https://colab.research.google.com/drive/1eYlenR1GHPZXt-YuvXabzO9wfh9CWY36
+R: https://colab.research.google.com/github/ekgren/StructuredDreaming/blob/main/colabs/Structured_Dreaming_Styledreams_faces.ipynb
+R: https://colab.research.google.com/github/hila-chefer/TargetCLIP/blob/main/TargetCLIP_CLIP_guided_image_essence_transfer.ipynb
 
 ---
 
 class: middle 
 
-## A security threat
+.center.width-40[![](figures/lec11/christies.jpg)]
 
-Adversarial attacks pose a **security threat** to machine learning systems deployed in the real world.
+.italic["Generative adversarial networks is the coolest idea in deep learning in the last 20 years."] 
 
-Examples include:
-- fooling real classifiers trained by remotely hosted API (e.g., Google),
-- fooling malware detector networks,
-- obfuscating speech data,
-- displaying adversarial examples in the physical world and fool systems that perceive them through a camera.
+.pull-right[Yann LeCun, 2018.]
 
 ---
 
-class: middle, black-slide
+# Today
 
-.center.width-50[![](figures/lec11/stop.png)]
+Learn a model of the data.
 
-.center[What if adversarial patches are put on road signs?<br> Say, for a self-driving car?]
-
----
-
-# Origins of the vulnerability
-
-## Conjecture 1: Overfitting
-
-Natural images are within the correct regions, but are also sufficiently close to the decision boundary.
-
-.center.width-70[![](figures/lec11/conjecture1.png)]
+- Generative adversarial networks
+- .inactive[Wasserstein GANs]
+- Numerics of GANs
+- State of the art
+- Applications
 
 ---
 
 class: middle
 
-## Conjecture 2: Excessive linearity
+# Generative adversarial networks
 
-The decision boundary for most ML models, including neural networks, are near piecewise linear.
+---
 
-Then, for an adversarial sample $\hat{\mathbf{x}}$, its dot product with a weight vector $\mathbf{w}$ is such that
-$$\mathbf{w}^T \hat{\mathbf{x}} = \mathbf{w}^T\mathbf{x} + \mathbf{w}^T\mathbf{r}.$$
-- The adversarial perturbation causes the activation to grow by $\mathbf{w}^T\mathbf{r}$.
-- For $\mathbf{r} = \epsilon \text{sign}(\mathbf{w})$, if $\mathbf{w}$ has $n$ dimensions and the average magnitude of an element is $m$, then the activation will grow by $\epsilon mn$.
-- Therefore, for high dimensional problems, we can make
-many infinitesimal changes to the input that add up to one large change to the output.
+class: middle
+
+.center.width-45[![](figures/lec11/catch-me.jpg)]
+
+.center[.width-30[![](figures/lec11/check.jpg)] .width-30[![](figures/lec11/frank.jpg)]]
+
+---
+
+class: middle
+
+## A two-player game
+
+In **generative adversarial networks** (GANs), the task of learning a generative model is expressed as a two-player zero-sum game between two networks.
+
+.center.width-100[![](figures/lec11/gan-setup.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+The first network is a *generator*  $g(\cdot;\theta) : \mathcal{Z} \to \mathcal{X}$, mapping a latent space equipped with a prior distribution $p(\mathbf{z})$ to the data space, thereby inducing a distribution
+$$\mathbf{x} \sim q(\mathbf{x};\theta) \Leftrightarrow \mathbf{z} \sim p(\mathbf{z}), \mathbf{x} = g(\mathbf{z};\theta).$$
+
+The second network $d(\cdot; \phi) : \mathcal{X} \to [0,1]$ is a **classifier** trained to distinguish between true samples $\mathbf{x} \sim p(\mathbf{x})$ and generated samples $\mathbf{x} \sim q(\mathbf{x};\theta)$.
+
+---
+
+class: middle
+
+For a fixed generator $g$, the classifier $d$ can be trained by generating a two-class training set
+$$\mathbf{d} = \\\{ (\mathbf{x}\_1, y=1), ..., (\mathbf{x}\_N, y=1), (g(\mathbf{z}\_1; \theta), y=0), ..., (g(\mathbf{z}\_N; \theta), y=0)  \\\},$$
+where $\mathbf{x}\_i \sim p(\mathbf{x})$ and $\mathbf{z}\_i \sim p(\mathbf{z})$, and minimizing the cross-entropy loss
+$$\begin{aligned}
+\mathcal{L}(\phi) &= -\frac{1}{2N} \sum\_{i=1}^N \left[ \log d(\mathbf{x}\_i; \phi) + \log\left(1 - d(g(\mathbf{z}\_i;\theta); \phi)\right) \right] \\\\
+&\approx -\mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ \log d(\mathbf{x};\phi) \right] - \mathbb{E}\_{\mathbf{z} \sim p(\mathbf{z})}\left[ \log (1-d(g(\mathbf{z};\theta);\phi)) \right].
+\end{aligned}$$
+
+However, the situation is slightly more complicated since we also want to train $g$ to fool the discriminator, which is equivalent to maximize $d$'s loss.
+
+---
+
+
+class: middle
+
+## Game analysis
+
+Let us consider the **value function** 
+$$V(\phi, \theta) = \mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ \log d(\mathbf{x};\phi) \right] + \mathbb{E}\_{\mathbf{z} \sim p(\mathbf{z})}\left[ \log (1-d(g(\mathbf{z};\theta);\phi)) \right].$$
+
+- For a fixed $g$, $V(\phi, \theta)$ is high if $d$ is good at recognizing true from generated samples.
+
+- If $d$ is the best classifier given $g$, and if $V$ is high, then this implies that
+the generator is bad at reproducing the data distribution.
+
+- Conversely, $g$ will be a good generative model if $V$ is low when $d$ is a perfect opponent.
+
+Therefore, the ultimate goal is
+$$\theta^\* = \arg \min\_\theta \max\_\phi V(\phi, \theta).$$
 
 ???
 
-See also https://arxiv.org/pdf/1608.07690.pdf
+Switch to the iPad
 
 ---
 
 class: middle
 
-.center.width-70[![](figures/lec11/epsilon-response.png)]
-
-.center[Empirical observation: neural networks produce nearly linear responses over $\epsilon$.]
-
----
-
-# Defenses
-
-- Data augmentation
-- Adversarial training
-- Denoising / smoothing
+For a generator $g$ fixed at $\theta$, the classifier $d$ with parameters $\phi^\*\_\theta$ is optimal if and only if
+$$\forall \mathbf{x}, d(\mathbf{x};\phi^\*\_\theta) = \frac{p(\mathbf{x})}{q(\mathbf{x};\theta) + p(\mathbf{x})}.$$
 
 ---
 
 class: middle
 
-## Denoising
+Therefore,
+$$\begin{aligned}
+&\min\_\theta \max\_\phi V(\phi, \theta) = \min\_\theta V(\phi^\*\_\theta, \theta) \\\\
+&= \min\_\theta \mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ \log \frac{p(\mathbf{x})}{q(\mathbf{x};\theta) + p(\mathbf{x})} \right] + \mathbb{E}\_{\mathbf{x} \sim q(\mathbf{x};\theta)}\left[ \log \frac{q(\mathbf{x};\theta)}{q(\mathbf{x};\theta) + p(\mathbf{x})} \right] \\\\
+&= \min\_\theta \text{KL}\left(p(\mathbf{x}) || \frac{p(\mathbf{x}) + q(\mathbf{x};\theta)}{2}\right) \\\\
+&\quad\quad\quad+ \text{KL}\left(q(\mathbf{x};\theta) || \frac{p(\mathbf{x}) + q(\mathbf{x};\theta)}{2}\right) -\log 4\\\\
+&= \min\_\theta 2\, \text{JSD}(p(\mathbf{x}) || q(\mathbf{x};\theta)) - \log 4
+\end{aligned}$$
+where $\text{JSD}$ is the Jensen-Shannon divergence.
 
-- Train the network to remove adversarial perturbations before using the input.
-- The winning team of the defense track of the NIPS 2017 competition trained a denoising U-Net to remove adversarial noise.
+---
+
+class: middle
+
+In summary,
+$$
+\begin{aligned}
+\theta^\* &= \arg \min\_\theta \max\_\phi V(\phi, \theta) \\\\
+&= \arg \min\_\theta \text{JSD}(p(\mathbf{x}) || q(\mathbf{x};\theta)).
+\end{aligned}$$
+
+Since $\text{JSD}(p(\mathbf{x}) || q(\mathbf{x};\theta))$ is minimum if and only if
+$$p(\mathbf{x}) = q(\mathbf{x};\theta)$$ for all $\mathbf{x}$, this proves that the minimax solution
+corresponds to a generative model that perfectly reproduces the true data distribution.
+
+---
+
+class: middle
+
+## Learning process
+
+In practice, the minimax solution is approximated using *alternating* stochastic gradient descent:
+$$
+\begin{aligned}
+\theta &\leftarrow \theta - \gamma \nabla\_\theta V(\phi, \theta) \\\\
+\phi &\leftarrow \phi + \gamma \nabla\_\phi V(\phi, \theta),
+\end{aligned}
+$$
+where gradients are estimated with Monte Carlo integration.
+
+???
+
+- For one step on $\theta$, we can optionally take $k$ steps on $\phi$, since we need the classifier to remain near optimal.
+- Note that to compute $\nabla\_\theta V(\phi, \theta)$, it is necessary to backprop all the way through $d$ before computing the partial derivatives with respect to $g$'s internals.
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec11/learning.png)]
+
+.footnote[Credits: Goodfellow et al, [Generative Adversarial Networks](https://arxiv.org/abs/1406.2661), 2014.]
+
+---
+
+class: middle, center
+
+.width-100[![](figures/lec11/ganlab.png)]
+
+[[Demo](https://poloclub.github.io/ganlab)]
+
+
+
+---
+
+class: middle
+
+## Results
+
+.center.width-90[![](figures/lec11/gan-gallery.png)]
+
+.footnote[Credits: Goodfellow et al, [Generative Adversarial Networks](https://arxiv.org/abs/1406.2661), 2014.]
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec11/bedrooms1.png)]
+
+.footnote[Credits: Radford et al, [Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks](https://arxiv.org/abs/1511.06434), 2015.]
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec11/bedrooms2.png)]
+
+.footnote[Credits: Radford et al, [Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks](https://arxiv.org/abs/1511.06434), 2015.]
+
+
+---
+
+class: middle
+
+## Open problems
+
+Training a standard GAN often results in pathological behaviors:
+
+- *Oscillations* without convergence: contrary to standard loss minimization,
+  alternating stochastic gradient descent has no guarantee of convergence.
+- **Vanishing gradients**: when the classifier $d$ is too good, the value function saturates
+  and we end up with no gradient to update the generator.
+- *Mode collapse*: the generator $g$ models very well a small sub-population,
+  concentrating on a few modes of the data distribution.
+- Performance is also difficult to assess in practice.
 
 <br>
+.center.width-100[![](figures/lec11/mode-collapse.png)]
 
-.center.width-100[![](figures/lec11/dunet.png)]
-
-.footnote[Credits: Liao et al, [Defense against Adversarial Attacks Using High-Level Representation Guided Denoiser](http://bigml.cs.tsinghua.edu.cn/~jun/pub/adversarial-defense.pdf), 2017.]
-
-???
-
-http://bigml.cs.tsinghua.edu.cn/~jun/pub/adversarial-defense.pdf
+.center[Mode collapse (Metz et al, 2016)]
 
 ---
 
 class: middle
 
-## Failed defenses
+## Cabinet of curiosities
 
-.italic["In this paper we evaluate ten proposed defenses and **demonstrate
-that none of them are able to withstand a white-box attack**. We do
-this by constructing defense-specific loss functions that we minimize
-with a strong iterative attack algorithm. With these attacks, on
-CIFAR an adversary can create imperceptible adversarial examples
-for each defense.
+While early results (2014-2016) were already impressive, a close inspection of the fake samples distribution $q(\mathbf{x};\theta)$ often revealed fundamental issues highlighting architectural limitations.
 
-By studying these ten defenses, we have drawn two lessons: existing
-defenses lack thorough security evaluations, and adversarial
-examples are much more difficult to detect than previously recognized."]
+---
 
-.pull-right[(Carlini and Wagner, 2017)]
+class: middle
 
-<br><br>
+.center.width-90[![](figures/lec11/curiosity-cherrypicks.png)]
 
-.italic["No method of defending against adversarial examples is yet completely satisfactory. This remains a rapidly evolving research area."]
+.center[Cherry-picks]
 
-.pull-right[(Kurakin, Goodfellow and Bengio, 2018)]
+.footnote[Credits: Ian Goodfellow, 2016.]
+
+---
+
+class: middle
+
+.center.width-90[![](figures/lec11/curiosity-counting.png)]
+
+.center[Problems with counting]
+
+.footnote[Credits: Ian Goodfellow, 2016.]
+
+---
+
+class: middle
+
+.center.width-90[![](figures/lec11/curiosity-perspective.png)]
+
+.center[Problems with perspective]
+
+.footnote[Credits: Ian Goodfellow, 2016.]
+
+---
+
+class: middle
+
+.center.width-90[![](figures/lec11/curiosity-global.png)]
+
+.center[Problems with global structures]
+
+.footnote[Credits: Ian Goodfellow, 2016.]
+
+---
+
+class: middle, inactive
+count: false
+
+# .inactive[Wasserstein GANs]
+
+(optional)
+
+---
+
+class: middle
+count: false
+
+## Return of the Vanishing Gradients
+
+For most non-toy data distributions, the fake samples $\mathbf{x} \sim q(\mathbf{x};\theta)$
+may be so bad initially that the response of $d$ saturates.
+
+At the limit, when $d$ is perfect given the current generator $g$,
+$$\begin{aligned}
+d(\mathbf{x};\phi) &= 1, \forall \mathbf{x} \sim p(\mathbf{x}), \\\\
+d(\mathbf{x};\phi) &= 0, \forall \mathbf{x} \sim q(\mathbf{x};\theta).
+\end{aligned}$$
+Therefore,
+$$V(\phi, \theta) =  \mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ \log d(\mathbf{x};\phi) \right] + \mathbb{E}\_{\mathbf{z} \sim p(\mathbf{z})}\left[ \log (1-d(g(\mathbf{z};\theta);\phi)) \right] = 0$$
+and $\nabla\_\theta V(\phi,\theta) = 0$, thereby **halting** gradient descent.
+
+---
+
+class: middle
+count: false
+
+Dilemma :
+- If $d$ is bad, then $g$ does not have accurate feedback and the loss function cannot represent the reality.
+- If $d$ is too good, the gradients drop to 0, thereby slowing down or even halting the optimization.
+
+---
+
+class: middle
+count: false
+
+## Jensen-Shannon divergence
+
+For any two distributions $p$ and $q$,
+$$0 \leq JSD(p||q) \leq \log 2,$$
+where
+- $JSD(p||q)=0$ if and only if $p=q$,
+- $JSD(p||q)=\log 2$ if and only if $p$ and $q$ have disjoint supports.
+
+.center[![](figures/lec11/jsd.gif)]
+
+---
+
+class: middle
+count: false
+
+Notice how the Jensen-Shannon divergence poorly accounts for the metric structure of the space.
+
+Intuitively, instead of comparing distributions "vertically", we would like to compare them "horizontally".
+
+.center[![](figures/lec11/jsd-vs-emd.png)]
+
+---
+
+class: middle
+count: false
+
+## Wasserstein distance
+
+An alternative choice is the **Earth mover's distance**, which intuitively
+corresponds to the minimum mass displacement to transform one distribution into
+the other.
+
+.center.width-100[![](figures/lec11/emd-moves.png)]
+
+- $p = \frac{1}{4}\mathbf{1}\_{[1,2]} + \frac{1}{4}\mathbf{1}\_{[3,4]} + \frac{1}{2}\mathbf{1}\_{[9,10]}$
+- $q = \mathbf{1}\_{[5,7]}$
+
+Then,
+$$\text{W}\_1(p,q) = 4\times\frac{1}{4} + 2\times\frac{1}{4} + 3\times\frac{1}{2}=3$$
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+count: false
+
+The Earth mover's distance is also known as the Wasserstein-1 distance and is defined as:
+$$\text{W}\_1(p, q) = \inf\_{\gamma \in \Pi(p,q)} \mathbb{E}\_{(x,y)\sim \gamma} \left[||x-y||\right]$$
+where:
+- $\Pi(p,q)$ denotes the set of all joint distributions $\gamma(x,y)$ whose marginals are respectively $p$ and $q$;
+- $\gamma(x,y)$ indicates how much mass must be transported from $x$ to $y$ in order to transform the distribution $p$ into $q$.
+- $||\cdot||$ is the L1 norm and $||x-y||$ represents the cost of moving a unit of mass from $x$ to $y$.
+
+---
+
+class: middle
+count: false
+
+.center[![](figures/lec11/transport-plan.png)]
+
+---
+
+class: middle
+count: false
+
+Notice how the $\text{W}\_1$ distance does not saturate. Instead, it
+ increases monotonically with the distance between modes:
+
+.center[![](figures/lec11/emd.png)]
+
+$$\text{W}\_1(p,q)=d$$
+
+For any two distributions $p$ and $q$,
+- $W\_1(p,q) \in \mathbb{R}^+$,
+- $W\_1(p,q)=0$ if and only if $p=q$.
+
+---
+
+class: middle
+count: false
+
+## Wasserstein GANs
+
+Given the attractive properties of the Wasserstein-1 distance, Arjovsky et al (2017) propose
+to learn a generative model by solving instead:
+$$\theta^\* = \arg \min\_\theta \text{W}\_1(p(\mathbf{x})||q(\mathbf{x};\theta))$$
+Unfortunately, the definition of $\text{W}\_1$ does not provide with an operational way of estimating it because of the intractable $\inf$.
+
+On the other hand, the Kantorovich-Rubinstein duality tells us that
+$$\text{W}\_1(p(\mathbf{x})||q(\mathbf{x};\theta)) = \sup\_{||f||\_L \leq 1} \mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ f(\mathbf{x}) \right] - \mathbb{E}\_{\mathbf{x} \sim q(\mathbf{x};\theta)} \left[f(\mathbf{x})\right]$$
+where the supremum is over all the 1-Lipschitz functions $f:\mathcal{X} \to \mathbb{R}$. That is, functions $f$ such that
+$$||f||\_L = \max\_{\mathbf{x},\mathbf{x}'} \frac{||f(\mathbf{x}) - f(\mathbf{x}')||}{||\mathbf{x} - \mathbf{x}'||} \leq 1.$$
+
+---
+
+class: middle
+count: false
+
+.center.width-80[![](figures/lec11/kr-duality.png)]
+
+For $p = \frac{1}{4}\mathbf{1}\_{[1,2]} + \frac{1}{4}\mathbf{1}\_{[3,4]} + \frac{1}{2}\mathbf{1}\_{[9,10]}$
+and $q = \mathbf{1}\_{[5,7]}$,
+$$\begin{aligned}
+\text{W}\_1(p,q) &= 4\times\frac{1}{4} + 2\times\frac{1}{4} + 3\times\frac{1}{2}=3 \\\\
+&= \underbrace{\left(3\times \frac{1}{4} + 1\times\frac{1}{4}+2\times\frac{1}{2}\right)}\_{\mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ f(\mathbf{x}) \right]} - \underbrace{\left(-1\times\frac{1}{2}-1\times\frac{1}{2}\right)}\_{\mathbb{E}\_{\mathbf{x} \sim q(\mathbf{x};\theta)}\left[f(\mathbf{x})\right]} = 3
+\end{aligned}
+$$
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+count: false
+
+Using this result, the Wasserstein GAN algorithm consists in solving the minimax problem:
+$$\theta^\* = \arg \min\_\theta \max\_{\phi:||d(\cdot;\phi)||\_L \leq 1}  \mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ d(\mathbf{x};\phi) \right] - \mathbb{E}\_{\mathbf{x} \sim q(\mathbf{x};\theta)} \left[d(\mathbf{x};\phi)\right]$$$$
+Note that this formulation is very close to the original GANs, except that:
+- The classifier $d:\mathcal{X} \to [0,1]$ is replaced by a critic function $d:\mathcal{X}\to \mathbb{R}$
+  and its output is not interpreted through the cross-entropy loss;
+- There is a strong regularization on the form of $d$.
+  In practice, to ensure 1-Lipschitzness,
+    - Arjovsky et al (2017) propose to clip the weights of the critic at each iteration;
+    - Gulrajani et al (2017) add a regularization term to the loss.
+- As a result, Wasserstein GANs benefit from:
+    - a meaningful loss metric,
+    - improved stability (no mode collapse is observed).
+
+---
+
+class: middle
+count: false
+
+.center.width-90[![](figures/lec11/wgan.png)]
+
+.footnote[Credits: Arjovsky et al, [Wasserstein GAN](https://arxiv.org/abs/1701.07875), 2017.]
+
+---
+
+class: middle
+count: false
+
+.center.width-70[![](figures/lec11/wgan-gallery.png)]
+
+.footnote[Credits: Arjovsky et al, [Wasserstein GAN](https://arxiv.org/abs/1701.07875), 2017.]
+
+---
+
+class: middle
+
+# Numerics of GANs
+
+???
+
+Check https://mitliagkas.github.io/ift6085-2019/ift-6085-lecture-14-notes.pdf
+
+---
+
+class: middle
+
+.center[
+.width-45[![](figures/lec11/animation2.gif)]
+.width-45[![](figures/lec11/animation1.gif)]
+]
+
+Solving for saddle points is different from gradient descent.
+- Minimization of scalar functions yields *conservative* vector fields.
+- Min-max saddle point problems may yield **non-conservative** vector fields.
+
+.footnote[Credits: Ferenc Huszár, [GANs are Broken in More than One Way](https://www.inference.vc/my-notes-on-the-numerics-of-gans/), 2017.]
+
+???
+
+A vector field is conservative when it can be expressed as the gradient of a scalar function.
+
+---
+
+class: middle
+
+Following the notations of Mescheder et al (2018), the training objective for the two players can be described by an objective function of the form
+$$L(\theta,\phi) = \mathbb{E}\_{p(\mathbf{z})}\left[ f(d(g(\mathbf{z};\theta);\phi)) \right] + \mathbb{E}\_{p(\mathbf{x})}\left[f(-d(\mathbf{x};\phi))\right],$$
+where the goal of the generator is to minimizes the loss, whereas the discriminator tries to maximize it.
+
+If $f(t)=-\log(1+\exp(-t))$, then we recover the original GAN objective (assuming that $d$ outputs the logits).
+
+???
+
+If $f(t)=-t$ and and if we impose the Lipschitz constraint on $d$, then we recover Wassterstein GAN.
+
+---
+
+class: middle
+
+Training algorithms can be described as fixed points algorithms that apply some operator $F\_h(\theta,\phi)$ to the parameters values $(\theta,\phi)$.
+
+- For simultaneous gradient descent,
+$$F\_h(\theta,\phi) = (\theta,\phi) + h v(\theta,\phi)$$
+where $v(\theta,\phi)$ denotes the **gradient vector field**
+$$v(\theta,\phi):= \begin{pmatrix}
+-\frac{\partial L}{\partial \theta}(\theta,\phi) \\\\
+\frac{\partial L}{\partial \phi}(\theta,\phi)
+\end{pmatrix}$$
+and $h$ is a scalar stepsize.
+- Similarly, alternating gradient descent can be described by an operator $F\_h = F\_{2,h} \circ F\_{1,h}$, where $F\_{1,h}$ and $F\_{2,h}$ perform an update for the generator and discriminator, respectively.
+
+---
+
+class: middle
+
+## Local convergence near an equilibrium point
+
+Let us consider the Jacobian $J\_{F\_h}(\theta^\*,\phi^\*)$ at the equilibrium $(\theta^\*,\phi^\*)$:
+- if $J\_{F\_h}(\theta^\*,\phi^\*)$ has eigenvalues with absolute value bigger than 1, the training will generally not converge to $(\theta^\*,\phi^\*)$.
+- if all eigenvalues have absolute value smaller than 1, the training will converge to $(\theta^\*,\phi^\*)$.
+- if all eigenvalues values are on the unit circle, training can be convergent, divergent or neither.
+
+Mescheder et al (2017) show that all eigenvalues can be forced to remain within the unit ball if and only if the stepsize $h$ is made sufficiently small.
+
+---
+
+class: middle
+
+.width-90.center[![](figures/lec11/discrete-diverge.png)]
+
+.center[Discrete system: divergence ($h=1$, too large).]
+
+.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
+
+---
+
+class: middle
+
+.width-90.center[![](figures/lec11/discrete-converge.png)]
+
+.center[Discrete system: convergence ($h=0.5$, small enough).]
+
+.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
+
+---
+
+class: middle
+
+For the (idealized) continuous system
+$$
+\begin{pmatrix}
+\dot{\theta}(t) \\\\
+\dot{\phi}(t)
+\end{pmatrix} =
+\begin{pmatrix}
+-\frac{\partial L}{\partial \theta}(\theta,\phi) \\\\
+\frac{\partial L}{\partial \phi}(\theta,\phi)
+\end{pmatrix},$$
+which corresponds to training GANs with infinitely small learning rate $h \to 0$:
+- if all eigenvalues of the Jacobian $v'(\theta^\*,\phi^\*)$ at a stationary point $(\theta^\*,\phi^\*)$ have negative real-part, the continuous system converges locally to $(\theta^\*,\phi^\*)$;
+- if $v'(\theta^\*,\phi^\*)$ has eigenvalues with positive real-part, the continuous system is not locally convergent.
+- if all eigenvalues have zero real-part, it can be convergent, divergent or neither.
+
+---
+
+class: middle
+
+.width-90.center[![](figures/lec11/continuous-diverge.png)]
+
+.center[Continuous system: divergence.]
+
+.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
+
+---
+
+
+class: middle
+
+.width-90.center[![](figures/lec11/continuous-converge.png)]
+
+.center[Continuous system: convergence.]
+
+.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
+
+---
+
+class: middle
+
+## Dirac-GAN: Vanilla GANs
+
+.width-90.center[![](figures/lec11/dirac-unreg.png)]
+
+On the Dirac-GAN toy problem, eigenvalues are $\\{ -f'(0)i, +f'(0)i \\}$.
+Therefore convergence is not guaranteed.
+
+.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
+
+---
+
+class: middle
+
+## Dirac-GAN: Wasserstein GANs
+
+.width-90.center[![](figures/lec11/dirac-wgan.png)]
+
+Eigenvalues are $\\{ -i, +i \\}$.
+Therefore convergence is not guaranteed.
+
+.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
+
+---
+
+class: middle
+
+## Taming the vector field
+
+.width-90.center[![](figures/lec11/dirac-reg.png)]
+
+A penalty on the squared norm of the gradients of the discriminator results in the regularization
+$$R\_1(\phi) = \frac{\gamma}{2} \mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ || \nabla\_\mathbf{x} d(\mathbf{x};\phi)||^2 \right].$$
+The resulting eigenvalues are $\\{ -\frac{\gamma}{2} \pm \sqrt{\frac{\gamma}{4} - f'(0)^2}\\}$.
+Therefore, for $\gamma>0$, all eigenvalues have negative real part, hence training is locally convergent!
+
+
+.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
+
+---
+
+class: middle
+
+.center.width-70[![](figures/lec11/reg1.png)]
+
+.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
+
+---
+
+class: middle
+
+.center.width-70[![](figures/lec11/reg2.png)]
+
+.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
+
+---
+
+class: middle
+
+.center.width-70[![](figures/lec11/reg3.png)]
+
+.footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
+
+---
+
+class: middle
+
+# State of the art
+
+---
+
+class: middle
+
+.center.width-70[![](figures/lec11/timeline.png)]
+
+---
+
+class: middle
+
+## Progressive growing of GANs
+
+.center[
+
+Wasserstein GANs as baseline (Arjovsky et al, 2017) + <br>Gradient Penalty (Gulrajani, 2017) + (quite a few other tricks)
+
++
+
+]
+
+.center.width-100[![](figures/lec11/progressive-gan.png)]
+
+.center[(Karras et al, 2017)]
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec11/progressive-gan2.png)]
+
+.center[(Karras et al, 2017)]
+
+
+---
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/XOxxPcy5Gr4" frameborder="0" volume="0" allowfullscreen></iframe>
+
+(Karras et al, 2017)
+
+---
+
+class: middle
+
+## BigGANs
+
+.center[
+
+Self-attention GANs as baseline (Zhang et al, 2018) + Hinge loss objective (Lim and Ye, 2017; Tran et al, 2017) + Class information to $g$ with class-conditional batchnorm (de Vries et al, 2017) + Class information to $d$ with projection (Miyato and Koyama, 2018) + Half the learning rate of SAGAN, 2 $d$-steps per $g$-step   + Spectral normalization for both $g$ and $d$ + Orthogonal initialization (Saxe et al, 2014) + Large minibatches (2048) + Large number of convolution filters + Shared embedding and hierarchical latent spaces + Orthogonal regularization + Truncated sampling + (quite a few other tricks)
+
+]
+
+<br>
+.center.width-100[![](figures/lec11/biggan.png)]
+.center[(Brock et al, 2018)]
+
+---
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/YY6LrQSxIbc" frameborder="0" allowfullscreen></iframe>
+
+(Brock et al, 2018)
+
+---
+
+class: middle
+
+## StyleGAN (v1)
+
+.center[
+
+Progressive GANs as baseline (Karras et al, 2017) + Non-saturating loss instead of WGAN-GP + $R\_1$ regularization (Mescheder et al, 2018) + (quite a few other tricks)
+
++
+
+.width-60[![](figures/lec11/stylegan.png)]
+
+]
+
+
+---
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/kSLJriaOumA" frameborder="0" allowfullscreen></iframe>
+
+(Karras et al, 2018)
+
+---
+
+class: middle
+
+The StyleGAN generator $g$ is so powerful that it can re-generate arbitrary faces.
+
+.center[
+.width-30[![](figures/lec11/stylegan-gilles.png)] &nbsp;
+.width-30[![](figures/lec11/stylegan-damien.png)]
+]
+
+---
+
+class: middle
+
+.center[.width-80[![](figures/lec11/stylegan-interpolation.jpg)]]
+
+---
+
+class: middle
+
+.center[
+.width-30[![](figures/lec11/stylegan-damien-1.png)] &nbsp;
+.width-30[![](figures/lec11/stylegan-damien-2.png)]
+
+.width-30[![](figures/lec11/stylegan-damien-3.png)] &nbsp;
+.width-30[![](figures/lec11/stylegan-damien-4.png)]
+]
+
+---
+
+class: middle 
+
+## StyleGAN (v2)
+
+.width-60.center[![](figures/lec11/styleganv2.png)]
+
+.center[(Karras et al, 2019)]
+
+---
+
+class: middle
+
+# Applications
+
+---
+
+class: middle
+
+.alert[$p(\mathbf{z})$ need not be a random noise distribution.]
+
+---
+
+class: middle
+
+## Image-to-image translation
+
+.center[
+
+.width-90[![](figures/lec11/cyclegan.jpeg)]
+
+![](figures/lec11/horse2zebra.gif)
+
+.center[CycleGANs (Zhu et al, 2017)]
+
+]
+
+---
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/3AIpPlzM_qs" frameborder="0" volume="0" allowfullscreen></iframe>
+
+High-resolution image synthesis (Wang et al, 2017)
+
+---
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/p5U4NgVGAwg" frameborder="0" allowfullscreen></iframe>
+
+GauGAN: Changing sketches into photorealistic masterpieces (NVIDIA, 2019)
+
+---
+
+class: middle
+
+## Living portraits / deepfakes
+
+.center[
+
+.width-80[![](figures/lec11/portrait.png)]
+
+Few-Shot Adversarial Learning of Realistic Neural Talking Head Models<br> (Zakharov et al, 2019)
+
+]
+
+---
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/rJb0MDrT3SE" frameborder="0" allowfullscreen></iframe>
+
+Few-Shot Adversarial Learning of Realistic Neural Talking Head Models<br> (Zakharov et al, 2019)
+
+---
+
+class: middle
+
+## Captioning
+
+.width-100[![](figures/lec11/caption1.png)]
+
+.width-100[![](figures/lec11/caption2.png)]
+
+.center[(Shetty et al, 2017)]
+
+---
+
+class: middle
+
+## Text-to-image synthesis
+
+.center[
+
+.width-100[![](figures/lec11/stackgan1.png)]
+
+.center[(Zhang et al, 2017)]
+
+]
+
+---
+
+class: middle
+
+.center[
+
+.width-100[![](figures/lec11/stackgan2.png)]
+
+.center[(Zhang et al, 2017)]
+
+]
+
+---
+
+class: middle
+
+##  Music generation
+
+.center.width-100[![](figures/lec11/musegan.png)]
+
+.center[
+
+<audio src="https://salu133445.github.io/musegan/audio/best_samples.mp3" type="audio/mpeg" controls="" controlslist="nodownload">Your browser does not support the audio element.</audio>
+
+]
+
+.center[MuseGAN (Dong et al, 2018)]
+
+---
+
+class: middle
+
+## Accelerating scientific simulators
+
+.grid[
+.kol-2-3[.width-100[![](figures/lec11/calogan1.png)]]
+.kol-1-3[<br>.width-100[![](figures/lec11/calogan2.png)]]
+]
+
+.center[Learning particle physics (Paganini et al, 2017)]
+
+???
+
+https://arxiv.org/pdf/1712.10321.pdf
+
+---
+
+class: middle
+
+.center.width-70[![](figures/lec11/cosmo.png)]
+
+.center[Learning cosmological models (Rodriguez et al, 2018)]
+
+???
+
+https://arxiv.org/pdf/1801.09070.pdf
+
 
 ---
 
@@ -837,14 +959,3 @@ class: end-slide, center
 count: false
 
 The end.
-
----
-
-count: false
-
-# References
-
-- Bishop, C. M. (1994). Mixture density networks (p. 7). Technical Report NCRG/4288, Aston University, Birmingham, UK.
-- Kendall, A., & Gal, Y. (2017). What uncertainties do we need in bayesian deep learning for computer vision?. In Advances in neural information processing systems (pp. 5574-5584).
-- Srivastava, N., Hinton, G., Krizhevsky, A., Sutskever, I., & Salakhutdinov, R. (2014). Dropout: a simple way to prevent neural networks from overfitting. The Journal of Machine Learning Research, 15(1), 1929-1958.
-- Pierre Geurts, [INFO8004 Advanced Machine Learning - Lecture 1](https://glouppe.github.io/info8004-advanced-machine-learning/pdf/lec1.pdf), 2019.

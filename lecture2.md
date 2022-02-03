@@ -10,6 +10,9 @@ Prof. Gilles Louppe<br>
 
 ???
 
+- Universal approximation theorem? + magic trick
+- Tesla AI https://t.co/EMMKOO5FbK?amp=1
+
 LEGO == hydranet
 
 ---

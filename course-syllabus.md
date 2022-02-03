@@ -2,17 +2,11 @@ class: middle, center, title-slide
 
 # Deep Learning
 
-Spring 2021
+Spring 2022
 
 <br><br>
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](g.louppe@uliege.be)
-
-???
-
-R: https://www.cs.toronto.edu/~duvenaud/courses/csc2541/index.html projects
-R: geometric DL course https://geometricdeeplearning.com/lectures/
-R: talk about msc thesis opportunities early in the course
 
 ---
 
@@ -51,22 +45,21 @@ This course is given by:
 
 # Materials
 
-This year, the course takes place online on Youtube at [https://bit.ly/3igTphO](https://bit.ly/3igTphO).
-Theoretical lectures will be **streamed live**.
-
-.center.width-80[![](figures/course-syllabus/youtube.png)]
-
----
-
-class: middle 
-
-## Schedule & Slides
-
 The schedule and slides are available at [github.com/glouppe/info8010-deep-learning](https://github.com/glouppe/info8010-deep-learning).
 - In HTML and in PDFs.
 - Posted/updated online the day before the lesson (hopefully).
 
 .center.width-80[![](figures/course-syllabus/github.png)]
+
+---
+
+class: middle
+
+## Videos
+
+Videos from Spring 2021 are available at [https://youtube.com/playlist?list=PLLqXZ_E-UXlyGPyiWStnC_Y0iizSv5jsG](https://youtube.com/playlist?list=PLLqXZ_E-UXlyGPyiWStnC_Y0iizSv5jsG).
+
+.center.width-80[![](figures/course-syllabus/youtube.png)]
 
 ---
 
@@ -79,24 +72,6 @@ None!
 But we would recommend "Dive into Deep Learning" ([d2l.ai](https://d2l.ai/)) for a comprehensive and practical introduction to the field.
 
 .center.width-60[![](figures/course-syllabus/book.png)]
-
----
-
-class: middle
-
-## Discord
-
-Live interactions will take place on Discord. 
-- Ask your questions live during the livestream (in _Livestreamed Q&As_).
-- Ask your questions offline in the text channels.
-- Don't be shy!
-
-.center[
-.width-60[![](figures/course-syllabus/discord.png)]
-
-(See email for the invitation link.)
-]
-
 
 ---
 
