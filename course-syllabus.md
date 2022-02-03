@@ -30,14 +30,16 @@ Prof. Gilles Louppe<br>
 This course is given by:
 - Theory: Gilles Louppe ([g.louppe@uliege.be](mailto:g.louppe@uliege.be))
 - Projects and guidance: 
-  - Matthia Sabatelli 
+  - Arnaud Delaunoy
+  - François Rozet
   - Antoine Wehenkel
 
 <br>
 
 .center[
 .circle.width-20[![](figures/course-syllabus/gilles.jpg)] &nbsp;
-.circle.width-20[![](figures/course-syllabus/matthia.jpg)] &nbsp;
+.circle.width-20[![](figures/course-syllabus/arnaud.jpg)] &nbsp;
+.circle.width-20[![](figures/course-syllabus/francois.jpg)] &nbsp;
 .circle.width-20[![](figures/course-syllabus/antoine.jpg)]
 ]
 
