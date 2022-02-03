@@ -12,6 +12,7 @@ Prof. Gilles Louppe<br>
 
 R: https://www.cs.toronto.edu/~duvenaud/courses/csc2541/index.html projects
 R: geometric DL course https://geometricdeeplearning.com/lectures/
+R: talk about msc thesis opportunities early in the course
 
 ---
 
