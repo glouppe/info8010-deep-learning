@@ -45,13 +45,14 @@ This course is given by:
 
 ---
 
-# Materials
+# Course hub
 
-The schedule and slides are available at [github.com/glouppe/info8010-deep-learning](https://github.com/glouppe/info8010-deep-learning).
-- In HTML and in PDFs.
-- Posted/updated online the day before the lesson (hopefully).
+All important information about the course is available on the course web page [github.com/glouppe/info8010-deep-learning](https://github.com/glouppe/info8010-deep-learning):
+- Schedule
+- Slides and materials
+- Homeworks and project
 
-.center.width-80[![](figures/course-syllabus/github.png)]
+.center.width-70[![](figures/course-syllabus/github.png)]
 
 ---
 
@@ -59,9 +60,9 @@ class: middle
 
 ## Videos
 
-Videos from Spring 2021 are available at [https://youtube.com/playlist?list=PLLqXZ_E-UXlyGPyiWStnC_Y0iizSv5jsG](https://youtube.com/playlist?list=PLLqXZ_E-UXlyGPyiWStnC_Y0iizSv5jsG).
+Videos from Spring 2021 are available at [https://bit.ly/3roQmea](https://bit.ly/3roQmea).
 
-.center.width-80[![](figures/course-syllabus/youtube.png)]
+.center.width-70[![](figures/course-syllabus/youtube.png)]
 
 ---
 

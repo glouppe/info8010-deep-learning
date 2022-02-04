@@ -281,15 +281,7 @@ Speech synthesis and question answering (Google, 2018)
 
 class: middle, center, black-slide
 
-<iframe width="600" height="450" src="https://www.youtube.com/embed/Khuj4ASldmU" frameborder="0" allowfullscreen></iframe>
-
-Artistic style transfer (Ruder et al, 2016)
-
----
-
-class: middle, center, black-slide
-
-<iframe width="600" height="450" src="https://www.youtube.com/embed/kSLJriaOumA" frameborder="0" allowfullscreen></iframe>
+<iframe width="600" height="450" src="https://www.youtube.com/embed/9QuDh3W3lOY" frameborder="0" allowfullscreen></iframe>
 
 Image generation (Karras et al, 2018)
 

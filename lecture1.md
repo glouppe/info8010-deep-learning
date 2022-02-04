@@ -65,7 +65,7 @@ we want to estimate for any new $\mathbf{x}$, $$\mathbb{E}\left[ Y|X=\mathbf{x} 
 
 ???
 
-$\bigtriangleup^C$ is the simplex $\\{\mathbf{p} \in \mathbb{R}^C_+ : ||\mathbf{p}||_1 = 1\\}$.
+$\bigtriangleup^C$ is the $C-1$-dimensional probability simplex $\\{\mathbf{p} \in \mathbb{R}^C_+ : ||\mathbf{p}||_1 = 1\\}$.
 
 ---
 
@@ -130,7 +130,7 @@ $$f\_\* = \arg \min\_{f \in \mathcal{F}} R(f).$$
 
 class: middle
 
-Unfortunately, since $p\_{X,Y}$ is unknown, the expected risk cannot be evaluated and the optimal
+Since $p\_{X,Y}$ is unknown, the expected risk cannot be evaluated and the optimal
 model cannot be determined.
 
 However, if we have i.i.d. training data $\mathbf{d} = \\\{(\mathbf{x}\_i, y\_i) | i=1,\ldots,N\\\}$, we can
