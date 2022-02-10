@@ -32,15 +32,19 @@ This course is given by:
 - Projects and guidance: 
   - Arnaud Delaunoy
   - François Rozet
+  - Gaspard Lambrechts
+  - Yann Claes
   - Antoine Wehenkel
 
 <br>
 
 .center[
-.circle.width-20[![](figures/course-syllabus/gilles.jpg)] &nbsp;
-.circle.width-20[![](figures/course-syllabus/arnaud.jpg)] &nbsp;
-.circle.width-20[![](figures/course-syllabus/francois.jpg)] &nbsp;
-.circle.width-20[![](figures/course-syllabus/antoine.jpg)]
+.circle.width-15[![](figures/course-syllabus/gilles.jpg)] &nbsp;
+.circle.width-15[![](figures/course-syllabus/arnaud.jpg)] &nbsp;
+.circle.width-15[![](figures/course-syllabus/francois.jpg)] &nbsp;
+.circle.width-15[![](figures/course-syllabus/gaspard.jpg)] &nbsp;
+.circle.width-15[![](figures/course-syllabus/yann.jpg)] &nbsp;
+.circle.width-15[![](figures/course-syllabus/antoine.jpg)]
 ]
 
 ---

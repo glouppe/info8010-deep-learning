@@ -3,7 +3,7 @@
 Lectures for INFO8010 - Deep Learning, ULiège, Spring 2022.
 
 - Instructor: Gilles Louppe
-- Teaching assistants: Arnaud Delaunoy, François Rozet, Antoine Wehenkel
+- Teaching assistants: Arnaud Delaunoy, François Rozet, Gaspard Lambrechts, Yann Claes, Antoine Wehenkel
 - When: Spring 2022, Friday 8:30 AM
 - Classroom: R3 / B28
 
