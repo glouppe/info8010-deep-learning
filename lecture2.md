@@ -8,13 +8,6 @@ Lecture 2: Multi-layer perceptron
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-- Universal approximation theorem? + magic trick
-- Tesla AI https://t.co/EMMKOO5FbK?amp=1
-
-LEGO == hydranet
-
 ---
 
 # Today
@@ -866,6 +859,10 @@ class: middle, center
 
 (demo)
 
+???
+
+Don't forget the magic trick!
+
 ---
 
 # Universal approximation 
@@ -1031,10 +1028,23 @@ class: black-slide
 
 .center[
 .width-60[![](figures/lec2/unnamed.gif)]
-.width-70[![](figures/lec2/alphastar.png)]
+.width-60[![](figures/lec2/alphastar.png)]
+
+AlphaStar, DeepMind 2019.
 ]
 
 .footnote[Credits: [Vinyals et al, 2019](https://www.nature.com/articles/s41586-019-1724-z).]
+
+---
+
+class: black-slide, middle
+
+.center[
+<iframe width="600" height="450" src="https://www.youtube.com/embed/j0z4FweCy4M?start=4279" frameborder="0" allowfullscreen></iframe>
+
+HydraNet, Telsa 2021.
+]
+
 
 ---
 
