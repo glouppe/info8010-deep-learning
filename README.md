@@ -43,11 +43,9 @@ See instructions in [`project.md`](https://github.com/glouppe/info8010-deep-lear
 
 Your task is to read and summarize a major scientific paper in the field of deep learning. You are free to select one among the following three papers:
 
-> Mildenhall et al, "NeRF: Representing Scenes as Neural Radiance Fields for View Synthesis", 2020. [[Paper](https://arxiv.org/abs/2003.08934)]
-
-> Ho et al, "Denoising Diffusion Probabilistic Models", 2020. [[Paper](https://arxiv.org/abs/2006.11239)]
-
-> Jumper et al, "Highly accurate protein structure prediction with AlphaFold", 2021. [[Paper](https://www.nature.com/articles/s41586-021-03819-2)]
+- Mildenhall et al, "NeRF: Representing Scenes as Neural Radiance Fields for View Synthesis", 2020. [[Paper](https://arxiv.org/abs/2003.08934)]
+- Ho et al, "Denoising Diffusion Probabilistic Models", 2020. [[Paper](https://arxiv.org/abs/2006.11239)]
+- Jumper et al, "Highly accurate protein structure prediction with AlphaFold", 2021. [[Paper](https://www.nature.com/articles/s41586-021-03819-2)]
 
 You should produce a report that summarizes the problem that is tackled by the paper and explains why it is challenging or important, from the perspective of the wider research context. The report should outline the main contributions and results with respect to the problem that is addressed. It should also include a critical discussion of the advantages and shortcomings of the contributions of the paper.
 Further guidelines for writing a good summary can be found [here](https://web.stanford.edu/class/cs224n/project/project-proposal-instructions.pdf) (Section 2, "The summary").
