@@ -22,6 +22,7 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2022.
 | April 22 | Lecture 9: [Graph neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture9.md)  [PDF] |
 | April 29 | Lecture 10: [Auto-encoders and variational auto-encoders](https://glouppe.github.io/info8010-deep-learning/?p=lecture10.md) [[video](https://youtu.be/6gWeyUZtHWs)] |
 | May 6 | Lecture 11: [Generative adversarial networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture11.md) [[video](https://youtu.be/cM6m1eHY5FI)] |
+| May 8 | Deadline for the reading assignment | 
 | May 13 | Lecture 12: [Uncertainty](https://glouppe.github.io/info8010-deep-learning/?p=lecture12.md) [PDF]  [[video](https://youtu.be/AxJBY9eRTL4)] |
 
 ## Homeworks
@@ -42,7 +43,9 @@ See instructions in [`project.md`](https://github.com/glouppe/info8010-deep-lear
 
 Your task is to read and summarize a major scientific paper in the field of deep learning. You are free to select one among the following three papers:
 
-> (Papers TBD)
+> Mildenhall et al, "NeRF: Representing Scenes as Neural Radiance Fields for View Synthesis", 2020. [[Paper](https://arxiv.org/abs/2003.08934)]
+> Ho et al, "Denoising Diffusion Probabilistic Models", 2020. [[Paper](https://arxiv.org/abs/2006.11239)]
+> Jumper et al, "Highly accurate protein structure prediction with AlphaFold", 2021. [[Paper](https://www.nature.com/articles/s41586-021-03819-2)]
 
 You should produce a report that summarizes the problem that is tackled by the paper and explains why it is challenging or important, from the perspective of the wider research context. The report should outline the main contributions and results with respect to the problem that is addressed. It should also include a critical discussion of the advantages and shortcomings of the contributions of the paper.
 Further guidelines for writing a good summary can be found [here](https://web.stanford.edu/class/cs224n/project/project-proposal-instructions.pdf) (Section 2, "The summary").
@@ -53,7 +56,7 @@ Constraints:
 - 2 pages (excluding references, if any).
 - Formatted using the LaTeX template [`template-report.tex`](https://glouppe.github.io/info8010-deep-learning/template-report.tex).
 
-Your report should be submitted  by XXX. This is a **hard** deadline.
+Your report should be submitted by May 8. This is a **hard** deadline.
 
 ## Archives
 

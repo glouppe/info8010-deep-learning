@@ -8,6 +8,10 @@ Lecture 6: Computer vision
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+R: nerf
+
 ---
 
 # Today 

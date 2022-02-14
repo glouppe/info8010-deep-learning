@@ -230,8 +230,8 @@ w\_3
 
 class: middle
 
-This is **ordinary least squares** regression, for which the solution is known analytically:
-$$\mathbf{w}\_\*^{\mathbf{d}} = (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{y}$$
+This is **ordinary least squares** regression, for which the solution is derived as
+$$\mathbf{w}\_\*^{\mathbf{d}} = (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{y}.$$
 
 .center[![](figures/lec1/poly-3.png)]
 
@@ -563,7 +563,7 @@ $$\begin{aligned}
 \end{aligned}$$
 
 This decomposition is known as the **bias-variance** decomposition.
-- The noise term quantities the irreducible part of the expected risk.
+- The noise term quantifies the irreducible part of the expected risk.
 - The bias term measures the discrepancy between the average model and the Bayes model.
 - The variance term quantities the variability of the predictions.
 

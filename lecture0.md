@@ -289,6 +289,14 @@ Image generation (Karras et al, 2018)
 
 class: middle, center, black-slide
 
+<iframe width="600" height="450" src="https://www.youtube.com/embed/Zm9B-DvwOgw" frameborder="0" allowfullscreen></iframe>
+
+Write computer code (OpenAI, 2021)
+
+---
+
+class: middle, center, black-slide
+
 <iframe width="600" height="450" src="https://www.youtube.com/embed/egJ0PTKQp4U?start=223" frameborder="0" allowfullscreen></iframe>
 
 Music composition (NVIDIA, 2017)
