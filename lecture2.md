@@ -162,6 +162,10 @@ Assume class populations are Gaussian, with same covariance matrix $\Sigma$ (hom
 
 $$p(\mathbf{x}|y) = \frac{1}{\sqrt{(2\pi)^p |\Sigma|}} \exp \left(-\frac{1}{2}(\mathbf{x} - \mathbf{\mu}_y)^T \Sigma^{-1}(\mathbf{x} - \mathbf{\mu}_y) \right)$$
 
+???
+
+Switch to blackboard.
+
 ---
 
 <br>
@@ -252,6 +256,10 @@ But,
 - **ignore** model assumptions (Gaussian class populations, homoscedasticity);
 - instead, find $\mathbf{w}, b$ that maximizes the likelihood of the data.
 
+???
+
+Switch to blackboard.
+
 ---
 
 class: middle
@@ -294,6 +302,10 @@ For $\theta\_0 \in \mathbb{R}^d$, a first-order approximation around $\theta\_0$
 $$\hat{\mathcal{L}}(\epsilon; \theta\_0) = \mathcal{L}(\theta\_0) + \epsilon^T\nabla\_\theta \mathcal{L}(\theta\_0) + \frac{1}{2\gamma}||\epsilon||^2.$$
 
 .center.width-60[![](figures/lec2/gd-good-0.png)]
+
+???
+
+Switch to blackboard.
 
 ---
 
@@ -635,7 +647,7 @@ class: middle
 ## Output layer 
 
 - For binary classification, the width $q$ of the last layer $L$ is set to $1$, which results in a single output $h\_L \in [0,1]$ that models the probability $p(y=1|\mathbf{x})$.
-- For multi-class classification, the sigmoid action $\sigma$ in the last layer can be generalized to produce a vector $\mathbf{h}\_L \in \bigtriangleup^C$ of probability estimates $p(y=i|\mathbf{x})$.
+- For multi-class classification, the sigmoid activation $\sigma$ in the last layer can be generalized to produce a vector $\mathbf{h}\_L \in \bigtriangleup^C$ of probability estimates $p(y=i|\mathbf{x})$.
 <br><br>
 This activation is the $\text{Softmax}$ function, where its $i$-th output is defined as
 $$\text{Softmax}(\mathbf{z})\_i = \frac{\exp(z\_i)}{\sum\_{j=1}^C \exp(z\_j)},$$
@@ -708,7 +720,7 @@ recursively over its computational graph.
 
 class: middle
 
-Let us consider a simplified 2-layer MLP and the following loss function:
+Let us consider a simplified 1-hidden layer MLP and the following loss function:
 $$\begin{aligned}
 f(\mathbf{x}; \mathbf{W}\_1, \mathbf{W}\_2) &= \sigma\left( \mathbf{W}\_2^T \sigma\left( \mathbf{W}\_1^T \mathbf{x} \right)\right) \\\\
 \mathcal{\ell}(y, \hat{y}; \mathbf{W}\_1, \mathbf{W}\_2) &= \text{cross\\\_ent}(y, \hat{y}) + \lambda \left( ||\mathbf{W}_1||\_2 + ||\mathbf{W}\_2||\_2 \right)
@@ -767,7 +779,7 @@ Training deep MLPs with many layers has for long (pre-2011) been very difficult 
 
 class: middle
 
-Let us consider a simplified 3-layer MLP, with $x, w\_1, w\_2, w\_3 \in\mathbb{R}$, such that
+Let us consider a simplified 2-hidden layer MLP, with $x, w\_1, w\_2, w\_3 \in\mathbb{R}$, such that
 $$f(x; w\_1, w\_2, w\_3) = \sigma\left(w\_3\sigma\left( w\_2 \sigma\left( w\_1 x \right)\right)\right). $$
 
 Under the hood, this would be evaluated as
@@ -868,7 +880,7 @@ Don't forget the magic trick!
 # Universal approximation 
 
 
-Let us consider the 1-layer MLP
+Let us consider the 1-hidden layer MLP
 $$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
 This model can approximate *any* smooth 1D function, provided enough hidden units.
 
