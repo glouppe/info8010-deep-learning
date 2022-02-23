@@ -31,7 +31,7 @@ AMD GPUs cannot be used for deep learning as the libraries usually rely on CUDA,
 \
 You can install all the remaining librairies using the following command
 ```
-conda install jupyter numpy scipy matplotlib pillow scikit-learn
+conda install jupyter numpy matplotlib pillow scikit-learn
 ```
 or find the installation commands in the documentation: 
 [jupyter](https://anaconda.org/anaconda/jupyter),
