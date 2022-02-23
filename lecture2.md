@@ -1054,7 +1054,7 @@ class: black-slide, middle
 .center[
 <iframe width="600" height="450" src="https://www.youtube.com/embed/j0z4FweCy4M?start=4279" frameborder="0" allowfullscreen></iframe>
 
-HydraNet, Telsa 2021.
+HydraNet, Tesla 2021.
 ]
 
 

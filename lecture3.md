@@ -28,6 +28,10 @@ You will probably never do it, but it is important for having a mental model of 
 
 .pull-right[Roger Grosse]
 
+???
+
+Promise for today!
+
 ---
 
 class: middle
@@ -44,17 +48,6 @@ class: middle
 <br>
 
 .footnote[Image credits: [Visualizing optimization trajectory of neural nets](https://towardsdatascience.com/from-animation-to-intuition-visualizing-optimization-trajectory-in-neural-nets-726e43a08d85), Logan Yang, 2020.]
-
----
-
-class: middle
-
-## Automatic differentiation
-
-Automatic differentiation (AD) provides a family of techniques for evaluating the **derivatives** of a function specified *by a computer program*.
-
-- $\neq$ symbolic differentiation, which aims at identifying some human-readable expression of the derivative.
-- $\neq$ numerical differentation (finite differences), which may introduce round-off errors.
 
 ---
 
@@ -94,13 +87,24 @@ def tanh(x):
     return (1.0 - y) / (1.0 + y)
 
 fp = grad(tanh)
-fpp = grad(grad(tanh))
+fpp = grad(grad(tanh))  # what sorcery is this?!
 ...
 ```
 
 ???
 
 Will show a demo later on.
+
+---
+
+class: middle
+
+## Automatic differentiation
+
+Automatic differentiation (AD) provides a family of techniques for evaluating the **derivatives** of a function specified *by a computer program*.
+
+- $\neq$ symbolic differentiation, which aims at identifying some human-readable expression of the derivative.
+- $\neq$ numerical differentation (finite differences), which may introduce round-off errors.
 
 ---
 
@@ -146,6 +150,10 @@ i.e., a vector that gathers the partial derivatives of $f$.
 Applying the definition of the derivative coordinate-wise, we have
 $$\left[ \nabla f(\mathbf{x}) \right]\_j = \frac{\partial f}{\partial x\_j}(\mathbf{x}) = \lim\_{h\to 0} \frac{f(\mathbf{x} + h\mathbf{e}\_j) - f(\mathbf{x})}{h},$$
 where $\mathbf{e}\_j$ is the $j$-th basis vector.
+
+???
+
+Note how each coordinate-wise derivative is a directional derivative in the direction $\mathbf{e}\_j$.
 
 ---
 
