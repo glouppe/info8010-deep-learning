@@ -1,11 +1,11 @@
 # Installation instructions
 \
 To complete the assignments, you need a working Python installation with Jupyter and the following libraries: numpy, scipy, matplotlib, 
-scikit-learn, pytorch, torchvision and pillow. We recommend using Anaconda although this is not mandatory.
+scikit-learn, pytorch, torchvision and pillow. We recommend using Miniconda although this is not mandatory.
 
-## Installing Anaconda
+## Installing Miniconda
 \
-You can find Anaconda installation instructions in the [official Anaconda documentation](https://docs.anaconda.com/anaconda/install/index.html).
+You can find Miniconda installation instructions in the [official Miniconda documentation](https://docs.conda.io/en/latest/miniconda.html#installing).
 
 Once anaconda is installed, create a virtual environment dedicated to the homeworks using the following command
 ```
