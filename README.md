@@ -15,8 +15,10 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2022.
 | February 18 | Lecture 2: [Multi-layer perceptron](https://glouppe.github.io/info8010-deep-learning/?p=lecture2.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec2.pdf)] [[video](https://www.youtube.com/watch?v=OF6AkE9Fnjc)] |
 | February 25 | Lecture 3: [Automatic differentiation](https://glouppe.github.io/info8010-deep-learning/?p=lecture3.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec3.pdf)] [[video](https://youtu.be/fD047xXpSfI)] |
 | March 4 | Lecture 4: [Training neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture4.md) [PDF] [[video](https://youtu.be/G7qw620V_3g)]  |
+| March 7 | Deadline for the homework 1 |
 | March 11 | Lecture 5: [Convolutional neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture5.md) [PDF] [[video](https://youtu.be/54WShJMWYo0)] |
 | March 18 | Lecture 6: [Computer vision](https://glouppe.github.io/info8010-deep-learning/?p=lecture6.md) [PDF] [[video](https://youtu.be/cfZGfJaLRxA)] |
+| March 21 | Deadline for the homework 2 |
 | March 25 | Lecture 7: [Recurrent neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture7.md) [PDF] [[video](https://youtu.be/qnux5dg5wZ4)] |
 | April 1 | Lecture 8: [Attention and transformers](https://glouppe.github.io/info8010-deep-learning/?p=lecture8.md) [PDF] [[video](https://youtu.be/cwFE1pLld-g)] |
 | April 22 | Lecture 9: [Graph neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture9.md)  [PDF] |
