@@ -7,7 +7,7 @@ scikit-learn, pytorch, torchvision and pillow. We recommend using Miniconda alth
 
 You can find Miniconda installation instructions in the [official Miniconda documentation](https://docs.conda.io/en/latest/miniconda.html#installing).
 
-Once anaconda is installed, create a virtual environment dedicated to the homeworks using the following command
+Once Miniconda is installed, create a virtual environment dedicated to the homeworks using the following command
 ```
 conda create --name deep_learning
 ```
@@ -19,7 +19,7 @@ and deactivate it using
 ```
 conda deactivate
 ```
-## Installing pytorch
+## Installing Pytorch
 
 To install Pytorch, go to [this webpage](https://pytorch.org/get-started/locally/) and select the different boxes according to your system.
 Be sure to activate your environment with `conda activate deep_learning` before entering the install command.
