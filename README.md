@@ -22,16 +22,16 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2022.
 | April 22 | Lecture 9: [Graph neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture9.md)  [PDF] |
 | April 29 | Lecture 10: [Auto-encoders and variational auto-encoders](https://glouppe.github.io/info8010-deep-learning/?p=lecture10.md) [[video](https://youtu.be/6gWeyUZtHWs)] |
 | May 6 | Lecture 11: [Generative adversarial networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture11.md) [[video](https://youtu.be/cM6m1eHY5FI)] |
-| May 8 | Deadline for the reading assignment | 
+| May 8 | Deadline for the reading assignment |
 | May 13 | Lecture 12: [Uncertainty](https://glouppe.github.io/info8010-deep-learning/?p=lecture12.md) [PDF]  [[video](https://youtu.be/AxJBY9eRTL4)] |
 
 ## Homeworks
 
-The goal of these two assignments is to get you familiar with the PyTorch library.
-Each homework should be done in groups of 2 or 3 (the same as for the project) and must be submitted before 23:59 on the due date.
+The goal of these two assignments is to get you familiar with the PyTorch library. You can find the installations instructions in the [Homeworks](./homeworks) folder.
+Each homework should be done in groups of 2 or 3 (the same as for the project) and must be submitted **before 23:59 on the due date**.
 
-- [Homework 1](https://github.com/glouppe/info8010-deep-learning/raw/master/homeworks/homework1.zip): Tensor operations, `autograd` and `nn`. Due by XXX.
-- [Homework 2](https://github.com/glouppe/info8010-deep-learning/raw/master/homeworks/homework2.ipynb): Dataset, Dataloader, running on GPU, training a convolutional neural network. Due by XXX.
+- [Homework 1](https://github.com/glouppe/info8010-deep-learning/raw/master/homeworks/homework1.ipynb): Tensor operations, `autograd` and `nn`. Due by **March 7th, 2022**.
+- [Homework 2](https://github.com/glouppe/info8010-deep-learning/raw/master/homeworks/homework2.ipynb): Dataset, Dataloader, running on GPU, training a convolutional neural network. Due by **March 21th, 2022**.
 
 Homeworks are optional. If submitted, each homework will account for 5% of the final grade.
 
