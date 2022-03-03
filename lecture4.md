@@ -8,13 +8,6 @@ Lecture 4: Training neural networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-R: optimization in overparameterized nets
-R: loss surface
-R: kaiming he init https://arxiv.org/pdf/1502.01852.pdf
-R: learning rate https://twitter.com/iScienceLuvr/status/1431470172179632131?s=03
-
 ---
 
 # Today
@@ -39,6 +32,10 @@ class: middle
 
 $$\theta\_\*^\{\mathbf{d}} = \arg \min\_\theta \mathcal{L}(\theta) = \frac{1}{N} \sum\_{n=1}^N \ell(y\_n, f(\mathbf{x}\_n; \theta)).$$
 
+???
+
+This is our goal for today: to **minimize the empirical risk**.
+
 ---
 
 
@@ -56,8 +53,6 @@ A first step towards understanding, debugging and optimizing neural networks is 
 ---
 
 background-image: url(figures/lec4/tensorboard.png)
-
-
 
 ---
 
@@ -121,8 +116,6 @@ Although this is an ideal case, there is redundancy in practice that results in 
 
 class: middle
 
-
-
 To reduce the computational complexity, **stochastic gradient descent** (SGD) consists in updating the parameters after every sample
 $$\begin{aligned}
 g\_t &= \nabla\_\theta \ell(y\_{n(t)}, f(\mathbf{x}\_{n(t)}; \theta\_t)) \\\\
@@ -145,7 +138,7 @@ class: middle
 
 While being computationally faster than batch gradient descent,
 - gradient estimates used by SGD can be *very noisy*, which may help escape from local minima;
-- SGD does not benefit from the speed-up of **batch-processing**.
+- but SGD does not benefit from the speed-up of **batch-processing**.
 
 ---
 
@@ -516,6 +509,16 @@ class: middle
 
 class: middle
 
+## Warmup and cyclical schedules
+
+.center.width-100[![](figures/lec4/warmup_cosine_schedule.png)]
+
+.center.width-100[![](figures/lec4/warmup_cosine_warm_restarts_schedule.png)]
+
+---
+
+class: middle
+
 # Initialization
 
 ---
@@ -656,6 +659,20 @@ class: middle
 
 class: middle
 
+## He initialization
+
+Because of $\text{ReLU}(x) = \max(0,x)$, the mean of the activations at layer $l$ is typically not $0$. Therefore, our zero-mean assumption is wrong. Accounting for this shift, He et al (2015) derive a forward initialization scheme that initializes $w^l$ from a distribution with variance $$\mathbb{V}\left[w^l\right] = \frac{2}{q\_{l-1}}.$$
+
+---
+
+class: middle
+
+.center.width-75[![](figures/lec4/he.png)]
+
+---
+
+class: middle
+
 # Normalization
 
 ---
@@ -734,11 +751,9 @@ where $\gamma, \beta \in \mathbb{R}^q$ are parameters to optimize.
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
----
+???
 
-class: middle
-
-.center[Exercise: How does batch normalization combine with backpropagation?]
+Exercise: How does batch normalization combine with backpropagation?
 
 ---
 

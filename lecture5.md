@@ -8,6 +8,10 @@ Lecture 5: Convolutional networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+R: Loss surfaces of skip connections (see demo from Lecture 4)
+
 ---
 
 class: middle
