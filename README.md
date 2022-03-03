@@ -15,23 +15,28 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2022.
 | February 18 | Lecture 2: [Multi-layer perceptron](https://glouppe.github.io/info8010-deep-learning/?p=lecture2.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec2.pdf)] [[video](https://www.youtube.com/watch?v=OF6AkE9Fnjc)] |
 | February 25 | Lecture 3: [Automatic differentiation](https://glouppe.github.io/info8010-deep-learning/?p=lecture3.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec3.pdf)] [[video](https://youtu.be/fD047xXpSfI)] |
 | March 4 | Lecture 4: [Training neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture4.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec4.pdf)] [[video](https://youtu.be/G7qw620V_3g)]  |
+| March 7 | Deadline for homework 1 |
 | March 11 | Lecture 5: [Convolutional neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture5.md) [PDF] [[video](https://youtu.be/54WShJMWYo0)] |
+| March 14 | Deadline for project proposal |
 | March 18 | Lecture 6: [Computer vision](https://glouppe.github.io/info8010-deep-learning/?p=lecture6.md) [PDF] [[video](https://youtu.be/cfZGfJaLRxA)] |
+| March 21 | Deadline for homework 2 |
 | March 25 | Lecture 7: [Recurrent neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture7.md) [PDF] [[video](https://youtu.be/qnux5dg5wZ4)] |
 | April 1 | Lecture 8: [Attention and transformers](https://glouppe.github.io/info8010-deep-learning/?p=lecture8.md) [PDF] [[video](https://youtu.be/cwFE1pLld-g)] |
 | April 22 | Lecture 9: [Graph neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture9.md)  [PDF] |
 | April 29 | Lecture 10: [Auto-encoders and variational auto-encoders](https://glouppe.github.io/info8010-deep-learning/?p=lecture10.md) [[video](https://youtu.be/6gWeyUZtHWs)] |
 | May 6 | Lecture 11: [Generative adversarial networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture11.md) [[video](https://youtu.be/cM6m1eHY5FI)] |
-| May 8 | Deadline for the reading assignment | 
+| May 8 | Deadline for the reading assignment |
+| May 8 | Deadline for the project |
 | May 13 | Lecture 12: [Uncertainty](https://glouppe.github.io/info8010-deep-learning/?p=lecture12.md) [PDF]  [[video](https://youtu.be/AxJBY9eRTL4)] |
 
 ## Homeworks
 
-The goal of these two assignments is to get you familiar with the PyTorch library.
-Each homework should be done in groups of 2 or 3 (the same as for the project) and must be submitted before 23:59 on the due date.
+The goal of these two assignments is to get you familiar with the PyTorch library. You can find the installation instructions in the [Homeworks](./homeworks) folder.
+Each homework should be done in groups of 2 or 3 (the same as for the project) and must be submitted **before 23:59 on the due date**.
+Homeworks should be submitted on the [Montefiore submission platform](https://submit.montefiore.ulg.ac.be).
 
-- [Homework 1](https://github.com/glouppe/info8010-deep-learning/raw/master/homeworks/homework1.zip): Tensor operations, `autograd` and `nn`. Due by XXX.
-- [Homework 2](https://github.com/glouppe/info8010-deep-learning/raw/master/homeworks/homework2.ipynb): Dataset, Dataloader, running on GPU, training a convolutional neural network. Due by XXX.
+- [Homework 1](https://github.com/glouppe/info8010-deep-learning/raw/master/homeworks/homework1.ipynb): Tensor operations, `autograd` and `nn`. Due by **March 7th, 2022**.
+- [Homework 2](https://github.com/glouppe/info8010-deep-learning/raw/master/homeworks/homework2.ipynb): Dataset, Dataloader, running on GPU, training a convolutional neural network. Due by **March 21st, 2022**.
 
 Homeworks are optional. If submitted, each homework will account for 5% of the final grade.
 
