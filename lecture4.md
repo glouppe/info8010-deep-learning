@@ -312,6 +312,10 @@ class: middle
 
 In the situation of small but consistent gradients, as through valley floors, gradient descent moves **very slowly**.
 
+???
+
+Hint: the optimization process is like a ball that we keep pushing in the direction of the gradient.
+
 ---
 
 class: middle, black-slide
@@ -435,6 +439,14 @@ r\_t  &=  r\_{t-1} + g\_t \odot g\_t \\\\
 - It is good when the objective is convex.
 - $r_t$ grows unboundedly during training, which may cause the step size to shrink and eventually become infinitesimally small.
 
+???
+
+Interpretation: 
+- very steep, hence large gradients, the step size shrinks and eventually becomes infinitesimally small.
+- very shallow, hence small gradients, the step size grows and eventually becomes very large.
+
+Draw the two cases.
+
 ---
 
 class: middle
@@ -537,6 +549,12 @@ Little is known on the mathematics of initialization strategies of neural networ
 class: middle, center
 
 ([demo](https://www.deeplearning.ai/ai-notes/initialization/))
+
+???
+
+Take the time to explain, look at weights and gradients over time.
+
+Take the time to insist again on the loss curves.
 
 ---
 
@@ -661,13 +679,19 @@ class: middle
 
 ## He initialization
 
-Because of $\text{ReLU}(x) = \max(0,x)$, the mean of the activations at layer $l$ is typically not $0$. Therefore, our zero-mean assumption is wrong. Accounting for this shift, He et al (2015) derive a forward initialization scheme that initializes $w^l$ from a distribution with variance $$\mathbb{V}\left[w^l\right] = \frac{2}{q\_{l-1}}.$$
+Because $\text{ReLU}(x) = \max(0,x)$, the mean of the activations at layer $l$ is typically not $0$. Therefore, our zero-mean assumption is wrong. Accounting for this shift, He et al (2015) derive a forward initialization scheme that initializes $w^l$ from a distribution with variance $$\mathbb{V}\left[w^l\right] = \frac{2}{q\_{l-1}}.$$
 
 ---
 
 class: middle
 
 .center.width-75[![](figures/lec4/he.png)]
+
+---
+
+class: middle, center
+
+(Back to demo)
 
 ---
 
@@ -705,6 +729,10 @@ $$
 .center.width-100[![](figures/lec4/scaling.png)]
 
 .footnote[Credits: Scikit-Learn, [Compare the effect of different scalers on data with outliers](https://scikit-learn.org/stable/auto_examples/preprocessing/plot_all_scaling.html#standardscaler).]
+
+???
+
+Make them think about what would happen if data is not standardized.
 
 ---
 
@@ -778,3 +806,10 @@ class: end-slide, center
 count: false
 
 The end.
+
+???
+
+Make them do a recap:
+- good default optimizer?
+- good default initialization?
+- preprocessing?

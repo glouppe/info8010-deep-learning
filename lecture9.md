@@ -11,3 +11,4 @@ Prof. Gilles Louppe<br>
 ???
 
 R: geometric DL course https://geometricdeeplearning.com/lectures/
+R: https://twitter.com/thomaskipf/status/1499470015455805451?t=1jy4X1fhk_vo1rjSO-2YFQ&s=03
