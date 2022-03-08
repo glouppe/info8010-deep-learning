@@ -176,7 +176,7 @@ Large signals have some "invariance in translation". A representation meaningful
 
 # Convolutions
 
-A convolution layer embodies this idea. It applies the same linear transformation locally everywhere while preserving the signal structure.
+A convolution layer applies the same linear transformation locally everywhere while preserving the signal structure.
 
 <br>
 .center[![](figures/lec5/1d-conv.gif)]
@@ -249,6 +249,10 @@ where $\mathbf{u}$ and $\mathbf{b}$ are shared parameters to learn.
 - $D$ convolutions can be applied in the same way to produce a $D \times (H-h+1) \times (W-w+1)$ feature map,
 where $D$ is the depth.
 - Swiping across channels with a 3D convolution usually makes no sense, unless the channel index has some metric meaning.
+
+???
+
+Draw: Explain the intuition behind the sum of element-wise products which reduces to an inner product between the kernel and a region of the input.
 
 ---
 
@@ -396,6 +400,12 @@ The same procedure generalizes to $\mathbf{x} \in \mathbb{R}^{H \times W}$ and c
 Therefore, a convolutional layer is a special case of a fully
 connected layer: $$\mathbf{h} = \mathbf{x} \circledast \mathbf{u} \Leftrightarrow v(\mathbf{h}) = \mathbf{U}v(\mathbf{x}) \Leftrightarrow  v(\mathbf{h}) = \mathbf{W}^T v(\mathbf{x})$$
 
+???
+
+Insist on how inductive biases are enforced through architecture:
+- locality is enforced through sparsity and band structure
+- equivariance is enforced through replication and weight sharing
+
 ---
 
 class: middle, center
@@ -507,6 +517,14 @@ class: center, middle, black-slide
 class: middle, center
 
 (demo)
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec5/zoo.png)]
+
+.footnote[Credits: [Bianco et al](https://arxiv.org/abs/1810.00736), 2018.]
 
 ---
 
