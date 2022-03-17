@@ -8,10 +8,6 @@ Lecture 6: Computer vision
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-R: nerf
-
 ---
 
 # Today 
@@ -69,7 +65,11 @@ class: middle
 The lack of data is the biggest limit to the performance of deep learning models.
 - Collecting more data is usually expensive and laborious.
 - Synthesizing data is complicated and may not represent the true distribution.
-- **Augmenting** the data with base transformations is simple and efficient (e.g., as demonstrated with AlexNet).
+- **Augmenting** the data with base transformations is simple and efficient.
+  
+???
+
+Augmentation is efficient, as demonstrated with AlexNet.
 
 ---
 
@@ -129,10 +129,9 @@ class: middle
 
 class: middle
 
-In the case of models pre-trained on ImageNet, transferred/fine-tuned networks usually work even when the input images for the new task are not photographs of objects or animals, such as biomedical images, satellite images or paintings.
+For models pre-trained on ImageNet, transferred/fine-tuned networks usually work even when the input images for the new task are not photographs of objects or animals, such as biomedical images, satellite images or paintings.
 
-
-.center.width-70[![](figures/lec6/fine-tuning-results.png)]
+.center.width-75[![](figures/lec6/fine-tuning-results.png)]
 
 .footnote[Credits: Matthia Sabatelli et al, [Deep Transfer Learning for Art Classification Problems](http://openaccess.thecvf.com/content_ECCVW_2018/papers/11130/Sabatelli_Deep_Transfer_Learning_for_Art_Classification_Problems_ECCVW_2018_paper.pdf), 2018.]
 
@@ -218,7 +217,7 @@ class: middle
 
 .center.width-80[![](figures/lec6/overfeat-grid.png)]
 
-The classifier head outputs a class and a confidence for each location and scale pre-defined from a coarse grid. Each window is resized to fit with the input dimensions of the classifier.
+The classifier head outputs a class and a confidence for each location and scale pre-defined from a .bold[coarse] grid. Each window is resized to fit with the input dimensions of the classifier.
 
 .footnote[Credits: Sermanet et al, 2013.]
 
@@ -228,7 +227,7 @@ class: middle
 
 .center.width-80[![](figures/lec6/overfeat-predictions.png)]
 
-The regression head then predicts the location of the object with respect to each window.
+The regression head predicts the location of the object for each location and scale.
 
 .footnote[Credits: Sermanet et al, 2013.]
 
@@ -238,7 +237,7 @@ class: middle
 
 .center.width-60[![](figures/lec6/overfeat-merge.png)]
 
-These bounding boxes are finally merged with an *ad-hoc greedy procedure* (e.g., Non-maximum suppression) to produce the final predictions over a small number of objects.
+These bounding boxes are finally merged with an *ad-hoc procedure* (e.g., Non-maximum suppression) to produce the final predictions over a small number of objects.
 
 .footnote[Credits: Sermanet et al, 2013.]
 
@@ -460,11 +459,10 @@ class: middle
 
 class: middle
 
-Semantic **segmentation** is the task of partitioning an image into regions of different semantic categories. 
-
-These semantic regions label and predict objects at the pixel level.
-
 .center.width-70[![](figures/lec6/segmentation.svg)]
+
+Semantic **segmentation** is the task of partitioning an image into regions of different semantic categories. 
+These semantic regions label and predict objects at the pixel level.
 
 .footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
 
@@ -500,17 +498,22 @@ class: middle
 
 ---
 
-# Transposed convolution
+class: middle
 
-The convolution and pooling layers introduced so far often reduce the input width and height, or keep them unchanged.
-- Semantic segmentation requires to predict values for each pixel, and therefore needs to increase input width and height.
-- Fully connected layers could be used for that purpose but would face the same limitations as before (spatial specialization, too many parameters).
-- Ideally, we would like layers that implement the inverse of convolutional
+Convolution and pooling layers reduce the input width and height, or keep them unchanged.
+
+Semantic segmentation requires to predict values for each pixel, and therefore needs to increase input width and height.
+
+???
+
+Fully connected layers could be used for that purpose but would face the same limitations as before (spatial specialization, too many parameters).
+
+Ideally, we would like layers that implement the inverse of convolutional
  and pooling layers.
 
 ---
 
-class: middle
+# Transposed convolution
 
 A **transposed convolution** is a convolution where the implementation of the forward and backward passes
 are swapped.

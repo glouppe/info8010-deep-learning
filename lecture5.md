@@ -159,7 +159,14 @@ class: middle
 
 .center.width-80[![](figures/lec5/mlp-image1.png)]
 
-If they were handled as normal "unstructured" vectors, high-dimensional signals such as sound samples or images would require models of intractable size.
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL; Michael Bronstein, [Geometric Deep Learning](https://drive.google.com/file/d/14H8KXBpkJBlqINTLOTvlTRMh-WLkGo4-/view), 2020.]
+
+---
+
+count: false
+class: middle
+
+.center.width-80[![](figures/lec5/mlp-image2.png)]
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL; Michael Bronstein, [Geometric Deep Learning](https://drive.google.com/file/d/14H8KXBpkJBlqINTLOTvlTRMh-WLkGo4-/view), 2020.]
 
@@ -167,11 +174,10 @@ If they were handled as normal "unstructured" vectors, high-dimensional signals 
 
 class: middle
 
-.center.width-80[![](figures/lec5/mlp-image2.png)]
+If they were handled as normal "unstructured" vectors, high-dimensional signals such as sound samples or images would require models of intractable size.
 
 Large signals have some "invariance in translation". A representation meaningful at a certain location **should be used everywhere**.
 
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL; Michael Bronstein, [Geometric Deep Learning](https://drive.google.com/file/d/14H8KXBpkJBlqINTLOTvlTRMh-WLkGo4-/view), 2020.]
 ---
 
 # Convolutions

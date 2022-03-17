@@ -19,7 +19,7 @@ R: https://twitter.com/pschwllr/status/1260963596412092419
 R: image https://iaml-it.github.io/posts/2021-04-28-transformers-in-vision/
 
 vit, convnext 
-attention <> mlp <> conv
+attention <> mlp (mixer) <> conv
 
 ---
 
