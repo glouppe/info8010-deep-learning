@@ -12,7 +12,7 @@ Prof. Gilles Louppe<br>
 
 # Today 
 
-Advanced deep neural networks for computer vision:
+Advanced deep neural networks for (some) computer vision tasks:
 - Classification
 - Object detection
 - Semantic segmentation
@@ -449,6 +449,13 @@ class: middle, center
 
 ([demo](https://colab.research.google.com/drive/1xdjyBiY75MAVRSjgmiqI7pbRLn58VrbE?usp=sharing#scrollTo=TwfFDhs5TMhi))
 
+???
+
+Use Lucie's kitchen set.
+- Far vs. near detections
+- Individual vs. packed detections
+- Rotation, flip, etc
+
 ---
 
 class: middle
@@ -623,6 +630,10 @@ It consists in symmetric contraction and expansion paths, along with a concatena
 
 .footnote[Credits: [Ronneberger et al](https://arxiv.org/abs/1505.04597), 2015.]
 
+???
+
+Take the time to explain that that same architecture can be used for image to image mappings, as in some of their projects.
+
 ---
 
 class: middle
@@ -670,3 +681,13 @@ class: end-slide, center
 count: false
 
 The end.
+
+???
+
+Quiz:
+- What architecture would you use on images?
+- Would you train from scratch?
+- What is the difference between object detection and segmentation?
+- Name one architecture for object detection.
+- Name one architecture for semantic segmentation.
+- What kind of layer can you use to upscale a feature map?

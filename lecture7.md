@@ -10,8 +10,7 @@ Prof. Gilles Louppe<br>
 
 ???
 
-R: move NTM to Attention lecture?
-R: sort the applications and delay/move stuff for Lec8?
+R: https://drive.google.com/file/d/1tyxLHg0Xlm0Pir0cdX2epHcpg9I3oJlD/view
 
 ---
 
@@ -49,6 +48,10 @@ Many real-world problems require to process a signal with a **sequence** structu
     - part-of-speech tagging
 
 .footnote[Credits: Francois Fleuret, [14x050/EE559 Deep Learning](https://fleuret.org/dlc/), EPFL.]
+
+???
+
+Draw all 3 setups.
 
 ---
 
@@ -579,9 +582,7 @@ https://github.com/nyu-dl/NLP_DL_Lecture_Note/blob/master/lecture_note.pdf
 
 class:  middle
 
-# Applications
-
-(some)
+# Some applications
 
 ---
 
@@ -637,6 +638,7 @@ E.g., [`sketch-rnn-demo`](https://magenta.tensorflow.org/assets/sketch_rnn_demo/
 
 ---
 
+exclude: true
 class: middle
 
 ## Neural machine translation
@@ -649,6 +651,7 @@ class: middle
 
 ---
 
+exclude: true
 class: middle
 
 .center[
@@ -669,15 +672,33 @@ class: middle
 
 ---
 
+class: middle
+
+## Lip-reading in the wild
+
+.width-80.center[![](figures/lec7/lip-reading.png)]
+
+.footnote[Image credits: [Chung et al, 2016. arXiv:1611.05358](https://arxiv.org/abs/1611.05358).]
+
+---
+
 class: middle, black-slide
 
 .center[
-<iframe width="640" height="400" src="https://www.youtube.com/embed/Ipi40cb_RsI?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
+<iframe width="640" height="400" src="https://www.youtube.com/embed/5aogzAUPilE?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
 ]
+
+---
+
+class: middle, black-slide
 
 ## Learning to control 
 
 A recurrent network playing Mario Kart.
+
+.center[
+<iframe width="640" height="400" src="https://www.youtube.com/embed/Ipi40cb_RsI?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
+]
 
 ---
 
@@ -713,7 +734,7 @@ class: middle
 
 This principle generalizes to:
 - arbitrarily structured data (e.g., sequences, trees, **graphs**)
-- arbitrary graph of computation construction algorithm that traverses these structures (e.g., including for-loops or recursive calls).
+- arbitrary graph of computation construction algorithms that traverses these structures (e.g., including for-loops or recursive calls).
 
 ---
 

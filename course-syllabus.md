@@ -8,6 +8,10 @@ Spring 2022
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](g.louppe@uliege.be)
 
+???
+
+R: add that they should participate. Dont be shy! (have candies for each answer?)
+
 ---
 
 # Philosophy
