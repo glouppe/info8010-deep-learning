@@ -32,6 +32,27 @@ background-size: cover
 
 class: middle
 
+.center.width-75[![](figures/lec8/eye-coffee.svg)]
+
+Using the nonvolitional cue based on saliency (red cup, non-paper), attention is involuntarily directed to the coffee.
+
+.footnote[Credits: [Dive Into Deep Learning, 10.1](https://d2l.ai/chapter_attention-mechanisms/attention-cues.html).]
+
+---
+
+class: middle
+
+.center.width-75[![](figures/lec8/eye-book.svg)]
+
+Using the volitional cue (want to read a book) that is task-dependent, attention is directed to the book under volitional control.
+
+.footnote[Credits: [Dive Into Deep Learning, 10.1](https://d2l.ai/chapter_attention-mechanisms/attention-cues.html).]
+
+
+---
+
+class: middle
+
 .center.width-100[![](figures/lec8/qkv.svg)]
 
 .footnote[Credits: [Dive Into Deep Learning, 10.1](https://d2l.ai/chapter_attention-mechanisms/attention-cues.html).]
@@ -89,6 +110,16 @@ class: middle
 
 .footnote[Credits: [Dive Into Deep Learning, 10.4](https://d2l.ai/chapter_attention-mechanisms/bahdanau-attention.html).]
 
+???
+
+Blackboard: translate to French the following sentence. 
+
+"A truck is coming down the road. It drives too fast."
+
+->
+
+"Un camion arrive sur la route. Il roule trop vite."
+
 ---
 
 class: middle
@@ -97,7 +128,7 @@ Following Bahdanau et al. (2014), the encoder is specified as a bidirectional RN
 $$\mathbf{h}\_i = (\overrightarrow{\mathbf{h}}\_i, \overleftarrow{\mathbf{h}}\_i)$$
 for $i = 1, \ldots, T$, where $\overrightarrow{\mathbf{h}}\_i$ and $\overleftarrow{\mathbf{h}}\_i$ respectively denote the forward and backward hidden recurrent states of the bidirectional RNN.
 
-From this, they compute a new process $\mathbf{s}\_i$, $i=1, \ldots, T$, which looks at weighted averages of the $\mathbf{h}\_j$, $j=1, \ldots, T$, where the __weights are functions of the signal__.
+From this, they compute a new process $\mathbf{s}\_i$, $i=1, \ldots, T$, which looks at weighted averages of the $\mathbf{h}\_j$ where the __weights are functions of the signal__.
 
 .footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
@@ -105,11 +136,9 @@ From this, they compute a new process $\mathbf{s}\_i$, $i=1, \ldots, T$, which l
 
 class: middle
 
-Given $\mathbf{s}\_1, \ldots, \mathbf{s}\_{i-1}$, first compute an attention vector
-$$\mathbf{\alpha}\_{i,j} = \text{softmax}\_j(\mathbf{e}\_{i,j})$$
-for $j=1, \ldots, T$, where
-$$\mathbf{e}\_{i,j} = a(\mathbf{s}\_{i-1}, \mathbf{h}\_j)$$
-and $a$ is an *attention scoring function*, here specified as a one hidden layer $\text{tanh}$ MLP.
+Given $\mathbf{y}\_1, \ldots, \mathbf{y}\_{i-1}$ and $\mathbf{s}\_1, \ldots, \mathbf{s}\_{i-1}$, first compute an attention vector
+$$\mathbf{\alpha}\_{i,j} = \text{softmax}\_j(a(\mathbf{s}\_{i-1}, \mathbf{h}\_j))$$
+for $j=1, \ldots, T$, whered $a$ is an *attention scoring function*, here specified as a one hidden layer $\text{tanh}$ MLP.
 
 Then, compute the context vector from the weighted $\mathbf{h}\_j$'s,
 $$\mathbf{c}\_i = \sum\_{j=1}^T \alpha\_{i, j} \mathbf{h}\_j.$$
@@ -135,11 +164,9 @@ where $f$ is a GRU.
 
 This is **context attention**, where $\mathbf{s}\_{i-1}$ modulates what to look in $\mathbf{h}\_1, \ldots, \mathbf{h}\_{T}$ to compute $\mathbf{s}\_i$ and sample $\mathbf{y}\_i$.
 
----
+???
 
-class: middle, center
-
-(whiteboard example)
+Do a blackboard example.
 
 ---
 
@@ -302,7 +329,7 @@ class: middle
 The performance is expected to be poor given the inability of the self-attention layer to take into account absolute or relative positions. Indeed, self-attention is permutation-invariant:
 $$\begin{aligned}
 \mathbf{y} &= \sum\_{i=1}^m \text{softmax}\_i\left(\frac{\mathbf{q}^T{\mathbf{K}^T\_{i}}}{\sqrt{d}}\right) \mathbf{V}\_{i}\\\\
-&= \sum\_{i=1}^m \text{softmax}\_{\sigma(i)}\left(\frac{\mathbf{q}^T{\mathbf{K}^T\_{\sigma(i)}}}{\sqrt{d}}\right) \mathbf{V}\_{\sigma(i)}
+&= \sum\_{i=1}^m \text{softmax}\_{i}\left(\frac{\mathbf{q}^T{\mathbf{K}^T\_{\sigma(i)}}}{\sqrt{d}}\right) \mathbf{V}\_{\sigma(i)}
 \end{aligned}$$
 for any permutation $\sigma$ of the key-value pairs.
 
