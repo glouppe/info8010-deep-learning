@@ -15,6 +15,7 @@ R: https://replicate.ai/yuval-alaluf/restyle_encoder
 R: https://colab.research.google.com/drive/1eYlenR1GHPZXt-YuvXabzO9wfh9CWY36
 R: https://colab.research.google.com/github/ekgren/StructuredDreaming/blob/main/colabs/Structured_Dreaming_Styledreams_faces.ipynb
 R: https://colab.research.google.com/github/hila-chefer/TargetCLIP/blob/main/TargetCLIP_CLIP_guided_image_essence_transfer.ipynb
+R: https://twitter.com/ak92501/status/1506849160867295235?t=MlxjF0JVwpaTfpk3KlP_UQ&s=03
 
 ---
 

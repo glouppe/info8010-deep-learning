@@ -109,6 +109,10 @@ with $\psi : \mathbb{R}^q \to \mathbb{R}^C$.
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
+???
+
+Draw the next diagrams on the black board.
+
 ---
 
 class: middle
@@ -351,7 +355,10 @@ class: middle
 ## GRU
 
 The gated recurrent unit (GRU; Cho et al, 2014) is another gated recurrent cell.
-- It uses two gates instead of three: an update gate $\mathbf{z}\_t$ and a reset gate $\mathbf{r}\_t$.
+It uses two gates instead of three: an update gate $\mathbf{z}\_t$ and a reset gate $\mathbf{r}\_t$.
+
+???
+
 - GRUs perform similarly as LSTMs for language or speech modeling sequences, but with fewer parameters.
 - However, LSTMs remain strictly stronger than GRUs.
 
@@ -496,6 +503,10 @@ In particular,
 $$\mathbf{A}^n = \mathbf{S} \Lambda^n \mathbf{S}^{-1}.$$
 
 Therefore, the Fibonacci sequence grows **exponentially fast** with the golden ratio $\varphi$.
+
+???
+
+$\varphi = \frac{1+\sqrt{5}}{2}$
 
 ---
 

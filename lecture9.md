@@ -4,7 +4,7 @@ class: middle, center, title-slide
 
 Lecture 9: Graph neural networks
 
-(Optional)
+(optional)
 
 <br><br>
 Prof. Gilles Louppe<br>

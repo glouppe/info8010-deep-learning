@@ -8,50 +8,54 @@ Lecture 8: Attention and transformers
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-xxx permutation equivariance
-
-R: improve consistency of notations (i, j; C as output then as input, etc)
-R: review complexity
-
-R: https://twitter.com/pschwllr/status/1260963596412092419
-R: image https://iaml-it.github.io/posts/2021-04-28-transformers-in-vision/
-
-vit, convnext 
-attention <> mlp (mixer) <> conv
-
 ---
 
 # Today
 
 Attention is all you need!
-- Context attention
-- Key-value store
+- Bahdanau attention
+- Attention layers
 - Transformers
+- Applications
+
+???
+
+Mission: learn a bout a novel and fundamental building block in modern neural networks. This brick can replace both FC and convolutional layers.
+
+---
+
+class: black-slide
+background-image: url(figures/lec8/vision.png)
+background-size: cover
 
 ---
 
 class: middle
 
-# Context attention
+.center.width-100[![](figures/lec8/qkv.svg)]
+
+.footnote[Credits: [Dive Into Deep Learning, 10.1](https://d2l.ai/chapter_attention-mechanisms/attention-cues.html).]
 
 ---
 
 class: middle
 
-.center.width-75[![](figures/lec8/rnn-seq2seq.svg)]
+# Bahdanau attention
 
-Standard RNN-based sequence-to-sequence models compress an input sequence $\mathbf{x}\_{1:T}$ into a thought vector $v$ corresponding to the final recurrent state:
+---
+
+class: middle
+
+.center.width-100[![](figures/lec8/seq2seq.svg)]
+
+Standard RNN-based sequence-to-sequence models compress an input sequence $\mathbf{x}\_{1:T}$ into a single thought vector $v$, and then produce an output sequence $\mathbf{y}\_{1:T'}$ from an autoregressive generative model
 $$\begin{aligned}
 \mathbf{h}\_t &= \phi(\mathbf{x}\_t, \mathbf{h}\_{t-1})\\\\
-v &= \mathbf{h}\_{T}. 
+v &= \mathbf{h}\_{T} \\\\
+\mathbf{y}\_{i} &\sim p(\cdot | \mathbf{y}\_{1:i-1}, v).
 \end{aligned}$$
-Then, they produce an output sequence $\mathbf{y}\_{1:T'}$ from an autoregressive generative model
-$$\begin{aligned}
-\mathbf{y}\_{i} &\sim p(\cdot | \mathbf{y}\_{1:i-1}, v),
-\end{aligned}$$
-where $p(\cdot | \mathbf{y}\_{1:i-1}, v)$ is itself an RNN.
+
+.footnote[Credits: [Dive Into Deep Learning, 9.7](https://d2l.ai/chapter_recurrent-modern/seq2seq.html).]
 
 ---
 
@@ -59,7 +63,7 @@ class: middle
 
 .center.width-80[![](figures/lec8/bottleneck.svg)]
 
-This architecture assumes that the sole thought vector $v$ carries out enough information in itself to generate entire output sequences. This is often **challenging** for long sequences.
+This architecture assumes that the sole vector $v$ carries enough information to generate entire output sequences. This is often **challenging** for long sequences.
 
 ???
 
@@ -77,11 +81,23 @@ Under the assumption that each output token comes from one or a handful of input
 
 ---
 
-# Attention-based machine translation
+class: middle
+
+## Attention-based machine translation
+
+.center.width-90[![](figures/lec8/seq2seq-attention-details.svg)]
+
+.footnote[Credits: [Dive Into Deep Learning, 10.4](https://d2l.ai/chapter_attention-mechanisms/bahdanau-attention.html).]
+
+---
+
+class: middle
 
 Following Bahdanau et al. (2014), the encoder is specified as a bidirectional RNN that computes an annotation vector for each input token,
 $$\mathbf{h}\_i = (\overrightarrow{\mathbf{h}}\_i, \overleftarrow{\mathbf{h}}\_i)$$
 for $i = 1, \ldots, T$, where $\overrightarrow{\mathbf{h}}\_i$ and $\overleftarrow{\mathbf{h}}\_i$ respectively denote the forward and backward hidden recurrent states of the bidirectional RNN.
+
+From this, they compute a new process $\mathbf{s}\_i$, $i=1, \ldots, T$, which looks at weighted averages of the $\mathbf{h}\_j$, $j=1, \ldots, T$, where the __weights are functions of the signal__.
 
 .footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
@@ -89,13 +105,11 @@ for $i = 1, \ldots, T$, where $\overrightarrow{\mathbf{h}}\_i$ and $\overleftarr
 
 class: middle
 
-From this, they compute a new process $\mathbf{s}\_i$, $i=1, \ldots, T$, which looks at weighted averages of the $\mathbf{h}\_j$, $j=1, \ldots, T$, where the .bold[weights are functions of the signal].
-
 Given $\mathbf{s}\_1, \ldots, \mathbf{s}\_{i-1}$, first compute an attention vector
 $$\mathbf{\alpha}\_{i,j} = \text{softmax}\_j(\mathbf{e}\_{i,j})$$
 for $j=1, \ldots, T$, where
 $$\mathbf{e}\_{i,j} = a(\mathbf{s}\_{i-1}, \mathbf{h}\_j)$$
-and $a$ is an **attention function**, here specified as a one hidden layer $\text{tanh}$ MLP.
+and $a$ is an *attention scoring function*, here specified as a one hidden layer $\text{tanh}$ MLP.
 
 Then, compute the context vector from the weighted $\mathbf{h}\_j$'s,
 $$\mathbf{c}\_i = \sum\_{j=1}^T \alpha\_{i, j} \mathbf{h}\_j.$$
@@ -110,18 +124,16 @@ Note that the attention weights depend on the content, rather than on the positi
 
 class: middle
 
-The model can now make the prediction $\mathbf{y}\_i$:
+The model can now make the prediction $\mathbf{y}\_i$ as
 $$
 \begin{aligned}
 \mathbf{s}\_i &= f(\mathbf{s}\_{i-1}, y\_{i-1}, c\_i)  \\\\
-\mathbf{y}\_i &\sim g(\mathbf{y}\_{i-1}, \mathbf{s}\_i, \mathbf{c}\_i)
+\mathbf{y}\_i &\sim g(\mathbf{y}\_{i-1}, \mathbf{s}\_i, \mathbf{c}\_i),
 \end{aligned}
 $$
 where $f$ is a GRU.
 
 This is **context attention**, where $\mathbf{s}\_{i-1}$ modulates what to look in $\mathbf{h}\_1, \ldots, \mathbf{h}\_{T}$ to compute $\mathbf{s}\_i$ and sample $\mathbf{y}\_i$.
-
-.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
 ---
 
@@ -139,119 +151,55 @@ class: middle
 
 class: middle
 
-.center.width-100[![](figures/lec8/translation-length.png)]
-
----
-
-# Attention-based caption generation
-
-.grid[
-.kol-1-2[
-
-The human eye cannot process a whole visual scene at once. 
-The fovea enables high-acuity vision in only a tiny region of our field of view.
-
-Instead, we must integrate information from a **series of glimpses**.
-
-]
-.kol-1-2[
-
-.center[
-.width-100[![](figures/lec8/vision.png)]
-]
-
-]
-]
-.center.width-65[![](figures/lec8/fovea.png)]
+# Attention layers
 
 ---
 
 class: middle
 
-.center.width-80[![](figures/lec8/attention-caption1.png)]
+The attention mechanisms can be defined generically as follows.
 
-Following Xu et al. (2015), the context attention mechanism can be adapted to caption generation:
-- Encoder: a CNN that extracts a feature map over the input image.
-- Decoder: an attention-based RNN that computes at each step an attention map over the entire feature map, effectively deciding which regions to focus on.
-
----
-
-class: middle
-
-.center.width-100[![](figures/lec8/attention-caption2.png)]
+Given a context or query vector $\mathbf{q} \in \mathbb{R}^{q}$, a key tensor $\mathbf{K} \in \mathbb{R}^{m \times k}$, and a value tensor $\mathbf{V} \in \mathbb{R}^{m \times v},$ an attention layer computes an output vector $\mathbf{y} \in \mathbb{R}^{v}$
+with $$\mathbf{y} = \sum\_{i=1}^m \text{softmax}\_i(a(\mathbf{q}, \mathbf{K}\_i; \theta)) \mathbf{V}\_i,$$
+where $a : \mathbb{R}^q \times \mathbb{R}^k \to \mathbb{R}$ is a scalar attention scoring function.
 
 ---
 
 class: middle
 
-.center.width-85[![](figures/lec8/attention-caption3.png)]
+.center.width-100[![](figures/lec8/attention-output.svg)]
+
+.footnote[Credits: [Dive Into Deep Learning, 10.3](https://d2l.ai/chapter_attention-mechanisms/attention-scoring-functions.html).]
 
 ---
 
 class: middle
 
-# Key-value store
+## Additive attention
+
+When queries and keys are vectors of different lengths, we can use an additive attention as the scoring function.
+
+Given $\mathbf{q} \in \mathbb{R}^{q}$ and $\mathbf{k} \in \mathbb{R}^{k}$, the **additive attention** scoring function is
+$$a(\mathbf{q}, \mathbf{k}) = \mathbf{w}_v^T \tanh(\mathbf{W}\_q^T \mathbf{q} + \mathbf{W}\_k^T \mathbf{k})$$
+where $\mathbf{w}_v \in \mathbb{R}^h$, $\mathbf{W}_q \in \mathbb{R}^{q \times h}$ and $\mathbf{W}_k \in \mathbb{R}^{k \times h}$ are learnable parameters.
 
 ---
 
 class: middle
 
-## Context attention
+## Scaled dot-product attention
 
-The previous **context attention** mechanism can be generically defined as follows.
+When queries and keys are vectors of the same length $d$, we can use a scaled dot-product attention as the scoring function.
 
-Given a context tensor $\mathbf{C} \in \mathbb{R}^{T \times C}$ and a value tensor $\mathbf{V} \in \mathbb{R}^{S \times D},$ context attention computes an output tensor $\mathbf{Y} \in \mathbb{R}^{T \times D}$
-with $$\mathbf{Y}\_j = \sum\_{i=1}^S \text{softmax}\_i(a(\mathbf{C}\_j, \mathbf{V}\_i; \theta)) \mathbf{V}\_i,$$
-where $a : \mathbb{R}^C \times \mathbb{R}^D \to \mathbb{R}$ is a scalar attention function.
-
-<br>
-.center.width-40[![](figures/lec8/context-attention-layer.svg)]
-
-.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+Given $\mathbf{q} \in \mathbb{R}^{d}$ and $\mathbf{k} \in \mathbb{R}^{d}$, the **scaled dot-product attention** scoring function is
+$$a(\mathbf{q}, \mathbf{k}) = \frac{\mathbf{q}^T \mathbf{k}}{\sqrt{d}}.$$
 
 ---
 
 class: middle
 
-## Self-attention
-
-When $\mathbf{C} = \mathbf{V}$, context attention is becomes a **self-attention** layer.
-
-Given a value tensor $\mathbf{V} \in \mathbb{R}^{S \times D}$, self-attention computes an output tensor $\mathbf{Y} \in \mathbb{R}^{S \times D}$ with $$\mathbf{Y}\_j = \sum\_{i=1}^S \text{softmax}\_i(a(\mathbf{V}\_j, \mathbf{V}\_i; \theta)) \mathbf{V}\_i.$$
-
-<br>
-.center.width-40[![](figures/lec8/self-attention-layer.svg)]
-
----
-
-class: middle 
-
-.center.width-50[![](figures/lec8/cnn-rnn-self-attention.svg)]
-
-## Complexity
-
-.center.width-100[![](figures/lec8/complexity.png)]
-
-where $n$ is the sequence length, $d$ is the embedding dimension, and $k$ is the kernel size of convolutions.
-
-
-
-.footnote[Credits: [Dive Into Deep Learning, 10.6.2](http://preview.d2l.ai/d2l-en/PR-1581/chapter_attention-mechanisms/self-attention-and-positional-encoding.html#comparing-cnns-rnns-and-self-attention).]
-
----
-
-# Key-value store 
-
-Following the terminology of Graves et al. (2014) et Vaswani et al. (2017), attention can be generalized to an averaging of **values** associated to *keys* matching a *query*. 
-
-With $\mathbf{Q}$ the tensor of row $T$ queries, $\mathbf{K}$ the tensor of $T'$ row keys, and $\mathbf{V}$ the tensor of $T'$ row values,
-$$\mathbf{Q} \in \mathbb{R}^{T \times D}, \mathbf{K} \in \mathbb{R}^{T' \times D}, \mathbf{V} \in \mathbb{R}^{T' \times D'},$$
-and using a dot-product for attention function, an attention operation yields
-$$\mathbf{Y}\_j = \sum\_{i=1}^{T'} \frac{\exp(\mathbf{Q}\_j \mathbf{K}\_i^T)}{\sum\_{r=1}^{T'} \exp(\mathbf{Q}\_j \mathbf{K}\_r^T)} \mathbf{V}\_i$$
-or
-$$\mathbf{Y} = \underbrace{\text{softmax}(\mathbf{QK}^T)}\_{\text{attention matrix}\, \mathbf{A}}\mathbf{V}.$$
-
-.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+For $n$ queries $\mathbf{Q} \in \mathbb{R}^{n \times d}$, keys $\mathbf{K} \in \mathbb{R}^{m \times d}$ and values $\mathbf{V} \in \mathbb{R}^{m \times v}$, the **scaled dot-product attention** layer computes an output tensor 
+$$\mathbf{Y} = \underbrace{\text{softmax}\left(\frac{\mathbf{QK}^T)}{\sqrt{d}}\right)}\_{\text{attention matrix}\, \mathbf{A}}\mathbf{V} \in \mathbb{R}^{n \times v}.$$
 
 ---
 
@@ -267,51 +215,65 @@ Therefore, the $\mathbf{QK}^T$ matrix is a **similarity matrix** between queries
 
 class: middle
 
-In the currently standard models for sequences, the queries, keys and values are linear functions of the inputs.
-
-Given the (learnable) matrices $\mathbf{W}\_Q \in \mathbb{R}^{D \times C}$, $\mathbf{W}\_K \in \mathbb{R}^{D \times C'}$, and $\mathbf{W}\_V \in \mathbb{R}^{D' \times C'}$, and two input sequences $\mathbf{X} \in \mathbb{R}^{T \times C}$ and $\mathbf{X}' \in \mathbb{R}^{T' \times C'}$, we have
-$$\begin{aligned} 
-\mathbf{Q} &= \mathbf{X} \mathbf{W}\_Q^T \in \mathbb{R}^{T \times D} \\\\
-\mathbf{K} &= \mathbf{X'} \mathbf{W}\_K^T \in \mathbb{R}^{T' \times D} \\\\
-\mathbf{V} &= \mathbf{X'} \mathbf{W}\_V^T \in \mathbb{R}^{T' \times D'}.
-\end{aligned}$$
-As for context attention, we obtain self-attention when $\mathbf{X} = \mathbf{X}'$.
-
-.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
-
----
-
-class: middle
-
 .center.width-100[![](figures/lec8/qkv-maps.png)]
 
 .footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
 ---
 
-class: middle, center
+class: middle
 
-([demo](https://hallvagi.github.io/dl-explorer/fastai/attention/lstm/2020/06/29/Attention.html))
+In the currently standard models for sequences, the queries, keys and values are linear functions of the inputs.
 
-???
-
-R: adapt https://fleuret.org/git-extract/pytorch/attentiontoy1d.py
-
+Given the learnable matrices $\mathbf{W}\_q \in \mathbb{R}^{d \times x}$, $\mathbf{W}\_k \in \mathbb{R}^{d \times x'}$, and $\mathbf{W}\_v \in \mathbb{R}^{v \times x'}$, and two input sequences $\mathbf{X} \in \mathbb{R}^{n \times x}$ and $\mathbf{X}' \in \mathbb{R}^{m \times x'}$, we have
+$$\begin{aligned} 
+\mathbf{Q} &= \mathbf{X} \mathbf{W}\_q^T \in \mathbb{R}^{n \times d} \\\\
+\mathbf{K} &= \mathbf{X'} \mathbf{W}\_k^T \in \mathbb{R}^{m \times d} \\\\
+\mathbf{V} &= \mathbf{X'} \mathbf{W}\_v^T \in \mathbb{R}^{m \times v}.
+\end{aligned}$$
 
 ---
 
 class: middle
 
-# Transformers
+## Self-attention
+
+When the queries, keys and values are derived from the same inputs, the attention mechanism is called **self-attention**.
+
+For the scaled dot-product attention, the self-attention layer is obtained when $\mathbf{X} = \mathbf{X}'$.
+
+Therefore, self-attention can be used as a regular feedforward-kind of layer, similarly to fully-connected or convolutional layers.
+
+<br>
+.center.width-60[![](figures/lec8/self-attention-layer.svg)]
 
 ---
 
-# Transformers
+class: middle 
 
-Vaswani et al. (2017) proposed to go one step further: instead of using attention mechanisms as a supplement to standard convolutional and recurrent layers, they designed a model, the **transformer**, combining only attention layers.
+## CNNs vs. RNNs vs. self-attention
 
-The transformer was designed for a sequence-to-sequence translation task, but it is currently key to state-of-the-art approaches across NLP tasks.
+.center.width-80[![](figures/lec8/cnn-rnn-self-attention.svg)]
 
+.footnote[Credits: [Dive Into Deep Learning, 10.6.2](http://preview.d2l.ai/d2l-en/PR-1581/chapter_attention-mechanisms/self-attention-and-positional-encoding.html#comparing-cnns-rnns-and-self-attention).]
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec8/complexity.png)]
+
+where $n$ is the sequence length, $d$ is the embedding dimension, and $k$ is the kernel size of convolutions.
+
+---
+
+class: middle
+
+## A toy example
+
+To illustrate the behavior of the attention mechanism, we consider a toy problem with 1D sequences composed of two triangular and two rectangular patterns. The target sequence averages the heights in each pair of shapes.
+
+.center.width-100[![](figures/lec8/toy1.png)]
 
 .footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
@@ -319,23 +281,71 @@ The transformer was designed for a sequence-to-sequence translation task, but it
 
 class: middle
 
-.grid[
-.kol-2-3[
+.center.width-80[![](figures/lec8/toy1-training.png)]
 
-## Scaled dot-product attention
-
-The first building block of the transformer architecture is a scaled dot-production attention module defined as
-$$\text{attention}(\mathbf{Q}, \mathbf{K}, \mathbf{V}) = \text{softmax}\left(\frac{\mathbf{Q}\mathbf{K}^T}{\sqrt{d\_k}}\right) \mathbf{V}$$
-where the $1/\sqrt{d\_k}$ scaling is used to keep the (softmax's) temperature constant across different choices of the key dimension $d\_k$.
-
-]
-.kol-1-3.center.width-60[![](figures/lec8/transformer1.png)]
-]
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
 ---
 
 class: middle
 
+We can modify the toy problem to consider targets where the pairs to average are the two right and leftmost shapes.
+
+.center.width-100[![](figures/lec8/toy2.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+The performance is expected to be poor given the inability of the self-attention layer to take into account absolute or relative positions. Indeed, self-attention is permutation-invariant:
+$$\begin{aligned}
+\mathbf{y} &= \sum\_{i=1}^m \text{softmax}\_i\left(\frac{\mathbf{q}^T{\mathbf{K}^T\_{i}}}{\sqrt{d}}\right) \mathbf{V}\_{i}\\\\
+&= \sum\_{i=1}^m \text{softmax}\_{\sigma(i)}\left(\frac{\mathbf{q}^T{\mathbf{K}^T\_{\sigma(i)}}}{\sqrt{d}}\right) \mathbf{V}\_{\sigma(i)}
+\end{aligned}$$
+for any permutation $\sigma$ of the key-value pairs.
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec8/toy2-training.png)]
+
+However, this problem can be fixed by providing positional encodings explicitly to the attention layer.
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+# Transformers
+
+---
+
+class: middle
+
+
+Vaswani et al. (2017) proposed to go one step further: instead of using attention mechanisms as a supplement to standard convolutional and recurrent layers, they designed a model, the **transformer**, combining only attention layers.
+
+The transformer was designed for a sequence-to-sequence translation task, but it is currently key to state-of-the-art approaches across NLP tasks.
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+
+## Scaled dot-product attention
+
+The first building block of the transformer architecture is a scaled dot-production attention module
+$$\text{attention}(\mathbf{Q}, \mathbf{K}, \mathbf{V}) = \text{softmax}\left(\frac{\mathbf{Q}\mathbf{K}^T}{\sqrt{d\_k}}\right) \mathbf{V}$$
+where the $1/\sqrt{d\_k}$ scaling is used to keep the (softmax's) temperature constant across different choices of the query/key dimension $d\_k$.
+
+---
+
+class: middle
 
 .grid[
 .kol-2-3[
@@ -344,7 +354,7 @@ class: middle
 
 ## Multi-head attention
 
-Instead of performing a single attention function with $d\_\text{model}$-dimensional keys, values and queries, the transformer architecture project the queries, keys and values $h=8$ times with different, learned linear projections to $d\_k=64$, $d\_k=64$ and $d\_v=64$ dimensions respectively.
+The transformer architecture projects the queries, keys and values $h=8$ times with distinct, learned linear projections to $d\_k=64$, $d\_k=64$ and $d\_v=64$ dimensions respectively.
 ]
 .kol-1-3.center.width-100[![](figures/lec8/transformer2.png)]
 ]
@@ -367,8 +377,7 @@ class: middle
 
 ## Encoder-decoder architecture
 
-Their complete transformer model is composed of:
-
+The transformer model is composed of:
 - An encoder that combines $N=6$ modules, each composed of a multi-head attention sub-module, and a (per-component) one-hidden-layer MLP, with residual pass-through and layer normalization. All sub-modules and embedding layers produce outputs of dimension $d\_\text{model}=512$.
 - A decoder that combines $N=6$ modules similar to the encoder, but using masked self-attention to prevent positions from attending to subsequent positions. In addition, the decoder inserts a third sub-module which performs multi-head attention over the output of the encoder stack.
 
@@ -376,11 +385,13 @@ Their complete transformer model is composed of:
 .kol-1-3.center.width-100[<br><br>![](figures/lec8/transformer3.png)]
 ]
 
+???
+
 ---
 
 class: middle
 
-.center.width-80[![](figures/lec8/transformer-decoding-1.gif)]
+.center.width-90[![](figures/lec8/transformer-decoding-1.gif)]
 
 The encoders start by processing the input sequence. The output of the top encoder is then transformed into a set of attention vectors $\mathbf{K}$ and $\mathbf{V}$ that will help the decoders focus on appropriate places in the input sequence.
 
@@ -390,7 +401,7 @@ The encoders start by processing the input sequence. The output of the top encod
 
 class: middle
 
-.center.width-80[![](figures/lec8/transformer-decoding-2.gif)]
+.center.width-90[![](figures/lec8/transformer-decoding-2.gif)]
 
 Each step in the decoding phase produces an output token, until a special symbol is reached indicating the transformer decoder has completed its output.
 
@@ -426,11 +437,6 @@ $$
 
 After adding the positional encoding, words will be closer to each other based on the similarity of their meaning and their relative position in the sentence, in the $d\_\text{model}$-dimensional space.
 
-???
-
-https://blog.dataiku.com/dissecting-the-transformer
-https://kazemnejad.com/blog/transformer_architecture_positional_encoding/
-
 ---
 
 class: middle
@@ -445,7 +451,7 @@ class: middle
 
 ## Machine translation
 
-The architecture is tested on English-to-German and English-to-French translation using WMT2014 datasets.
+The transformer architecture is tested on English-to-German and English-to-French translation using WMT2014 datasets.
 
 - English-to-German: 4.5M sentence pairs, 37k tokens vocabulary.
 - English-to-French: 36M sentence pairs, 32k tokens vocabulary.
@@ -457,17 +463,11 @@ The architecture is tested on English-to-German and English-to-French translatio
 
 class: middle
 
-.center.width-75[![](figures/lec8/transformer-bleu.png)]
-
----
-
-class: middle
-
 .center[
 
 .width-100[![](figures/lec8/transformer-attention-example.png)]
 
-Self-attention layers learnt "it" could refer to different entities in different contexts.
+Self-attention layers learned that "it" could refer<br> to different entities, in different contexts.
   
 ]
 
@@ -489,7 +489,9 @@ Attention maps extracted from the multi-head attention modules<br> show how inpu
 
 ---
 
-# Language pre-training
+class: middle
+
+## Language pre-training
 
 Similar to pre-training computer vision models on ImageNet, language models can be pre-trained for tasks in natural language processing.
 
@@ -536,7 +538,98 @@ various sources.
 
 ---
 
+class: middle
+
+## Vision transformers (ViTs)
+
+.center.width-90[![](figures/lec8/ViT.gif)]
+
+.footnote[Credits: [Dosovitskiy et al](https://arxiv.org/abs/2010.11929), 2020.]
+
+---
+
+class: middle
+
+.center.width-90[![](figures/lec8/vit-performance.jpg)]
+
+---
+
+class: center, middle
+
+(demo)
+
+---
+
+class: middle
+count: false
+
 # Applications
+
+---
+
+class: black-slide, middle
+
+.center[
+
+.width-80[![](figures/lec8/gpt-2-prompt.png)]
+
+GPT-2 generates synthetic text samples in response to arbitrary inputs.
+
+]
+
+---
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/fZSFNUT6iY8" frameborder="0" allowfullscreen></iframe>
+
+GPT-3 generates Python code.
+
+---
+
+class: middle
+
+.center[
+
+.width-100[![](figures/lec8/clip.png)]
+
+CLIP: connecting text and images for zero-shot classification (see [demo](https://clip.backprop.co/)).
+
+]
+
+.footnote[Credits: [Radford et al.](https://arxiv.org/abs/2103.00020), 2021.]
+
+---
+
+class: middle
+
+.center[
+
+.width-100[![](figures/lec8/alphafold.webp)]
+
+AlphaFold: Highly accurate protein structure prediction.
+
+]
+
+.footnote[Credits: [Jumper et al.](https://doi.org/10.1038/s41586-021-03819-2), 2021.]
+
+---
+
+class: middle
+
+.center[
+
+.width-100[![](figures/lec8/decision-transformer.gif)]
+
+Decision Transformer: Reinforcement Learning via Sequence Modeling.
+
+]
+
+.footnote[Credits: [Chen et al.](https://arxiv.org/abs/2106.01345), 2021.]
+
+---
+
+# Disclaimer
 
 Large, general language models could have significant **societal impacts**, and also have many near-term applications, including:
 - AI writing assistants
@@ -559,51 +652,6 @@ However, we can also imagine the application of these models for **malicious pur
 .alert[The public at large will need to become more skeptical of text they find online, just as the "deep fakes" phenomenon calls for more skepticism about images.]
 
 .footnote[Credits: OpenAI [Better Language Models and Their Implications](https://openai.com/blog/better-language-models/).]
-
----
-
-class: black-slide, middle
-
-.center[
-
-.width-80[![](figures/lec8/gpt-2-prompt.png)]
-
-GPT-2 generates synthetic text samples in response to the model being primed arbitrary input. See OpenAI's [blog post](https://openai.com/blog/better-language-models/).
-
-]
-
----
-
-class: middle, center, black-slide
-
-<iframe width="600" height="450" src="https://www.youtube.com/embed/fZSFNUT6iY8" frameborder="0" allowfullscreen></iframe>
-
-GPT-3 generates Python code
-
----
-
-class: black-slide, middle
-
-.center[
-
-.width-80[![](figures/lec8/dall-e.png)]
-
-DALL·E: a 12-billion parameter version of GPT-3 trained to generate images from text descriptions. See OpenAI's [blog post](https://openai.com/blog/dall-e/).
-
-]
-
----
-
-class: middle
-
-.center[
-
-.width-100[![](figures/lec8/clip.png)]
-
-CLIP: connecting text and images for zero-shot classification. See [demo](https://clip.backprop.co/).
-
-]
-
 
 ---
 
