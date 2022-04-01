@@ -114,11 +114,13 @@ class: middle
 
 Blackboard: translate to French the following sentence. 
 
-"A truck is coming down the road. It drives too fast."
+"The animal didn't cross the street because it was too tired."
 
 ->
 
-"Un camion arrive sur la route. Il roule trop vite."
+"L'animal n'a pas traversé la rue car il était trop fatigué."
+
++ demo on Google translate, change "animal" for "lion" or "giraffe".
 
 ---
 
@@ -282,7 +284,7 @@ class: middle
 
 .center.width-80[![](figures/lec8/cnn-rnn-self-attention.svg)]
 
-.footnote[Credits: [Dive Into Deep Learning, 10.6.2](http://preview.d2l.ai/d2l-en/PR-1581/chapter_attention-mechanisms/self-attention-and-positional-encoding.html#comparing-cnns-rnns-and-self-attention).]
+.footnote[Credits: [Dive Into Deep Learning, 10.6.2](https://d2l.ai/chapter_attention-mechanisms/self-attention-and-positional-encoding.html#comparing-cnns-rnns-and-self-attention).]
 
 ---
 
@@ -464,6 +466,12 @@ $$
 
 After adding the positional encoding, words will be closer to each other based on the similarity of their meaning and their relative position in the sentence, in the $d\_\text{model}$-dimensional space.
 
+???
+
+All words of input sequence are fed to the network with no special order or position; in contrast, in RNN architecture, 𝑛-th word is fed at step 𝑛, and in ConvNet, it is fed to specific input indices. Therefore, proposed model has no idea how the words are ordered.
+
+Draw https://datascience.stackexchange.com/questions/51065/what-is-the-positional-encoding-in-the-transformer-model on black board.
+
 ---
 
 class: middle
@@ -581,16 +589,12 @@ class: middle
 
 ---
 
-class: center, middle
-
-(demo)
-
----
-
 class: middle
 count: false
 
 # Applications
+
+Check Hugging Face's [Spaces](https://huggingface.co/spaces) for ML apps made with Transformers.
 
 ---
 
@@ -612,6 +616,10 @@ class: middle, center, black-slide
 
 GPT-3 generates Python code.
 
+???
+
+Show Copilot to generate Pytorch code for a Transformer module!
+
 ---
 
 class: middle
@@ -620,7 +628,7 @@ class: middle
 
 .width-100[![](figures/lec8/clip.png)]
 
-CLIP: connecting text and images for zero-shot classification (see [demo](https://clip.backprop.co/)).
+CLIP: connecting text and images for zero-shot classification (see [demo](https://huggingface.co/spaces/Datatrooper/zero-shot-image-classification)).
 
 ]
 
