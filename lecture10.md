@@ -20,48 +20,12 @@ class: middle
 
 Learn a model of the data.
 
-- Generative models
 - Auto-encoders
 - Variational inference
 - Variational auto-encoders
 
 ---
 
-class: middle
-
-# Generative models
-
-.footnote[Credits: slides adapted from .italic["[Tutorial on Deep Generative Models](http://auai.org/uai2017/media/tutorials/shakir.pdf)"], Shakir Mohamed and Danilo Rezende, UAI 2017.]
-
----
-
-class: middle
-
-## Deep unsupervised learning
-
-Deep unsupervised learning is about capturing rich patterns in raw data with deep networks in a **label-free** way.
-
-- Generative models: recreate the raw data distribution (e.g., the distribution of natural images).
-- Self-supervised learning: solve puzzle tasks that require semantic understanding (e.g., predict a missing word in a sequence).
-
----
-
-class: middle
-
-## Generative models
-
-A **generative model** is a probabilistic model $p$ that can be used as *a simulator of the data*.
-Its purpose is to generate synthetic but realistic high-dimensional data
-$$\mathbf{x} \sim p(\mathbf{x};\theta),$$
-that is as close as possible from the unknown data distribution $p(\mathbf{x})$, but for which we have empirical samples.
-
----
-
-class: middle
-
-.center[Why do we care?]
-
----
 
 class: middle
 
@@ -100,9 +64,31 @@ class: middle
 
 ---
 
-# Immediate applications
+class: middle
 
-<br>
+## Deep unsupervised learning
+
+Deep unsupervised learning is about capturing rich patterns in raw data with deep networks in a **label-free** way.
+
+- Generative models: recreate the raw data distribution (e.g., the distribution of natural images).
+- Self-supervised learning: solve puzzle tasks that require semantic understanding (e.g., predict a missing word in a sequence).
+
+---
+
+class: middle
+
+## Generative models
+
+A **generative model** is a probabilistic model $p$ that can be used as *a simulator of the data*.
+Its purpose is to generate synthetic but realistic high-dimensional data
+$$\mathbf{x} \sim p(\mathbf{x};\theta),$$
+that is as close as possible from the unknown data distribution $p(\mathbf{x})$, but for which we have empirical samples.
+
+---
+
+class: middle
+
+## Immediate applications
 
 .center[
 .width-100[![](figures/lec10/why-gm.png)]
@@ -112,132 +98,7 @@ class: middle
 ---
 
 class: middle
-
-## Machine translation
-
-Attention-based sequence-to-sequence synthesis.
-
-.center[
-.width-100[![](figures/lec7/nmt2.gif)]
-
-(Wu et al, 2016)
-]
-
----
-
-class: middle
-
-## Text-to-speech synthesis
-
-Generating audio conditioned on text.
-
-.center[
-.width-100[![](figures/lec10/generative-text-to-speech.png)]
-
-(Oord et al, 2016)
-]
-
----
-
-class: middle
-
-## Image and content generation
-
-Generating images and video content.
-
-.center[
-.width-100[![](figures/lec10/generative-content.png)]
-
-(Gregor et al, 2015; Oord et al, 2016; Dumoulin et al, 2016)
-]
-
----
-
-class: middle
-
-## Communication and compression
-
-Hierarchical compression of images and other data, e.g., in video conferencing systems.
-
-.center[
-.width-100[![](figures/lec10/generative-compression.png)]
-
-(Gregor et al, 2016)
-]
-
----
-
-class: middle
-
-## Image super-resolution
-
-Photo-realistic single image super-resolution.
-
-.center[
-.width-100[![](figures/lec10/generative-superres.png)]
-
-(Ledig et al, 2016)
-]
-
----
-
-class: middle
-
-## Visual concept learning
-
-Understanding the factors of variation and invariances.
-
-.center[
-.width-100[![](figures/lec10/generative-factors.png)]
-
-(Higgins et al, 2017)
-]
-
----
-
-class: middle
-
-## Future simulation
-
-Simulate future trajectories of environments based on actions for planning.
-
-.center[
-.width-40[![](figures/lec10/robot1.gif)] .width-40[![](figures/lec10/robot2.gif)]
-
-(Finn et al, 2016)
-]
-
----
-
-class: middle
-
-## One-shot generalization
-
-Rapid generalization of novel concepts.
-
-.center[
-.width-100[![](figures/lec10/generative-oneshot.png)]
-
-(Gregor et al, 2016)
-]
-
----
-
-class: middle
-
-## Improving downstream tasks with un(self)supervised pre-training
-
-Transformer architectures have shown to be remarkably effective zero/one-short learners.
-
-.center[
-.width-100[![](figures/lec8/gpt.png)]
-
-(Radford et al, 2018)
-]
-
----
-
-class: middle
+count: false
 
 # Auto-encoders
 
@@ -474,6 +335,7 @@ Building a good model in latent space amounts to our original problem of modelin
 ---
 
 class: middle
+count: false
 
 # Variational inference
 
@@ -598,6 +460,7 @@ this gradient is difficult to compute because the expectation is unknown and the
 ---
 
 class: middle
+count: false
 
 # Variational auto-encoders
 
@@ -629,7 +492,6 @@ $$\begin{aligned}
 \mu, \sigma &= \text{NN}\_\varphi(\mathbf{x}) \\\\
 q(\mathbf{z}|\mathbf{x};\varphi) &= \mathcal{N}(\mathbf{z}; \mu, \sigma^2\mathbf{I})
 \end{aligned}$$
-
 
 ---
 
@@ -684,15 +546,11 @@ $$\begin{aligned}
 \text{ELBO}(\mathbf{x};\theta,\varphi) &= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi)\right] \\\\
 &= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ f(\mathbf{x}, \mathbf{z}; \varphi) \right].
 \end{aligned}$$
-
 We have
-
 .grid[
 .kol-1-5[]
 .kol-4-5[.center.width-90[![](figures/lec10/reparam-original.svg)]]
 ]
-
-
 
 We cannot backpropagate through the stochastic node $\mathbf{z}$ to compute $\nabla\_\varphi f$!
 
@@ -700,7 +558,7 @@ We cannot backpropagate through the stochastic node $\mathbf{z}$ to compute $\na
 
 # Reparameterization trick
 
-The *reparameterization trick* consists in re-expressing the variable $$\mathbf{z} \sim q(\mathbf{z}|\mathbf{x};\varphi)$$ as some differentiable and invertible transformation
+The .bold[reparameterization trick] consists in re-expressing the variable $$\mathbf{z} \sim q(\mathbf{z}|\mathbf{x};\varphi)$$ as some differentiable and invertible transformation
 of another random variable $\epsilon$ given $\mathbf{x}$ and $\varphi$,
 $$\mathbf{z} = g(\varphi, \mathbf{x}, \epsilon),$$
 such that the distribution of $\epsilon$ is independent of $\mathbf{x}$ or $\varphi$.
@@ -809,49 +667,30 @@ class: middle, center
 
 class: middle, center
 
-.width-100[![](figures/lec10/vae-interpolation.png)]
+.width-95[![](figures/lec10/vae-interpolation.png)]
 
 (Kingma and Welling, 2013)
 
 ---
 
-class: middle
-
 # Applications
 
----
-
-class: black-slide, middle
+<br>
 
 .center[
-<iframe width="640" height="400" src="https://www.youtube.com/embed/XNZIN7Jh3Sg?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
+.width-90[![](figures/lec10/generative-compression.png)]
 
-Random walks in latent space. (Alex Radford, 2015)
-
+Hierarchical .bold[compression of images and other data],<br> e.g., in video conferencing systems (Gregor et al, 2016).
 ]
 
 ---
 
-class: black-slide, middle
+class: middle
 
 .center[
-.width-60[![](figures/lec10/nvae.gif)]
+.width-100[![](figures/lec10/generative-factors.png)]
 
-Random walks in latent space. (Vahdat and Kautz, 2020)
-
-]
-
----
-
-class: middle, black-slide
-
-.center[
-
-<iframe  width="640" height="400"  src="https://int8.io/wp-content/uploads/2016/12/output.mp4" frameborder="0" volume="0" allowfullscreen></iframe>
-
-Impersonation by encoding-decoding an unknown face.
-
-(Kamil Czarnogórski, 2016)
+.bold[Understanding the factors of variation and invariances] (Higgins et al, 2017).
 ]
 
 ---
@@ -862,21 +701,7 @@ class: middle
 
 .width-80[![](figures/lec10/vae-styletransfer.jpg)]
 
-Voice style transfer [[demo](https://avdnoord.github.io/homepage/vqvae/)]
-
-(van den Oord et al, 2017)
-]
-
----
-
-class: middle, black-slide
-
-.center[
-
-<iframe width="640" height="400" src="https://www.youtube.com/embed/Wd-1WU8emkw?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
-
-(Inoue et al, 2017)
-
+.bold[Voice style transfer] [[demo](https://avdnoord.github.io/homepage/vqvae/)] (van den Oord et al, 2017).
 ]
 
 ---
@@ -885,7 +710,68 @@ class: middle
 
 .center.width-100[![](figures/lec10/bombarelli.jpeg)]
 
-.center[Design of new molecules with desired chemical properties.<br> (Gomez-Bombarelli et al, 2016)]
+.center[.bold[Design of new molecules] with desired chemical properties<br> (Gomez-Bombarelli et al, 2016).]
+
+---
+
+class: middle
+
+.center[
+
+<iframe width="640" height="400" src="https://www.youtube.com/embed/Wd-1WU8emkw?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
+
+Bridging the .bold[simulation-to-reality] gap (Inoue et al, 2017).
+
+]
+
+---
+
+# Hierarchical VAEs
+
+See blackboard.
+
+---
+
+class: middle
+
+.center.width-90[![](figures/lec10/vdvae_diagram.png)]
+
+.center[VDVAE: Very Deep VAEs (Child, 2020-2021).]
+
+---
+
+class: middle
+
+.center.width-70[![](figures/lec10/vdvae_samples.png)]
+
+.center[VDVAE samples (Child, 2020-2021).]
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec10/nvae_model_diagram.png)]
+
+.center[NVAE: A Deep Hierarchical Variational Autoencoder (Vahdat and Kautz, 2020).]
+
+---
+
+class: middle
+
+.center.width-90[![](figures/lec10/nvae_samples.png)]
+
+.center[NVAE samples (Vahdat and Kautz, 2020).]
+
+---
+
+class: black-slide, middle
+
+.center[
+.width-60[![](figures/lec10/nvae.gif)]
+
+NVAE: Random walks in latent space. (Vahdat and Kautz, 2020)
+
+]
 
 ---
 
@@ -893,13 +779,3 @@ class: end-slide, center
 count: false
 
 The end.
-
----
-
-count: false
-
-# References
-
-- Mohamed and Rezende, "[Tutorial on Deep Generative Models](http://auai.org/uai2017/media/tutorials/shakir.pdf)", UAI 2017.
-- Blei et al, "[Variational inference: Foundations and modern methods](https://media.nips.cc/Conferences/2016/Slides/6199-Slides.pdf)", 2016.
-- Kingma and Welling, "[Auto-Encoding Variational Bayes](https://arxiv.org/pdf/1312.6114.pdf)", 2013.
