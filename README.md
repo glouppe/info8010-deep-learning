@@ -28,7 +28,7 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2022.
 | May 8 | Deadline for the reading assignment |
 | May 8 | Deadline for the project |
 | May 13 | Lecture 12: [Uncertainty](https://glouppe.github.io/info8010-deep-learning/?p=lecture12.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec12.pdf)] [[video](https://youtu.be/AxJBY9eRTL4)] |
-| --- | All lectures [PDF](https://glouppe.github.io/info8010-deep-learning/pdf/all.pdf) |
+| --- | All lectures [[PDF](https://drive.google.com/file/d/1Rb4YC8L4DPREW802Ow9gw79zhBtLhY5V/view?usp=sharing)] |
 
 ## Homeworks
 
