@@ -8,22 +8,13 @@ Lecture 11: Generative adversarial networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-R: https://stylegan-nada.github.io/
-R: https://replicate.ai/yuval-alaluf/restyle_encoder
-R: https://colab.research.google.com/drive/1eYlenR1GHPZXt-YuvXabzO9wfh9CWY36
-R: https://colab.research.google.com/github/ekgren/StructuredDreaming/blob/main/colabs/Structured_Dreaming_Styledreams_faces.ipynb
-R: https://colab.research.google.com/github/hila-chefer/TargetCLIP/blob/main/TargetCLIP_CLIP_guided_image_essence_transfer.ipynb
-R: https://twitter.com/ak92501/status/1506849160867295235?t=MlxjF0JVwpaTfpk3KlP_UQ&s=03
-
 ---
 
 class: middle 
 
-.center.width-40[![](figures/lec11/christies.jpg)]
+.center.width-55[![](figures/lec11/christies.jpg)]
 
-.italic["Generative adversarial networks is the coolest idea in deep learning in the last 20 years."] 
+.center.italic["Generative adversarial networks is the coolest idea<br> in deep learning in the last 20 years."] 
 
 .pull-right[Yann LeCun, 2018.]
 
@@ -34,7 +25,6 @@ class: middle
 Learn a model of the data.
 
 - Generative adversarial networks
-- .inactive[Wasserstein GANs]
 - Numerics of GANs
 - State of the art
 - Applications
@@ -90,6 +80,34 @@ However, the situation is slightly more complicated since we also want to train 
 
 ---
 
+class: middle
+
+## Learning process
+
+In practice, the minimax solution is approximated using *alternating* stochastic gradient descent:
+$$
+\begin{aligned}
+\theta &\leftarrow \theta - \gamma \nabla\_\theta V(\phi, \theta) \\\\
+\phi &\leftarrow \phi + \gamma \nabla\_\phi V(\phi, \theta),
+\end{aligned}
+$$
+where gradients are estimated with Monte Carlo integration.
+
+???
+
+- For one step on $\theta$, we can optionally take $k$ steps on $\phi$, since we need the classifier to remain near optimal.
+- Note that to compute $\nabla\_\theta V(\phi, \theta)$, it is necessary to backprop all the way through $d$ before computing the partial derivatives with respect to $g$'s internals.
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec11/learning.png)]
+
+.footnote[Credits: Goodfellow et al, [Generative Adversarial Networks](https://arxiv.org/abs/1406.2661), 2014.]
+
+---
+
 
 class: middle
 
@@ -110,7 +128,7 @@ $$\theta^\* = \arg \min\_\theta \max\_\phi V(\phi, \theta).$$
 
 ???
 
-Switch to the iPad
+Switch to blackboard.
 
 ---
 
@@ -150,41 +168,11 @@ corresponds to a generative model that perfectly reproduces the true data distri
 
 ---
 
-class: middle
-
-## Learning process
-
-In practice, the minimax solution is approximated using *alternating* stochastic gradient descent:
-$$
-\begin{aligned}
-\theta &\leftarrow \theta - \gamma \nabla\_\theta V(\phi, \theta) \\\\
-\phi &\leftarrow \phi + \gamma \nabla\_\phi V(\phi, \theta),
-\end{aligned}
-$$
-where gradients are estimated with Monte Carlo integration.
-
-???
-
-- For one step on $\theta$, we can optionally take $k$ steps on $\phi$, since we need the classifier to remain near optimal.
-- Note that to compute $\nabla\_\theta V(\phi, \theta)$, it is necessary to backprop all the way through $d$ before computing the partial derivatives with respect to $g$'s internals.
-
----
-
-class: middle
-
-.center.width-100[![](figures/lec11/learning.png)]
-
-.footnote[Credits: Goodfellow et al, [Generative Adversarial Networks](https://arxiv.org/abs/1406.2661), 2014.]
-
----
-
 class: middle, center
 
 .width-100[![](figures/lec11/ganlab.png)]
 
-[[Demo](https://poloclub.github.io/ganlab)]
-
-
+([demo](https://poloclub.github.io/ganlab))
 
 ---
 
@@ -286,6 +274,7 @@ class: middle
 
 class: middle, inactive
 count: false
+exclude: true
 
 # .inactive[Wasserstein GANs]
 
@@ -295,6 +284,7 @@ count: false
 
 class: middle
 count: false
+exclude: true
 
 ## Return of the Vanishing Gradients
 
@@ -314,6 +304,7 @@ and $\nabla\_\theta V(\phi,\theta) = 0$, thereby **halting** gradient descent.
 
 class: middle
 count: false
+exclude: true
 
 Dilemma :
 - If $d$ is bad, then $g$ does not have accurate feedback and the loss function cannot represent the reality.
@@ -323,6 +314,7 @@ Dilemma :
 
 class: middle
 count: false
+exclude: true
 
 ## Jensen-Shannon divergence
 
@@ -338,6 +330,7 @@ where
 
 class: middle
 count: false
+exclude: true
 
 Notice how the Jensen-Shannon divergence poorly accounts for the metric structure of the space.
 
@@ -349,6 +342,7 @@ Intuitively, instead of comparing distributions "vertically", we would like to c
 
 class: middle
 count: false
+exclude: true
 
 ## Wasserstein distance
 
@@ -370,6 +364,7 @@ $$\text{W}\_1(p,q) = 4\times\frac{1}{4} + 2\times\frac{1}{4} + 3\times\frac{1}{2
 
 class: middle
 count: false
+exclude: true
 
 The Earth mover's distance is also known as the Wasserstein-1 distance and is defined as:
 $$\text{W}\_1(p, q) = \inf\_{\gamma \in \Pi(p,q)} \mathbb{E}\_{(x,y)\sim \gamma} \left[||x-y||\right]$$
@@ -382,6 +377,7 @@ where:
 
 class: middle
 count: false
+exclude: true
 
 .center[![](figures/lec11/transport-plan.png)]
 
@@ -389,6 +385,7 @@ count: false
 
 class: middle
 count: false
+exclude: true
 
 Notice how the $\text{W}\_1$ distance does not saturate. Instead, it
  increases monotonically with the distance between modes:
@@ -405,6 +402,7 @@ For any two distributions $p$ and $q$,
 
 class: middle
 count: false
+exclude: true
 
 ## Wasserstein GANs
 
@@ -422,6 +420,7 @@ $$||f||\_L = \max\_{\mathbf{x},\mathbf{x}'} \frac{||f(\mathbf{x}) - f(\mathbf{x}
 
 class: middle
 count: false
+exclude: true
 
 .center.width-80[![](figures/lec11/kr-duality.png)]
 
@@ -439,6 +438,7 @@ $$
 
 class: middle
 count: false
+exclude: true
 
 Using this result, the Wasserstein GAN algorithm consists in solving the minimax problem:
 $$\theta^\* = \arg \min\_\theta \max\_{\phi:||d(\cdot;\phi)||\_L \leq 1}  \mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ d(\mathbf{x};\phi) \right] - \mathbb{E}\_{\mathbf{x} \sim q(\mathbf{x};\theta)} \left[d(\mathbf{x};\phi)\right]$$$$
@@ -457,6 +457,7 @@ Note that this formulation is very close to the original GANs, except that:
 
 class: middle
 count: false
+exclude: true
 
 .center.width-90[![](figures/lec11/wgan.png)]
 
@@ -466,6 +467,7 @@ count: false
 
 class: middle
 count: false
+exclude: true
 
 .center.width-70[![](figures/lec11/wgan-gallery.png)]
 
@@ -607,18 +609,17 @@ class: middle
 
 class: middle
 
-## Dirac-GAN: Vanilla GANs
-
 .width-90.center[![](figures/lec11/dirac-unreg.png)]
 
 On the Dirac-GAN toy problem, eigenvalues are $\\{ -f'(0)i, +f'(0)i \\}$.
-Therefore convergence is not guaranteed.
+Therefore convergence of the standard GAN learning procedure is not guaranteed.
 
 .footnote[Credits: Mescheder et al, [Which Training Methods for GANs do actually Converge?](https://arxiv.org/abs/1801.04406), 2018.]
 
 ---
 
 class: middle
+exclude: true
 
 ## Dirac-GAN: Wasserstein GANs
 
@@ -756,7 +757,6 @@ Progressive GANs as baseline (Karras et al, 2017) + Non-saturating loss instead 
 
 ]
 
-
 ---
 
 class: middle, center, black-slide
@@ -798,23 +798,49 @@ class: middle
 
 class: middle 
 
-## StyleGAN (v2)
+## StyleGAN (v2, v3)
 
-.width-60.center[![](figures/lec11/styleganv2.png)]
+.center[
 
-.center[(Karras et al, 2019)]
+<video controls preload="auto" height="320" width="320">
+  <source src="https://nvlabs-fi-cdn.nvidia.com/_web/stylegan3/videos/video_3_afhq_interpolations.mp4#t=0.001" type="video/mp4">
+</video>
+
+<video controls preload="auto" height="320" width="320">
+  <source src="https://nvlabs-fi-cdn.nvidia.com/_web/stylegan3/videos/video_4_beaches_interpolations.mp4#t=0.001" type="video/mp4">
+</video>
+
+]
+
+.center[(Karras et al, 2019; Karras et al, 2021)]
+
+---
+
+class: middle
+
+## VQGAN 
+
+.width-100[![](figures/lec11/vqgan.png)]
+
+.center[(Esser et al, 2021)]
+
+???
+
+Check https://ljvmiranda921.github.io/notebook/2021/08/08/clip-vqgan/
+
+---
+
+class: middle, center
+.width-45[![](figures/lec11/vqgan1.jpg)] &nbsp;
+.width-45[![](figures/lec11/vqgan2.jpg)]
+
+(Esser et al, 2021)
 
 ---
 
 class: middle
 
 # Applications
-
----
-
-class: middle
-
-.alert[$p(\mathbf{z})$ need not be a random noise distribution.]
 
 ---
 
@@ -847,6 +873,14 @@ class: middle, center, black-slide
 <iframe width="600" height="450" src="https://www.youtube.com/embed/p5U4NgVGAwg" frameborder="0" allowfullscreen></iframe>
 
 GauGAN: Changing sketches into photorealistic masterpieces (NVIDIA, 2019)
+
+---
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/p9MAvRpT6Cg" frameborder="0" allowfullscreen></iframe>
+
+GauGAN2 (NVIDIA, 2021)
 
 ---
 
@@ -907,6 +941,23 @@ class: middle
 .center[(Zhang et al, 2017)]
 
 ]
+
+---
+
+class: middle
+
+.center[
+
+.width-100[![](figures/lec11/styleclip.png)]
+.width-100[![](figures/lec11/styleclip-teaser.png)]
+
+.center[StyleCLIP (Patashnik et al, 2021)]
+
+]
+
+???
+
+See also https://stylegan-nada.github.io/ or VQGAN+CLIP.
 
 ---
 

@@ -18,6 +18,8 @@ R: langevin dynamics (welling)
 R: Balaji tutorial https://twitter.com/balajiln/status/1421519413988053002?s=03
 R: https://emtiyaz.github.io/papers/Nov9_2021_ACML_summer_school.pdf
 
+R: CLIP adversarial examples
+
 ---
 
 # Today

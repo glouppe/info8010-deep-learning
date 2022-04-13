@@ -8,6 +8,15 @@ Lecture 10: Auto-encoders and variational auto-encoders
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+R?: Split before Hierarchical VAE into a new lecture covering:
+- priors in VAEs
+- hierarchical VAEs
+- DDPMs
+- score-based generative models
+(and drop GANs?)
+
 ---
 
 class: middle
@@ -417,7 +426,7 @@ class: middle
 However, we can write
 $$\begin{aligned}
 &\arg\min\_\nu \text{KL}(q(\mathbf{z}|\mathbf{x};\nu) || p(\mathbf{z}|\mathbf{x})) \\\\
-=&\arg\min\_\nu \log p(\mathbf{x}) - \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log p(\mathbf{x},\mathbf{z}) - \log q(\mathbf{z}|\mathbf{x};\nu) \right] \\\\
+=& \arg\min\_\nu  \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log q(\mathbf{z}|\mathbf{x};\nu) - \log p(\mathbf{x},\mathbf{z}) \right] + \log p(\mathbf{x})\\\\
 =&\arg\max\_\nu \underbrace{\mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log p(\mathbf{x},\mathbf{z}) - \log q(\mathbf{z}|\mathbf{x};\nu) \right]}\_{\text{ELBO}(\mathbf{x};\nu)}
 \end{aligned}
 $$
@@ -510,7 +519,6 @@ As before, we can use variational inference, but to jointly optimize the generat
 We want
 $$\begin{aligned}
 \theta^{\*}, \varphi^{\*} &= \arg \max\_{\theta,\varphi} \text{ELBO}(\mathbf{x};\theta,\varphi) \\\\
-&= \arg \max\_{\theta,\varphi} \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi)\right] \\\\
 &= \arg \max\_{\theta,\varphi} \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x}|\mathbf{z};\theta)\right] - \text{KL}(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z})).
 \end{aligned}$$
 
@@ -638,8 +646,7 @@ class: middle
 
 Plugging everything together, the objective can be expressed as:
 $$\begin{aligned}
-\text{ELBO}(\mathbf{x};\theta,\varphi) &= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi)\right] \\\\
-&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)} \left[ \log p(\mathbf{x}|\mathbf{z};\theta) \right] - \text{KL}(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z})) \\\\
+\text{ELBO}(\mathbf{x};\theta,\varphi) &= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)} \left[ \log p(\mathbf{x}|\mathbf{z};\theta) \right] - \text{KL}(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z})) \\\\
 &= \mathbb{E}\_{p(\epsilon)} \left[  \log p(\mathbf{x}|\mathbf{z}=g(\varphi,\mathbf{x},\epsilon);\theta) \right] - \text{KL}(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z}))
 \end{aligned}
 $$
@@ -728,7 +735,7 @@ Bridging the .bold[simulation-to-reality] gap (Inoue et al, 2017).
 
 # Hierarchical VAEs
 
-See blackboard.
+See side notes.
 
 ---
 

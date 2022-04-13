@@ -24,10 +24,11 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2022.
 | April 1 | Lecture 8: [Attention and transformers](https://glouppe.github.io/info8010-deep-learning/?p=lecture8.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec8.pdf)] [[video](https://youtu.be/cwFE1pLld-g)] |
 | April 22 | Lecture 9: [Graph neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture9.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec9.pdf)] (Optional) |
 | April 29 | Lecture 10: [Auto-encoders and variational auto-encoders](https://glouppe.github.io/info8010-deep-learning/?p=lecture10.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec10.pdf)] [[video](https://youtu.be/6gWeyUZtHWs)] |
-| May 6 | Lecture 11: [Generative adversarial networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture11.md) [[video](https://youtu.be/cM6m1eHY5FI)] |
+| May 6 | Lecture 11: [Generative adversarial networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture11.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec11.pdf)] [[video](https://youtu.be/cM6m1eHY5FI)] |
 | May 8 | Deadline for the reading assignment |
 | May 8 | Deadline for the project |
-| May 13 | Lecture 12: [Uncertainty](https://glouppe.github.io/info8010-deep-learning/?p=lecture12.md) [PDF] [[video](https://youtu.be/AxJBY9eRTL4)] |
+| May 13 | Lecture 12: [Uncertainty](https://glouppe.github.io/info8010-deep-learning/?p=lecture12.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec12.pdf)] [[video](https://youtu.be/AxJBY9eRTL4)] |
+| --- | All lectures [PDF](https://glouppe.github.io/info8010-deep-learning/pdf/all.pdf) |
 
 ## Homeworks
 

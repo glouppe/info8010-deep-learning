@@ -8,10 +8,6 @@ Closing remarks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-R: use the LEGO advertisment and insist that builder one last time
-
 ---
 
 class: middle, center
@@ -54,9 +50,23 @@ Feel free to contact us about
 
 ---
 
-class: middle
+class: black-slide, middle
 
+.grid[
+.kol-1-2[
 ## Last words
+
+- Deep Learning is more than feedforward networks.
+- It is a .bold[methodology]:
+  - assemble networks of parameterized functional blocks 
+  - train them from examples using some form of gradient-based optimisation.
+- Bricks are simple, but their nested composition can be arbitrarily complicated.
+- Think like an architect: make cathedrals!
+]
+.kol-1-2[.width-100[![](figures/course-syllabus/lego-ad.jpg)]]
+]
+
+???
 
 Artificial intelligence and deep learning are transforming science, engineering and society.
 
