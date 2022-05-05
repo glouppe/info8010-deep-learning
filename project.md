@@ -8,7 +8,7 @@ Some general potential problems could be the following:
 
 - Computer vision applications (classification, object detection, segmentation)
 - Natural language processing applications (machine translation, image captioning, recommendation systems)
-- Conditional generative models (image synthesis, style-transfer, drug-discovery)
+- Conditional generative models (image synthesis, style transfer)
 - Deep reinforcement learning (video games, robotics)
 
 ### Agenda
