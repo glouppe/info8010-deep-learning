@@ -8,18 +8,6 @@ Lecture 12: Uncertainty
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-R: check https://drive.google.com/file/d/1G6I1hOxg9zN3PmKqm7sahXw6DvYmyYW3/view?usp=sharing
-R: check https://www.slideshare.net/perone/uncertainty-estimation-in-deep-learning
-R: https://www.gatsby.ucl.ac.uk/~balaji/berkeley-talk-balaji.pdf
-R: langevin dynamics (welling)
-
-R: Balaji tutorial https://twitter.com/balajiln/status/1421519413988053002?s=03
-R: https://emtiyaz.github.io/papers/Nov9_2021_ACML_summer_school.pdf
-
-R: CLIP adversarial examples
-
 ---
 
 # Today
@@ -89,62 +77,6 @@ class: middle
 
 ---
 
-# Types of uncertainty
-
-## Case 1
-
-We have three different types of images to classify, cat, dog, and cow, some of which may be noisy due to the limitations of the acquisition instrument.
-
-$\Rightarrow$ **Aleatoric uncertainty**.
-
-<br>
-.center.width-90[![](figures/lec12/model-uncertainty2.png)]
-
----
-
-class: middle
-
-## Case 2
-
-What are the model parameters that best explain a given dataset? What model structure should we use? What are the known unknowns and our prior beliefs?
-
-$\Rightarrow$ **Epistemic uncertainty**.
-
-.center[
-.width-45[![](figures/lec1/poly-3.png)]
-.width-45[![](figures/lec1/poly-10.png)]
-]
-
----
-
-class: middle
-
-.center.width-90[![](figures/lec12/types.png)]
-
-.italic["Our model exhibits in (d) increased .bold[aleatoric uncertainty on object boundaries and for objects far from the camera]. .bold[Epistemic uncertainty accounts for our ignorance about which model generated our collected data]. In (e) our model exhibits increased epistemic uncertainty for semantically and visually challenging pixels. The bottom row shows a failure case of the segmentation model when the model fails to segment the footpath due to increased epistemic uncertainty, but not aleatoric uncertainty."]
-
-.footnote[Credits: Kendall and Gal, [What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?](https://papers.nips.cc/paper/7141-what-uncertainties-do-we-need-in-bayesian-deep-learning-for-computer-vision.pdf), 2017.]
-
----
-
-class: middle
-
-## Case 3
-
-Let us consider a neural network model trained with several pictures of dog breeds.
-
-We ask the model to decide on a dog breed using a photo of a cat.
-What would you want the model to do?
-
-$\Rightarrow$ **Out of distribution test data**.
-
-.grid[
-.kol-1-2[.center.width-90[![](figures/lec12/dogs.jpg)]]
-.kol-1-2[.center.width-70[![](figures/lec12/cat.jpg)]]
-]
-
----
-
 class: middle
 
 # Aleatoric uncertainty
@@ -156,8 +88,7 @@ class: middle
 **Aleatoric** uncertainty captures noise inherent in the observations.
 - For example, sensor noise or motion noise result in uncertainty.
 - This uncertainty *cannot be reduced* with more data.
-- However, aleatoric could be reduced with better measurements.
-
+- However, aleatoric uncertainty could be reduced with better measurements.
 
 ---
 
@@ -321,9 +252,64 @@ A mixture density network models the data correctly, as it predicts for each inp
 
 .footnote[Credits: David Ha, [Mixture Density Networks](http://blog.otoro.net/2015/06/14/mixture-density-networks/), 2015.]
 
+---
+
+# Normalizing flows
+
+.center.width-80[![](figures/lec12/cubes.png)]
+
+Assume $p(\mathbf{z})$ is a uniformly distributed unit cube in $\mathbb{R}^3$ and $\mathbf{x} = f(\mathbf{z}) = 2\mathbf{z}$.
+
+Since the total probability mass must be conserved, 
+$$p(\mathbf{x}=f(\mathbf{z})) = p(\mathbf{z})\frac{V\_\mathbf{z}}{V\_\mathbf{x}}=p(\mathbf{z}) \frac{1}{8},$$
+where $\frac{1}{8} = \left| \det \left( \begin{matrix}
+2 & 0 & 0 \\\\ 
+0 & 2 & 0 \\\\
+0 & 0 & 2
+\end{matrix} \right)\right|^{-1}$ represents the determinant of the linear transformation $f$.
 
 ---
 
+class: middle
+
+.center.width-50[![](figures/lec12/non-linear.png)]
+
+What if $f$ is non-linear?
+
+- The Jacobian $J\_f(\mathbf{z})$ of $\mathbf{x} = f(\mathbf{z})$ represents the infinitesimal linear transformation in the neighborhood of $\mathbf{z}$
+- If the function is a bijective map, then the mass must be conserved locally.
+
+Therefore, the local change of density yields
+$$p(\mathbf{x}=f(\mathbf{z})) = p(\mathbf{z})\left| \det J\_f(\mathbf{z}) \right|^{-1}.$$
+
+Similarly, for $g = f^{-1}$, we have $$p(\mathbf{x})=p(\mathbf{z}=g(\mathbf{x}))\left| \det J\_g(\mathbf{x}) \right|.$$
+
+---
+
+class: middle 
+
+A .bold[normalizing flow] is a change of variable $f$ parameterized by an **invertible neural network** that transforms a base distribution $p(\mathbf{z})$ into $p(\mathbf{x})$.
+Formally, 
+- $f$ is a composition $f=f\_K \circ ... \circ f\_1$, where each $f\_k$ is an invertible neural transformation
+- $g_k = f^{-1}_k$
+- $\mathbf{z}\_k = f\_k(\mathbf{z}_{k-1})$, with $\mathbf{z}\_0 = \mathbf{z}$ and $\mathbf{z}\_K = \mathbf{x}$
+- $p(\mathbf{z}\_k) = p(\mathbf{z}\_{k-1} = g\_k(\mathbf{z}\_k)) \left| \det J\_{g\_k}(\mathbf{z}\_k) \right|$
+
+.center.width-100[![](figures/lec12/normalizing-flow.png)]
+
+.footnote[Image credits: [Lilian Weng](https://lilianweng.github.io/lil-log/2018/10/13/flow-based-deep-generative-models), 2018.]
+
+---
+
+class: middle
+
+## Example
+
+.center.width-90[![](figures/lec12/nf-densities.png)]
+
+Normalizing flows shine in applications for .bold[density estimation], where access to the density function is required (Wehenkel and Louppe, 2019).
+
+---
 
 class: middle
 
@@ -380,7 +366,7 @@ Bayesian neural networks are *easy to formulate*,  but notoriously **difficult**
 
 Variational inference can be used for building an approximation $q(\mathbf{\omega};\nu)$ of the posterior $p(\mathbf{\omega}|\mathbf{d})$.
 
-As before (see Lecture 9), we can show that minimizing
+As before (see Lecture 10), we can show that minimizing
 $$\text{KL}(q(\mathbf{\omega};\nu) || p(\mathbf{\omega}|\mathbf{d}))$$
 with respect to the variational parameters $\nu$, is identical to maximizing the evidence lower bound objective (ELBO)
 $$\text{ELBO}(\nu) = \mathbb{E}\_{q(\mathbf{\omega};\nu)} \left[\log p(\mathbf{d}| \mathbf{\omega})\right] - \text{KL}(q(\mathbf{\omega};\nu) || p(\mathbf{\omega})).$$

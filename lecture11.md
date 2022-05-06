@@ -8,10 +8,6 @@ Lecture 11: Generative adversarial networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-R: Slide 'learning process' -> V is used but not defined yet!
-
 ---
 
 class: middle 
@@ -86,6 +82,23 @@ However, the situation is slightly more complicated since we also want to train 
 
 class: middle
 
+Let us consider the **value function** 
+$$V(\phi, \theta) = \mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ \log d(\mathbf{x};\phi) \right] + \mathbb{E}\_{\mathbf{z} \sim p(\mathbf{z})}\left[ \log (1-d(g(\mathbf{z};\theta);\phi)) \right].$$
+
+- For a fixed $g$, $V(\phi, \theta)$ is high if $d$ is good at recognizing true from generated samples.
+
+- If $d$ is the best classifier given $g$, and if $V$ is high, then this implies that
+the generator is bad at reproducing the data distribution.
+
+- Conversely, $g$ will be a good generative model if $V$ is low when $d$ is a perfect opponent.
+
+Therefore, the ultimate goal is
+$$\theta^\* = \arg \min\_\theta \max\_\phi V(\phi, \theta).$$
+
+---
+
+class: middle
+
 ## Learning process
 
 In practice, the minimax solution is approximated using *alternating* stochastic gradient descent:
@@ -116,27 +129,6 @@ class: middle
 class: middle
 
 ## Game analysis
-
-Let us consider the **value function** 
-$$V(\phi, \theta) = \mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ \log d(\mathbf{x};\phi) \right] + \mathbb{E}\_{\mathbf{z} \sim p(\mathbf{z})}\left[ \log (1-d(g(\mathbf{z};\theta);\phi)) \right].$$
-
-- For a fixed $g$, $V(\phi, \theta)$ is high if $d$ is good at recognizing true from generated samples.
-
-- If $d$ is the best classifier given $g$, and if $V$ is high, then this implies that
-the generator is bad at reproducing the data distribution.
-
-- Conversely, $g$ will be a good generative model if $V$ is low when $d$ is a perfect opponent.
-
-Therefore, the ultimate goal is
-$$\theta^\* = \arg \min\_\theta \max\_\phi V(\phi, \theta).$$
-
-???
-
-Switch to blackboard.
-
----
-
-class: middle
 
 For a generator $g$ fixed at $\theta$, the classifier $d$ with parameters $\phi^\*\_\theta$ is optimal if and only if
 $$\forall \mathbf{x}, d(\mathbf{x};\phi^\*\_\theta) = \frac{p(\mathbf{x})}{q(\mathbf{x};\theta) + p(\mathbf{x})}.$$
