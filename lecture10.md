@@ -10,12 +10,7 @@ Prof. Gilles Louppe<br>
 
 ???
 
-R?: Split before Hierarchical VAE into a new lecture covering:
-- priors in VAEs
-- hierarchical VAEs
-- DDPMs
-- score-based generative models
-(and drop GANs?)
+R: Don't spend too long on HVAEs
 
 ---
 
@@ -32,17 +27,6 @@ Learn a model of the data.
 - Auto-encoders
 - Variational inference
 - Variational auto-encoders
-
----
-
-
-class: middle
-
-.center.circle.width-30[![](figures/lec10/feynman.jpg)]
-
-.italic.center["What I cannot create, I do not understand."]
-
-.pull-right[Richard Feynman]
 
 ---
 
@@ -110,16 +94,6 @@ class: middle
 count: false
 
 # Auto-encoders
-
----
-
-class: middle
-
-Many applications such as image synthesis, denoising, super-resolution, speech synthesis or compression, require to **go beyond** classification and regression and model explicitly a high-dimensional signal.
-
-This modeling consists of finding .italic["meaningful degrees of freedom"], or .italic["factors of variations"], that describe the signal and are of lesser dimension.
-
-.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
 ---
 
@@ -347,6 +321,10 @@ class: middle
 count: false
 
 # Variational inference
+
+???
+
+Switch to BB.
 
 ---
 

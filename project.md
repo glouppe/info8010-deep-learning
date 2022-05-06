@@ -14,7 +14,7 @@ Some general potential problems could be the following:
 ### Agenda
 
 - Project proposal, due by **March 14th, 2022**.
-- Project code and report, due by **May 8th, 2022**.
+- Project code and report, due by **May 13th, 2022**.
 
 Projects should be submitted through the [Montefiore submission platform](https://submit.montefiore.ulg.ac.be).
 

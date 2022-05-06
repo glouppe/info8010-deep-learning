@@ -25,9 +25,9 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2022.
 | April 22 | Lecture 9: [Graph neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture9.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec9.pdf)] (Optional) |
 | April 29 | Lecture 10: [Auto-encoders and variational auto-encoders](https://glouppe.github.io/info8010-deep-learning/?p=lecture10.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec10.pdf)] [[video](https://youtu.be/6gWeyUZtHWs)] |
 | May 6 | Lecture 11: [Generative adversarial networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture11.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec11.pdf)] [[video](https://youtu.be/cM6m1eHY5FI)] |
-| May 8 | Deadline for the reading assignment |
-| May 8 | Deadline for the project |
 | May 13 | Lecture 12: [Uncertainty](https://glouppe.github.io/info8010-deep-learning/?p=lecture12.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec12.pdf)] [[video](https://youtu.be/AxJBY9eRTL4)] |
+| May 13 | Deadline for the reading assignment |
+| May 13 | Deadline for the project |
 | --- | All lectures [[PDF](https://drive.google.com/file/d/1Rb4YC8L4DPREW802Ow9gw79zhBtLhY5V/view?usp=sharing)] |
 
 ## Homeworks
@@ -62,7 +62,7 @@ Constraints:
 - 2 pages (excluding references, if any).
 - Formatted using the LaTeX template [`template-report.tex`](https://glouppe.github.io/info8010-deep-learning/template-report.tex).
 
-Your report should be submitted by May 8. This is a **hard** deadline.
+Your report should be submitted by May 13. This is a **hard** deadline.
 
 ## Archives
 

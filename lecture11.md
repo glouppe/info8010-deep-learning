@@ -8,6 +8,10 @@ Lecture 11: Generative adversarial networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+R: Slide 'learning process' -> V is used but not defined yet!
+
 ---
 
 class: middle 
@@ -76,7 +80,7 @@ $$\begin{aligned}
 &\approx -\mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x})}\left[ \log d(\mathbf{x};\phi) \right] - \mathbb{E}\_{\mathbf{z} \sim p(\mathbf{z})}\left[ \log (1-d(g(\mathbf{z};\theta);\phi)) \right].
 \end{aligned}$$
 
-However, the situation is slightly more complicated since we also want to train $g$ to fool the discriminator, which is equivalent to maximize $d$'s loss.
+However, the situation is slightly more complicated since we also want to train $g$ to fool the discriminator. Fortunately, this is equivalent to maximizing $d$'s loss.
 
 ---
 
