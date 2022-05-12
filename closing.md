@@ -21,7 +21,7 @@ class: middle
 ## Exam
 
 - 1 question on the fundamentals of deep learning (lectures 1 to 4)  
-- 1 question on advanced topics (lectures 5 to 12) 
+- 1 question on advanced topics (lectures 5 to 12, lecture 9 excluded) 
 - short technical questions on your project 
 
 ---

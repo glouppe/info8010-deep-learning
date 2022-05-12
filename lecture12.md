@@ -54,8 +54,16 @@ In May 2016, there was the **first fatality** from an assisted driving system, c
 .kol-1-3[.center.width-100[![](figures/lec12/crash2.png)]]
 ]
 
-
 .footnote[Credits: Kendall and Gal, [What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?](https://papers.nips.cc/paper/7141-what-uncertainties-do-we-need-in-bayesian-deep-learning-for-computer-vision.pdf), 2017.]
+
+---
+
+class: middle, center
+
+.center[<video controls autoplay loop muted preload="auto" height="600" width="640">
+  <source src="./figures/lec12/tesla.mp4" type="video/mp4">
+</video>]
+
 
 ---
 
@@ -71,7 +79,7 @@ An image classification system erroneously identifies two African Americans as g
 
 class: middle
 
-.alert[If both these algorithms were able to assign a high level of **uncertainty** to their erroneous predictions, then the systems may have been able to *make better decisions*, and likely avoid disaster.]
+.alert[If these systems were able to assign a high level of **uncertainty** to their erroneous predictions, then they may have been able to *make better decisions*, and likely avoid disaster.]
 
 .footnote[Credits: Kendall and Gal, [What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?](https://papers.nips.cc/paper/7141-what-uncertainties-do-we-need-in-bayesian-deep-learning-for-computer-vision.pdf), 2017.]
 
@@ -98,9 +106,7 @@ Aleatoric uncertainty can further be categorized into *homoscedastic* and *heter
 - Homoscedastic uncertainty relates to the uncertainty that a particular task might cause. It stays constant for different inputs.
 - Heteroscedastic uncertainty depends on the inputs to the model, with some inputs potentially having more noisy outputs than others.
 
----
-
-class: middle
+<br>
 
 .center.width-100[![](figures/lec12/homo-vs-hetero.png)]
 
