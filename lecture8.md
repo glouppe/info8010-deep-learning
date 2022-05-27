@@ -130,7 +130,7 @@ Following Bahdanau et al. (2014), the encoder is specified as a bidirectional RN
 $$\mathbf{h}\_i = (\overrightarrow{\mathbf{h}}\_i, \overleftarrow{\mathbf{h}}\_i)$$
 for $i = 1, \ldots, T$, where $\overrightarrow{\mathbf{h}}\_i$ and $\overleftarrow{\mathbf{h}}\_i$ respectively denote the forward and backward hidden recurrent states of the bidirectional RNN.
 
-From this, they compute a new process $\mathbf{s}\_i$, $i=1, \ldots, T$, which looks at weighted averages of the $\mathbf{h}\_j$ where the __weights are functions of the signal__.
+From this, they compute a new process $\mathbf{s}\_i$, $i=1, \ldots, T'$, which looks at weighted averages of the $\mathbf{h}\_j$ where the __weights are functions of the signal__.
 
 .footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
