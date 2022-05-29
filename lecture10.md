@@ -10,7 +10,7 @@ Prof. Gilles Louppe<br>
 
 ???
 
-R: Don't spend too long on HVAEs
+R: Don't spend too long on HVAEs... but do mention Diffusion models.
 
 ---
 
