@@ -8,6 +8,10 @@ Lecture 8: Attention and transformers
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+https://www.youtube.com/watch?v=brmidghOP6c
+
 ---
 
 # Today

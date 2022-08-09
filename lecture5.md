@@ -8,6 +8,8 @@ Lecture 5: Convolutional networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
 R: EfficientNet?
 
 ---
