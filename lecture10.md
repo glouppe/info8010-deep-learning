@@ -11,6 +11,7 @@ Prof. Gilles Louppe<br>
 ???
 
 R: Don't spend too long on HVAEs... but do mention Diffusion models.
+R: https://twitter.com/c_valenzuelab/status/1562579547404455936
 
 ---
 

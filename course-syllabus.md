@@ -12,6 +12,7 @@ Prof. Gilles Louppe<br>
 
 R: add that they should participate. Dont be shy! (have candies for each answer?)
 R: low-level / closer to hardware / gpu / software stack (from code to execution)
+R: paper https://t.co/wVg6xUmt7d
 
 ---
 
