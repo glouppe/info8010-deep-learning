@@ -27,12 +27,12 @@ Prof. Gilles Louppe<br>
 - Lecture 4: Training neural networks
 - Lecture 5: Convolutional neural networks
 - Lecture 6: Computer vision
-- Lecture 7: Recurrent neural networks
-- Lecture 8: Attention and transformer networks
+- Lecture 7: Attention and transformer networks
+- Lecture 8: nanoGPT
 - Lecture 9: Graph neural networks
-- Lecture 10: Auto-encoders and variational auto-encoders
-- Lecture 11: Generative adversarial networks
-- Lecture 12: Uncertainty
+- Lecture 10: Uncertainty
+- Lecture 11: Auto-encoders and variational auto-encoders
+- Lecture 12: Score-based diffusion models
 
 ---
 

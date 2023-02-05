@@ -8,13 +8,13 @@ Some general potential problems could be the following:
 
 - Computer vision applications (classification, object detection, segmentation)
 - Natural language processing applications (machine translation, image captioning, recommendation systems)
-- Conditional generative models (image synthesis, style transfer)
+- Conditional generative models (image synthesis, style transfer, text generation)
 - Deep reinforcement learning (video games, robotics)
 
 ### Agenda
 
-- Project proposal, due by **March 14th, 2022**.
-- Project code and report, due by **May 13th, 2022**.
+- Project proposal, due by **(TBD)**.
+- Project code and report, due by **(TBD)**.
 
 Projects should be submitted through the [Montefiore submission platform](https://submit.montefiore.ulg.ac.be).
 
