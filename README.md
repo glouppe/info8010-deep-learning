@@ -56,7 +56,7 @@ Constraints:
 - 2 pages (excluding references, if any).
 - Formatted using the LaTeX template [`template-report.tex`](https://glouppe.github.io/info8010-deep-learning/template-report.tex).
 
-Your report should be submitted by May 13. This is a **hard** deadline.
+Your report should be submitted by **(TBD)**. This is a **hard** deadline.
 
 ## Archives
 
