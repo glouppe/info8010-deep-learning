@@ -2,7 +2,7 @@ class: middle, center, title-slide
 
 # Deep Learning
 
-Spring 2022
+Spring 2023
 
 <br><br>
 Prof. Gilles Louppe<br>
@@ -39,6 +39,7 @@ This course is given by:
   - Arnaud Delaunoy
   - François Rozet
   - Yann Claes
+  - Victor Dachet
 
 <br>
 
@@ -46,7 +47,8 @@ This course is given by:
 .circle.width-15[![](figures/course-syllabus/gilles.jpg)] &nbsp;
 .circle.width-15[![](figures/course-syllabus/arnaud.jpg)] &nbsp;
 .circle.width-15[![](figures/course-syllabus/francois.jpg)] &nbsp;
-.circle.width-15[![](figures/course-syllabus/yann.jpg)] 
+.circle.width-15[![](figures/course-syllabus/yann.jpg)] &nbsp;
+.circle.width-15[![](figures/course-syllabus/victor.jpg)] 
 ]
 
 ---

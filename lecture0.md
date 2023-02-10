@@ -28,7 +28,7 @@ Prof. Gilles Louppe<br>
 - Lecture 5: Convolutional neural networks
 - Lecture 6: Computer vision
 - Lecture 7: Attention and transformer networks
-- Lecture 8: nanoGPT
+- Lecture 8: GPT
 - Lecture 9: Graph neural networks
 - Lecture 10: Uncertainty
 - Lecture 11: Auto-encoders and variational auto-encoders
@@ -222,6 +222,7 @@ Reinforcement learning (Mnih et al, 2014)
 
 ---
 
+exclude: true
 class: middle, center, black-slide
 
 <iframe width="600" height="450" src="https://www.youtube.com/embed/HcZ48JDamyk" frameborder="0" allowfullscreen></iframe>
@@ -240,16 +241,13 @@ Autonomous cars (NVIDIA, 2016)
 
 class: middle, center, black-slide
 
-<iframe width="600" height="450" src="https://www.youtube.com/embed/tlThdr3O5Qo" frameborder="0" allowfullscreen></iframe>
+<iframe width="600" height="450" src="https://www.youtube.com/embed/hA_-MkU0Nfw" frameborder="0" allowfullscreen></iframe>
 
-Autopilot (Tesla, 2019)
-
-???
-
-A full build of Autopilot neural networks involves 48 networks that take 70,000 GPU hours to train 🔥. Together, they output 1,000 distinct tensors (predictions) at each timestep.
+Autonomous cars (Waymo, 2022)
 
 ---
 
+exclude: true
 class: middle, black-slide
 
 .center[
@@ -281,9 +279,9 @@ Speech synthesis and question answering (Google, 2018)
 
 class: middle, center, black-slide
 
-<iframe width="600" height="450" src="https://www.youtube.com/embed/9QuDh3W3lOY" frameborder="0" allowfullscreen></iframe>
+<iframe width="600" height="450" src="https://www.youtube.com/embed/qTgPSKKjfVg" frameborder="0" allowfullscreen></iframe>
 
-Image generation (Karras et al, 2018)
+Image generation and AI art (OpenAI, 2022)
 
 ---
 
@@ -297,12 +295,13 @@ Write computer code (OpenAI, 2021)
 
 class: middle, center, black-slide
 
-<iframe width="600" height="450" src="https://www.youtube.com/embed/egJ0PTKQp4U?start=223" frameborder="0" allowfullscreen></iframe>
+.center.width-100[![](figures/lec0/ChatGPT.png)]
 
-Music composition (NVIDIA, 2017)
+Answer all your questions (OpenAI, 2022)
 
 ---
 
+exclude: true
 class: middle, center, black-slide
 
 <iframe width="600" height="450" src="https://www.youtube.com/embed/BIDaxl4xqJ4" frameborder="0" allowfullscreen></iframe>
@@ -395,11 +394,3 @@ class: end-slide, center
 count: false
 
 The end.
-
----
-
-count: false
-
-# References
-
-- LeCun, Y., Bengio, Y., & Hinton, G. (2015). Deep learning. nature, 521(7553), 436-444.

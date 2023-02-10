@@ -612,12 +612,3 @@ class: end-slide, center
 count: false
 
 The end.
-
----
-
-count: false
-
-# References
-
-- Vapnik, V. (1992). Principles of risk minimization for learning theory. In Advances in neural information processing systems (pp. 831-838).
-- Louppe, G. (2014). Understanding random forests: From theory to practice. arXiv preprint arXiv:1407.7502.
