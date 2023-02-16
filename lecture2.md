@@ -8,10 +8,6 @@ Lecture 2: Multi-layer perceptron
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-R: demo 02-space_stretching.ipynb
-
 ---
 
 # Today
@@ -289,14 +285,102 @@ When $Y$ takes values in $\\{-1,1\\}$, a similar derivation yields the **logisti
 
 ---
 
+# Multi-layer perceptron
+
+So far we considered the logistic unit $h=\sigma\left(\mathbf{w}^T \mathbf{x} + b\right)$, where $h \in \mathbb{R}$, $\mathbf{x} \in \mathbb{R}^p$, $\mathbf{w} \in \mathbb{R}^p$ and $b \in \mathbb{R}$.
+
+These units can be composed *in parallel* to form a **layer** with $q$ outputs:
+$$\mathbf{h} = \sigma(\mathbf{W}^T \mathbf{x} + \mathbf{b})$$
+where  $\mathbf{h} \in \mathbb{R}^q$, $\mathbf{x} \in \mathbb{R}^p$, $\mathbf{W} \in \mathbb{R}^{p\times q}$, $b \in \mathbb{R}^q$ and where $\sigma(\cdot)$ is upgraded to the element-wise sigmoid function.
+
+<br>
+.center.width-70[![](figures/lec2/graphs/layer.svg)]
+
+???
+
+Draw the NN diagram.
+
+
+---
+
 class: middle
 
-- In general, the cross-entropy and the logistic losses do not admit a minimizer that can be expressed analytically in closed form.
+Similarly, layers can be composed *in series*, such that:
+$$\begin{aligned}
+\mathbf{h}\_0 &= \mathbf{x} \\\\
+\mathbf{h}\_1 &= \sigma(\mathbf{W}\_1^T \mathbf{h}\_0 + \mathbf{b}\_1) \\\\
+... \\\\
+\mathbf{h}\_L &= \sigma(\mathbf{W}\_L^T \mathbf{h}\_{L-1} + \mathbf{b}\_L) \\\\
+f(\mathbf{x}; \theta) = \hat{y} &= \mathbf{h}\_L
+\end{aligned}$$
+where $\theta$ denotes the model parameters $\\{ \mathbf{W}\_k, \mathbf{b}\_k, ... | k=1, ..., L\\}$.
+
+This model is the **multi-layer perceptron**, also known as the fully connected feedforward network.
+
+???
+
+Draw the NN diagram.
+
+---
+
+class: middle, center
+
+.width-100[![](figures/lec2/graphs/mlp.svg)]
+
+---
+
+class: middle
+
+## Output layer 
+
+- For binary classification, the width $q$ of the last layer $L$ is set to $1$, which results in a single output $h\_L \in [0,1]$ that models the probability $p(y=1|\mathbf{x})$.
+- For multi-class classification, the sigmoid activation $\sigma$ in the last layer can be generalized to produce a vector $\mathbf{h}\_L \in \bigtriangleup^C$ of probability estimates $p(y=i|\mathbf{x})$.
+<br><br>
+This activation is the $\text{Softmax}$ function, where its $i$-th output is defined as
+$$\text{Softmax}(\mathbf{z})\_i = \frac{\exp(z\_i)}{\sum\_{j=1}^C \exp(z\_j)},$$
+for $i=1, ..., C$.
+
+
+---
+
+# Regression
+
+For regression problems, one usually starts with the assumption that
+$$p(y|\mathbf{x}) = \mathcal{N}(y; \mu=f(\mathbf{x}; \theta), \sigma^2=1),$$
+where $f$ is parameterized with a neural network which last layer does not contain any final activation.
+
+---
+
+class: middle
+
+We have,
+$$\begin{aligned}
+&\arg \max\_{\theta} p(\mathbf{d}|\theta) \\\\
+&= \arg \max\_{\theta} \prod\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} p(y=y\_i|\mathbf{x}\_i, \theta) \\\\
+&= \arg \min\_{\theta} -\sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} \log p(y=y\_i|\mathbf{x}\_i, \theta) \\\\
+&= \arg \min\_{\theta} -\sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} \log\left( \frac{1}{\sqrt{2\pi}} \exp\(-\frac{1}{2}(y\_i - f(\mathbf{x};\theta))^2\) \right)\\\\
+&= \arg \min\_{\theta} \sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} (y\_i - f(\mathbf{x};\theta))^2,
+\end{aligned}$$
+which recovers the common **squared error** loss $\ell(y, \hat{y}) = (y-\hat{y})^2$.
+
+---
+
+class: middle, center
+
+(demo)
+
+---
+
+# Training neural networks
+
+- In general, the loss functions do not admit a minimizer that can be expressed analytically in closed form.
 - However, a minimizer can be found numerically, using a general minimization technique such as **gradient descent**.
 
 ---
 
-# Gradient descent
+class: middle
+
+## Gradient descent
 
 Let $\mathcal{L}(\theta)$ denote a loss function defined over model parameters $\theta$ (e.g., $\mathbf{w}$ and $b$).
 
@@ -602,86 +686,6 @@ A fundamental result due to Bottou and Bousquet (2011) states that stochastic op
 
 ---
 
-# Multi-layer perceptron
-
-So far we considered the logistic unit $h=\sigma\left(\mathbf{w}^T \mathbf{x} + b\right)$, where $h \in \mathbb{R}$, $\mathbf{x} \in \mathbb{R}^p$, $\mathbf{w} \in \mathbb{R}^p$ and $b \in \mathbb{R}$.
-
-These units can be composed *in parallel* to form a **layer** with $q$ outputs:
-$$\mathbf{h} = \sigma(\mathbf{W}^T \mathbf{x} + \mathbf{b})$$
-where  $\mathbf{h} \in \mathbb{R}^q$, $\mathbf{x} \in \mathbb{R}^p$, $\mathbf{W} \in \mathbb{R}^{p\times q}$, $b \in \mathbb{R}^q$ and where $\sigma(\cdot)$ is upgraded to the element-wise sigmoid function.
-
-<br>
-.center.width-70[![](figures/lec2/graphs/layer.svg)]
-
-???
-
-Draw the NN diagram.
-
-
----
-
-class: middle
-
-Similarly, layers can be composed *in series*, such that:
-$$\begin{aligned}
-\mathbf{h}\_0 &= \mathbf{x} \\\\
-\mathbf{h}\_1 &= \sigma(\mathbf{W}\_1^T \mathbf{h}\_0 + \mathbf{b}\_1) \\\\
-... \\\\
-\mathbf{h}\_L &= \sigma(\mathbf{W}\_L^T \mathbf{h}\_{L-1} + \mathbf{b}\_L) \\\\
-f(\mathbf{x}; \theta) = \hat{y} &= \mathbf{h}\_L
-\end{aligned}$$
-where $\theta$ denotes the model parameters $\\{ \mathbf{W}\_k, \mathbf{b}\_k, ... | k=1, ..., L\\}$.
-
-This model is the **multi-layer perceptron**, also known as the fully connected feedforward network.
-
-???
-
-Draw the NN diagram.
-
----
-
-class: middle, center
-
-.width-100[![](figures/lec2/graphs/mlp.svg)]
-
----
-
-class: middle
-
-## Output layer 
-
-- For binary classification, the width $q$ of the last layer $L$ is set to $1$, which results in a single output $h\_L \in [0,1]$ that models the probability $p(y=1|\mathbf{x})$.
-- For multi-class classification, the sigmoid activation $\sigma$ in the last layer can be generalized to produce a vector $\mathbf{h}\_L \in \bigtriangleup^C$ of probability estimates $p(y=i|\mathbf{x})$.
-<br><br>
-This activation is the $\text{Softmax}$ function, where its $i$-th output is defined as
-$$\text{Softmax}(\mathbf{z})\_i = \frac{\exp(z\_i)}{\sum\_{j=1}^C \exp(z\_j)},$$
-for $i=1, ..., C$.
-
-
----
-
-# Regression
-
-For regression problems, one usually starts with the assumption that
-$$p(y|\mathbf{x}) = \mathcal{N}(y; \mu=f(\mathbf{x}; \theta), \sigma^2=1),$$
-where $f$ is parameterized with a neural network which last layer does not contain any final activation.
-
----
-
-class: middle
-
-We have,
-$$\begin{aligned}
-&\arg \max\_{\theta} p(\mathbf{d}|\theta) \\\\
-&= \arg \max\_{\theta} \prod\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} p(y=y\_i|\mathbf{x}\_i, \theta) \\\\
-&= \arg \min\_{\theta} -\sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} \log p(y=y\_i|\mathbf{x}\_i, \theta) \\\\
-&= \arg \min\_{\theta} -\sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} \log\left( \frac{1}{\sqrt{2\pi}} \exp\(-\frac{1}{2}(y\_i - f(\mathbf{x};\theta))^2\) \right)\\\\
-&= \arg \min\_{\theta} \sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} (y\_i - f(\mathbf{x};\theta))^2,
-\end{aligned}$$
-which recovers the common **squared error** loss $\ell(y, \hat{y}) = (y-\hat{y})^2$.
-
----
-
 # Automatic differentiation (teaser)
 
 To minimize $\mathcal{L}(\theta)$ with stochastic gradient descent, we need the gradient 
@@ -871,6 +875,26 @@ Note that:
 
 ---
 
+# Activation functions
+
+<br>
+
+.center[
+![](figures/lec2/af-Sigmoid.png)
+![](figures/lec2/af-Tanh.png)
+![](figures/lec2/af-ReLU.png)
+![](figures/lec2/af-LeakyReLU.png)
+
+<br>
+
+![](figures/lec2/af-ELU.png)
+![](figures/lec2/af-SELU.png)
+![](figures/lec2/af-Softplus.png)
+![](figures/lec2/af-Swish.png)
+]
+
+---
+
 class: middle, center
 
 (demo)
@@ -882,7 +906,6 @@ Don't forget the magic trick!
 ---
 
 # Universal approximation 
-
 
 Let us consider the 1-hidden layer MLP
 $$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
