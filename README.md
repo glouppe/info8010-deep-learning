@@ -15,14 +15,18 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2023.
 | February 17 | Lecture 2: [Multi-layer perceptron](https://glouppe.github.io/info8010-deep-learning/?p=lecture2.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec2.pdf)] [[video](https://www.youtube.com/watch?v=OF6AkE9Fnjc)] |
 | February 24 | Lecture 3: [Automatic differentiation](https://glouppe.github.io/info8010-deep-learning/?p=lecture3.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec3.pdf)] [[video](https://youtu.be/fD047xXpSfI)] |
 | March 3 | Lecture 4: [Training neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture4.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec4.pdf)] [[video](https://youtu.be/G7qw620V_3g)]  |
+| March  6 | Deadline for Homework 1 | 
 | March 10 | Lecture 5: [Convolutional neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture5.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec5.pdf)] [[video](https://youtu.be/54WShJMWYo0)] |
 | March 17 | Lecture 6: [Computer vision](https://glouppe.github.io/info8010-deep-learning/?p=lecture6.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec6.pdf)] [[video](https://youtu.be/cfZGfJaLRxA)] |
+| March 20 | Deadline for Homework 2 |
 | March 24 | Lecture 7: [Attention and transformers](https://glouppe.github.io/info8010-deep-learning/?p=lecture7.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec7.pdf)] [[video](https://youtu.be/cwFE1pLld-g)] |
 | March 31 | Lecture 8: [GPT](https://glouppe.github.io/info8010-deep-learning/?p=lecture8.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec8.pdf)] [notebook] |
 | April 21 | Lecture 9: [Graph neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture9.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec9.pdf)] |
 | April 28 | Lecture 10: [Uncertainty](https://glouppe.github.io/info8010-deep-learning/?p=lecture10.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec10.pdf)] [[video](https://youtu.be/AxJBY9eRTL4)] |
 | May 5 | Lecture 11: [Auto-encoders and variational auto-encoders](https://glouppe.github.io/info8010-deep-learning/?p=lecture11.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec11.pdf)] [[video](https://youtu.be/6gWeyUZtHWs)] |
 | May 12 | Lecture 12: [Score-based diffusion models](https://glouppe.github.io/info8010-deep-learning/?p=lecture12.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec12.pdf)] [[video](https://youtu.be/cM6m1eHY5FI)] |
+| May 12 | Deadline for the reading assignment |
+| May 12 | Deadline for the project |
 
 ## Homeworks
 
@@ -30,8 +34,8 @@ The goal of these two assignments is to get you familiar with the PyTorch librar
 Each homework should be done in groups of 2 or 3 (the same as for the project) and must be submitted **before 23:59 on the due date**.
 Homeworks should be submitted on the [Montefiore submission platform](https://submit.montefiore.ulg.ac.be).
 
-- [Homework 1](https://github.com/glouppe/info8010-deep-learning/raw/master/homeworks/homework1.ipynb): Tensor operations, `autograd` and `nn`. Due by **(TBD)**.
-- [Homework 2](https://github.com/glouppe/info8010-deep-learning/raw/master/homeworks/homework2.ipynb): Dataset, Dataloader, running on GPU, training a convolutional neural network. Due by **(TBD)**.
+- [Homework 1](https://github.com/glouppe/info8010-deep-learning/raw/master/homeworks/homework1.ipynb): Tensor operations, `autograd` and `nn`. Due by **March 6, 2023**.
+- [Homework 2](https://github.com/glouppe/info8010-deep-learning/raw/master/homeworks/homework2.ipynb): Dataset, Dataloader, running on GPU, training a convolutional neural network. Due by **March 20, 2023**.
 
 Homeworks are optional. If submitted, each homework will account for 5% of the final grade.
 
@@ -43,9 +47,9 @@ See instructions in [`project.md`](https://github.com/glouppe/info8010-deep-lear
 
 Your task is to read and summarize a major scientific paper in the field of deep learning. You are free to select one among the following three papers:
 
-- (TBD1)
-- (TBD2)
-- (TBD3)
+- Rombach et al, "High-Resolution Image Synthesis with Latent Diffusion Models", 2022. [[Paper](https://arxiv.org/abs/2112.10752)]
+- Chen et al, "Evaluating Large Language Models Trained on Code", 2021 [[Paper](https://arxiv.org/abs/2107.03374)]
+- Jumper et al, "Highly accurate protein structure prediction with AlphaFold", 2021. [[Paper](https://www.nature.com/articles/s41586-021-03819-2)]
 
 You should produce a report that summarizes the problem that is tackled by the paper and explains why it is challenging or important, from the perspective of the wider research context. The report should outline the main contributions and results with respect to the problem that is addressed. It should also include a critical discussion of the advantages and shortcomings of the contributions of the paper.
 Further guidelines for writing a good summary can be found [here](https://web.stanford.edu/class/cs224n/project/project-proposal-instructions.pdf) (Section 2, "The summary").

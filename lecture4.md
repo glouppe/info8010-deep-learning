@@ -8,6 +8,10 @@ Lecture 4: Training neural networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+R: https://t.co/oU0WLIhAOI
+
 ---
 
 # Today

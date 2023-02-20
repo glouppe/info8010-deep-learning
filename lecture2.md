@@ -150,6 +150,10 @@ for which the corresponding computational graph of $f$ is:
 
 .center.width-70[![](figures/lec2/graphs/perceptron-neuron.svg)]
 
+???
+
+Ask about their intuition on the intuitive meaning of $f(x)$ (i.e., the product as a similarity measure).
+
 ---
 
 # Linear discriminant analysis
