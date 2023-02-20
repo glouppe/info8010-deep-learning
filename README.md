@@ -32,7 +32,7 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2023.
 
 The goal of these two assignments is to get you familiar with the PyTorch library. You can find the installation instructions in the [Homeworks](./homeworks) folder.
 Each homework should be done in groups of 2 or 3 (the same as for the project) and must be submitted **before 23:59 on the due date**.
-Homeworks should be submitted on the [Montefiore submission platform](https://submit.montefiore.ulg.ac.be).
+Homeworks should be submitted on Gradescope.
 
 - [Homework 1](https://github.com/glouppe/info8010-deep-learning/raw/master/homeworks/homework1.ipynb): Tensor operations, `autograd` and `nn`. Due by **March 6, 2023**.
 - [Homework 2](https://github.com/glouppe/info8010-deep-learning/raw/master/homeworks/homework2.ipynb): Dataset, Dataloader, running on GPU, training a convolutional neural network. Due by **March 20, 2023**.
