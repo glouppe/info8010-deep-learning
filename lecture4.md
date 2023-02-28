@@ -8,10 +8,6 @@ Lecture 4: Training neural networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-R: https://t.co/oU0WLIhAOI
-
 ---
 
 # Today
@@ -56,7 +52,19 @@ A first step towards understanding, debugging and optimizing neural networks is 
 
 ---
 
-background-image: url(figures/lec4/tensorboard.png)
+class: middle
+
+.center.width-90[![](figures/lec4/tensorboard.png)]
+
+.center[Tensorboard]
+
+---
+
+class: middle
+
+.width-95[![](figures/lec4/wandb.jpg)]
+
+.center[Weights & Biases]
 
 ---
 
@@ -497,9 +505,28 @@ r\_t  &=  \rho\_2 r\_{t-1} + (1-\rho\_2) g\_t \odot g\_t \\\\
 
 ---
 
-class: middle, center
+class: middle
 
-([demo](https://losslandscape.com/explorer))
+## Weight decay
+
+- Weight decay is a regularization technique that penalizes large weights.
+- For vanilla SGD, it is equivalent to adding a penalty term to the loss function
+$$\ell_\theta + \frac{\lambda}{2} ||\mathbf{\theta}||^2.$$
+- For more complex optimizers, it is equivalent to adding a penalty term to the update rule
+$$\theta_{t+1} = \theta\_t - \gamma \left(g_t + \lambda \theta \right).$$
+
+---
+
+class: middle
+
+.center[
+.width-45[![](figures/lec4/train-no-wd.svg)]
+.width-45[![](figures/lec4/train-wd.svg)]
+
+Training without (left) and with (right) weight decay.
+]
+
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2023.]
 
 ---
 

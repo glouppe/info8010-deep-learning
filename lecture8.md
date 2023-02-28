@@ -11,3 +11,4 @@ Prof. Gilles Louppe<br>
 ???
 
 R: implement a GPT model from scratch (nanoGPT)
+R: https://jaykmody.com/blog/gpt-from-scratch/ (picoGPT)

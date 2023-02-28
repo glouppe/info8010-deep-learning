@@ -12,6 +12,7 @@ Prof. Gilles Louppe<br>
 
 https://www.youtube.com/watch?v=brmidghOP6c
 Emergent properties https://docs.google.com/presentation/d/1yzbmYB5E7G8lY2-KzhmArmPYwwl7o7CUST1xRZDUu1Y/edit?resourcekey=0-6_TnUMoKWCk_FN2BiPxmbw#slide=id.g16197112905_0_0
+Emergent https://twitter.com/AndrewLampinen/status/1629534694617370625
 
 ---
 
