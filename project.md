@@ -13,10 +13,10 @@ Some general potential problems could be the following:
 
 ### Agenda
 
-- Project proposal, due by **(TBD)**.
-- Project code and report, due by **(TBD)**.
+- Project proposal, due by **March 20, 2023**.
+- Project code and report, due by **May 12, 2023**.
 
-Projects should be submitted through the [Montefiore submission platform](https://submit.montefiore.ulg.ac.be).
+Projects should be submitted on Gradescope.
 
 ### Instructions and evaluation guidelines
 
@@ -30,7 +30,6 @@ Projects should be submitted through the [Montefiore submission platform](https:
 		* qualitative analysis: could include examples of generated images, correct vs wrong predictions, ...
 		* quantitative analysis: general overview of final performance, loss curves, comparison table with error-bars, ...
 	* Discussion: a critical discussion of the performance of the neural network, analysis of the potential limitations, tips for future work
-- ~~At the end of the course everyone will present their project to the class.~~
 - The grade will depend on two main components:
 	* quality and originality of the project (are the contributions of the group to the development of the project well defined? what has been implemented with respect to the original research questions, what has been re-used from existing coding directories?)
 	* presentation of the project (structure of the report, clarity of figures/tables, correctness of the English language)

@@ -19,6 +19,7 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2023.
 | March 10 | Lecture 5: [Convolutional neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture5.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec5.pdf)] [[video](https://youtu.be/54WShJMWYo0)] |
 | March 17 | Lecture 6: [Computer vision](https://glouppe.github.io/info8010-deep-learning/?p=lecture6.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec6.pdf)] [[video](https://youtu.be/cfZGfJaLRxA)] |
 | March 20 | Deadline for Homework 2 |
+| March 20 | Deadline for the project proposal |
 | March 24 | Lecture 7: [Attention and transformers](https://glouppe.github.io/info8010-deep-learning/?p=lecture7.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec7.pdf)] [[video](https://youtu.be/cwFE1pLld-g)] |
 | March 31 | Lecture 8: [GPT](https://glouppe.github.io/info8010-deep-learning/?p=lecture8.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec8.pdf)] [notebook] |
 | April 21 | Lecture 9: [Graph neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture9.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec9.pdf)] |
