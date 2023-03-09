@@ -13,6 +13,10 @@ Prof. Gilles Louppe<br>
 https://www.youtube.com/watch?v=brmidghOP6c
 Emergent properties https://docs.google.com/presentation/d/1yzbmYB5E7G8lY2-KzhmArmPYwwl7o7CUST1xRZDUu1Y/edit?resourcekey=0-6_TnUMoKWCk_FN2BiPxmbw#slide=id.g16197112905_0_0
 Emergent https://twitter.com/AndrewLampinen/status/1629534694617370625
+The giraffe does not enter the building because it is too short / tall
+https://t.co/WBw53cb3cz
+https://www.slideshare.net/SushantGautam/convnext-a-convnet-for-the-2020s-explained-251338584
+R: ConvNexT? (inspired from Swin Transformer)
 
 ---
 

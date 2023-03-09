@@ -8,10 +8,6 @@ Lecture 5: Convolutional networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-R: EfficientNet?
-
 ---
 
 class: middle
@@ -40,7 +36,7 @@ class: middle
 
 # Visual perception 
 
-In 1959-1962, David Hubel and Torsten Wiesel discover the neural basis of information processing in the **visual system**.
+In 1959-1962, David Hubel and Torsten Wiesel identify the neural basis of information processing in the **visual system**.
 They are awarded the Nobel Prize of Medicine in 1981 for their discovery.
 
 .grid.center[
@@ -235,7 +231,7 @@ class: middle
 ## n-D convolution
 
 Convolutions generalize to multi-dimensional tensors:
-- In its most usual form, a convolution takes as input a 3D tensor $\mathbf{x} \in \mathbb{R}^{C \times H \times W}$, called the **input feature map**.
+- In its most usual form, a convolution takes as input a 3D tensor $\mathbf{x} \in \mathbb{R}^{C \times H \times W}$, called the **input feature map**, where $C$ is the number of input channels.
 - A kernel $\mathbf{u} \in \mathbb{R}^{C \times h \times w}$ slides across the input feature map, along its height and width. The size $h \times w$ is the size of the *receptive field*.
 - At each location,  the element-wise product between the kernel and the input elements it overlaps is computed and the results are summed up.
 
@@ -257,7 +253,7 @@ $$\begin{aligned}
 \end{aligned}$$
 where $\mathbf{u}$ is a shared parameter to learn.
 - $D$ convolutions can be applied in the same way to produce a $D \times (H-h+1) \times (W-w+1)$ feature map,
-where $D$ is the depth.
+where $D$ is the number of output channels.
 - Swiping across channels with a 3D convolution usually makes no sense, unless the channel index has some metric meaning.
 
 ???
@@ -281,7 +277,7 @@ class: middle
 
 ## Padding
 
-Padding is useful to control the spatial dimension of the feature map, for example to keep it constant across layers.
+Padding is useful to control the spatial dimension of the output feature map, for example to keep it constant across layers.
 
 .center[
 .width-45[![](figures/lec5/same_padding_no_strides.gif)]
@@ -328,7 +324,7 @@ Having a dilation coefficient greater than one increases the units receptive fie
 
 A function $f$ is **equivariant** to $g$ if $f(g(\mathbf{x})) = g(f(\mathbf{x}))$.
 - Parameter sharing used in a convolutional layer causes the layer to be equivariant to translation.
-- That is, if $g$ is any function that translates the input, the convolution function is equivariant to $g$.
+- If $g$ is any function that translates the input, the convolution function is equivariant to $g$.
 
 .center.width-50[![](figures/lec5/atrans.gif)]
 
@@ -483,7 +479,7 @@ class: middle
 
 class: middle
 
-A **convolutional network** is generically defined as a composition of convolutional layers ($\texttt{CONV}$), pooling layers ($\texttt{POOL}$), linear rectifiers ($\texttt{RELU}$) and fully connected layers ($\texttt{FC}$).
+A **convolutional network** is generically defined as a composition of convolutional layers ($\texttt{CONV}$), pooling layers ($\texttt{POOL}$), linear rectifiers ($\texttt{ReLU}$) and fully connected layers ($\texttt{FC}$).
 
 .center.width-100[![](figures/lec5/convnet-pattern.png)]
 
@@ -493,7 +489,7 @@ class: middle
 
 The most common convolutional network architecture follows the pattern:
 
-$$\texttt{INPUT} \to [[\texttt{CONV} \to \texttt{RELU}]\texttt{\*}N \to \texttt{POOL?}]\texttt{\*}M \to [\texttt{FC} \to \texttt{RELU}]\texttt{\*}K \to \texttt{FC}$$
+$$\texttt{INPUT} \to [[\texttt{CONV} \to \texttt{ReLU}]\texttt{\*}N \to \texttt{POOL?}]\texttt{\*}M \to [\texttt{FC} \to \texttt{ReLU}]\texttt{\*}K \to \texttt{FC}$$
 
 where:
 - $\texttt{\*}$ indicates repetition;
@@ -507,10 +503,10 @@ class: middle
 
 Some common architectures for convolutional networks following this pattern include:
 - $\texttt{INPUT} \to \texttt{FC}$, which implements a linear classifier ($N=M=K=0$).
-- $\texttt{INPUT} \to [\texttt{FC} \to \texttt{RELU}]{\*K} \to \texttt{FC}$, which implements a $K$-layer MLP.
-- $\texttt{INPUT} \to \texttt{CONV} \to \texttt{RELU} \to \texttt{FC}$.
-- $\texttt{INPUT} \to [\texttt{CONV} \to \texttt{RELU} \to \texttt{POOL}]\texttt{\*2} \to \texttt{FC} \to \texttt{RELU} \to \texttt{FC}$.
-- $\texttt{INPUT} \to [[\texttt{CONV} \to \texttt{RELU}]\texttt{\*2} \to \texttt{POOL}]\texttt{\*3} \to [\texttt{FC} \to \texttt{RELU}]\texttt{\*2} \to \texttt{FC}$.
+- $\texttt{INPUT} \to [\texttt{FC} \to \texttt{ReLU}]{\*K} \to \texttt{FC}$, which implements a $K$-layer MLP.
+- $\texttt{INPUT} \to \texttt{CONV} \to \texttt{ReLU} \to \texttt{FC}$.
+- $\texttt{INPUT} \to [\texttt{CONV} \to \texttt{ReLU} \to \texttt{POOL}]\texttt{\*2} \to \texttt{FC} \to \texttt{ReLU} \to \texttt{FC}$.
+- $\texttt{INPUT} \to [[\texttt{CONV} \to \texttt{ReLU}]\texttt{\*2} \to \texttt{POOL}]\texttt{\*3} \to [\texttt{FC} \to \texttt{ReLU}]\texttt{\*2} \to \texttt{FC}$.
 
 ???
 
@@ -662,6 +658,36 @@ class: middle
 ## The benefits of depth
 
 .center.width-100[![](figures/lec5/imagenet.png)]
+
+---
+
+class: middle
+
+## ... and width and resolution (Tan and Le, 2019)
+
+.center.width-100[![](figures/lec5/scale.png)]
+
+.footnote[Credits: [Tan and Le](https://arxiv.org/abs/1905.11946.pdf), 2019.]
+
+???
+
+We empirically observe that different scaling dimensions are
+not independent. Intuitively, for higher resolution images,
+we should increase network depth, such that the larger receptive fields can help capture similar features that include
+more pixels in bigger images. Correspondingly, we should
+also increase network width when resolution is higher, in
+order to capture more fine-grained patterns with more pixels
+in high resolution images. These intuitions suggest that we
+need to coordinate and balance different scaling dimensions
+rather than conventional single-dimension scaling
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec5/scaling.png)]
+
+.footnote[Credits: [Tan and Le](https://arxiv.org/abs/1905.11946.pdf), 2019.]
 
 ---
 

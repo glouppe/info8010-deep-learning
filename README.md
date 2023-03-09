@@ -16,7 +16,7 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2023.
 | February 24 | Lecture 3: [Automatic differentiation](https://glouppe.github.io/info8010-deep-learning/?p=lecture3.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec3.pdf)] [[video](https://youtu.be/fD047xXpSfI)] [[code](https://github.com/glouppe/info8010-deep-learning/blob/master/code/lec3-autodiff.ipynb)] |
 | March 3 | Lecture 4: [Training neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture4.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec4.pdf)] [[video](https://youtu.be/G7qw620V_3g)]  |
 | March  6 | Deadline for Homework 1 | 
-| March 10 | Lecture 5: [Convolutional neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture5.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec5.pdf)] [[video](https://youtu.be/54WShJMWYo0)] |
+| March 10 | Lecture 5: [Convolutional neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture5.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec5.pdf)] [[video](https://youtu.be/54WShJMWYo0)] [[code](https://github.com/glouppe/info8010-deep-learning/blob/master/code/lec5-convnet.ipynb)] |
 | March 17 | Lecture 6: [Computer vision](https://glouppe.github.io/info8010-deep-learning/?p=lecture6.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec6.pdf)] [[video](https://youtu.be/cfZGfJaLRxA)] |
 | March 20 | Deadline for Homework 2 |
 | March 20 | Deadline for the project proposal |
