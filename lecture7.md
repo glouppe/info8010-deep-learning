@@ -17,6 +17,8 @@ The giraffe does not enter the building because it is too short / tall
 https://t.co/WBw53cb3cz
 https://www.slideshare.net/SushantGautam/convnext-a-convnet-for-the-2020s-explained-251338584
 R: ConvNexT? (inspired from Swin Transformer)
+https://twitter.com/peteflorence/status/1634256569335713799
+R: compare visually against convolution and FC
 
 ---
 

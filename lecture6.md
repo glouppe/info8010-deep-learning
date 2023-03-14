@@ -66,10 +66,6 @@ The lack of data is the biggest limit to the performance of deep learning models
 - Collecting more data is usually expensive and laborious.
 - Synthesizing data is complicated and may not represent the true distribution.
 - **Augmenting** the data with base transformations is simple and efficient.
-  
-???
-
-Augmentation is efficient, as demonstrated with AlexNet.
 
 ---
 
@@ -129,7 +125,7 @@ class: middle
 
 class: middle
 
-For models pre-trained on ImageNet, transferred/fine-tuned networks usually work even when the input images for the new task are not photographs of objects or animals, such as biomedical images, satellite images or paintings.
+For models pre-trained on ImageNet, transferred/fine-tuned networks usually work even when the input images are from a different domain (e.g., biomedical images, satellite images or paintings).
 
 .center.width-75[![](figures/lec6/fine-tuning-results.png)]
 
@@ -204,7 +200,7 @@ This approach is usually **very computationally expensive** as performance direc
 
 The complexity of the sliding window approach was mitigated in the pioneer OverFeat network (Sermanet et al, 2013) by adding a **regression head** to predict the object *bounding box* $(x,y,w,h)$.
 
-For training, the convolutional layers are fixed and the regression network is trained using an $\ell\_2$ loss between the predicted and the true bounding box for each example.
+For training, the convolutional layers are fixed and the regression network is trained using an $\ell\_2$ loss between the predicted and the true bounding box.
 ]
 .kol-1-3[.center.width-100[![](figures/lec6/overfeat.png)]]
 ]
@@ -237,7 +233,7 @@ class: middle
 
 .center.width-60[![](figures/lec6/overfeat-merge.png)]
 
-These bounding boxes are finally merged with an *ad-hoc procedure* (e.g., Non-maximum suppression) to produce the final predictions over a small number of objects.
+These bounding boxes are finally merged by *Non-Maximum Suppression* to produce the final predictions over a small number of objects.
 
 .footnote[Credits: Sermanet et al, 2013.]
 
@@ -245,7 +241,7 @@ These bounding boxes are finally merged with an *ad-hoc procedure* (e.g., Non-ma
 
 class: middle
 
-Although OverFeat is one of the earliest successful networks for object detection, its architecture comes with several **drawbacks**:
+The OverFeat architecture comes with several **drawbacks**:
 - it is a disjoint system (2 disjoint heads with their respective losses, ad-hoc merging procedure);
 - it optimizes for localization rather than detection;
 - it cannot reason about global context and thus requires significant post-processing to produce coherent detections.
@@ -468,20 +464,22 @@ class: middle
 
 .center.width-70[![](figures/lec6/segmentation.svg)]
 
-Semantic **segmentation** is the task of partitioning an image into regions of different semantic categories. 
+Semantic **segmentation** partitions an image into regions of different semantic categories. 
 These semantic regions label and predict objects at the pixel level.
 
 .footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
 
----
-
-# Fully convolutional networks
+???
 
 The historical approach to image segmentation was to define a measure of
 similarity between pixels, and to cluster groups of similar pixels. Such
 approaches account poorly for semantic content.
 
-The deep-learning approach re-casts semantic segmentation as pixel
+---
+
+# Fully convolutional networks
+
+The deep-learning approach casts semantic segmentation as pixel
 classification, and re-uses networks trained for image classification by making
 them **fully convolutional** (FCNs).
 

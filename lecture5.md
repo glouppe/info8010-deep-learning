@@ -8,6 +8,15 @@ Lecture 5: Convolutional networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+R: trim down 10~ slides
+R: compare *visually* against FC, to be later compared against attention
+R: formulate convolution in a way which is then consistent with attention and FC
+R: revise according to lec 7 and lec 9
+R: more on the blackboard
+R: add checklist questions at the end of the lecture
+
 ---
 
 class: middle
