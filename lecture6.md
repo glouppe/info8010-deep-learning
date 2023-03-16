@@ -527,9 +527,16 @@ Given a convolutional kernel $\mathbf{u}$,
 - the forward pass is implemented as $v(\mathbf{h}) = \mathbf{U}^T v(\mathbf{x})$ with appropriate reshaping, thereby effectively up-sampling an input $v(\mathbf{x})$ into a larger one;
 - the backward pass is computed by multiplying the loss by $\mathbf{U}$ instead of $\mathbf{U}^T$.
 
-Transposed convolutions are also referred to as fractionally-strided convolutions or deconvolutions (mistakenly).
-
+<br>
 .center.width-70[![](figures/lec6/transposed-convolution.svg)]
+
+???
+
+In a regular convolution,
+- the forward pass is equivalent to $v(\mathbf{h}) = \mathbf{U} v(\mathbf{x})$;
+- the backward pass is computed by multiplying the loss by $\mathbf{U}^T$.
+
+Transposed convolutions are also referred to as fractionally-strided convolutions or deconvolutions (mistakenly).
 
 ---
 

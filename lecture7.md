@@ -10,14 +10,11 @@ Prof. Gilles Louppe<br>
 
 ???
 
-https://www.youtube.com/watch?v=brmidghOP6c
-Emergent properties https://docs.google.com/presentation/d/1yzbmYB5E7G8lY2-KzhmArmPYwwl7o7CUST1xRZDUu1Y/edit?resourcekey=0-6_TnUMoKWCk_FN2BiPxmbw#slide=id.g16197112905_0_0
-Emergent https://twitter.com/AndrewLampinen/status/1629534694617370625
 The giraffe does not enter the building because it is too short / tall
-https://t.co/WBw53cb3cz
+
 https://www.slideshare.net/SushantGautam/convnext-a-convnet-for-the-2020s-explained-251338584
 R: ConvNexT? (inspired from Swin Transformer)
-https://twitter.com/peteflorence/status/1634256569335713799
+
 R: compare visually against convolution and FC
 
 ---
@@ -81,7 +78,7 @@ class: middle
 
 .center.width-100[![](figures/lec7/seq2seq.svg)]
 
-Standard RNN-based sequence-to-sequence models compress an input sequence $\mathbf{x}\_{1:T}$ into a single thought vector $v$, and then produce an output sequence $\mathbf{y}\_{1:T'}$ from an autoregressive generative model
+Recurrent encoder-decoder models compress an input sequence $\mathbf{x}\_{1:T}$ into a single thought vector $v$, and then produce an output sequence $\mathbf{y}\_{1:T'}$ from an autoregressive generative model
 $$\begin{aligned}
 \mathbf{h}\_t &= \phi(\mathbf{x}\_t, \mathbf{h}\_{t-1})\\\\
 v &= \mathbf{h}\_{T} \\\\
@@ -138,7 +135,7 @@ Blackboard: translate to French the following sentence.
 
 class: middle
 
-Following Bahdanau et al. (2014), the encoder is specified as a bidirectional RNN that computes an annotation vector for each input token,
+Following Bahdanau et al. (2014), the encoder is specified as a bidirectional recurrent neural network (RNN) that computes an annotation vector for each input token,
 $$\mathbf{h}\_j = (\overrightarrow{\mathbf{h}}\_j, \overleftarrow{\mathbf{h}}\_j)$$
 for $j = 1, \ldots, T$, where $\overrightarrow{\mathbf{h}}\_j$ and $\overleftarrow{\mathbf{h}}\_j$ respectively denote the forward and backward hidden recurrent states of the bidirectional RNN.
 
@@ -298,6 +295,10 @@ class: middle
 
 .footnote[Credits: [Dive Into Deep Learning, 10.6.2](https://d2l.ai/chapter_attention-mechanisms/self-attention-and-positional-encoding.html#comparing-cnns-rnns-and-self-attention).]
 
+???
+
+Compare mathematically on the blackboard and show the similarities and differences.
+
 ---
 
 class: middle
@@ -388,18 +389,11 @@ where the $1/\sqrt{d\_k}$ scaling is used to keep the (softmax's) temperature co
 
 class: middle
 
-.grid[
-.kol-2-3[
-
-<br>
+.center.width-55[![](figures/lec7/multi-head-attention.svg)]
 
 ## Multi-head attention
 
-The transformer architecture projects the queries, keys and values $h=8$ times with distinct, learned linear projections to $d\_k=64$, $d\_k=64$ and $d\_v=64$ dimensions respectively.
-]
-.kol-1-3.center.width-100[![](figures/lec7/transformer2.png)]
-]
-
+The transformer projects the queries, keys and values $h=8$ times with distinct linear projections to $d\_k=64$, $d\_k=64$ and $d\_v=64$ dimensions respectively.
 $$
 \begin{aligned}
 \text{multihead}(\mathbf{Q}, \mathbf{K}, \mathbf{V}) &= \text{concat}\left(\mathbf{H}\_1, \ldots, \mathbf{H}\_h\right) \mathbf{W}^O\\\\
@@ -409,12 +403,11 @@ $$
 with
 $$\mathbf{W}\_i^Q \in \mathbb{R}^{d\_\text{model} \times d\_k}, \mathbf{W}\_i^K \in \mathbb{R}^{d\_\text{model} \times d\_k}, \mathbf{W}\_i^V \in \mathbb{R}^{d\_\text{model} \times d\_v}, \mathbf{W}\_i^O \in \mathbb{R}^{hd\_v \times d\_\text{model}}$$
 
+.footnote[Credits: [Dive Into Deep Learning, 11.5](https://d2l.ai/chapter_attention-mechanisms-and-transformers/multihead-attention.html).]
+
 ---
 
 class: middle
-
-.grid[
-.kol-2-3[
 
 ## Encoder-decoder architecture
 
@@ -422,11 +415,13 @@ The transformer model is composed of:
 - An encoder that combines $N=6$ modules, each composed of a multi-head attention sub-module, and a (per-component) one-hidden-layer MLP, with residual pass-through and layer normalization. All sub-modules and embedding layers produce outputs of dimension $d\_\text{model}=512$.
 - A decoder that combines $N=6$ modules similar to the encoder, but using masked self-attention to prevent positions from attending to subsequent positions. In addition, the decoder inserts a third sub-module which performs multi-head attention over the output of the encoder stack.
 
-]
-.kol-1-3.center.width-100[<br><br>![](figures/lec7/transformer3.png)]
-]
+---
 
-???
+class: middle
+
+.center.width-60[![](figures/lec7/transformer.svg)]
+
+.footnote[Credits: [Dive Into Deep Learning, 11.7](https://d2l.ai/chapter_attention-mechanisms-and-transformers/transformer.html).]
 
 ---
 
@@ -498,7 +493,7 @@ class: middle
 
 ## Machine translation
 
-The transformer architecture is tested on English-to-German and English-to-French translation using WMT2014 datasets.
+The transformer architecture was first designed for machine translation and tested on English-to-German and English-to-French translation tasks.
 
 - English-to-German: 4.5M sentence pairs, 37k tokens vocabulary.
 - English-to-French: 36M sentence pairs, 32k tokens vocabulary.
@@ -565,72 +560,21 @@ Increasing the training data and the model size leads to significant improvement
 ---
 
 class: middle
-
-GPT-2 is a large transformer-based language model with 1.5 billion parameters, trained on a dataset of 8 million web pages. GPT-2 is trained with a simple objective: predict the next word, given all of the previous words within some text. The diversity of the dataset causes this simple goal to contain naturally occurring demonstrations of many tasks across diverse domains. GPT-2 is a direct scale-up of GPT, with more than 10X the parameters and trained on more than 10X the amount of data.
-
-.pull-right[Radford et al. (2019)]
-
-.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
-
----
-
-class: middle
-
-The GPT-3 model has 175B parameters and was trained on 300B tokens from
-various sources.
-
-.pull-right[Brown et al. (2020)]
-
-.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
-
----
-
-class: middle
-
-## Vision transformers (ViTs)
-
-.center.width-90[![](figures/lec7/ViT.gif)]
-
-.footnote[Credits: [Dosovitskiy et al](https://arxiv.org/abs/2010.11929), 2020.]
-
----
-
-class: middle
-
-.center.width-90[![](figures/lec7/vit-performance.jpg)]
-
----
-
-class: middle
 count: false
 
 # Applications
 
-Check Hugging Face's [Spaces](https://huggingface.co/spaces) for ML apps made with Transformers.
-
 ---
 
-class: black-slide, middle
+class: middle
 
 .center[
 
-.width-80[![](figures/lec7/gpt-2-prompt.png)]
+.width-80[![](figures/lec7/chatgpt.png)]
 
-GPT-2 generates synthetic text samples in response to arbitrary inputs.
+ChatGPT generates text samples in response to arbitrary inputs.
 
 ]
-
----
-
-class: middle, center, black-slide
-
-<iframe width="600" height="450" src="https://www.youtube.com/embed/fZSFNUT6iY8" frameborder="0" allowfullscreen></iframe>
-
-GPT-3 generates Python code.
-
-???
-
-Show Copilot to generate Pytorch code for a Transformer module!
 
 ---
 
@@ -645,6 +589,21 @@ CLIP: connecting text and images for zero-shot classification (see [demo](https:
 ]
 
 .footnote[Credits: [Radford et al.](https://arxiv.org/abs/2103.00020), 2021.]
+
+---
+
+class: middle
+
+.center.width-90[![](figures/lec7/ViT.gif)]
+.center[Vision transformers (ViTs)]
+
+.footnote[Credits: [Dosovitskiy et al](https://arxiv.org/abs/2010.11929), 2020.]
+
+---
+
+class: middle
+
+.center.width-90[![](figures/lec7/vit-performance.jpg)]
 
 ---
 
@@ -673,32 +632,6 @@ Decision Transformer: Reinforcement Learning via Sequence Modeling.
 ]
 
 .footnote[Credits: [Chen et al.](https://arxiv.org/abs/2106.01345), 2021.]
-
----
-
-# Disclaimer
-
-Large, general language models could have significant **societal impacts**, and also have many near-term applications, including:
-- AI writing assistants
-- more capable dialogue agents
-- unsupervised translation between languages
-- better speech recognition systems.
-
-.footnote[Credits: OpenAI [Better Language Models and Their Implications](https://openai.com/blog/better-language-models/).]
-
----
-
-class: middle
-
-However, we can also imagine the application of these models for **malicious purposes**, including the following:
-- generate misleading news articles
-- impersonate others online
-- automate the production of abusive or faked content to post on social media
-- automate the production of spam/phising content.
-
-.alert[The public at large will need to become more skeptical of text they find online, just as the "deep fakes" phenomenon calls for more skepticism about images.]
-
-.footnote[Credits: OpenAI [Better Language Models and Their Implications](https://openai.com/blog/better-language-models/).]
 
 ---
 
