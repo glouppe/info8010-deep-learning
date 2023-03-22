@@ -14,3 +14,5 @@ R: https://twitter.com/MilesCranmer/status/1608763526138716168?t=bybrIyhZ3X8OJ-H
 R: https://docs.kidger.site/equinox/examples/score_based_diffusion/
 R: https://arxiv.org/abs/2208.11970
 https://arxiv.org/abs/2301.11108
+
+R: prompts https://bestaiprompts.art/

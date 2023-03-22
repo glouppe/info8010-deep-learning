@@ -10,18 +10,14 @@ Prof. Gilles Louppe<br>
 
 ???
 
-The giraffe does not enter the building because it is too short / tall
-
-https://www.slideshare.net/SushantGautam/convnext-a-convnet-for-the-2020s-explained-251338584
-R: ConvNexT? (inspired from Swin Transformer)
-
-R: compare visually against convolution and FC
+R: compare visually against FC vs Conv vs Attention -> all are linear operators
 
 ---
 
 # Today
 
 Attention is all you need!
+- Encoder-decoder
 - Bahdanau attention
 - Attention layers
 - Transformers
@@ -30,6 +26,118 @@ Attention is all you need!
 ???
 
 Mission: learn a bout a novel and fundamental building block in modern neural networks. This brick can replace both FC and convolutional layers.
+
+---
+
+class: middle
+
+# Encoder-decoder
+
+---
+
+class: middle
+
+Many real-world problems require to process a signal with a **sequence** structure.
+
+- Sequence classification:
+    - sentiment analysis in text
+    - activity/action recognition in videos
+    - DNA sequence classification
+- Sequence synthesis:
+    - text synthesis
+    - music synthesis
+    - motion synthesis
+- Sequence-to-sequence translation:
+    - speech recognition
+    - text translation
+    - part-of-speech tagging
+
+.footnote[Credits: Francois Fleuret, [14x050/EE559 Deep Learning](https://fleuret.org/dlc/), EPFL.]
+
+???
+
+Draw all 3 setups.
+
+---
+
+class: middle
+
+Given a set $\mathcal{X}$, if $S(\mathcal{X})$ denotes the set of sequences of elements from $\mathcal{X}$,
+$$S(\mathcal{X}) = \cup\_{t=1}^\infty \mathcal{X}^t,$$
+then we formally define:
+
+.grid.center[
+.kol-1-2.bold[Sequence classification]
+.kol-1-2[$f: S(\mathcal{X}) \to \bigtriangleup^C$]
+]
+.grid.center[
+.kol-1-2.bold[Sequence synthesis]
+.kol-1-2[$f: \mathbb{R}^d \to S(\mathcal{X})$]
+]
+.grid.center[
+.kol-1-2.bold[Sequence-to-sequence translation]
+.kol-1-2[$f: S(\mathcal{X}) \to S(\mathcal{Y})$]
+]
+
+<br>
+In the rest of the slides, we consider only time-indexed signal, although it generalizes to arbitrary sequences.
+
+.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+---
+
+class: middle
+
+When the input is a sequence $\mathbf{x} \in S(\mathbb{R}^p)$ of variable length, the historical approach is to use a recurrent .bold[encoder-decoder] architecture that first compresses the input into a single vector $v$ and then uses it to generate the output sequence.
+
+<br>
+
+.center.width-85[![](figures/lec7/encoder-decoder.svg)]
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec7/seq2seq.svg)]
+
+Recurrent encoder-decoder models compress an input sequence $\mathbf{x}\_{1:T}$ into a single thought vector $v$, and then produce an output sequence $\mathbf{y}\_{1:T'}$ from an autoregressive generative model
+$$\begin{aligned}
+\mathbf{h}\_t &= \phi(\mathbf{x}\_t, \mathbf{h}\_{t-1})\\\\
+v &= \mathbf{h}\_{T} \\\\
+\mathbf{y}\_{i} &\sim p(\cdot | \mathbf{y}\_{1:i-1}, v).
+\end{aligned}$$
+
+.footnote[Credits: [Dive Into Deep Learning, 9.7](https://d2l.ai/chapter_recurrent-modern/seq2seq.html).]
+
+???
+
+Blackboard: translate to French the following sentence. 
+
+"The animal didn't cross the street because it was too tired."
+
+->
+
+"L'animal n'a pas traversé la rue car il était trop fatigué."
+
++ demo on Google translate, change "animal" for "lion" or "giraffe".
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec7/bottleneck.svg)]
+
+This architecture assumes that the sole vector $v$ carries enough information to generate entire output sequences. This is often **challenging** for long sequences.
+
+???
+
+There are not direct "channels" to transport local information from the input sequence to the place where it is useful in the resulting sequence.
+
+---
+
+class: middle
+
+# Bahdanau attention
 
 ---
 
@@ -70,54 +178,11 @@ class: middle
 
 class: middle
 
-# Bahdanau attention
-
----
-
-class: middle
-
-.center.width-100[![](figures/lec7/seq2seq.svg)]
-
-Recurrent encoder-decoder models compress an input sequence $\mathbf{x}\_{1:T}$ into a single thought vector $v$, and then produce an output sequence $\mathbf{y}\_{1:T'}$ from an autoregressive generative model
-$$\begin{aligned}
-\mathbf{h}\_t &= \phi(\mathbf{x}\_t, \mathbf{h}\_{t-1})\\\\
-v &= \mathbf{h}\_{T} \\\\
-\mathbf{y}\_{i} &\sim p(\cdot | \mathbf{y}\_{1:i-1}, v).
-\end{aligned}$$
-
-.footnote[Credits: [Dive Into Deep Learning, 9.7](https://d2l.ai/chapter_recurrent-modern/seq2seq.html).]
-
----
-
-class: middle
-
-.center.width-80[![](figures/lec7/bottleneck.svg)]
-
-This architecture assumes that the sole vector $v$ carries enough information to generate entire output sequences. This is often **challenging** for long sequences.
-
-???
-
-There are not direct "channels" to transport local information from the input sequence to the place where it is useful in the resulting sequence.
-
----
-
-class: middle
-
-Instead, attention mechanisms can transport information from parts of the input signal to parts of the output .bold[specified dynamically].
+Attention mechanisms can transport information from parts of the input signal to parts of the output .bold[specified dynamically].
 
 Under the assumption that each output token comes from one or a handful of input tokens, the decoder should attend to only those tokens that are relevant for producing the next output token.
 
 .center.width-80[![](figures/lec7/attention.svg)]
-
----
-
-class: middle
-
-## Attention-based machine translation
-
-.center.width-90[![](figures/lec7/seq2seq-attention-details.svg)]
-
-.footnote[Credits: [Dive Into Deep Learning, 10.4](https://d2l.ai/chapter_attention-mechanisms/bahdanau-attention.html).]
 
 ???
 
@@ -130,6 +195,16 @@ Blackboard: translate to French the following sentence.
 "L'animal n'a pas traversé la rue car il était trop fatigué."
 
 + demo on Google translate, change "animal" for "lion" or "giraffe".
+
+---
+
+class: middle
+
+## Attention-based machine translation
+
+.center.width-90[![](figures/lec7/seq2seq-attention-details.svg)]
+
+.footnote[Credits: [Dive Into Deep Learning, 10.4](https://d2l.ai/chapter_attention-mechanisms/bahdanau-attention.html).]
 
 ---
 
@@ -297,7 +372,7 @@ class: middle
 
 ???
 
-Compare mathematically on the blackboard and show the similarities and differences.
+Compare visually on the blackboard and show the similarities and differences.
 
 ---
 
@@ -603,7 +678,7 @@ class: middle
 
 class: middle
 
-.center.width-90[![](figures/lec7/vit-performance.jpg)]
+.center.width-85[![](figures/lec7/vit-performance.jpg)]
 
 ---
 

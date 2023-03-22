@@ -10,6 +10,8 @@ Prof. Gilles Louppe<br>
 
 ???
 
+https://d2l.ai/chapter_attention-mechanisms-and-transformers/large-pretraining-transformers.html
+
 R: implement a GPT model from scratch (nanoGPT)
 R: https://jaykmody.com/blog/gpt-from-scratch/ (picoGPT)
 
