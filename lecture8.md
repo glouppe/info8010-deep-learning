@@ -2,38 +2,62 @@ class: middle, center, title-slide
 
 # Deep Learning
 
-Lecture 8: GPT
+Lecture 8: GPT and Large Language Models
 
 <br><br>
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-https://d2l.ai/chapter_attention-mechanisms-and-transformers/large-pretraining-transformers.html
-
-R: implement a GPT model from scratch (nanoGPT)
-R: https://jaykmody.com/blog/gpt-from-scratch/ (picoGPT)
-
-Scalability https://d2l.ai/chapter_attention-mechanisms-and-transformers/large-pretraining-transformers.html
-Emergent properties https://docs.google.com/presentation/d/1yzbmYB5E7G8lY2-KzhmArmPYwwl7o7CUST1xRZDUu1Y/edit?resourcekey=0-6_TnUMoKWCk_FN2BiPxmbw#slide=id.g16197112905_0_0
-Emergent https://twitter.com/AndrewLampinen/status/1629534694617370625
-https://t.co/WBw53cb3cz
-chain of thoughts
-
-https://twitter.com/peteflorence/status/1634256569335713799
-
-Composition of models (langchain)
-
 ---
+
+# Today
+
+- BabyGPT
+- Large language models
 
 ---
 
 class: middle
 
-.width-100[![](figures/lec7/gpt.png)]
+.center[ See `code/gpt/`. ]
 
-.center[GPT, Radford et al. (2018)]
+---
+
+class: middle
+
+# Large language models
+
+---
+
+class: middle
+
+.center.width-100[![](./figures/lec8/map.png)]
+
+.center[(March 2023)]
+
+.footnote[Credits: [lifearchitect.ai/models](https://lifearchitect.ai/models/), 2023]
+
+---
+
+class: middle
+
+## Decoder-only transformers
+
+The decoder-only transformer has become the de facto architecture for large language models.
+
+These models are trained with self-supervised learning, where the target sequence is the same as the input sequence, but shifted by one token to the right.
+
+.center.width-80[![](./figures/lec8/gpt-decoder-only.svg)]
+
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai).]
+
+---
+
+class: middle
+
+Historically, GPT-1 was first pre-trained and then fine-tuned on downstream tasks.
+
+.width-100[![](figures/lec7/gpt.png)]
 
 .footnote[Credits: Radford et al., [Improving Language Understanding by Generative Pre-Training](https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf), 2018.]
 
@@ -41,53 +65,119 @@ class: middle
 
 class: middle
 
-Increasing the training data and the model size leads to significant improvement of transformer language models. These models are now .bold[the largest in deep learning].
+## Scaling laws
 
-.center.width-80[![](figures/lec7/plot-size.png)]
+Transformer language model performance improves smoothly as we increase the model size, the dataset size, and amount of compute used for training. 
 
----
+For optimal performance all three factors must be scaled up in tandem. Empirical performance has a power-law relationship with each individual factor when not bottlenecked by the other two.
 
-class: middle
+.center.width-100[![](./figures/lec8/scaling-power-law.png)]
 
-GPT-2 is a large transformer-based language model with 1.5 billion parameters, trained on a dataset of 8 million web pages. GPT-2 is trained with a simple objective: predict the next word, given all of the previous words within some text. The diversity of the dataset causes this simple goal to contain naturally occurring demonstrations of many tasks across diverse domains. GPT-2 is a direct scale-up of GPT, with more than 10X the parameters and trained on more than 10X the amount of data.
-
-.pull-right[Radford et al. (2019)]
-
-.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+.footnote[Credits: [Kaplan et al](https://arxiv.org/pdf/2001.08361.pdf), 2020.]
 
 ---
 
 class: middle
 
-The GPT-3 model has 175B parameters and was trained on 300B tokens from
-various sources.
+Large models also enjoy better sample efficiency than small models. Larger models require less data to achieve the same performance.
+The optimal model size also shows to grow smoothly with the amount of compute available for training.
 
-.pull-right[Brown et al. (2020)]
+<br>
 
-.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+.center.width-100[![](./figures/lec8/scaling-sample-conv.png)]
 
----
-
-# Disclaimer
-
-Large, general language models could have significant **societal impacts**, and also have many near-term applications, including:
-- AI writing assistants
-- more capable dialogue agents
-- unsupervised translation between languages
-- better speech recognition systems.
-
-.footnote[Credits: OpenAI [Better Language Models and Their Implications](https://openai.com/blog/better-language-models/).]
+.footnote[Credits: [Kaplan et al](https://arxiv.org/pdf/2001.08361.pdf), 2020.]
 
 ---
 
 class: middle
 
-However, we can also imagine the application of these models for **malicious purposes**, including the following:
-- generate misleading news articles
-- impersonate others online
-- automate the production of abusive or faked content to post on social media
-- automate the production of spam/phising content.
+## In-context learning
 
-.alert[The public at large will need to become more skeptical of text they find online, just as the "deep fakes" phenomenon calls for more skepticism about images.]
+GPT-2 and following models demonstrated potential of using the same language model for multiple tasks, .bold[without updating the model weights].
 
-.footnote[Credits: OpenAI [Better Language Models and Their Implications](https://openai.com/blog/better-language-models/).]
+Zero-shot, one-shot and few-shot learning consist in prompting the model with a few examples of the target task and letting it learn from them. This paradigm is called in-context learning.
+
+---
+
+class: middle
+
+.center.width-100[![](./figures/lec8/gpt-3-xshot.svg)]
+
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai).]
+
+---
+
+class: middle, center
+
+Demo of Llama 7B vs GPT-3.5 vs GPT-4
+
+---
+
+class: middle
+
+## Emergent abilities
+
+As language models grow in size, they start to exhibit emergent abilities that are not present in the original training data.
+
+A (few-shot) prompted task is .bold[emergent] if it achieves random performance for small models and then (suddenly) improves as the model size increases.
+
+---
+
+class: middle
+
+.center.width-100[![](./figures/lec8/emergence.gif)]
+
+.footnote[Credits: [Wei et al](https://arxiv.org/abs/2206.07682), 2022.]
+
+---
+
+class: middle
+
+Notably, chain-of-thought reasoning is an emergent ability of large language models. It improves performance on a wide range of arithmetica, commonsense, and symbolic reasoning tasks.
+
+.center.width-100[![](./figures/lec8/cot1.png)]
+
+.footnote[Credits: [Wei et al](https://openreview.net/pdf?id=_VjQlMeSB_J), 2022b.]
+
+---
+
+class: middle
+
+.center.width-50[![](./figures/lec8/cot2.png)]
+
+.footnote[Credits: [Wei et al](https://openreview.net/pdf?id=_VjQlMeSB_J), 2022b.]
+
+---
+
+class: middle
+.pull-right[![](./figures/lec8/bias-score.png)]
+
+## Alignment
+
+Increasing the model size does not inherently makes models follow a user's intent better, despite emerging abilities.
+
+Worse, scaling up the model may increase the likelihood of undesirable behaviors, including those that are harmful, unethical, or biased. 
+
+---
+
+class: middle
+
+Human feedback can be used for aligning language models with human intent, as shown by InstructGPT.
+
+.center.width-80[![](./figures/lec8/instructgpt.png)]
+
+.footnote[Credits: [Ouyang et al](https://arxiv.org/pdf/2203.02155.pdf), 2022.]
+
+---
+
+class: middle
+
+.center.width-100[![](./figures/lec8/instructgpt-code.png)]
+
+---
+
+class: end-slide, center
+count: false
+
+The end.

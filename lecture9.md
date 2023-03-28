@@ -10,10 +10,12 @@ Prof. Gilles Louppe<br>
 
 ???
 
+R: encoder-process-decoder architecture
 R: geometric DL course https://geometricdeeplearning.com/lectures/
 R: https://twitter.com/thomaskipf/status/1499470015455805451?t=1jy4X1fhk_vo1rjSO-2YFQ&s=03
 R: https://twitter.com/xbresson/status/1629898461402497024?t=quHYF-x9RNFnVsLqfd264A&s=03 Bresson
 R: unify attention, convolution, etc
+R: https://twitter.com/CSProfKGD/status/1638742528588673024?t=FWeRSkQOoOTF59cPu7YOqQ&s=03
 
 ---
 

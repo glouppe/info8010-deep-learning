@@ -16,3 +16,6 @@ R: https://arxiv.org/abs/2208.11970
 https://arxiv.org/abs/2301.11108
 
 R: prompts https://bestaiprompts.art/
+
+
+R: https://scoste.fr/posts/diffusion/

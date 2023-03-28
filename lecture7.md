@@ -8,10 +8,6 @@ Lecture 7: Attention and transformers
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-R: compare visually against FC vs Conv vs Attention -> all are linear operators
-
 ---
 
 # Today
@@ -25,7 +21,7 @@ Attention is all you need!
 
 ???
 
-Mission: learn a bout a novel and fundamental building block in modern neural networks. This brick can replace both FC and convolutional layers.
+Mission: learn about a novel and fundamental building block in modern neural networks. This brick can replace both FC and convolutional layers.
 
 ---
 
@@ -107,7 +103,7 @@ v &= \mathbf{h}\_{T} \\\\
 \mathbf{y}\_{i} &\sim p(\cdot | \mathbf{y}\_{1:i-1}, v).
 \end{aligned}$$
 
-.footnote[Credits: [Dive Into Deep Learning, 9.7](https://d2l.ai/chapter_recurrent-modern/seq2seq.html).]
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai).]
 
 ???
 
@@ -119,7 +115,9 @@ Blackboard: translate to French the following sentence.
 
 "L'animal n'a pas traversé la rue car il était trop fatigué."
 
-+ demo on Google translate, change "animal" for "lion" or "giraffe".
+Imitate how the RNN would translate this sentence.
+
+
 
 ---
 
@@ -153,7 +151,7 @@ class: middle
 
 Using the nonvolitional cue based on saliency (red cup, non-paper), attention is involuntarily directed to the coffee.
 
-.footnote[Credits: [Dive Into Deep Learning, 10.1](https://d2l.ai/chapter_attention-mechanisms/attention-cues.html).]
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai).]
 
 ---
 
@@ -163,8 +161,7 @@ class: middle
 
 Using the volitional cue (want to read a book) that is task-dependent, attention is directed to the book under volitional control.
 
-.footnote[Credits: [Dive Into Deep Learning, 10.1](https://d2l.ai/chapter_attention-mechanisms/attention-cues.html).]
-
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai).]
 
 ---
 
@@ -172,7 +169,7 @@ class: middle
 
 .center.width-100[![](figures/lec7/qkv.svg)]
 
-.footnote[Credits: [Dive Into Deep Learning, 10.1](https://d2l.ai/chapter_attention-mechanisms/attention-cues.html).]
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai).]
 
 ---
 
@@ -194,8 +191,6 @@ Blackboard: translate to French the following sentence.
 
 "L'animal n'a pas traversé la rue car il était trop fatigué."
 
-+ demo on Google translate, change "animal" for "lion" or "giraffe".
-
 ---
 
 class: middle
@@ -204,7 +199,7 @@ class: middle
 
 .center.width-90[![](figures/lec7/seq2seq-attention-details.svg)]
 
-.footnote[Credits: [Dive Into Deep Learning, 10.4](https://d2l.ai/chapter_attention-mechanisms/bahdanau-attention.html).]
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai).]
 
 ---
 
@@ -282,7 +277,7 @@ class: middle
 
 .center.width-100[![](figures/lec7/attention-output.svg)]
 
-.footnote[Credits: [Dive Into Deep Learning, 10.3](https://d2l.ai/chapter_attention-mechanisms/attention-scoring-functions.html).]
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai).]
 
 ---
 
@@ -368,7 +363,7 @@ class: middle
 
 .center.width-80[![](figures/lec7/cnn-rnn-self-attention.svg)]
 
-.footnote[Credits: [Dive Into Deep Learning, 10.6.2](https://d2l.ai/chapter_attention-mechanisms/self-attention-and-positional-encoding.html#comparing-cnns-rnns-and-self-attention).]
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai).]
 
 ???
 
@@ -381,6 +376,26 @@ class: middle
 .center.width-100[![](figures/lec7/complexity.png)]
 
 where $n$ is the sequence length, $d$ is the embedding dimension, and $k$ is the kernel size of convolutions.
+
+???
+
+As noted in Table 1, a self-attention layer connects all positions with a constant number of sequentially
+executed operations, whereas a recurrent layer requires O(n) sequential operations. In terms of
+computational complexity, self-attention layers are faster than recurrent layers when the sequence
+length n$$ is smaller than the representation dimensionality $d$, which is most often the case with
+sentence representations used by state-of-the-art models in machine translations, such as word-piece
+[38] and byte-pair [31] representations. 
+
+A single convolutional layer with kernel width $k < n$ does not connect all pairs of input and output
+positions. Doing so requires a stack of $O(n/k)$ convolutional layers in the case of contiguous kernels,
+or $O(logk(n))$ in the case of dilated convolutions [18], increasing the length of the longest paths
+between any two positions in the network. Convolutional layers are generally more expensive than
+recurrent layers, by a factor of $k$. 
+
+As side benefit, self-attention could yield more interpretable models. We inspect attention distributions
+from our models and present and discuss examples in the appendix. Not only do individual attention
+heads clearly learn to perform different tasks, many appear to exhibit behavior related to the syntactic
+and semantic structure of the sentences.
 
 ---
 
@@ -478,7 +493,7 @@ $$
 with
 $$\mathbf{W}\_i^Q \in \mathbb{R}^{d\_\text{model} \times d\_k}, \mathbf{W}\_i^K \in \mathbb{R}^{d\_\text{model} \times d\_k}, \mathbf{W}\_i^V \in \mathbb{R}^{d\_\text{model} \times d\_v}, \mathbf{W}\_i^O \in \mathbb{R}^{hd\_v \times d\_\text{model}}$$
 
-.footnote[Credits: [Dive Into Deep Learning, 11.5](https://d2l.ai/chapter_attention-mechanisms-and-transformers/multihead-attention.html).]
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai).]
 
 ---
 
@@ -496,7 +511,7 @@ class: middle
 
 .center.width-60[![](figures/lec7/transformer.svg)]
 
-.footnote[Credits: [Dive Into Deep Learning, 11.7](https://d2l.ai/chapter_attention-mechanisms-and-transformers/transformer.html).]
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai).]
 
 ---
 
