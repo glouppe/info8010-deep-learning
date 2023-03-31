@@ -35,7 +35,7 @@ class: middle
 
 .center[(March 2023)]
 
-.footnote[Credits: [lifearchitect.ai/models](https://lifearchitect.ai/models/), 2023]
+.footnote[Credits: [lifearchitect.ai/models](https://lifearchitect.ai/models/), 2023.]
 
 ---
 
@@ -49,7 +49,7 @@ These models are trained with self-supervised learning, where the target sequenc
 
 .center.width-80[![](./figures/lec8/gpt-decoder-only.svg)]
 
-.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai).]
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai), 2023.]
 
 ---
 
@@ -104,13 +104,13 @@ class: middle
 
 .center.width-100[![](./figures/lec8/gpt-3-xshot.svg)]
 
-.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai).]
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai), 2023.]
 
 ---
 
 class: middle, center
 
-Demo of Llama 7B vs GPT-3.5 vs GPT-4
+(demo)
 
 ---
 
@@ -163,7 +163,7 @@ Worse, scaling up the model may increase the likelihood of undesirable behaviors
 
 class: middle
 
-Human feedback can be used for aligning language models with human intent, as shown by InstructGPT.
+Human feedback can be used for better aligning language models with human intent, as shown by InstructGPT.
 
 .center.width-80[![](./figures/lec8/instructgpt.png)]
 
