@@ -8,6 +8,10 @@ Lecture 6: Computer vision
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+R: YOLOv8 https://twitter.com/LearnOpenCV/status/1613177011048189952
+
 ---
 
 # Today 
