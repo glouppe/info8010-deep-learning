@@ -79,11 +79,11 @@ For optimal performance all three factors must be scaled up in tandem. Empirical
 
 class: middle
 
-Large models also enjoy better sample efficiency than small models. Larger models require less data to achieve the same performance.
-The optimal model size also shows to grow smoothly with the amount of compute available for training.
+Large models also enjoy better sample efficiency than small models.
+- Larger models require less data to achieve the same performance.
+- The optimal model size shows to grow smoothly with the amount of compute available for training.
 
 <br>
-
 .center.width-100[![](./figures/lec8/scaling-sample-conv.png)]
 
 .footnote[Credits: [Kaplan et al](https://arxiv.org/pdf/2001.08361.pdf), 2020.]
