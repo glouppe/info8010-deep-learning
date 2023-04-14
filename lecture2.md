@@ -8,6 +8,10 @@ Lecture 2: Multi-layer perceptron
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+R: Series of layers -> Use notations consistent with Lec 9 (^{k})
+
 ---
 
 # Today
