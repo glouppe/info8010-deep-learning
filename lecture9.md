@@ -59,18 +59,18 @@ An interesting problem is to predict whether a molecule is a potent drug or not.
 
 ---
 
-<br>
+<br><br>
 
-Once we have an accurate GNN that can predict whether a molecule is a potent drug, we can use it on arbitrary new graphs to identify potential drugs.
-- Run on large dataset $O(10^8)$ of candidates.
-- Select top-100 with highest predicted potency.
+Oncea a GNN can accurately predict whether a molecule is a potent drug, we can use it on arbitrary new graphs to identify potential drugs:
+- Run on large dataset of candidates.
+- Select top-100 with the highest predicted potency.
 - Manually inspect top-100.
 
 --
 
-Using this very approach, Stokes et al. (2020) discovered .bold[Halicin], a previously overlooked compound that is a highly potent antibiotic!
+This very approach led to the discovery of .italic[Halicin], a previously overlooked compound that is a highly potent antibiotic!
 
-.center.width-80[![](figures/lec9/molecules3.png)]
+.center.width-70[![](figures/lec9/halicin.png)]
 
 .footnote[Credits: Petar Veličković, [CST Wednesday Seminar](https://petar-v.com/talks/GNN-Wednesday.pdf), 2021.]
 
