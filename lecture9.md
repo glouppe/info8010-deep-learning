@@ -23,9 +23,8 @@ class: middle
 
 ## Motivation
 
-Many real-world problems do not fit into the tabular format of machine learning. Instead, many problems involve data that is naturally represented as .italic[graphs].
+Many real-world problems do not fit into the tabular format of machine learning. Instead, many problems involve data that is naturally represented as .italic[graphs]:
 
-Examples include:
 - social networks
 - traffic networks
 - biomolecular graphs
@@ -38,9 +37,9 @@ class: middle
 
 ## The case of molecules
 
-A very natural way to represent molecules is as graphs, where nodes represent atoms and edges represent bonds.
+Molecules are naturally represented as graphs, where nodes represent atoms and edges represent bonds.
 
-Features can be associated with each node, e.g. the atomic number, the number of bonds, etc.
+Features can be associated with each node and edge, e.g. the atomic number, the number of bonds, etc.
 
 .center.width-100[![](figures/lec9/molecules1.png)]
 
@@ -52,7 +51,7 @@ class: middle
 
 An interesting problem is to predict whether a molecule is a potent drug or not.
 - Binary classification on whether the drug will inhibit bacterial growth (E. coli).
-- Train a graph neural network (GNN) on a curated dataset of known drugs.
+- Train a graph neural network (GNN) on a curated dataset $O(10^4)$ of known drugs.
 
 .center.width-100[![](figures/lec9/molecules2.png)]
 
@@ -63,7 +62,7 @@ An interesting problem is to predict whether a molecule is a potent drug or not.
 <br>
 
 Once we have an accurate GNN that can predict whether a molecule is a potent drug, we can use it on arbitrary new graphs to identify potential drugs.
-- Run on large dataset of candidates.
+- Run on large dataset $O(10^8)$ of candidates.
 - Select top-100 with highest predicted potency.
 - Manually inspect top-100.
 
@@ -136,8 +135,8 @@ class: middle
 ## Tasks
 
 Given a graph $\mathcal{G} = (\mathcal{V}, \mathcal{E})$ and its $(\mathbf{X}, \mathbf{A})$ representation, we want to make
-- graph-level predictions, using graph-level functions $f(\mathbf{X}, \mathbf{A})$,
-- nodel-level predictions, using node-level functions $\mathbf{F}(\mathbf{X}, \mathbf{A})$.
+- graph-level predictions $y \in \mathcal{Y}$, using graph-level functions $f(\mathbf{X}, \mathbf{A})$,
+- nodel-level predictions $\mathbf{y} \in \mathcal{Y}^{|\mathcal{V}|}$, using node-level functions $\mathbf{F}(\mathbf{X}, \mathbf{A})$.
 
 ---
 
@@ -145,7 +144,7 @@ class: middle
 
 ## Permutation matrices
 
-A permutation matrix $\mathbf{P} \in \mathbb{R}^{|\mathcal{V}| \times |\mathcal{V}|}$ is a matrix with $|\mathcal{V}|$ rows and columns, where each row and column contains a single $1$ and the remaining entries are $0$.
+A permutation matrix $\mathbf{P} \in \\{0,1\\}^{|\mathcal{V}| \times |\mathcal{V}|}$ is a matrix with $|\mathcal{V}|$ rows and columns, where each row and column contains a single $1$ and the remaining entries are $0$.
 
 ---
 
@@ -193,6 +192,8 @@ class: middle
 For node-level tasks, we want permutation equivariance, i.e.
 $$\mathbf{F}(\mathbf{P}\mathbf{X}, \mathbf{P}\mathbf{A}\mathbf{P}^T) = \mathbf{P}\mathbf{F}(\mathbf{X}, \mathbf{A})$$
 for all permutation matrices $\mathbf{P}$.
+
+???
 
 That is, permuting the nodes of the graph should modify the results only up to their permutation.
 
@@ -415,10 +416,10 @@ class: middle
 
 Layers can be stacked in series to form deep graph neural networks:
 
-$$\begin{aligned}\mathbf{H}^{(0)} &= \mathbf{X} \\\\
-\mathbf{H}^{(1)} &= \mathbf{F}^{(1)}(\mathbf{H}^{(0)}, \mathbf{A}) \\\\
+$$\begin{aligned}\mathbf{H}\_0 &= \mathbf{X} \\\\
+\mathbf{H}\_1 &= \mathbf{F}\_1(\mathbf{H}\_0, \mathbf{A}) \\\\
 ... & \\\\
-\mathbf{H}^{(L)} &= \mathbf{F}^{(L)}(\mathbf{H}^{(L-1)}, \mathbf{A}) \\\\
+\mathbf{H}\_L &= \mathbf{F}\_L(\mathbf{H}\_{L-1}, \mathbf{A}) \\\\
 \end{aligned}$$
 
 ???

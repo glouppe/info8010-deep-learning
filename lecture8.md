@@ -69,7 +69,7 @@ class: middle
 
 Transformer language model performance improves smoothly as we increase the model size, the dataset size, and amount of compute used for training. 
 
-For optimal performance all three factors must be scaled up in tandem. Empirical performance has a power-law relationship with each individual factor when not bottlenecked by the other two.
+For optimal performance, all three factors must be scaled up in tandem. Empirical performance has a power-law relationship with each individual factor when not bottlenecked by the other two.
 
 .center.width-100[![](./figures/lec8/scaling-power-law.png)]
 
