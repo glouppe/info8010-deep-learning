@@ -16,7 +16,6 @@ How to model *uncertainty* in deep learning?
 - Uncertainty
 - Aleatoric uncertainty
 - Epistemic uncertainty
-- Adversarial attacks
 
 ---
 
@@ -236,7 +235,7 @@ class: middle
 
 .width-60[![](figures/lec10/illus2.png)]
 
-If we flip $\mathbf{x}\_i$ and $y\_i$, the network faces issues since for each input, there are multiple outputs that can work. It produces some sort of average of the correct values.
+If we flip $\mathbf{x}\_i$ and $y\_i$, the network faces issues since for each input, there are multiple outputs that can work. It produces an average of the correct values.
 [[demo](http://otoro.net/ml/mixture/inverse.html)]
 
 ]
@@ -372,10 +371,14 @@ Bayesian neural networks are *easy to formulate*,  but notoriously **difficult**
 
 Variational inference can be used for building an approximation $q(\mathbf{\omega};\nu)$ of the posterior $p(\mathbf{\omega}|\mathbf{d})$.
 
-As before (see Lecture 10), we can show that minimizing
+We can show that minimizing
 $$\text{KL}(q(\mathbf{\omega};\nu) || p(\mathbf{\omega}|\mathbf{d}))$$
 with respect to the variational parameters $\nu$, is identical to maximizing the evidence lower bound objective (ELBO)
 $$\text{ELBO}(\nu) = \mathbb{E}\_{q(\mathbf{\omega};\nu)} \left[\log p(\mathbf{d}| \mathbf{\omega})\right] - \text{KL}(q(\mathbf{\omega};\nu) || p(\mathbf{\omega})).$$
+
+???
+
+Do it on the blackboard.
 
 ---
 
@@ -531,6 +534,8 @@ class: middle
 
 ---
 
+exclude: true
+
 # Bayesian Infinite Networks
 
 Consider the 1-layer MLP with a hidden layer of size $q$ and a bounded activation function $\sigma$:
@@ -544,6 +549,7 @@ Assume Gaussian priors $v\_j \sim \mathcal{N}(0, \sigma\_v^2)$, $b \sim \mathcal
 
 ---
 
+exclude: true
 class: middle
 
 For a fixed value $x^{(1)}$, let us consider the prior distribution of $f(x^{(1)})$ implied by
@@ -565,6 +571,7 @@ We define $V(x^{(1)}) = \mathbb{E}[h\_j(x^{(1)})^2]$, and is the same for all $j
 
 ---
 
+exclude: true
 class: middle
 
 ## What if $q \to \infty$?
@@ -577,6 +584,7 @@ distribution $f(x^{(1)})$ is a Gaussian of variance $\sigma\_b^2 + q \sigma_v^2 
 
 ---
 
+exclude: true
 class: middle
 
 Accordingly, for $\sigma\_v = \omega\_v q^{-\frac{1}{2}}$, for some fixed $\omega\_v$, the prior $f(x^{(1)})$ converges to a Gaussian of mean zero and variance $\sigma\_b^2 + \omega\_v^2 \sigma_v^2 V(x^{(1)})$ as $q \to \infty$.
@@ -592,6 +600,7 @@ where $C(x^{(1)}, x^{(2)}) = \mathbb{E}[h\_j(x^{(1)}) h\_j(x^{(2)})]$ and is the
 
 ---
 
+exclude: true
 class: middle
 
 This result states that for any set of fixed points $x^{(1)}, x^{(2)}, ...$,
@@ -609,236 +618,7 @@ a  **Gaussian process**.
 
 ---
 
-class: middle
-
-# Adversarial attacks
-
----
-
-class: middle
-
-## Intriguing properties of neural networks
-
-.italic["We can cause the network to *misclassify an image by applying a certain hardly perceptible perturbation*, which is found
-by maximizing the network’s prediction error. In addition, the specific nature of
-these perturbations is **not a random artifact of learning**: the same perturbation can
-cause a different network, that was trained on a different subset of the dataset, to
-misclassify the same input."
-
-The existence of
-the adversarial negatives appears to be in *contradiction with the network’s ability to achieve high
-generalization performance*. Indeed, if the network can generalize well, how can it be confused
-by these adversarial negatives, which are indistinguishable from the regular examples?"]
-
-.pull-right[(Szegedy et al, 2013)]
-
----
-
-# Attacks
-
-<br><br>
-
-.center.width-100[![](figures/lec10/piggie.png)]
-
----
-
-class: middle
-
-.center.width-60[![](figures/lec10/negative1.png)]
-
-.center[(Left) Original images. (Middle) Adversarial noise. (Right) Modified images.<br>
-All are classified as 'Ostrich'. ]
-
-.footnote[Credits: Szegedy et al, [Intriguing properties of neural networks](https://arxiv.org/abs/1312.6199), 2013.]
-
----
-
-class: middle
-
-## Fooling deep structured prediction models
-
-.center.width-80[![](figures/lec10/houdini1.png)]
-
-.center.width-80[![](figures/lec10/houdini2.png)]
-
-.center[(Cisse et al, 2017)]
-
----
-
-class: middle, black-slide
-
-## Adversarial examples in the physical world
-
-.center[
-<iframe width="600" height="450" src="https://www.youtube.com/embed/zQ_uMenoBCk" frameborder="0" volume="0" allowfullscreen></iframe>
-]
-
----
-
-class: middle, center, black-slide
-
-<iframe width="600" height="450" src="https://www.youtube.com/embed/oeQW5qdeyy8" frameborder="0" volume="0" allowfullscreen></iframe>
-
----
-
-
-class: middle, center, black-slide
-
-<iframe width="600" height="450" src="https://www.youtube.com/embed/YXy6oX1iNoA" frameborder="0" volume="0" allowfullscreen></iframe>
-
----
-
-class: middle
-
-## Creating adversarial examples
-
-"The deep stack of non-linear layers are a way for the model to encode a non-local
-generalization prior over the input space. In other words, it is assumed that is
-possible for the output unit to assign probabilities to regions of the input
-space that contain no training examples in their vicinity.
-
-It is implicit in such arguments that local generalization—in the very proximity
-of the training examples—works as expected. And that in particular, for a small
-enough radius $\epsilon > 0$ in the vicinity of a given training input
-$\mathbf{x}$, an $\mathbf{x} + \mathbf{r}$ satisfying $||\mathbf{r}|| < \epsilon$ will
-get assigned a high probability of the correct class by the model."
-
-.pull-right[(Szegedy et al, 2013)]
-
----
-
-class: middle
-
-$$\begin{aligned}
-\min\_{\mathbf{r}}&\, \ell(y\_\text{target}, f(\mathbf{x}+\mathbf{r};\theta))\\\\
-\text{subject to}&\, ||\mathbf{r}||\leq L
-\end{aligned}$$
-
----
-
-class: middle 
-
-## A security threat
-
-Adversarial attacks pose a **security threat** to machine learning systems deployed in the real world.
-
-Examples include:
-- fooling real classifiers trained by remotely hosted API (e.g., Google),
-- fooling malware detector networks,
-- obfuscating speech data,
-- displaying adversarial examples in the physical world and fool systems that perceive them through a camera.
-
----
-
-class: middle, black-slide
-
-.center.width-50[![](figures/lec10/stop.png)]
-
-.center[What if adversarial patches are put on road signs?<br> Say, for a self-driving car?]
-
----
-
-# Origins of the vulnerability
-
-## Conjecture 1: Overfitting
-
-Natural images are within the correct regions, but are also sufficiently close to the decision boundary.
-
-.center.width-70[![](figures/lec10/conjecture1.png)]
-
----
-
-class: middle
-
-## Conjecture 2: Excessive linearity
-
-The decision boundary for most ML models, including neural networks, are near piecewise linear.
-
-Then, for an adversarial sample $\hat{\mathbf{x}}$, its dot product with a weight vector $\mathbf{w}$ is such that
-$$\mathbf{w}^T \hat{\mathbf{x}} = \mathbf{w}^T\mathbf{x} + \mathbf{w}^T\mathbf{r}.$$
-- The adversarial perturbation causes the activation to grow by $\mathbf{w}^T\mathbf{r}$.
-- For $\mathbf{r} = \epsilon \text{sign}(\mathbf{w})$, if $\mathbf{w}$ has $n$ dimensions and the average magnitude of an element is $m$, then the activation will grow by $\epsilon mn$.
-- Therefore, for high dimensional problems, we can make
-many infinitesimal changes to the input that add up to one large change to the output.
-
-???
-
-See also https://arxiv.org/pdf/1608.07690.pdf
-
----
-
-class: middle
-
-.center.width-70[![](figures/lec10/epsilon-response.png)]
-
-.center[Empirical observation: neural networks produce nearly linear responses over $\epsilon$.]
-
----
-
-# Defenses
-
-- Data augmentation
-- Adversarial training
-- Denoising / smoothing
-
----
-
-class: middle
-
-## Denoising
-
-- Train the network to remove adversarial perturbations before using the input.
-- The winning team of the defense track of the NIPS 2017 competition trained a denoising U-Net to remove adversarial noise.
-
-<br>
-
-.center.width-100[![](figures/lec10/dunet.png)]
-
-.footnote[Credits: Liao et al, [Defense against Adversarial Attacks Using High-Level Representation Guided Denoiser](http://bigml.cs.tsinghua.edu.cn/~jun/pub/adversarial-defense.pdf), 2017.]
-
-???
-
-http://bigml.cs.tsinghua.edu.cn/~jun/pub/adversarial-defense.pdf
-
----
-
-class: middle
-
-## Failed defenses
-
-.italic["In this paper we evaluate ten proposed defenses and **demonstrate
-that none of them are able to withstand a white-box attack**. We do
-this by constructing defense-specific loss functions that we minimize
-with a strong iterative attack algorithm. With these attacks, on
-CIFAR an adversary can create imperceptible adversarial examples
-for each defense.
-
-By studying these ten defenses, we have drawn two lessons: existing
-defenses lack thorough security evaluations, and adversarial
-examples are much more difficult to detect than previously recognized."]
-
-.pull-right[(Carlini and Wagner, 2017)]
-
-<br><br>
-
-.italic["No method of defending against adversarial examples is yet completely satisfactory. This remains a rapidly evolving research area."]
-
-.pull-right[(Kurakin, Goodfellow and Bengio, 2018)]
-
----
-
 class: end-slide, center
 count: false
 
 The end.
-
----
-
-count: false
-
-# References
-
-- Bishop, C. M. (1994). Mixture density networks (p. 7). Technical Report NCRG/4288, Aston University, Birmingham, UK.
-- Kendall, A., & Gal, Y. (2017). What uncertainties do we need in bayesian deep learning for computer vision?. In Advances in neural information processing systems (pp. 5574-5584).
-- Srivastava, N., Hinton, G., Krizhevsky, A., Sutskever, I., & Salakhutdinov, R. (2014). Dropout: a simple way to prevent neural networks from overfitting. The Journal of Machine Learning Research, 15(1), 1929-1958.
-- Pierre Geurts, [INFO8004 Advanced Machine Learning - Lecture 1](https://glouppe.github.io/info8004-advanced-machine-learning/pdf/lec1.pdf), 2019.
