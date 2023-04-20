@@ -44,9 +44,7 @@ class: middle
 
 class: middle
 
-## Motivation
-
-In May 2016, there was the **first fatality** from an assisted driving system, caused by the perception system confusing the white side of a trailer for bright sky.
+.italic[Case 1]. First assisted driving .bold[fatality] in May 2016: Perception system mistook trailer's white side for bright sky.
 
 .grid[
 .kol-2-3[.center.width-100[![](figures/lec10/crash.png)]]
@@ -70,7 +68,7 @@ class: middle
 
 .center.width-70[![](figures/lec10/gorillas.png)]
 
-An image classification system erroneously identifies two African Americans as gorillas, raising concerns of racial discrimination.
+.italic[Case 2]. An image classification system erroneously identifies two African Americans as gorillas, raising concerns of racial discrimination.
 
 .footnote[Credits: Kendall and Gal, [What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?](https://papers.nips.cc/paper/7141-what-uncertainties-do-we-need-in-bayesian-deep-learning-for-computer-vision.pdf), 2017.]
 
@@ -78,9 +76,7 @@ An image classification system erroneously identifies two African Americans as g
 
 class: middle
 
-.alert[If these systems were able to assign a high level of **uncertainty** to their erroneous predictions, then they may have been able to *make better decisions*, and likely avoid disaster.]
-
-.footnote[Credits: Kendall and Gal, [What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?](https://papers.nips.cc/paper/7141-what-uncertainties-do-we-need-in-bayesian-deep-learning-for-computer-vision.pdf), 2017.]
+If these systems had assigned a high level of .bold[uncertainty] to their erroneous predictions, then they might have been capable of making better decisions, and likely averting disaster.
 
 ---
 
@@ -92,10 +88,10 @@ class: middle
 
 class: middle
 
-**Aleatoric** uncertainty captures noise inherent in the observations.
-- For example, sensor noise or motion noise result in uncertainty.
-- This uncertainty *cannot be reduced* with more data.
-- However, aleatoric uncertainty could be reduced with better measurements.
+**Aleatoric** uncertainty captures noise inherent in the observations. For example, sensor noise or motion noise result in uncertainty.
+
+This uncertainty *cannot be reduced* with more data.
+However, aleatoric uncertainty could be reduced with better measurements.
 
 ---
 
@@ -105,11 +101,11 @@ Aleatoric uncertainty can further be categorized into *homoscedastic* and *heter
 - Homoscedastic uncertainty relates to the uncertainty that a particular task might cause. It stays constant for different inputs.
 - Heteroscedastic uncertainty depends on the inputs to the model, with some inputs potentially having more noisy outputs than others.
 
-<br>
+---
+
+class: middle
 
 .center.width-100[![](figures/lec10/homo-vs-hetero.png)]
-
-.footnote[Credits: Yarin Gal, [Uncertainty in  Deep Learning](https://pdfs.semanticscholar.org/55cd/9e1bb7ce02cd2bb01b364e7b331fcc1ef2c7.pdf), 2016.]
 
 ---
 
@@ -145,7 +141,7 @@ $$\begin{aligned}
 &= \arg \min\_{\theta,\sigma^2} \sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}}  \frac{(y\_i-\mu(\mathbf{x}\_i))^2}{2\sigma^2} + \log(\sigma) + C
 \end{aligned}$$
 
-.exercise[What if $\sigma^2$ was fixed?]
+.question[What if $\sigma^2$ was fixed?]
 
 ---
 
@@ -167,13 +163,13 @@ $$\begin{aligned}
 &= \arg \min\_{\theta} \sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}}  \frac{(y\_i-\mu(\mathbf{x}\_i))^2}{2\sigma^2(\mathbf{x}\_i)} + \log(\sigma(\mathbf{x}\_i)) + C
 \end{aligned}$$
 
-.exercise[What is the purpose of $2\sigma^2(\mathbf{x}\_i)$? What about $\log(\sigma(\mathbf{x}\_i))$?]
+.question[What is the purpose of $2\sigma^2(\mathbf{x}\_i)$? What about $\log(\sigma(\mathbf{x}\_i))$?]
 
 ---
 
 # Multimodality
 
-Modelling $p(y|\mathbf{x})$ as a unimodal Gaussian is not always a good idea since the conditional distribution may be multimodal.
+Modelling $p(y|\mathbf{x})$ as a unimodal (Gaussian) distribution can be inadequate since the conditional distribution may be multimodal.
 
 <br>
 
@@ -325,9 +321,9 @@ class: middle
 class: middle
 
 **Epistemic** uncertainty accounts for uncertainty in the model or in its parameters.
-- It captures our *ignorance* about which model generated the collected data.
-- It can be explained away given enough data (why?).
-- It is also often referred to as *model uncertainty*.
+It captures our *ignorance* about which model generated the collected data.
+
+It can be explained away given enough data.
 
 .footnote[Credits: Kendall and Gal, [What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?](https://papers.nips.cc/paper/7141-what-uncertainties-do-we-need-in-bayesian-deep-learning-for-computer-vision.pdf), 2017.]
 
@@ -348,12 +344,14 @@ Then we invoke Bayes for making predictions.
 
 class: middle
 
-- The prior predictive distribution at $\mathbf{x}$ is given by integrating over all possible weight configurations,
+The prior predictive distribution at $\mathbf{x}$ is given by integrating over all possible weight configurations,
 $$p(y|\mathbf{x}) = \int p(y|\mathbf{x}, \mathbf{\omega}) p(\mathbf{\omega}) d\mathbf{\omega}.$$
-- Given training data $\mathbf{d}=\\{(\mathbf{x}\_1, y\_1), ..., (\mathbf{x}\_N, y\_N)\\}$ a Bayesian update results in the posterior
+
+Given training data $\mathbf{d}=\\{(\mathbf{x}\_1, y\_1), ..., (\mathbf{x}\_N, y\_N)\\}$ a Bayesian update results in the posterior
 $$p(\mathbf{\omega}|\mathbf{d}) = \frac{p(\mathbf{d}|\mathbf{\omega})p(\mathbf{\omega})}{p(\mathbf{d})}$$
 where the likelihood $p(\mathbf{d}|\omega) = \prod\_i p(y\_i | \mathbf{x}\_i, \omega).$
-- The posterior predictive distribution is then given by
+
+The posterior predictive distribution is then given by
 $$p(y|\mathbf{x},\mathbf{d}) = \int p(y|\mathbf{x}, \mathbf{\omega}) p(\mathbf{\omega}|\mathbf{d}) d\mathbf{\omega}.$$
 
 ---
@@ -362,8 +360,9 @@ class: middle
 
 Bayesian neural networks are *easy to formulate*,  but notoriously **difficult** to perform inference in.
 
-- This stems mainly from the fact that the marginal $p(\mathbf{d})$ is intractable to evaluate, which results in the posterior $p(\mathbf{\omega}|\mathbf{d})$ not being tractable either.
-- Therefore, we must rely on approximations.
+$p(\mathbf{d})$ is intractable to evaluate, which results in the posterior $p(\mathbf{\omega}|\mathbf{d})$ not being tractable either.
+
+Therefore, we must rely on approximations.
 
 ---
 
@@ -520,7 +519,7 @@ class: middle, center
 
 .center.width-80[![](figures/lec10/gal-demo.png)]
 
-Yarin Gal's [demo](http://mlg.eng.cam.ac.uk/yarin/blog_3d801aa532c1ce.html).
+([demo](http://mlg.eng.cam.ac.uk/yarin/blog_3d801aa532c1ce.html))
 
 ---
 

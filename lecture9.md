@@ -61,7 +61,7 @@ An interesting problem is to predict whether a molecule is a potent drug or not.
 
 <br><br>
 
-Oncea a GNN can accurately predict whether a molecule is a potent drug, we can use it on arbitrary new graphs to identify potential drugs:
+Once a GNN can accurately predict whether a molecule is a potent drug, we can use it on arbitrary new graphs to identify potential drugs:
 - Run on large dataset of candidates.
 - Select top-100 with the highest predicted potency.
 - Manually inspect top-100.
@@ -261,20 +261,13 @@ count: false
 
 class: middle
 
-Formally, we will define a GNN as a function
-$$g(\bigoplus\_{i \in \mathcal{V}} \phi(\mathbf{x}\_i, \mathbf{X}))$$
-where $g$ is an arbitrary function, $\phi$ is a .italic[shared] permutation invariant function in $\mathbf{X}$, and $\bigoplus$ is a permutation invariant aggregator (e.g., sum, average or max).
-
----
-
-class: middle
-
 If we denote $\mathbf{h}\_i = \phi(\mathbf{x}\_i, \mathbf{X})$ for $i \in \mathcal{V}$, then 
 $$\begin{aligned}
 f(\mathbf{X}, \mathbf{A}) &= g(\bigoplus\_{i \in \mathcal{V}} \mathbf{h}\_i)\\\\
 \mathbf{F}(\mathbf{X}, \mathbf{A}) &= \begin{bmatrix}\mathbf{h}\_1\\\\
 \vdots\\\\
 \mathbf{h}\_{\mathcal{V}}\end{bmatrix}\end{aligned}$$
+where $g$ is an arbitrary function, $\phi$ is a .italic[shared] permutation invariant function in $\mathbf{X}$, and $\bigoplus$ is a permutation invariant aggregator (e.g., sum, average or max).
 
 ---
 
@@ -552,6 +545,23 @@ class: middle
 
 ---
 
+class: middle
+
+.grid[
+.kol-2-3[<br>
+
+## Travel time prediction in Google Maps
+
+.width-95[![](figures/lec9/eta.gif)]
+
+]
+.kol-1-3[.width-100[![](figures/lec9/eta-google-maps.png)]]
+]
+
+.footnote[Credits: [Derrow-Pinion et al](https://arxiv.org/abs/2108.11482), 2021.]
+
+---
+
 class: middle 
 
 ## Learning to simulate physics with graph networks
@@ -571,6 +581,17 @@ class: middle, black-slide
 ]
 
 .footnote[Credits: [Sanchez-Gonzalez et al](https://arxiv.org/abs/2002.09405), 2020.]
+
+---
+
+class: middle
+
+## Medium-range global weather forecasting
+
+.center.width-85[![](figures/lec9/graphcast.png)]
+
+.footnote[Credits: [Lam et al](https://arxiv.org/abs/2212.12794), 2022.]
+
 
 ---
 
