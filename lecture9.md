@@ -8,6 +8,10 @@ Lecture 9: Graph neural networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+R: Check slides of https://web.stanford.edu/class/cs224w/
+
 ---
 
 # Today
@@ -100,9 +104,13 @@ class: middle
 
 A graph $\mathcal{G} = (\mathcal{V}, \mathcal{E})$ is defined by a set of nodes $\mathcal{V}$ and a set of edges $\mathcal{E} \subseteq \mathcal{V} \times \mathcal{V}$.
 
-Edges can be represented by an adjacency matrix $$\mathbf{A} \in \mathbb{R}^{|\mathcal{V}| \times |\mathcal{V}|},$$ where $\mathbf{A}\_{ij} = 1$ if there is an edge from node $i$ to $j$, and $\mathbf{A} \_{ij} = 0$ otherwise.
+Edges can be represented by an adjacency matrix $$\mathbf{A} \in \\{0,1\\}^{|\mathcal{V}| \times |\mathcal{V}|},$$ where $\mathbf{A}\_{ij} = 1$ if there is an edge from node $i$ to $j$, and $\mathbf{A} \_{ij} = 0$ otherwise.
 
 The features of the nodes are represented by a matrix $$\mathbf{X} \in \mathbb{R}^{|\mathcal{V}| \times d}$$ where $d$ is the dimensionality of the node features.
+
+???
+
+Draw an example on the board.
 
 ---
 
@@ -269,6 +277,10 @@ f(\mathbf{X}, \mathbf{A}) &= g(\bigoplus\_{i \in \mathcal{V}} \mathbf{h}\_i)\\\\
 \mathbf{h}\_{\mathcal{V}}\end{bmatrix}\end{aligned}$$
 where $g$ is an arbitrary function, $\phi$ is a .italic[shared] permutation invariant function in $\mathbf{X}$, and $\bigoplus$ is a permutation invariant aggregator (e.g., sum, average or max).
 
+???
+
+Illustrate on the board.
+
 ---
 
 class: middle
@@ -336,6 +348,10 @@ $$\mathbf{h}\\\_i = \sigma\left( \sum\\\_{j \in \mathcal{N}\\\_i} \frac{1}{|\mat
 ]
 
 .footnote[Image credits: Bronstein et al., [Geometric Deep Learning](https://arxiv.org/abs/2104.13478.pdf), 2021.]
+
+???
+
+Illustrate on the board, with a larger graph.
 
 ---
 
@@ -420,8 +436,10 @@ $$\begin{aligned}\mathbf{H}\_0 &= \mathbf{X} \\\\
 Draw a full architecture on the blackboard.
 
 Elaborate on the propagation of information across the graph. 
-    - The effective neighborhood of a node grows with the depth of the network
-    - Similar to CNNs in which the effective receptive field grows with the depth of the network.
+- The effective neighborhood of a node grows with the depth of the network
+- Similar to CNNs in which the effective receptive field grows with the depth of the network.
+
+Comment on unrolling a shared layer vs stacking distinct layers.
 
 ---
 
@@ -458,7 +476,7 @@ class: middle
 
 ## Global pooling
 
-To make graph-level predictions, the node representations $\mathbf{H}$ are aggregated into a single vector $$\bar{\mathbf{h}} = \bigoplus\_{i \in \mathcal{V}} \mathbf{h}\_i$$ using a pooling operator (e.g., max, mean, sum, etc.)
+To make graph-level predictions, the node representations $\mathbf{H}$ are aggregated into a single vector $$\bar{\mathbf{h}} = \bigoplus\_{i \in \mathcal{V}} \mathbf{h}\_i$$ using a permutation invariant pooling operator (e.g., max, mean, sum, etc.)
 
 $\bar{\mathbf{h}}$ is then usually passed through a regular MLP $g$ to make the final prediction.
 
