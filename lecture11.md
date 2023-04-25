@@ -15,12 +15,6 @@ R: https://twitter.com/c_valenzuelab/status/1562579547404455936
 
 ---
 
-class: middle
-
-.center.width-60[![](figures/lec0/map.png)]
-
----
-
 # Today
 
 Learn a model of the data.

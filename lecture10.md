@@ -10,6 +10,12 @@ Prof. Gilles Louppe<br>
 
 ---
 
+class: middle
+
+.center.width-60[![](figures/lec0/map.png)]
+
+---
+
 # Today
 
 How to model *uncertainty* in deep learning?
@@ -47,6 +53,14 @@ class: middle
 Uncertainty refers to epistemic situations involving imperfect or unknown information. It applies to predictions of future events, to physical measurements that are already made, or to the unknown. 
 
 Uncertainty arises in partially observable or stochastic environments, as well as due to ignorance, indolence, or both.meteorology, ecology and information science.
+
+.italic[Why is uncertainty important?]
+
+.footnote[Credits: [Wikipedia](https://en.wikipedia.org/wiki/Uncertainty), 2023.]
+
+???
+
+Accounting for uncertainty leads to optimal decisions. Not accounting for uncertainty leads to suboptimal, wrong, or even catastrophic decisions.
 
 ---
 
@@ -120,7 +134,7 @@ Consider training data $(\mathbf{x}, y) \sim P(X,Y)$, with
 - $\mathbf{x} \in \mathbb{R}^p$,
 - $y \in \mathbb{R}$.
 
-We do not wish to learn a function $\hat{y} = f(\mathbf{x})$, which would only produce point estimates. Instead we want to learn the ful conditional density $$p(y|\mathbf{x}).$$
+We do not wish to learn a function $\hat{y} = f(\mathbf{x})$, which would only produce point estimates. Instead we want to learn the full conditional density $$p(y|\mathbf{x}).$$
 
 ---
 
@@ -131,6 +145,8 @@ class: middle
 We can model aleatoric uncertainty in the output by modelling the conditional distribution as a Gaussian distribution,
 $$p(y|\mathbf{x}) = \mathcal{N}(y; \mu(\mathbf{x}), \sigma^2(\mathbf{x})),$$
 where $\mu(x)$ and $\sigma^2(\mathbf{x})$ are parametric functions to be learned, such as neural networks.
+
+Note: The Gaussian distribution is a modelling choice. Other parametric distributions can be used.
 
 ---
 
@@ -182,10 +198,9 @@ class: middle
 
 Modelling $p(y|\mathbf{x})$ as a unimodal (Gaussian) distribution can be inadequate since the conditional distribution may be .bold[multimodal].
 
-<br>
+???
 
-.center.width-90[![](figures/lec10/multimodality.png)]
-.caption[(and it would be even worse to have only point estimates for $y$!)]
+Illustrate on the blackboard.
 
 ---
 
@@ -286,6 +301,8 @@ What if $f$ is non-linear?
 
 .center.width-75[![](figures/lec10/cov.png)]
 
+.footnote[Image credits: Simon J.D. Prince, [Understanding Deep Learning](https://udlbook.github.io/udlbook/), 2023.]
+
 ---
 
 class: middle
@@ -307,14 +324,29 @@ class: middle
 
 ## Normalizing flows
 
-A normalizing flow is a change of variable $f$ parameterized by an **invertible neural network** that transforms a base distribution $p(\mathbf{z})$ into $p(\mathbf{x})$.
-Formally, 
-- $f$ is a composition $f=f\_K \circ ... \circ f\_1$, where each $f\_k$ is an invertible neural transformation
-- $g_k = f^{-1}_k$
-- $\mathbf{z}\_k = f\_k(\mathbf{z}_{k-1})$, with $\mathbf{z}\_0 = \mathbf{z}$ and $\mathbf{z}\_K = \mathbf{x}$
-- $p(\mathbf{z}\_k) = p(\mathbf{z}\_{k-1} = g\_k(\mathbf{z}\_k)) \left| \det J\_{g\_k}(\mathbf{z}\_k) \right|$
+A normalizing flow is a change of variable $f$ that transforms a base distribution $p(\mathbf{z})$ into $p(\mathbf{x})$ by a series of invertible transformations.
 
 .center.width-100[![](figures/lec10/normalizing-flow.png)]
+
+---
+
+class: middle
+
+.center.width-90[![](figures/lec10/nf-densities.png)]
+
+Normalizing flows shine in applications for .bold[density estimation], where access to the density function is required.
+
+.footnote[Image credits: [Wehenkel and Louppe](https://arxiv.org/abs/1908.05164), 2019.]
+
+---
+
+class: middle
+
+Formally, 
+- $f$ is a composition $f=f\_K \circ ... \circ f\_1$, where each $f\_k$ is an invertible neural transformation;
+- $g_k = f^{-1}_k$;
+- $\mathbf{z}\_k = f\_k(\mathbf{z}_{k-1})$, with $\mathbf{z}\_0 = \mathbf{z}$ and $\mathbf{z}\_K = \mathbf{x}$;
+- $p(\mathbf{z}\_k) = p(\mathbf{z}\_{k-1} = g\_k(\mathbf{z}\_k)) \left| \det J\_{g\_k}(\mathbf{z}\_k) \right|$.
 
 .footnote[Image credits: [Lilian Weng](https://lilianweng.github.io/lil-log/2018/10/13/flow-based-deep-generative-models), 2018.]
 
@@ -322,11 +354,28 @@ Formally,
 
 class: middle
 
-## Example
+## Example: coupling layers 
 
-.center.width-90[![](figures/lec10/nf-densities.png)]
+Assume $\mathbf{z} = (\mathbf{z}\_a, \mathbf{z}\_b)$ and $\mathbf{x} = (\mathbf{x}\_a, \mathbf{x}\_b)$. Then,
+- Forward mapping $\mathbf{x} = f(\mathbf{z})$: 
+$$\mathbf{x}\_a = \mathbf{z}\_a, \quad \mathbf{x}\_b = \mathbf{z}\_b \odot \exp(s(\mathbf{z}\_a)) + t(\mathbf{z}\_a),$$
+- Inverse mapping $\mathbf{z} = g(\mathbf{x})$:
+$$\mathbf{z}\_a = \mathbf{x}\_a, \quad \mathbf{z}\_b = (\mathbf{x}\_b - t(\mathbf{x}\_a)) \odot \exp(-s(\mathbf{x}\_a)),$$
 
-Normalizing flows shine in applications for .bold[density estimation], where access to the density function is required (Wehenkel and Louppe, 2019).
+where $s$ and $t$ are arbitrary neural networks.
+
+---
+
+class: middle
+
+For $\mathbf{x} = (\mathbf{x}\_a, \mathbf{x}\_b)$, the log-likelihood is
+$$\begin{aligned}\log p(\mathbf{x}) &= \log p(\mathbf{z} = g(\mathbf{x})) \left| \det J\_g(\mathbf{x}) \right|\end{aligned}$$
+where the Jacobian $J\_g(\mathbf{x}) = \frac{\partial \mathbf{z}}{\partial \mathbf{x}}$ is a lower triangular matrix $$\left( \begin{matrix}
+\mathbf{I} & 0 \\\\
+\frac{\partial \mathbf{z}\_b}{\partial \mathbf{x}\_a} & \text{diag}(\exp(-s(\mathbf{x}\_a))) \end{matrix} \right),$$
+such that $\left| \det J\_g(\mathbf{x}) \right| = \prod\_i \exp(-s(\mathbf{x}\_a))\_i = \exp(-\sum\_i s(\mathbf{x}\_a)\_i)$.
+
+Therefore, the log-likelihood is $$\log p(\mathbf{x}) = \log p(\mathbf{z} = g(\mathbf{x})) - \sum\_i s(\mathbf{x}\_a)\_i.$$
 
 ---
 
