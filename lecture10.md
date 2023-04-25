@@ -44,7 +44,15 @@ class: middle
 
 class: middle
 
-.italic[Case 1]. First assisted driving .bold[fatality] in May 2016: Perception system mistook trailer's white side for bright sky.
+Uncertainty refers to epistemic situations involving imperfect or unknown information. It applies to predictions of future events, to physical measurements that are already made, or to the unknown. 
+
+Uncertainty arises in partially observable or stochastic environments, as well as due to ignorance, indolence, or both.meteorology, ecology and information science.
+
+---
+
+class: middle
+
+.italic[Case 1]. First assisted driving fatality in May 2016: Perception system mistook trailer's white side for bright sky.
 
 .grid[
 .kol-2-3[.center.width-100[![](figures/lec10/crash.png)]]
@@ -57,7 +65,7 @@ class: middle
 
 class: middle, center
 
-.center[<video controls autoplay loop muted preload="auto" height="600" width="640">
+.center[<video controls autoplay loop muted preload="auto" height="500" width="640">
   <source src="./figures/lec10/tesla.mp4" type="video/mp4">
 </video>]
 
@@ -66,7 +74,7 @@ class: middle, center
 
 class: middle
 
-.center.width-70[![](figures/lec10/gorillas.png)]
+.center.width-60[![](figures/lec10/gorillas.png)]
 
 .italic[Case 2]. An image classification system erroneously identifies two African Americans as gorillas, raising concerns of racial discrimination.
 
@@ -76,7 +84,7 @@ class: middle
 
 class: middle
 
-If these systems had assigned a high level of .bold[uncertainty] to their erroneous predictions, then they might have been capable of making better decisions, and likely averting disaster.
+If these systems had assigned a high level of uncertainty to their erroneous predictions, then they might have been capable of making better decisions, and likely averting disaster.
 
 ---
 
@@ -97,37 +105,40 @@ However, aleatoric uncertainty could be reduced with better measurements.
 
 class: middle
 
-Aleatoric uncertainty can further be categorized into *homoscedastic* and *heteroscedastic* uncertainties:
-- Homoscedastic uncertainty relates to the uncertainty that a particular task might cause. It stays constant for different inputs.
-- Heteroscedastic uncertainty depends on the inputs to the model, with some inputs potentially having more noisy outputs than others.
+Aleatoric uncertainty can further be categorized into:
+- Homoscedastic uncertainty, which relates to the uncertainty that a particular task might cause. It stays constant for different inputs.
+- Heteroscedastic uncertainty, which depends on the inputs to the model, with some inputs potentially having more noisy outputs than others.
+
+<br>
+.center.width-90[![](figures/lec10/homo-vs-hetero.png)]
 
 ---
 
-class: middle
-
-.center.width-100[![](figures/lec10/homo-vs-hetero.png)]
-
----
-
-# Regression with uncertainty
+# Neural density estimation
 
 Consider training data $(\mathbf{x}, y) \sim P(X,Y)$, with
 - $\mathbf{x} \in \mathbb{R}^p$,
 - $y \in \mathbb{R}$.
 
-We model aleatoric uncertainty in the output by modelling the conditional distribution as a Normal distribution,
-$$p(y|\mathbf{x}) = \mathcal{N}(y; \mu(\mathbf{x}), \sigma^2(\mathbf{x})),$$
-where $\mu(x)$ and $\sigma^2(\mathbf{x})$ are parametric functions to be learned, such as neural networks.
-
-We do not wish to learn a function $\hat{y} = f(\mathbf{x})$ that would only produce point estimates.
+We do not wish to learn a function $\hat{y} = f(\mathbf{x})$, which would only produce point estimates. Instead we want to learn the ful conditional density $$p(y|\mathbf{x}).$$
 
 ---
 
 class: middle
 
-## Homoscedastic aleatoric uncertainty
+## NN with Gaussian output layer 
+
+We can model aleatoric uncertainty in the output by modelling the conditional distribution as a Gaussian distribution,
+$$p(y|\mathbf{x}) = \mathcal{N}(y; \mu(\mathbf{x}), \sigma^2(\mathbf{x})),$$
+where $\mu(x)$ and $\sigma^2(\mathbf{x})$ are parametric functions to be learned, such as neural networks.
+
+---
+
+class: middle
 
 .center.width-80[![](figures/lec10/homoscedastic.svg)]
+
+.center[Case 1: Homoscedastic aleatoric uncertainty]
 
 ---
 
@@ -147,9 +158,9 @@ $$\begin{aligned}
 
 class: middle
 
-## Heteroscedastic aleatoric uncertainty
-
 .center.width-80[![](figures/lec10/heteroscedastic.svg)]
+
+.center[Case 2: Heteroscedastic aleatoric uncertainty]
 
 ---
 
@@ -167,9 +178,9 @@ $$\begin{aligned}
 
 ---
 
-# Multimodality
+class: middle
 
-Modelling $p(y|\mathbf{x})$ as a unimodal (Gaussian) distribution can be inadequate since the conditional distribution may be multimodal.
+Modelling $p(y|\mathbf{x})$ as a unimodal (Gaussian) distribution can be inadequate since the conditional distribution may be .bold[multimodal].
 
 <br>
 
@@ -192,9 +203,7 @@ where $0 \leq \pi\_k \leq 1$ for all $k$ and $\sum\_{k=1}^K \pi\_k = 1$.
 
 class: middle
 
-## Mixture density network
-
-A **mixture density network** is a neural network implementation of the Gaussian mixture model.
+A **mixture density network** (MDN) is a neural network implementation of the Gaussian mixture model.
 
 .center.width-100[![](figures/lec10/mdn.svg)]
 
@@ -214,25 +223,10 @@ class: middle
 
 .center[
 
-.width-60[![](figures/lec10/illus1.png)]
+.width-55[![](figures/lec10/illus1.png)]
 
-The data can be fit with a 2-layer network producing point estimates for $y$.
-[[demo](http://otoro.net/ml/mixture/index.html)]
-
-]
-
-.footnote[Credits: David Ha, [Mixture Density Networks](http://blog.otoro.net/2015/06/14/mixture-density-networks/), 2015.]
-
----
-
-class: middle
-
-.center[
-
-.width-60[![](figures/lec10/illus2.png)]
-
-If we flip $\mathbf{x}\_i$ and $y\_i$, the network faces issues since for each input, there are multiple outputs that can work. It produces an average of the correct values.
-[[demo](http://otoro.net/ml/mixture/inverse.html)]
+The data can be fit with a 2-layer network producing point estimates for $y$
+([demo](http://otoro.net/ml/mixture/index.html)).
 
 ]
 
@@ -244,10 +238,25 @@ class: middle
 
 .center[
 
-.width-60[![](figures/lec10/illus3.png)]
+.width-55[![](figures/lec10/illus2.png)]
 
-A mixture density network models the data correctly, as it predicts for each input a distribution for the output, rather than a point estimate.
-[[demo](http://otoro.net/ml/mixture/mixture.html)]
+If we flip $\mathbf{x}\_i$ and $y\_i$, the network faces issues since for each input, there are multiple outputs that can work. It produces an average of the correct values
+([demo](http://otoro.net/ml/mixture/inverse.html)).
+
+]
+
+.footnote[Credits: David Ha, [Mixture Density Networks](http://blog.otoro.net/2015/06/14/mixture-density-networks/), 2015.]
+
+---
+
+class: middle
+
+.center[
+
+.width-55[![](figures/lec10/illus3.png)]
+
+A mixture density network models the data correctly, as it predicts for each input a distribution for the output, rather than a point estimate
+([demo](http://otoro.net/ml/mixture/mixture.html)).
 
 ]
 
@@ -273,12 +282,19 @@ where $\frac{1}{8} = \left| \det \left( \begin{matrix}
 
 class: middle
 
-.center.width-50[![](figures/lec10/non-linear.png)]
-
 What if $f$ is non-linear?
 
-- The Jacobian $J\_f(\mathbf{z})$ of $\mathbf{x} = f(\mathbf{z})$ represents the infinitesimal linear transformation in the neighborhood of $\mathbf{z}$
-- If the function is a bijective map, then the mass must be conserved locally.
+.center.width-75[![](figures/lec10/cov.png)]
+
+---
+
+class: middle
+
+## Change of variable theorem
+
+If $f$ is non-linear,
+- the Jacobian $J\_f(\mathbf{z})$ of $\mathbf{x} = f(\mathbf{z})$ represents the infinitesimal linear transformation in the neighborhood of $\mathbf{z}$;
+- if the function is a bijective map, then the mass must be conserved locally.
 
 Therefore, the local change of density yields
 $$p(\mathbf{x}=f(\mathbf{z})) = p(\mathbf{z})\left| \det J\_f(\mathbf{z}) \right|^{-1}.$$
@@ -289,7 +305,9 @@ Similarly, for $g = f^{-1}$, we have $$p(\mathbf{x})=p(\mathbf{z}=g(\mathbf{x}))
 
 class: middle 
 
-A .bold[normalizing flow] is a change of variable $f$ parameterized by an **invertible neural network** that transforms a base distribution $p(\mathbf{z})$ into $p(\mathbf{x})$.
+## Normalizing flows
+
+A normalizing flow is a change of variable $f$ parameterized by an **invertible neural network** that transforms a base distribution $p(\mathbf{z})$ into $p(\mathbf{x})$.
 Formally, 
 - $f$ is a composition $f=f\_K \circ ... \circ f\_1$, where each $f\_k$ is an invertible neural transformation
 - $g_k = f^{-1}_k$
