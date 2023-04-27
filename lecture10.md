@@ -52,13 +52,13 @@ class: middle
 
 Uncertainty refers to epistemic situations involving imperfect or unknown information. It applies to predictions of future events, to physical measurements that are already made, or to the unknown. 
 
-Uncertainty arises in partially observable or stochastic environments, as well as due to ignorance, indolence, or both.meteorology, ecology and information science.
-
-.italic[Why is uncertainty important?]
+Uncertainty arises in partially observable or stochastic environments, as well as due to ignorance, indolence, or both.
 
 .footnote[Credits: [Wikipedia](https://en.wikipedia.org/wiki/Uncertainty), 2023.]
 
 ???
+
+## Why is uncertainty important?
 
 Accounting for uncertainty leads to optimal decisions. Not accounting for uncertainty leads to suboptimal, wrong, or even catastrophic decisions.
 
@@ -115,6 +115,10 @@ class: middle
 This uncertainty *cannot be reduced* with more data.
 However, aleatoric uncertainty could be reduced with better measurements.
 
+???
+
+It arises from the true data generating process being stochastic.
+
 ---
 
 class: middle
@@ -130,11 +134,13 @@ Aleatoric uncertainty can further be categorized into:
 
 # Neural density estimation
 
-Consider training data $(\mathbf{x}, y) \sim P(X,Y)$, with
+Consider training data $(\mathbf{x}, y) \sim p(\mathbf{x}, y)$, with
 - $\mathbf{x} \in \mathbb{R}^p$,
 - $y \in \mathbb{R}$.
 
-We do not wish to learn a function $\hat{y} = f(\mathbf{x})$, which would only produce point estimates. Instead we want to learn the full conditional density $$p(y|\mathbf{x}).$$
+We do not wish to learn a function $\hat{y} = f(\mathbf{x})$, which would only produce point estimates. 
+
+Instead we want to learn the full conditional density $$p(y|\mathbf{x}).$$
 
 ---
 
@@ -191,6 +197,10 @@ $$\begin{aligned}
 \end{aligned}$$
 
 .question[What is the purpose of $2\sigma^2(\mathbf{x}\_i)$? What about $\log(\sigma(\mathbf{x}\_i))$?]
+
+???
+
+Take care of properly parametrizing $\sigma^2(\mathbf{x}\_i)$ to ensure that it is positive.
 
 ---
 
@@ -291,7 +301,11 @@ where $\frac{1}{8} = \left| \det \left( \begin{matrix}
 2 & 0 & 0 \\\\ 
 0 & 2 & 0 \\\\
 0 & 0 & 2
-\end{matrix} \right)\right|^{-1}$ represents the determinant of the linear transformation $f$.
+\end{matrix} \right)\right|^{-1}$ represents the inverse determinant of the linear transformation $f$.
+
+???
+
+Motivate that picking a parametric family of distributions is not always easy. We want something more flexible.
 
 ---
 
@@ -299,7 +313,7 @@ class: middle
 
 What if $f$ is non-linear?
 
-.center.width-75[![](figures/lec10/cov.png)]
+.center.width-70[![](figures/lec10/cov.png)]
 
 .footnote[Image credits: Simon J.D. Prince, [Understanding Deep Learning](https://udlbook.github.io/udlbook/), 2023.]
 
@@ -307,7 +321,7 @@ What if $f$ is non-linear?
 
 class: middle
 
-## Change of variable theorem
+## Change of variables theorem
 
 If $f$ is non-linear,
 - the Jacobian $J\_f(\mathbf{z})$ of $\mathbf{x} = f(\mathbf{z})$ represents the infinitesimal linear transformation in the neighborhood of $\mathbf{z}$;
@@ -317,6 +331,12 @@ Therefore, the local change of density yields
 $$p(\mathbf{x}=f(\mathbf{z})) = p(\mathbf{z})\left| \det J\_f(\mathbf{z}) \right|^{-1}.$$
 
 Similarly, for $g = f^{-1}$, we have $$p(\mathbf{x})=p(\mathbf{z}=g(\mathbf{x}))\left| \det J\_g(\mathbf{x}) \right|.$$
+
+???
+
+The Jacobian matrix of a function f: R^n -> R^m at a point z in R^n is an m x n matrix that represents the linear transformation induced by the function at that point. Geometrically, the Jacobian matrix can be thought of as a matrix of partial derivatives that describes how the function locally stretches or shrinks areas and volumes in the vicinity of the point z.
+
+The determinant of the Jacobian matrix of f at z has a geometric interpretation as the factor by which the function locally scales areas or volumes. Specifically, if the determinant is positive, then the function locally expands areas and volumes, while if it is negative, the function locally contracts areas and volumes. The absolute value of the determinant gives the factor by which the function scales the areas or volumes.
 
 ---
 
@@ -375,7 +395,7 @@ where the Jacobian $J\_g(\mathbf{x}) = \frac{\partial \mathbf{z}}{\partial \math
 \frac{\partial \mathbf{z}\_b}{\partial \mathbf{x}\_a} & \text{diag}(\exp(-s(\mathbf{x}\_a))) \end{matrix} \right),$$
 such that $\left| \det J\_g(\mathbf{x}) \right| = \prod\_i \exp(-s(\mathbf{x}\_a))\_i = \exp(-\sum\_i s(\mathbf{x}\_a)\_i)$.
 
-Therefore, the log-likelihood is $$\log p(\mathbf{x}) = \log p(\mathbf{z} = g(\mathbf{x})) - \sum\_i s(\mathbf{x}\_a)\_i.$$
+Therefore, the log-likelihood is $$\log p(\mathbf{x}) = \log p(\mathbf{z} = g(\mathbf{x})) -\sum\_i s(\mathbf{x}\_a)\_i.$$
 
 ---
 
@@ -393,6 +413,11 @@ It captures our *ignorance* about which model generated the collected data.
 It can be explained away given enough data.
 
 .footnote[Credits: Kendall and Gal, [What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?](https://papers.nips.cc/paper/7141-what-uncertainties-do-we-need-in-bayesian-deep-learning-for-computer-vision.pdf), 2017.]
+
+???
+
+Once we have decided on a model of the true data generating process, we face uncertainty in how much we can trust the model or its parameters.
+
 
 ---
 
@@ -450,11 +475,11 @@ Do it on the blackboard.
 
 class: middle
 
-The integral in the ELBO is not tractable for almost all $q$, but it can be minimized with stochastic gradient descent:
+The integral in the ELBO is not tractable for almost all $q$, but it can be maximized with stochastic gradient ascent:
 
 1. Sample $\hat{\omega} \sim q(\mathbf{\omega};\nu)$.
 2. Do one step of maximization with respect to $\nu$ on
-$$\hat{L}(\nu) = \log p(\mathbf{d}|\hat{\omega}) - \text{KL}(q(\mathbf{\omega};\nu) || p(\mathbf{\omega})) $$
+$$\hat{L}(\nu) = \log p(\mathbf{d}|\hat{\omega}) - \log\frac{q(\hat{\omega};\nu)}{p(\hat{\omega})} $$
 
 In the context of Bayesian neural networks, this procedure is also known as **Bayes by backprop** (Blundell et al, 2015).
 
@@ -469,6 +494,10 @@ At *each training step* (i.e., for each sample within a mini-batch):
 - Update the weights of the remaining nodes with backpropagation.
 
 .center.width-70[![](figures/lec10/dropout1.png)]
+
+???
+
+Remind the students we used Dropout in Lec 8 when implementing a Transformer.
 
 ---
 
@@ -516,13 +545,17 @@ q(\mathbf{w}\_{i,k}; \mathbf{m}\_{i,k}) &= p\delta\_0(\mathbf{w}\_{i,k}) + (1-p)
 $$
 where $\delta\_a(x)$ denotes a (multivariate) Dirac distribution centered at $a$.
 
+???
+
+Note that this assumes the parameterization $\mathbf{h} = \mathbf{W}\mathbf{x}$, without the transpose on $\mathbf{W}$. 
+
 ---
 
 class: middle
 
 Given the previous definition for $q$, sampling parameters $\hat{\omega} = \\{ \hat{\mathbf{W}}\_1, ..., \hat{\mathbf{W}}\_L \\}$ is done as follows:
 - Draw binary  $z\_{i,k} \sim \text{Bernoulli}(1-p)$ for each layer $i$ and unit $k$.
-- Compute $\hat{\mathbf{W}}\_i = \mathbf{M}\_i \text{diag}([z\_{i,k}]\_{k=1}^{q\_i})$,
+- Compute $\hat{\mathbf{W}}\_i = \mathbf{M}\_i \text{diag}([z\_{i,k}]\_{k=1}^{q\_{i-1}})$,
 where $\mathbf{M}\_i$ denotes a matrix composed of the columns $\mathbf{m}\_{i,k}$.
 
 .grid[
@@ -576,7 +609,7 @@ Proper epistemic uncertainty estimates at $\mathbf{x}$ can be obtained in a prin
 $$
 \begin{aligned}
 \mathbb{E}\_{p(y|\mathbf{x},\mathbf{d})}\left[y\right] &\approx \frac{1}{T} \sum\_{t=1}^T f(\mathbf{x};\hat{\omega}\_t) \\\\
-\mathbb{V}\_{p(y|\mathbf{x},\mathbf{d})}\left[y\right] &\approx \sigma^2 + \frac{1}{T} \sum\_{t=1}^T f(\mathbf{x};\hat{\omega}\_t)^2 - \hat{\mathbb{E}}\left[y\right]^2
+\mathbb{V}\_{p(y|\mathbf{x},\mathbf{d})}\left[y\right] &\approx \frac{1}{T} \sum\_{t=1}^T f(\mathbf{x};\hat{\omega}\_t)^2 - \hat{\mathbb{E}}\left[y\right]^2
 \end{aligned}
 $$
 

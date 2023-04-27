@@ -10,8 +10,7 @@ Prof. Gilles Louppe<br>
 
 ???
 
-R: Don't spend too long on HVAEs... but do mention Diffusion models.
-R: https://twitter.com/c_valenzuelab/status/1562579547404455936
+R: prepare code
 
 ---
 
@@ -701,55 +700,6 @@ class: middle
 <iframe width="640" height="400" src="https://www.youtube.com/embed/Wd-1WU8emkw?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
 
 Bridging the .bold[simulation-to-reality] gap (Inoue et al, 2017).
-
-]
-
----
-
-# Hierarchical VAEs
-
-See side notes.
-
----
-
-class: middle
-
-.center.width-90[![](figures/lec11/vdvae_diagram.png)]
-
-.center[VDVAE: Very Deep VAEs (Child, 2020-2021).]
-
----
-
-class: middle
-
-.center.width-70[![](figures/lec11/vdvae_samples.png)]
-
-.center[VDVAE samples (Child, 2020-2021).]
-
----
-
-class: middle
-
-.center.width-100[![](figures/lec11/nvae_model_diagram.png)]
-
-.center[NVAE: A Deep Hierarchical Variational Autoencoder (Vahdat and Kautz, 2020).]
-
----
-
-class: middle
-
-.center.width-90[![](figures/lec11/nvae_samples.png)]
-
-.center[NVAE samples (Vahdat and Kautz, 2020).]
-
----
-
-class: black-slide, middle
-
-.center[
-.width-60[![](figures/lec11/nvae.gif)]
-
-NVAE: Random walks in latent space. (Vahdat and Kautz, 2020)
 
 ]
 

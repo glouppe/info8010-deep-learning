@@ -10,6 +10,8 @@ Prof. Gilles Louppe<br>
 
 ???
 
+R: https://twitter.com/c_valenzuelab/status/1562579547404455936
+
 R: VERY GOOD https://arxiv.org/pdf/2208.11970.pdf
 
 R: https://course.fast.ai/Lessons/part2.html  (more practical)?
@@ -23,3 +25,53 @@ R: prompts https://bestaiprompts.art/
 
 
 R: https://scoste.fr/posts/diffusion/
+
+---
+
+# Hierarchical VAEs
+
+See side notes.
+
+---
+
+class: middle
+
+.center.width-90[![](figures/lec11/vdvae_diagram.png)]
+
+.center[VDVAE: Very Deep VAEs (Child, 2020-2021).]
+
+---
+
+class: middle
+
+.center.width-70[![](figures/lec11/vdvae_samples.png)]
+
+.center[VDVAE samples (Child, 2020-2021).]
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec11/nvae_model_diagram.png)]
+
+.center[NVAE: A Deep Hierarchical Variational Autoencoder (Vahdat and Kautz, 2020).]
+
+---
+
+class: middle
+
+.center.width-90[![](figures/lec11/nvae_samples.png)]
+
+.center[NVAE samples (Vahdat and Kautz, 2020).]
+
+---
+
+class: black-slide, middle
+
+.center[
+.width-60[![](figures/lec11/nvae.gif)]
+
+NVAE: Random walks in latent space. (Vahdat and Kautz, 2020)
+
+]
+
