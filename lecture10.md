@@ -8,6 +8,11 @@ Lecture 10: Uncertainty
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+R: better glue Normalizing Flows with the rest of the lecture -> if p(y|x) is complex, then it would require many mixture components to approximate it. We need a stronger class of density estimators.
+R: NFs are introduced as a way to estimate p(x) -> revise the notation to make it clear it can similarly be used to estimate p(y|x).
+
 ---
 
 class: middle
@@ -619,7 +624,7 @@ class: middle, center
 
 .center.width-80[![](figures/lec10/gal-demo.png)]
 
-([demo](http://mlg.eng.cam.ac.uk/yarin/blog_3d801aa532c1ce.html))
+([demo](https://www.cs.ox.ac.uk/people/yarin.gal/website/blog_2248.html))
 
 ---
 
