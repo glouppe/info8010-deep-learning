@@ -610,7 +610,6 @@ class: middle
 
 .footnote[Credits: [Lam et al](https://arxiv.org/abs/2212.12794), 2022.]
 
-
 ---
 
 class: end-slide, center

@@ -357,16 +357,6 @@ A normalizing flow is a change of variable $f$ that transforms a base distributi
 
 class: middle
 
-.center.width-90[![](figures/lec10/nf-densities.png)]
-
-Normalizing flows shine in applications for .bold[density estimation], where access to the density function is required.
-
-.footnote[Image credits: [Wehenkel and Louppe](https://arxiv.org/abs/1908.05164), 2019.]
-
----
-
-class: middle
-
 Formally, 
 - $f$ is a composition $f=f\_K \circ ... \circ f\_1$, where each $f\_k$ is an invertible neural transformation;
 - $g_k = f^{-1}_k$;
@@ -401,6 +391,16 @@ where the Jacobian $J\_g(\mathbf{x}) = \frac{\partial \mathbf{z}}{\partial \math
 such that $\left| \det J\_g(\mathbf{x}) \right| = \prod\_i \exp(-s(\mathbf{x}\_a))\_i = \exp(-\sum\_i s(\mathbf{x}\_a)\_i)$.
 
 Therefore, the log-likelihood is $$\log p(\mathbf{x}) = \log p(\mathbf{z} = g(\mathbf{x})) -\sum\_i s(\mathbf{x}\_a)\_i.$$
+
+---
+
+class: middle
+
+.center.width-90[![](figures/lec10/nf-densities.png)]
+
+.center[Normalizing flows can fit complex multimodal discontinuous densities.]
+
+.footnote[Image credits: [Wehenkel and Louppe](https://arxiv.org/abs/1908.05164), 2019.]
 
 ---
 

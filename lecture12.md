@@ -2,7 +2,7 @@ class: middle, center, title-slide
 
 # Deep Learning
 
-Lecture 12: Score-based diffusion models
+Lecture 12: Diffusion models
 
 <br><br>
 Prof. Gilles Louppe<br>
@@ -26,9 +26,23 @@ R: prompts https://bestaiprompts.art/
 
 R: https://scoste.fr/posts/diffusion/
 
+R: https://drive.google.com/file/d/1DYHDbt1tSl9oqm3O333biRYzSCOtdtmn/view (nvidia tutorial)
+
 ---
 
+# Today
+
+- Hierarchical VAEs
+- Denoising diffusion probabilistic models
+- Score-based generative models
+
+---
+
+class: middle
+
 # Hierarchical VAEs
+
+---
 
 See side notes.
 
@@ -74,4 +88,31 @@ class: black-slide, middle
 NVAE: Random walks in latent space. (Vahdat and Kautz, 2020)
 
 ]
+
+---
+
+class: middle
+
+# Denoising diffusion probabilistic models
+
+---
+
+todo
+
+---
+
+class: middle
+
+# Score-based generative models
+
+---
+
+todo
+
+---
+
+class: end-slide, center
+count: false
+
+The end.
 

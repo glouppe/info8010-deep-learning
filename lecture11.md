@@ -71,6 +71,10 @@ Its purpose is to generate synthetic but realistic high-dimensional data
 $$\mathbf{x} \sim p(\mathbf{x};\theta),$$
 that is as close as possible from the unknown data distribution $p(\mathbf{x})$, but for which we have empirical samples.
 
+???
+
+This is conceptually identical to what we already did in Lecture 10 when we wanted to learn $p(y|x)$. We still want to learn a distribution, but this time it is the distribution of the input data itself.
+
 ---
 
 class: middle
@@ -273,6 +277,10 @@ which may be very unlikely under $p(\mathbf{x}|\tilde{\mathbf{x}})$.
 
 .footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
+???
+
+Also, the quadratic loss leads to blurry and unrealistic reconstructions, for the reason that the quadratic loss minimizer may be very unlikely under the posterior.
+
 ---
 
 # Sampling from an AE's latent space
@@ -454,9 +462,9 @@ We will now directly learn a stochastic generating process with a neural network
 
 ---
 
-# Variational auto-encoders
+class: middle
 
-
+## Variational auto-encoders
 
 A variational auto-encoder is a deep latent variable model where:
 - The prior $p(\mathbf{z})$ is prescribed, and usually chosen to be Gaussian.
@@ -536,9 +544,11 @@ We cannot backpropagate through the stochastic node $\mathbf{z}$ to compute $\na
 
 ---
 
-# Reparameterization trick
+class: middle
 
-The .bold[reparameterization trick] consists in re-expressing the variable $$\mathbf{z} \sim q(\mathbf{z}|\mathbf{x};\varphi)$$ as some differentiable and invertible transformation
+## Reparameterization trick
+
+The .italic[reparameterization trick] consists in re-expressing the variable $$\mathbf{z} \sim q(\mathbf{z}|\mathbf{x};\varphi)$$ as some differentiable and invertible transformation
 of another random variable $\epsilon$ given $\mathbf{x}$ and $\varphi$,
 $$\mathbf{z} = g(\varphi, \mathbf{x}, \epsilon),$$
 such that the distribution of $\epsilon$ is independent of $\mathbf{x}$ or $\varphi$.
@@ -580,7 +590,9 @@ $$\log q(\mathbf{z}|\mathbf{x};\varphi) = \log p(\epsilon) - \log \left| \det\le
 
 ---
 
-# Example
+class: middle
+
+## Example
 
 Consider the following setup:
 - Generative model:
