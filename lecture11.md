@@ -8,10 +8,6 @@ Lecture 11: Auto-encoders and variational auto-encoders
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-R: prepare code
-
 ---
 
 # Today
