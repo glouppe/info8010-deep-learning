@@ -75,6 +75,12 @@ This is conceptually identical to what we already did in Lecture 10 when we want
 
 class: middle
 
+.center.width-100[![](figures/lec11/moore-of-gm.jpg)]
+
+---
+
+class: middle
+
 ## Immediate applications
 
 .center[
@@ -265,7 +271,7 @@ class: middle
 
 A fundamental weakness of denoising auto-encoders is that the posterior $p(\mathbf{x}|\tilde{\mathbf{x}})$ is possibly multi-modal.
 
-If we train an auto-encoder with the quadratic loss (i.e., implicitly assuming a Gaussian posterior), then the best reconstruction is 
+If we train an auto-encoder with the quadratic loss (i.e., implicitly assuming a Gaussian likelihood), then the best reconstruction is 
 $$h(\tilde{\mathbf{x}}) = \mathbb{E}[\mathbf{x}|\tilde{\mathbf{x}}],$$
 which may be very unlikely under $p(\mathbf{x}|\tilde{\mathbf{x}})$.
 
@@ -581,7 +587,7 @@ $$\begin{aligned}
 \end{aligned}$$
 which we can now estimate with Monte Carlo integration.
 
-The last required ingredient is the evaluation of the likelihood $q(\mathbf{z}|\mathbf{x};\varphi)$ given the change of variable $g$. As long as $g$ is invertible, we have:
+The last required ingredient is the evaluation of the approximate posterior $q(\mathbf{z}|\mathbf{x};\varphi)$ given the change of variable $g$. As long as $g$ is invertible, we have:
 $$\log q(\mathbf{z}|\mathbf{x};\varphi) = \log p(\epsilon) - \log \left| \det\left( \frac{\partial \mathbf{z}}{\partial \epsilon} \right) \right|.$$
 
 ---

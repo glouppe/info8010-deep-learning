@@ -413,7 +413,7 @@ class: middle
 class: middle
 
 **Epistemic** uncertainty accounts for uncertainty in the model or in its parameters.
-It captures our *ignorance* about which model generated the collected data.
+It captures our *ignorance* about which model can best explain the collected data.
 
 It can be explained away given enough data.
 
@@ -607,16 +607,17 @@ class: middle
 
 ## Uncertainty estimates from dropout
 
-Proper epistemic uncertainty estimates at $\mathbf{x}$ can be obtained in a principled way using Monte-Carlo integration:
+Proper uncertainty estimates at $\mathbf{x}$, accounting for both the aleatoric and epistemic uncertainties, can be obtained in a principled way using Monte-Carlo integration:
 - Draw $T$ sets of network parameters $\hat{\omega}\_t$ from $q(\omega;\nu)$.
 - Compute the predictions for the $T$ networks, $\\{ f(\mathbf{x};\hat{\omega}\_t) \\}\_{t=1}^T$.
-- Approximate the predictive mean and variance as follows:
+- Approximate the predictive mean and variance as 
 $$
 \begin{aligned}
 \mathbb{E}\_{p(y|\mathbf{x},\mathbf{d})}\left[y\right] &\approx \frac{1}{T} \sum\_{t=1}^T f(\mathbf{x};\hat{\omega}\_t) \\\\
-\mathbb{V}\_{p(y|\mathbf{x},\mathbf{d})}\left[y\right] &\approx \frac{1}{T} \sum\_{t=1}^T f(\mathbf{x};\hat{\omega}\_t)^2 - \hat{\mathbb{E}}\left[y\right]^2
+\mathbb{V}\_{p(y|\mathbf{x},\mathbf{d})}\left[y\right] &\approx \sigma^2 + \frac{1}{T} \sum\_{t=1}^T f(\mathbf{x};\hat{\omega}\_t)^2 - \hat{\mathbb{E}}\left[y\right]^2,
 \end{aligned}
 $$
+where $\sigma^2$ is the assumed level of noise in the observational model.
 
 ---
 

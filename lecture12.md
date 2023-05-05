@@ -28,11 +28,20 @@ R: https://scoste.fr/posts/diffusion/
 
 R: https://drive.google.com/file/d/1DYHDbt1tSl9oqm3O333biRYzSCOtdtmn/view (nvidia tutorial)
 
+
+"We can view L
+DSM
+θ
+pxq as a continuous-time generalization of the evidence lower bound (ELBO) in
+diffusion probabilistic models [43, 19]."
+https://papers.nips.cc/paper/2021/file/0a9fdbb17feb6ccb7ec405cfb85222c4-Paper.pdf
+
 ---
 
 # Today
 
-- Hierarchical VAEs
+- VAEs
+- Variational diffusion models
 - Denoising diffusion probabilistic models
 - Score-based generative models
 
@@ -40,54 +49,25 @@ R: https://drive.google.com/file/d/1DYHDbt1tSl9oqm3O333biRYzSCOtdtmn/view (nvidi
 
 class: middle
 
-# Hierarchical VAEs
+# VAEs
+
+A short recap.
 
 ---
 
-See side notes.
-
----
-
-class: middle
-
-.center.width-90[![](figures/lec11/vdvae_diagram.png)]
-
-.center[VDVAE: Very Deep VAEs (Child, 2020-2021).]
+- ELBO
+- VAEs
+- Hierarchical VAEs
 
 ---
 
 class: middle
 
-.center.width-70[![](figures/lec11/vdvae_samples.png)]
-
-.center[VDVAE samples (Child, 2020-2021).]
+# Variational diffusion models
 
 ---
 
-class: middle
-
-.center.width-100[![](figures/lec11/nvae_model_diagram.png)]
-
-.center[NVAE: A Deep Hierarchical Variational Autoencoder (Vahdat and Kautz, 2020).]
-
----
-
-class: middle
-
-.center.width-90[![](figures/lec11/nvae_samples.png)]
-
-.center[NVAE samples (Vahdat and Kautz, 2020).]
-
----
-
-class: black-slide, middle
-
-.center[
-.width-60[![](figures/lec11/nvae.gif)]
-
-NVAE: Random walks in latent space. (Vahdat and Kautz, 2020)
-
-]
+todo
 
 ---
 
@@ -97,7 +77,7 @@ class: middle
 
 ---
 
-todo
+reinterpretation of VDMs
 
 ---
 
@@ -107,7 +87,8 @@ class: middle
 
 ---
 
-todo
+- discrete time: reinterpretation of VDMs
+- continuous time
 
 ---
 
