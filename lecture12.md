@@ -491,8 +491,8 @@ class: middle
 With $\beta\_t = 1 - \alpha\_t$, we can rewrite the forward process as
 $$\begin{aligned}
 \mathbf{x}\_t &= \sqrt{ {\alpha}\_t} \mathbf{x}\_{t-1} + \sqrt{1-{\alpha}\_t} \mathcal{N}(\mathbf{0}, \mathbf{I}) \\\\
-&= \sqrt{1 - {\beta}\_t} \mathbf{x}\_{t-1} + \sqrt{{\beta}\_t} \mathcal{N}(\mathbf{0}, \mathbf{I}) \\\\
-&= \sqrt{1 - {\beta}(t)\Delta\_t} \mathbf{x}\_{t-1} + \sqrt{{\beta}(t)\Delta\_t} \mathcal{N}(\mathbf{0}, \mathbf{I})
+&= \sqrt{1 - {\beta}\_t} \mathbf{x}\_{t-1} + \sqrt{ {\beta}\_t} \mathcal{N}(\mathbf{0}, \mathbf{I}) \\\\
+&= \sqrt{1 - {\beta}(t)\Delta\_t} \mathbf{x}\_{t-1} + \sqrt{ {\beta}(t)\Delta\_t} \mathcal{N}(\mathbf{0}, \mathbf{I})
 \end{aligned}$$
 
 .footnote[Credits: [Kreis et al](https://cvpr2022-tutorial-diffusion-models.github.io/), 2022.]
@@ -503,8 +503,8 @@ class: middle
 
 In the limit of many small steps, i.e. as $\Delta\_t \rightarrow 0$, we can further rewrite the forward process as
 $$\begin{aligned}
-\mathbf{x}\_t &= \sqrt{1 - {\beta}(t)\Delta\_t} \mathbf{x}\_{t-1} + \sqrt{{\beta}(t)\Delta\_t} \mathcal{N}(\mathbf{0}, \mathbf{I}) \\\\
-&\approx \mathbf{x}\_{t-1} - \frac{\beta(t)\Delta\_t}{2} \mathbf{x}\_{t-1} + \sqrt{{\beta}(t)\Delta\_t} \mathcal{N}(\mathbf{0}, \mathbf{I}) 
+\mathbf{x}\_t &= \sqrt{1 - {\beta}(t)\Delta\_t} \mathbf{x}\_{t-1} + \sqrt{ {\beta}(t)\Delta\_t} \mathcal{N}(\mathbf{0}, \mathbf{I}) \\\\
+&\approx \mathbf{x}\_{t-1} - \frac{\beta(t)\Delta\_t}{2} \mathbf{x}\_{t-1} + \sqrt{ {\beta}(t)\Delta\_t} \mathcal{N}(\mathbf{0}, \mathbf{I}) 
 \end{aligned}.$$
 
 This last update rule corresponds to the Euler-Maruyama discretization of the stochastic differential equation (SDE)
