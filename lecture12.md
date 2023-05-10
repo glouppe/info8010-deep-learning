@@ -13,6 +13,7 @@ Prof. Gilles Louppe<br>
 Good references:
 - https://arxiv.org/pdf/2208.11970.pdf
 - https://cvpr2022-tutorial-diffusion-models.github.io/
+- Understanding Deep Learning book
 
 ---
 
@@ -141,7 +142,7 @@ count: false
 
 class: middle
 
-## Hierarchical VAEs
+## (Markovian) Hierarchical VAEs
 
 The prior $p(\mathbf{z})$ is itself a VAE, and recursively so for its own hyper-prior.
 
@@ -165,7 +166,13 @@ class: middle
 
 class: middle
 
-Variational diffusion models are HVAEs with the following constraints:
+.center.width-100[![](figures/lec12/sohl-dickstein2015.png)]
+
+---
+
+class: middle
+
+Variational diffusion models are Markovian HVAEs with the following constraints:
 - The latent dimension is the same as the data dimension.
 - The encoder is fixed to linear Gaussian transitions $q(\mathbf{x}\_t | \mathbf{x}\_{t-1})$.
 - The hyper-parameters are set such that $q(\mathbf{x}_T | \mathbf{x}_0)$ is a standard Gaussian. 
@@ -182,11 +189,7 @@ class: middle
 
 ## Forward diffusion process
 
-<br>
-
 .center.width-100[![](figures/lec12/vdm-forward.png)]
-
-<br>
 
 With $\epsilon \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$, we have
 $$\begin{aligned}
@@ -211,11 +214,7 @@ class: middle
 
 ## Diffusion kernel
 
-<br>
-
 .center.width-100[![](figures/lec12/vdm-kernel.png)]
-
-<br>
 
 With $\bar{\alpha}\_t = \prod\_{i=1}^t \alpha\_i$ and $\epsilon \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$, we have
 
@@ -248,17 +247,15 @@ class: middle
 
 ## Reverse denoising process
 
-<br>
-
 .center.width-100[![](figures/lec12/vdm-reverse.png)]
 
-<br>
-
 $$\begin{aligned}
+p(\mathbf{x}\_{0:T}) &= p(\mathbf{x}\_T) \prod\_{t=1}^T p\_\theta(\mathbf{x}\_{t-1} | \mathbf{x}\_t)\\\\
 p(\mathbf{x}\_T) &= \mathcal{N}(\mathbf{x}\_T; \mathbf{0}, I) \\\\
-p\_\theta(\mathbf{x}\_{t-1} | \mathbf{x}\_t) &= \mathcal{N}(\mathbf{x}\_{t-1}; \mu\_\theta(\mathbf{x}\_t), \Sigma\_\theta(\mathbf{x}\_t)) \\\\
-p(\mathbf{x}\_{0:T}) &= p(\mathbf{x}\_T) \prod\_{t=1}^T p\_\theta(\mathbf{x}\_{t-1} | \mathbf{x}\_t)
+p\_\theta(\mathbf{x}\_{t-1} | \mathbf{x}\_t) &= \mathcal{N}(\mathbf{x}\_{t-1}; \mu\_\theta(\mathbf{x}\_t, t), \sigma^2\_\theta(\mathbf{x}\_t, t)\mathbf{I}) \\\\
+\mathbf{x}\_{t-1} &= \mu\_\theta(\mathbf{x}\_t, t) + \sigma\_\theta(\mathbf{x}\_t, t) \mathbf{z} 
 \end{aligned}$$
+with $\mathbf{z} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$.
 
 .footnote[Credits: [Kreis et al](https://cvpr2022-tutorial-diffusion-models.github.io/), 2022.]
 
@@ -279,7 +276,7 @@ class: middle
 This objective can be rewritten as
 $$\begin{aligned}
 L &= \mathbb{E}\_{q(\mathbf{x}\_0)q(\mathbf{x}\_{1:T}|\mathbf{x}\_0)}\left[ \log \frac{p\_\theta(\mathbf{x}\_{0:T})}{q(\mathbf{x}\_{1:T} | \mathbf{x}\_0)} \right] \\\\
-&= \mathbb{E}\_q(\mathbf{x}\_0) \left[L\_0 - \sum\_{t>1} L\_{t-1} - L\_T\right]
+&= \mathbb{E}\_{q(\mathbf{x}\_0)} \left[L\_0 - \sum\_{t>1} L\_{t-1} - L\_T\right]
 \end{aligned}$$
 where
 - $L\_0 = \mathbb{E}\_{q(\mathbf{x}\_1 | \mathbf{x}\_0)}[\log p\_\theta(\mathbf{x}\_0 | \mathbf{x}\_1)]$ can be interpreted as a reconstruction term. It can be approximated and optimized using a Monte Carlo estimate.
@@ -314,7 +311,7 @@ To minimize the expected KL divergence $L\_{t-1}$, we need to match the reverse 
 By construction, the variance of the reverse process can be set to the known variance $\sigma^2\_t$ of the tractable posterior.
 
 For the mean, we reuse the analytical form of $\mu\_q(\mathbf{x}\_t, \mathbf{x}\_0, t)$ and parameterize the mean of the reverse process using a .bold[denoising network] as
-$$\mu\_\theta(\mathbf{x}\_t) = \frac{\sqrt{\alpha\_t}(1-\bar{\alpha}\_{t-1})}{1-\bar{\alpha}\_t}\mathbf{x}\_t + \frac{\sqrt{\bar{\alpha}\_{t-1}}(1-\alpha\_t)}{1-\bar{\alpha}\_t}\hat{\mathbf{x}}\_\theta(\mathbf{x}\_t, t).$$
+$$\mu\_\theta(\mathbf{x}\_t, t) = \frac{\sqrt{\alpha\_t}(1-\bar{\alpha}\_{t-1})}{1-\bar{\alpha}\_t}\mathbf{x}\_t + \frac{\sqrt{\bar{\alpha}\_{t-1}}(1-\alpha\_t)}{1-\bar{\alpha}\_t}\hat{\mathbf{x}}\_\theta(\mathbf{x}\_t, t).$$
 
 ---
 
@@ -323,7 +320,7 @@ class: middle
 Under this parameterization, the minimization of expected KL divergence $L\_{t-1}$ can be rewritten as
 $$\begin{aligned}
 &\arg \min\_\theta \mathbb{E}\_{q(\mathbf{x}\_t | \mathbf{x}\_0)}\text{KL}(q(\mathbf{x}\_{t-1}|\mathbf{x}\_t, \mathbf{x}\_0) || p\_\theta(\mathbf{x}\_{t-1} | \mathbf{x}\_t) )\\\\
-=&\arg \min\_\theta \mathbb{E}\_{q(\mathbf{x}\_t | \mathbf{x}\_0)} \frac{1}{2\sigma^2\_t} || \mu\_\theta(\mathbf{x}\_t) - \mu\_q(\mathbf{x}\_t, \mathbf{x}\_0, t) ||\_2^2 \\\\
+=&\arg \min\_\theta \mathbb{E}\_{q(\mathbf{x}\_t | \mathbf{x}\_0)} \frac{1}{2\sigma^2\_t} || \mu\_\theta(\mathbf{x}\_t, t) - \mu\_q(\mathbf{x}\_t, \mathbf{x}\_0, t) ||\_2^2 \\\\
 =&\arg \min\_\theta \mathbb{E}\_{q(\mathbf{x}\_t | \mathbf{x}\_0)} \frac{1}{2\sigma^2\_t} \frac{\bar{\alpha}\_{t-1}(1-\alpha\_t)^2}{(1-\bar{\alpha}\_t)^2} || \hat{\mathbf{x}}\_\theta(\mathbf{x}\_t, t) - \mathbf{x}\_0 ||\_2^2
 \end{aligned}$$
 
@@ -358,7 +355,7 @@ class: middle
 
 Accordingly, the mean of the reverse process can be parameterized with a .bold[noise-prediction network] as
 
-$$\mu\_\theta(\mathbf{x}\_t) = \frac{1}{\sqrt{\alpha}\_t} \mathbf{x}\_t - \frac{1-\alpha\_t}{\sqrt{(1-\bar{\alpha}\_t)\alpha\_t}}{\epsilon}\_\theta(\mathbf{x}\_t, t).$$
+$$\mu\_\theta(\mathbf{x}\_t, t) = \frac{1}{\sqrt{\alpha}\_t} \mathbf{x}\_t - \frac{1-\alpha\_t}{\sqrt{(1-\bar{\alpha}\_t)\alpha\_t}}{\epsilon}\_\theta(\mathbf{x}\_t, t).$$
 
 Under this parameterization, the minimization of the expected KL divergence $L\_{t-1}$ can be rewritten as
 $$\begin{aligned}
@@ -430,7 +427,7 @@ $$\begin{aligned}
 class: middle
 
 The mean of the reverse process can be parameterized with a .bold[score network] as
-$$\mu\_\theta(\mathbf{x}\_t) = \frac{1}{\sqrt{\alpha}\_t} \mathbf{x}\_t + \frac{1-\alpha\_t}{\sqrt{\alpha\_t}} s\_\theta(\mathbf{x}\_t, t).$$
+$$\mu\_\theta(\mathbf{x}\_t, t) = \frac{1}{\sqrt{\alpha}\_t} \mathbf{x}\_t + \frac{1-\alpha\_t}{\sqrt{\alpha\_t}} s\_\theta(\mathbf{x}\_t, t).$$
 
 Under this parameterization, the minimization of the expected KL divergence $L\_{t-1}$ can be rewritten as
 $$\begin{aligned}
@@ -482,11 +479,7 @@ class: middle
 
 ## Continuous-time diffusion models
 
-<br>
-
 .center.width-100[![](figures/lec12/vdm-forward.png)]
-
-<br>
 
 With $\beta\_t = 1 - \alpha\_t$, we can rewrite the forward process as
 $$\begin{aligned}
@@ -542,7 +535,7 @@ The score $\nabla\_{\mathbf{x}\_t} \log q(\mathbf{x}\_t)$ of the marginal diffus
 $$\arg \min\_\theta \mathbb{E}\_{t\sim U[0,T]} \mathbb{E}\_{q(\mathbf{x}\_t | \mathbf{x}\_0)} || s\_\theta(\mathbf{x}\_t, t) - \nabla\_{\mathbf{x}\_t} \log q(\mathbf{x}\_t | \mathbf{x}\_0) ||\_2^2,$$
 which will result in $s\_\theta(\mathbf{x}\_t, t) \approx \nabla\_{\mathbf{x}\_t} \log q(\mathbf{x}\_t)$ after expectation over $q(\mathbf{x}\_0)$.
 
-.success[This is just the .bold[same objective] as for VDMs!]
+.success[This is just the .bold[same objective] as for VDMs! (See Interpretation 3)]
 
 ---
 
