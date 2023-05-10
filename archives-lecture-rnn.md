@@ -8,16 +8,6 @@ Lecture: Recurrent neural networks (optional)
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-R: https://drive.google.com/file/d/1tyxLHg0Xlm0Pir0cdX2epHcpg9I3oJlD/view
-
----
-
-class: middle
-
-.center.width-60[![](figures/lec0/map.png)]
-
 ---
 
 # Today
