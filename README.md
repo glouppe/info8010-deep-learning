@@ -77,6 +77,6 @@ Your report should be submitted by **May 19** on Gradescope. This is a **hard** 
 Due to progress in the field, some of the lectures have become less relevant. However, they are still available for those who are interested.
 
 | Topic |
-| --- | --- |
+| --- |
 | [Recurrent neural networks](https://glouppe.github.io/info8010-deep-learning/?p=archives-lecture-rnn.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/archives-lec-rnn.pdf)] [[video](https://youtu.be/qnux5dg5wZ4)] |
 | [Generative adversarial networks](https://glouppe.github.io/info8010-deep-learning/?p=archives-lecture-gan.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/archives-lec-gan.pdf)] [[video](https://youtu.be/cM6m1eHY5FI)] |
