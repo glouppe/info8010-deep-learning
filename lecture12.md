@@ -190,7 +190,7 @@ class: middle
 
 With $\epsilon \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$, we have
 $$\begin{aligned}
-\mathbf{x}\_t &= \sqrt{{\alpha}\_t} \mathbf{x}\_{t-1} + \sqrt{1-{\alpha}\_t} \epsilon \\\\
+\mathbf{x}\_t &= \sqrt{ {\alpha}\_t} \mathbf{x}\_{t-1} + \sqrt{1-{\alpha}\_t} \epsilon \\\\
 q(\mathbf{x}\_t | \mathbf{x}\_{t-1}) &= \mathcal{N}(\mathbf{x}\_t ; \sqrt{\alpha\_t} \mathbf{x}\_{t-1}, (1-\alpha\_t)\mathbf{I}) \\\\
 q(\mathbf{x}\_{1:T} | \mathbf{x}\_{0}) &=  \prod\_{t=1}^T q(\mathbf{x}\_t | \mathbf{x}\_{t-1}) 
 \end{aligned}$$
@@ -490,7 +490,7 @@ class: middle
 
 With $\beta\_t = 1 - \alpha\_t$, we can rewrite the forward process as
 $$\begin{aligned}
-\mathbf{x}\_t &= \sqrt{{\alpha}\_t} \mathbf{x}\_{t-1} + \sqrt{1-{\alpha}\_t} \mathcal{N}(\mathbf{0}, \mathbf{I}) \\\\
+\mathbf{x}\_t &= \sqrt{ {\alpha}\_t} \mathbf{x}\_{t-1} + \sqrt{1-{\alpha}\_t} \mathcal{N}(\mathbf{0}, \mathbf{I}) \\\\
 &= \sqrt{1 - {\beta}\_t} \mathbf{x}\_{t-1} + \sqrt{{\beta}\_t} \mathcal{N}(\mathbf{0}, \mathbf{I}) \\\\
 &= \sqrt{1 - {\beta}(t)\Delta\_t} \mathbf{x}\_{t-1} + \sqrt{{\beta}(t)\Delta\_t} \mathcal{N}(\mathbf{0}, \mathbf{I})
 \end{aligned}$$
