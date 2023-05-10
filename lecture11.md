@@ -8,6 +8,10 @@ Lecture 11: Auto-encoders and variational auto-encoders
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+R: Rewrite to better match the sidenotes.
+
 ---
 
 # Today
@@ -17,6 +21,8 @@ Learn a model of the data.
 - Auto-encoders
 - Variational inference
 - Variational auto-encoders
+
+.alert[Caution: See also the side notes derived in class.]
 
 ---
 
@@ -64,7 +70,7 @@ class: middle
 
 A **generative model** is a probabilistic model $p$ that can be used as *a simulator of the data*.
 Its purpose is to generate synthetic but realistic high-dimensional data
-$$\mathbf{x} \sim p(\mathbf{x};\theta),$$
+$$\mathbf{x} \sim p\_\theta(\mathbf{x}),$$
 that is as close as possible from the unknown data distribution $p(\mathbf{x})$, but for which we have empirical samples.
 
 ???
@@ -384,9 +390,9 @@ Switch to iPad.
 .center.width-80[![](figures/lec11/vi.png)]
 
 **Variational inference** turns posterior inference into an optimization problem.
-- Consider a family of distributions $q(\mathbf{z}|\mathbf{x}; \nu)$ that approximate the posterior $p(\mathbf{z}|\mathbf{x})$, where the
+- Consider a family of distributions $q\_\nu(\mathbf{z}|\mathbf{x})$ that approximate the posterior $p(\mathbf{z}|\mathbf{x})$, where the
 variational parameters $\nu$ index the family of distributions.
-- The parameters $\nu$ are fit to minimize the KL divergence between the approximation $q(\mathbf{z}|\mathbf{x};\nu)$ and the posterior  $p(\mathbf{z}|\mathbf{x})$.
+- The parameters $\nu$ are fit to minimize the KL divergence between the approximation $q\_\nu(\mathbf{z}|\mathbf{x})$ and the posterior  $p(\mathbf{z}|\mathbf{x})$.
 
 ---
 
@@ -394,9 +400,9 @@ class: middle
 
 Formally, we want to solve
 $$\begin{aligned}
-&\arg\min\_\nu \text{KL}(q\(\mathbf{z}|\mathbf{x};\nu) || p(\mathbf{z}|\mathbf{x})) \\\\
-=& \arg\min\_\nu  \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[\log \frac{q(\mathbf{z}|\mathbf{x} ; \nu)}{p(\mathbf{z}|\mathbf{x})}\right] \\\\
-=& \arg\min\_\nu  \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log q(\mathbf{z}|\mathbf{x};\nu) - \log p(\mathbf{x},\mathbf{z}) \right] + \log p(\mathbf{x}).
+&\arg\min\_\nu \text{KL}(q\_\nu(\mathbf{z}|\mathbf{x}) || p(\mathbf{z}|\mathbf{x})) \\\\
+=& \arg\min\_\nu  \mathbb{E}\_{q\_\nu(\mathbf{z}|\mathbf{x})}\left[\log \frac{q\_\nu(\mathbf{z}|\mathbf{x})}{p(\mathbf{z}|\mathbf{x})}\right] \\\\
+=& \arg\min\_\nu  \mathbb{E}\_{q\_\nu(\mathbf{z}|\mathbf{x})}\left[ \log q\_\nu(\mathbf{z}|\mathbf{x}) - \log p(\mathbf{x},\mathbf{z}) \right] + \log p(\mathbf{x}).
 \end{aligned}$$
 For the same reason as before, the KL divergence cannot be directly minimized because
 of the $\log p(\mathbf{x})$ term.
@@ -407,9 +413,9 @@ class: middle
 
 However, we can write
 $$\begin{aligned}
-&\arg\min\_\nu \text{KL}(q(\mathbf{z}|\mathbf{x};\nu) || p(\mathbf{z}|\mathbf{x})) \\\\
-=& \arg\min\_\nu  \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log q(\mathbf{z}|\mathbf{x};\nu) - \log p(\mathbf{x},\mathbf{z}) \right] + \log p(\mathbf{x})\\\\
-=&\arg\max\_\nu \underbrace{\mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log p(\mathbf{x},\mathbf{z}) - \log q(\mathbf{z}|\mathbf{x};\nu) \right]}\_{\text{ELBO}(\mathbf{x};\nu)}
+&\arg\min\_\nu \text{KL}(q\_\nu(\mathbf{z}|\mathbf{x}) || p(\mathbf{z}|\mathbf{x})) \\\\
+=& \arg\min\_\nu  \mathbb{E}\_{q\_\nu(\mathbf{z}|\mathbf{x})}\left[ \log q\_\nu(\mathbf{z}|\mathbf{x}) - \log p(\mathbf{x},\mathbf{z}) \right] + \log p(\mathbf{x})\\\\
+=&\arg\max\_\nu \underbrace{\mathbb{E}\_{q\_\nu(\mathbf{z}|\mathbf{x})}\left[ \log p(\mathbf{x},\mathbf{z}) - \log q\_\nu(\mathbf{z}|\mathbf{x}) \right]}\_{\text{ELBO}(\mathbf{x};\nu)}
 \end{aligned}
 $$
 where $\text{ELBO}(\mathbf{x};\nu)$ is called the **evidence lower bound objective**.
@@ -423,11 +429,11 @@ class: middle
 
 Remark that
 $$\begin{aligned}
-\text{ELBO}(\mathbf{x};\nu) &= \mathbb{E}\_{q(\mathbf{z};|\mathbf{x}\nu)}\left[ \log p(\mathbf{x},\mathbf{z}) - \log q(\mathbf{z}|\mathbf{x};\nu) \right] \\\\
-&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log p(\mathbf{x}|\mathbf{z}) p(\mathbf{z}) - \log q(\mathbf{z}|\mathbf{x};\nu) \right] \\\\
-&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log p(\mathbf{x}|\mathbf{z})\right] - \text{KL}(q(\mathbf{z}|\mathbf{x};\nu) || p(\mathbf{z}))
+\text{ELBO}(\mathbf{x};\nu) &= \mathbb{E}\_{q(\mathbf{z};|\mathbf{x}\nu)}\left[ \log p(\mathbf{x},\mathbf{z}) - \log q\_\nu(\mathbf{z}|\mathbf{x}) \right] \\\\
+&= \mathbb{E}\_{q\_\nu(\mathbf{z}|\mathbf{x})}\left[ \log p(\mathbf{x}|\mathbf{z}) p(\mathbf{z}) - \log q\_\nu(\mathbf{z}|\mathbf{x}) \right] \\\\
+&= \mathbb{E}\_{q\_\nu(\mathbf{z}|\mathbf{x})}\left[ \log p(\mathbf{x}|\mathbf{z})\right] - \text{KL}(q\_\nu(\mathbf{z}|\mathbf{x}) || p(\mathbf{z}))
 \end{aligned}$$
-Therefore, maximizing the ELBO:
+Therefore, maximizing the ELBO
 - encourages distributions to place their mass on configurations of latent variables that explain the observed data (first term);
 - encourages distributions close to the prior (second term).
 
@@ -437,16 +443,14 @@ class: middle
 
 ## Optimization
 
-We want
 $$\begin{aligned}
-\nu^{\*} &= \arg \max\_\nu \text{ELBO}(\mathbf{x};\nu) \\\\
-&= \arg \max\_\nu \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\nu)}\left[ \log p(\mathbf{x},\mathbf{z}) - \log q(\mathbf{z}|\mathbf{x};\nu) \right].
+\nu^{\*} &= \arg \max\_\nu \text{ELBO}(\mathbf{x};\nu).
 \end{aligned}$$
 
 We can proceed by gradient ascent, provided we can evaluate $\nabla\_\nu \text{ELBO}(\mathbf{x};\nu)$.
 
 In general,
-this gradient is difficult to compute because the expectation is unknown and the parameters $\nu$ are parameters of the distribution $q(\mathbf{z}|\mathbf{x};\nu)$ we integrate over.
+this gradient is difficult to compute because the expectation is unknown and the parameters $\nu$ are parameters of the distribution $q\_\nu(\mathbf{z}|\mathbf{x})$ we integrate over.
 
 ---
 
@@ -470,18 +474,18 @@ class: middle
 
 A variational auto-encoder is a deep latent variable model where:
 - The prior $p(\mathbf{z})$ is prescribed, and usually chosen to be Gaussian.
-- The likelihood $p(\mathbf{x}|\mathbf{z};\theta)$ is parameterized with a **generative network** $\text{NN}\_\theta$
-(or decoder) that takes as input $\mathbf{z}$ and outputs parameters $\phi = \text{NN}\_\theta(\mathbf{z})$ to the data distribution. E.g.,
+- The likelihood $p\_\theta(\mathbf{x}|\mathbf{z})$ is parameterized with a **generative network** $\text{NN}\_\theta$
+(or decoder) that takes as input $\mathbf{z}$ and outputs parameters $\varphi = \text{NN}\_\theta(\mathbf{z})$ to the data distribution. E.g.,
 $$\begin{aligned}
 \mu, \sigma &= \text{NN}\_\theta(\mathbf{z}) \\\\
-p(\mathbf{x}|\mathbf{z};\theta) &= \mathcal{N}(\mathbf{x}; \mu, \sigma^2\mathbf{I})
+p\_\theta(\mathbf{x}|\mathbf{z}) &= \mathcal{N}(\mathbf{x}; \mu, \sigma^2\mathbf{I})
 \end{aligned}$$
-- The approximate posterior $q(\mathbf{z}|\mathbf{x};\varphi)$ is parameterized
-with an **inference network** $\text{NN}\_\varphi$ (or encoder) that takes as input $\mathbf{x}$ and
-outputs parameters $\nu = \text{NN}\_\varphi(\mathbf{x})$ to the approximate posterior. E.g.,
+- The approximate posterior $q\_\phi(\mathbf{z}|\mathbf{x})$ is parameterized
+with an **inference network** $\text{NN}\_\phi$ (or encoder) that takes as input $\mathbf{x}$ and
+outputs parameters $\nu = \text{NN}\_\phi(\mathbf{x})$ to the approximate posterior. E.g.,
 $$\begin{aligned}
-\mu, \sigma &= \text{NN}\_\varphi(\mathbf{x}) \\\\
-q(\mathbf{z}|\mathbf{x};\varphi) &= \mathcal{N}(\mathbf{z}; \mu, \sigma^2\mathbf{I})
+\mu, \sigma &= \text{NN}\_\phi(\mathbf{x}) \\\\
+q\_\phi(\mathbf{z}|\mathbf{x}) &= \mathcal{N}(\mathbf{z}; \mu, \sigma^2\mathbf{I})
 \end{aligned}$$
 
 ---
@@ -496,16 +500,16 @@ class: middle
 
 class: middle
 
-As before, we can use variational inference, but to jointly optimize the generative and the inference networks parameters $\theta$ and $\varphi$.
+As before, we can use variational inference, but to jointly optimize the generative and the inference networks parameters $\theta$ and $\phi$.
 
 We want
 $$\begin{aligned}
-\theta^{\*}, \varphi^{\*} &= \arg \max\_{\theta,\varphi} \text{ELBO}(\mathbf{x};\theta,\varphi) \\\\
-&= \arg \max\_{\theta,\varphi} \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x}|\mathbf{z};\theta)\right] - \text{KL}(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z})).
+\theta^{\*}, \phi^{\*} &= \arg \max\_{\theta,\phi} \text{ELBO}(\mathbf{x};\theta,\phi) \\\\
+&= \arg \max\_{\theta,\phi} \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})}\left[ \log p\_\theta(\mathbf{x}|\mathbf{z})\right] - \text{KL}(q\_\phi(\mathbf{z}|\mathbf{x}) || p(\mathbf{z})).
 \end{aligned}$$
 
-- Given some generative network $\theta$, we want to put the mass of the latent variables, by adjusting $\varphi$, such that they explain the observed data, while remaining close to the prior.
-- Given some inference network $\varphi$, we want to put the mass of the observed variables, by adjusting $\theta$, such that
+- Given some generative network $\theta$, we want to put the mass of the latent variables, by adjusting $\phi$, such that they explain the observed data, while remaining close to the prior.
+- Given some inference network $\phi$, we want to put the mass of the observed variables, by adjusting $\theta$, such that
 they are well explained by the latent variables.
 
 ---
@@ -514,17 +518,17 @@ class: middle
 
 Unbiased gradients of the ELBO with respect to the generative model parameters $\theta$ are simple to obtain:
 $$\begin{aligned}
-\nabla\_\theta \text{ELBO}(\mathbf{x};\theta,\varphi) &= \nabla\_\theta \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi)\right] \\\\
-&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \nabla\_\theta ( \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi) ) \right] \\\\
-&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \nabla\_\theta \log p(\mathbf{x},\mathbf{z};\theta) \right],
+\nabla\_\theta \text{ELBO}(\mathbf{x};\theta,\phi) &= \nabla\_\theta \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})}\left[ \log p\_\theta(\mathbf{x},\mathbf{z}) - \log q\_\phi(\mathbf{z}|\mathbf{x})\right] \\\\
+&= \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})}\left[ \nabla\_\theta ( \log p\_\theta(\mathbf{x},\mathbf{z}) - \log q\_\phi(\mathbf{z}|\mathbf{x}) ) \right] \\\\
+&= \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})}\left[ \nabla\_\theta \log p\_\theta(\mathbf{x},\mathbf{z}) \right],
 \end{aligned}$$
 which can be estimated with Monte Carlo integration.
 
-However, gradients with respect to the inference model parameters $\varphi$ are
+However, gradients with respect to the inference model parameters $\phi$ are
 more difficult to obtain:
 $$\begin{aligned}
-\nabla\_\varphi \text{ELBO}(\mathbf{x};\theta,\varphi) &= \nabla\_\varphi \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi)\right] \\\\
-&\neq \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \nabla\_\varphi ( \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi) ) \right]
+\nabla\_\phi \text{ELBO}(\mathbf{x};\theta,\phi) &= \nabla\_\phi \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})}\left[ \log p\_\theta(\mathbf{x},\mathbf{z}) - \log q\_\phi(\mathbf{z}|\mathbf{x})\right] \\\\
+&\neq \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})}\left[ \nabla\_\phi ( \log p\_\theta(\mathbf{x},\mathbf{z}) - \log q\_\phi(\mathbf{z}|\mathbf{x}) ) \right]
 \end{aligned}$$
 
 ---
@@ -533,8 +537,8 @@ class: middle
 
 Let us abbreviate
 $$\begin{aligned}
-\text{ELBO}(\mathbf{x};\theta,\varphi) &= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ \log p(\mathbf{x},\mathbf{z};\theta) - \log q(\mathbf{z}|\mathbf{x};\varphi)\right] \\\\
-&= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ f(\mathbf{x}, \mathbf{z}; \varphi) \right].
+\text{ELBO}(\mathbf{x};\theta,\phi) &= \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})}\left[ \log p\_\theta(\mathbf{x},\mathbf{z}) - \log q\_\phi(\mathbf{z}|\mathbf{x})\right] \\\\
+&= \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})}\left[ f(\mathbf{x}, \mathbf{z}; \phi) \right].
 \end{aligned}$$
 We have
 .grid[
@@ -542,7 +546,7 @@ We have
 .kol-4-5[.center.width-90[![](figures/lec11/reparam-original.svg)]]
 ]
 
-We cannot backpropagate through the stochastic node $\mathbf{z}$ to compute $\nabla\_\varphi f$!
+We cannot backpropagate through the stochastic node $\mathbf{z}$ to compute $\nabla\_\phi f$!
 
 ---
 
@@ -550,10 +554,10 @@ class: middle
 
 ## Reparameterization trick
 
-The .italic[reparameterization trick] consists in re-expressing the variable $$\mathbf{z} \sim q(\mathbf{z}|\mathbf{x};\varphi)$$ as some differentiable and invertible transformation
-of another random variable $\epsilon$ given $\mathbf{x}$ and $\varphi$,
-$$\mathbf{z} = g(\varphi, \mathbf{x}, \epsilon),$$
-such that the distribution of $\epsilon$ is independent of $\mathbf{x}$ or $\varphi$.
+The .italic[reparameterization trick] consists in re-expressing the variable $$\mathbf{z} \sim q\_\phi(\mathbf{z}|\mathbf{x})$$ as some differentiable and invertible transformation
+of another random variable $\epsilon$ given $\mathbf{x}$ and $\phi$,
+$$\mathbf{z} = g(\phi, \mathbf{x}, \epsilon),$$
+such that the distribution of $\epsilon$ is independent of $\mathbf{x}$ or $\phi$.
 
 ---
 
@@ -564,11 +568,11 @@ class: middle
 .kol-4-5[.center.width-90[![](figures/lec11/reparam-reparam.svg)]]
 ]
 
-For example, if $q(\mathbf{z}|\mathbf{x};\varphi) = \mathcal{N}(\mathbf{z}; \mu(\mathbf{x};\varphi), \sigma^2(\mathbf{x};\varphi))$, where $\mu(\mathbf{x};\varphi)$ and $\sigma^2(\mathbf{x};\varphi)$
-are the outputs of the inference network $NN\_\varphi$, then a common reparameterization is:
+For example, if $q\_\phi(\mathbf{z}|\mathbf{x}) = \mathcal{N}(\mathbf{z}; \mu(\mathbf{x};\phi), \sigma^2(\mathbf{x};\phi))$, where $\mu(\mathbf{x};\phi)$ and $\sigma^2(\mathbf{x};\phi)$
+are the outputs of the inference network $NN\_\phi$, then a common reparameterization is:
 $$\begin{aligned}
 p(\epsilon) &= \mathcal{N}(\epsilon; \mathbf{0}, \mathbf{I}) \\\\
-\mathbf{z} &= \mu(\mathbf{x};\varphi) + \sigma(\mathbf{x};\varphi) \odot \epsilon
+\mathbf{z} &= \mu(\mathbf{x};\phi) + \sigma(\mathbf{x};\phi) \odot \epsilon
 \end{aligned}$$
 
 ---
@@ -577,18 +581,18 @@ class: middle
 
 Given such a change of variable, the ELBO can be rewritten as:
 $$\begin{aligned}
-\text{ELBO}(\mathbf{x};\theta,\varphi) &= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)}\left[ f(\mathbf{x}, \mathbf{z}; \varphi) \right]\\\\
-&= \mathbb{E}\_{p(\epsilon)} \left[ f(\mathbf{x}, g(\varphi,\mathbf{x},\epsilon); \varphi) \right]
+\text{ELBO}(\mathbf{x};\theta,\phi) &= \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})}\left[ f(\mathbf{x}, \mathbf{z}; \phi) \right]\\\\
+&= \mathbb{E}\_{p(\epsilon)} \left[ f(\mathbf{x}, g(\phi,\mathbf{x},\epsilon); \phi) \right]
 \end{aligned}$$
 Therefore,
 $$\begin{aligned}
-\nabla\_\varphi \text{ELBO}(\mathbf{x};\theta,\varphi) &= \nabla\_\varphi \mathbb{E}\_{p(\epsilon)} \left[  f(\mathbf{x}, g(\varphi,\mathbf{x},\epsilon); \varphi) \right] \\\\
-&= \mathbb{E}\_{p(\epsilon)} \left[ \nabla\_\varphi  f(\mathbf{x}, g(\varphi,\mathbf{x},\epsilon); \varphi) \right],
+\nabla\_\phi \text{ELBO}(\mathbf{x};\theta,\phi) &= \nabla\_\phi \mathbb{E}\_{p(\epsilon)} \left[  f(\mathbf{x}, g(\phi,\mathbf{x},\epsilon); \phi) \right] \\\\
+&= \mathbb{E}\_{p(\epsilon)} \left[ \nabla\_\phi  f(\mathbf{x}, g(\phi,\mathbf{x},\epsilon); \phi) \right],
 \end{aligned}$$
 which we can now estimate with Monte Carlo integration.
 
-The last required ingredient is the evaluation of the approximate posterior $q(\mathbf{z}|\mathbf{x};\varphi)$ given the change of variable $g$. As long as $g$ is invertible, we have:
-$$\log q(\mathbf{z}|\mathbf{x};\varphi) = \log p(\epsilon) - \log \left| \det\left( \frac{\partial \mathbf{z}}{\partial \epsilon} \right) \right|.$$
+The last required ingredient is the evaluation of the approximate posterior $q\_\phi(\mathbf{z}|\mathbf{x})$ given the change of variable $g$. As long as $g$ is invertible, we have:
+$$\log q\_\phi(\mathbf{z}|\mathbf{x}) = \log p(\epsilon) - \log \left| \det\left( \frac{\partial \mathbf{z}}{\partial \epsilon} \right) \right|.$$
 
 ---
 
@@ -601,7 +605,7 @@ Consider the following setup:
 $$\begin{aligned}
 \mathbf{z} &\in \mathbb{R}^d \\\\
 p(\mathbf{z}) &= \mathcal{N}(\mathbf{z}; \mathbf{0},\mathbf{I})\\\\
-p(\mathbf{x}|\mathbf{z};\theta) &= \mathcal{N}(\mathbf{x};\mu(\mathbf{z};\theta), \sigma^2(\mathbf{z};\theta)\mathbf{I}) \\\\
+p\_\theta(\mathbf{x}|\mathbf{z}) &= \mathcal{N}(\mathbf{x};\mu(\mathbf{z};\theta), \sigma^2(\mathbf{z};\theta)\mathbf{I}) \\\\
 \mu(\mathbf{z};\theta) &= \mathbf{W}\_2^T\mathbf{h} + \mathbf{b}\_2 \\\\
 \log \sigma^2(\mathbf{z};\theta) &= \mathbf{W}\_3^T\mathbf{h} + \mathbf{b}\_3 \\\\
 \mathbf{h} &= \text{ReLU}(\mathbf{W}\_1^T \mathbf{z} + \mathbf{b}\_1)\\\\
@@ -614,13 +618,13 @@ class: middle
 
 - Inference model:
 $$\begin{aligned}
-q(\mathbf{z}|\mathbf{x};\varphi) &=  \mathcal{N}(\mathbf{z};\mu(\mathbf{x};\varphi), \sigma^2(\mathbf{x};\varphi)\mathbf{I}) \\\\
+q\_\phi(\mathbf{z}|\mathbf{x}) &=  \mathcal{N}(\mathbf{z};\mu(\mathbf{x};\phi), \sigma^2(\mathbf{x};\phi)\mathbf{I}) \\\\
 p(\epsilon) &= \mathcal{N}(\epsilon; \mathbf{0}, \mathbf{I}) \\\\
-\mathbf{z} &= \mu(\mathbf{x};\varphi) + \sigma(\mathbf{x};\varphi) \odot \epsilon \\\\
-\mu(\mathbf{x};\varphi) &= \mathbf{W}\_5^T\mathbf{h} + \mathbf{b}\_5 \\\\
-\log \sigma^2(\mathbf{x};\varphi) &= \mathbf{W}\_6^T\mathbf{h} + \mathbf{b}\_6 \\\\
+\mathbf{z} &= \mu(\mathbf{x};\phi) + \sigma(\mathbf{x};\phi) \odot \epsilon \\\\
+\mu(\mathbf{x};\phi) &= \mathbf{W}\_5^T\mathbf{h} + \mathbf{b}\_5 \\\\
+\log \sigma^2(\mathbf{x};\phi) &= \mathbf{W}\_6^T\mathbf{h} + \mathbf{b}\_6 \\\\
 \mathbf{h} &= \text{ReLU}(\mathbf{W}\_4^T \mathbf{x} + \mathbf{b}\_4)\\\\
-\varphi &= \\\{ \mathbf{W}\_4, \mathbf{b}\_4, \mathbf{W}\_5, \mathbf{b}\_5, \mathbf{W}\_6, \mathbf{b}\_6 \\\}
+\phi &= \\\{ \mathbf{W}\_4, \mathbf{b}\_4, \mathbf{W}\_5, \mathbf{b}\_5, \mathbf{W}\_6, \mathbf{b}\_6 \\\}
 \end{aligned}$$
 
 Note that there is no restriction on the generative and inference network architectures.
@@ -632,12 +636,12 @@ class: middle
 
 Plugging everything together, the objective can be expressed as:
 $$\begin{aligned}
-\text{ELBO}(\mathbf{x};\theta,\varphi) &= \mathbb{E}\_{q(\mathbf{z}|\mathbf{x};\varphi)} \left[ \log p(\mathbf{x}|\mathbf{z};\theta) \right] - \text{KL}(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z})) \\\\
-&= \mathbb{E}\_{p(\epsilon)} \left[  \log p(\mathbf{x}|\mathbf{z}=g(\varphi,\mathbf{x},\epsilon);\theta) \right] - \text{KL}(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z}))
+\text{ELBO}(\mathbf{x};\theta,\phi) &= \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})} \left[ \log p\_\theta(\mathbf{x}|\mathbf{z}) \right] - \text{KL}(q\_\phi(\mathbf{z}|\mathbf{x}) || p(\mathbf{z})) \\\\
+&= \mathbb{E}\_{p(\epsilon)} \left[  \log p(\mathbf{x}|\mathbf{z}=g(\phi,\mathbf{x},\epsilon);\theta) \right] - \text{KL}(q\_\phi(\mathbf{z}|\mathbf{x}) || p(\mathbf{z}))
 \end{aligned}
 $$
 where the KL divergence can be expressed  analytically as
-$$\text{KL}(q(\mathbf{z}|\mathbf{x};\varphi) || p(\mathbf{z})) = \frac{1}{2} \sum\_{j=1}^d \left( 1 + \log(\sigma\_j^2(\mathbf{x};\varphi)) - \mu\_j^2(\mathbf{x};\varphi) - \sigma\_j^2(\mathbf{x};\varphi)\right),$$
+$$\text{KL}(q\_\phi(\mathbf{z}|\mathbf{x}) || p(\mathbf{z})) = \frac{1}{2} \sum\_{j=1}^d \left( 1 + \log(\sigma\_j^2(\mathbf{x};\phi)) - \mu\_j^2(\mathbf{x};\phi) - \sigma\_j^2(\mathbf{x};\phi)\right),$$
 which allows to evaluate its derivative without approximation.
 
 ---

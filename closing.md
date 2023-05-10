@@ -37,6 +37,8 @@ class: middle
 - INFO8003: Optimal decision making for complex problems
 - INFO0948: Introduction to Intelligent Robotics
 - ELEN0016: Computer vision
+- INFOXXXX: Machine Learning Systems Design (new in 2023-2024)
+- SPAT0263: Machine Learning in Space Sciences (new in 2023-2024)
 
 ---
 

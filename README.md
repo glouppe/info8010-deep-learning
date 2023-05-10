@@ -25,7 +25,7 @@ Lectures for INFO8010 - Deep Learning, ULiège, Spring 2023.
 | April 21 | Lecture 9: [Graph neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture9.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec9.pdf)] |
 | April 28 | Lecture 10: [Uncertainty](https://glouppe.github.io/info8010-deep-learning/?p=lecture10.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec10.pdf)] [[video](https://youtu.be/AxJBY9eRTL4)]<br>Tutorial: Weight and Biases (Thomas Capelle, ML engineer at `wandb.ai`) |
 | May 5 | Lecture 11: [Auto-encoders and variational auto-encoders](https://glouppe.github.io/info8010-deep-learning/?p=lecture11.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec11.pdf)] [[video](https://youtu.be/6gWeyUZtHWs)] [[code](https://github.com/glouppe/info8010-deep-learning/blob/master/code/lec11-vae.ipynb)] |
-| May 12 | Lecture 12: [Diffusion models](https://glouppe.github.io/info8010-deep-learning/?p=lecture12.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec12.pdf)] [[video](https://youtu.be/cM6m1eHY5FI)] |
+| May 12 | Lecture 12: [Diffusion models](https://glouppe.github.io/info8010-deep-learning/?p=lecture12.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec12.pdf)] |
 | May 19 | Deadline for the reading assignment |
 | May 19 | Deadline for the project |
 
@@ -76,5 +76,7 @@ Your report should be submitted by **May 19** on Gradescope. This is a **hard** 
 
 Due to progress in the field, some of the lectures have become less relevant. However, they are still available for those who are interested.
 
-- [Recurrent neural networks](https://glouppe.github.io/info8010-deep-learning/?p=archives-lecture-rnn.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/archives-lec-rnn.pdf)] [[video](https://youtu.be/qnux5dg5wZ4)] 
-- [Generative adversarial networks](https://glouppe.github.io/info8010-deep-learning/?p=archives-lecture-gan.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/archives-lec-gan.pdf)] [[video](https://youtu.be/cM6m1eHY5FI)]
+| Topic |
+| --- | --- |
+| [Recurrent neural networks](https://glouppe.github.io/info8010-deep-learning/?p=archives-lecture-rnn.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/archives-lec-rnn.pdf)] [[video](https://youtu.be/qnux5dg5wZ4)] |
+| [Generative adversarial networks](https://glouppe.github.io/info8010-deep-learning/?p=archives-lecture-gan.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/archives-lec-gan.pdf)] [[video](https://youtu.be/cM6m1eHY5FI)] |
