@@ -37,6 +37,8 @@ A few motivating examples.
 
 class: middle
 
+## Content generation
+
 .center[.width-45[![](./figures/lec12/content-generation-1.png)] .width-45[![](./figures/lec12/content-generation-2.png)]]
 
 .center[Diffusion models have emerged as powerful generative models, beating previous state-of-the-art models (such as GANs) on a variety of tasks.]
@@ -47,6 +49,8 @@ class: middle
 
 class: middle
 
+## Image super-resolution
+
 .center[
 
 <video autoplay muted loop width="720" height="420">
@@ -55,23 +59,21 @@ class: middle
 
 ]
 
-.center[Image super-resolution]
-
 .footnote[Credits: [Saharia et al](https://arxiv.org/abs/2104.07636), 2021.]
 
 ---
 
 class: middle
 
+## Text-to-image generation
+
 .center[
+
+.width-50[![](./figures/lec12/text-to-image.png)]
 
 .italic[A group of teddy bears in suite in a corporate office celebrating<br> the birthday of their friend. There is a pizza cake on the desk.]
 
-.width-60[![](./figures/lec12/text-to-image.png)]
-
 ]
-
-.center[Text-to-image generation]
 
 .footnote[Credits: [Saharia et al](https://arxiv.org/abs/2205.11487), 2022.]
 
@@ -79,9 +81,9 @@ class: middle
 
 class: middle
 
-.center.width-100[![](./figures/lec12/sde-edit.jpg)]
+## Artistic tools and image editing
 
-.center[Artistic tools and image editing]
+.center.width-100[![](./figures/lec12/sde-edit.jpg)]
 
 .footnote[Credits: [Meng et al](https://arxiv.org/abs/2108.01073), 2021.]
 
@@ -89,9 +91,9 @@ class: middle
 
 class: middle
 
-.center.width-100[![](./figures/lec12/inverse-problems.png)]
+## Inverse problems in medical imaging
 
-.center[Solving inverse problems in medical imaging]
+.center.width-100[![](./figures/lec12/inverse-problems.png)]
 
 .footnote[Credits: [Song et al](https://arxiv.org/pdf/2111.08005.pdf), 2021.]
 
@@ -532,8 +534,8 @@ class: middle
 class: middle
 
 The score $\nabla\_{\mathbf{x}\_t} \log q(\mathbf{x}\_t)$ of the marginal diffused density $q(\mathbf{x}\_t)$ is not tractable, but can be estimated using denoising score matching (DSM) by solving
-$$\arg \min\_\theta \mathbb{E}\_{t\sim U[0,T]} \mathbb{E}\_{q(\mathbf{x}\_t | \mathbf{x}\_0)} || s\_\theta(\mathbf{x}\_t, t) - \nabla\_{\mathbf{x}\_t} \log q(\mathbf{x}\_t | \mathbf{x}\_0) ||\_2^2,$$
-which will result in $s\_\theta(\mathbf{x}\_t, t) \approx \nabla\_{\mathbf{x}\_t} \log q(\mathbf{x}\_t)$ after expectation over $q(\mathbf{x}\_0)$.
+$$\arg \min\_\theta \mathbb{E}\_{q(\mathbf{x}\_0)} \mathbb{E}\_{t\sim U[0,T]} \mathbb{E}\_{q(\mathbf{x}\_t | \mathbf{x}\_0)} || s\_\theta(\mathbf{x}\_t, t) - \nabla\_{\mathbf{x}\_t} \log q(\mathbf{x}\_t | \mathbf{x}\_0) ||\_2^2,$$
+which will result in $s\_\theta(\mathbf{x}\_t, t) \approx \nabla\_{\mathbf{x}\_t} \log q(\mathbf{x}\_t)$ because of the outer expectation over $q(\mathbf{x}\_0)$.
 
 .success[This is just the .bold[same objective] as for VDMs! (See Interpretation 3)]
 
