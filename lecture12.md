@@ -79,6 +79,14 @@ class: middle
 
 ---
 
+class: middle, black-slide
+
+.center.width-50[![](./figures/lec12/pope.jpg)]
+
+.center[... or deepfakes.]
+
+---
+
 class: middle
 
 ## Artistic tools and image editing
@@ -113,6 +121,10 @@ class: middle
 
 .center[![](figures/lec12/diagram-vae.svg)]
 
+???
+
+Recap on the black board.
+
 ---
 
 class: middle
@@ -132,6 +144,10 @@ class: middle
 The prior matching term limits the expressivity of the model.
 
 Solution: Make $p(\mathbf{z})$ a learnable distribution.
+
+???
+
+Explain the maths on the black board, taking the expectation wrt $p(\mathbf{x})$ of the ELBO and consider the expected KL terms.
 
 ---
 
@@ -157,6 +173,10 @@ class: middle
 Similarly to VAEs, training is done by maximizing the ELBO.
 
 (See side notes.)
+
+???
+
+Rederive the ELBO.
 
 ---
 
@@ -201,6 +221,10 @@ q(\mathbf{x}\_{1:T} | \mathbf{x}\_{0}) &=  \prod\_{t=1}^T q(\mathbf{x}\_t | \mat
 \end{aligned}$$
 
 .footnote[Credits: [Kreis et al](https://cvpr2022-tutorial-diffusion-models.github.io/), 2022.]
+
+???
+
+Start drawing the full probabilistic graphical model as the forward and reverse processes are presented.
 
 ---
 
@@ -271,6 +295,10 @@ For learning the parameters $\theta$ of the reverse process, we can form a varia
 
 $$\mathbb{E}\_{q(\mathbf{x}\_0)}\left[ \log p\_\theta(\mathbf{x}\_0) \right] \geq \mathbb{E}\_{q(\mathbf{x}\_0)q(\mathbf{x}\_{1:T}|\mathbf{x}\_0)}\left[ \log \frac{p\_\theta(\mathbf{x}\_{0:T})}{q(\mathbf{x}\_{1:T} | \mathbf{x}\_0)} \right] := L$$
 
+???
+
+Derive on the board.
+
 ---
 
 class: middle
@@ -302,6 +330,10 @@ $$\begin{aligned}
 \sigma^2\_t &= \frac{(1-\alpha\_t)(1-\bar{\alpha}\_{t-1})}{1-\bar{\alpha}\_t}
 \end{aligned}$$
 
+???
+
+Take the time to do the derivation on the board.
+
 ---
 
 class: middle
@@ -314,6 +346,10 @@ By construction, the variance of the reverse process can be set to the known var
 
 For the mean, we reuse the analytical form of $\mu\_q(\mathbf{x}\_t, \mathbf{x}\_0, t)$ and parameterize the mean of the reverse process using a .bold[denoising network] as
 $$\mu\_\theta(\mathbf{x}\_t, t) = \frac{\sqrt{\alpha\_t}(1-\bar{\alpha}\_{t-1})}{1-\bar{\alpha}\_t}\mathbf{x}\_t + \frac{\sqrt{\bar{\alpha}\_{t-1}}(1-\alpha\_t)}{1-\bar{\alpha}\_t}\hat{\mathbf{x}}\_\theta(\mathbf{x}\_t, t).$$
+
+???
+
+Derive on the board.
 
 ---
 
@@ -351,6 +387,10 @@ $$\begin{aligned}
 &= \frac{1}{\sqrt{\alpha}\_t} \mathbf{x}\_t - \frac{1-\alpha\_t}{\sqrt{(1-\bar{\alpha}\_t)\alpha\_t}}\epsilon
 \end{aligned}$$
 
+???
+
+Derive on the board.
+
 ---
 
 class: middle
@@ -374,6 +414,10 @@ class: middle
 ## Algorithms
 
 .center.width-100[![](figures/lec12/algorithms.png)]
+
+???
+
+Note that in practice, the coefficient before the norm in the loss function is often omitted. Setting it to 1 is found to increase the sample quality.
 
 ---
 
@@ -423,6 +467,10 @@ $$\begin{aligned}
 &= ... \\\\
 &= \frac{1}{\sqrt{\alpha}\_t} \mathbf{x}\_t + \frac{1-\alpha\_t}{\sqrt{\alpha\_t}} \nabla\_{\mathbf{x}\_t} \log q(\mathbf{x}\_t | \mathbf{x}\_0).
 \end{aligned}$$
+
+???
+
+Derive on the board.
 
 ---
 
