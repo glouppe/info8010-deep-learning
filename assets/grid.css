@@ -112,6 +112,14 @@
 	width: 8.33%
 }
 
+.kol-3-8 {
+	width: 37.5%;
+}
+
+.kol-5-8 {
+	width: 62.5%;
+}
+
 /* Layout Columns */
 
 .kol-11-12 {

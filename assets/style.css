@@ -1,9 +1,11 @@
-@import url(https://fonts.googleapis.com/css?family=Lato:400,900);
+@import url(https://fonts.googleapis.com/css?family=Lato:300,400,900);
+@import url(https://fonts.googleapis.com/css?family=Roboto:300,400,900);
 
 body {
-    font-family:  'Lato', 'Avenir Next', 'Avenir', 'Trebuchet MS', 'Segoe UI', sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family:  'Roboto', 'Segoe UI', sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-weight: 300;
+    line-height: 1.5; 
     color: #354046; /*#455a64;*/
-    line-height: 1.4;
     font-size: 11pt;
     word-wrap: break-word;
 }
@@ -12,7 +14,7 @@ body {
 /* Remark ------------------------------------------------------------------- */
 
 .remark-container {
-    background: #ddd;
+    background: #eee;
 }
 
 .remark-slide-content {
@@ -21,15 +23,17 @@ body {
 }
 
 .remark-slide-content h1 {
+    font-family: Lato, sans-serif;
     font-weight: bold;
-    font-size: 2.25em;
+    font-size: 2em;
     margin: 0 0 .5em 0;
-    color: #235699;
+    color: #356aaf;
 }
 
 .remark-slide-content h2 {
-    font-size: 1.1em;
+    font-family: Lato, sans-serif;
     font-weight: bold;
+    font-size: 1.2em;
     margin: 0 0 .5em 0;
 }
 
@@ -44,6 +48,11 @@ body {
     bottom: 2em;
 }
 
+.remark-slide-scaler {
+    box-shadow: 0 0 20px #ccc; 
+}
+
+
 
 /* Styles ------------------------------------------------------------------- */
 
@@ -53,7 +62,7 @@ body {
 }
 
 a {
-    color: #0288d1;
+    color: #5b82b5;
     text-decoration: none;
 }
 
@@ -85,7 +94,7 @@ em {
 strong {
     color: #d11a01;
     font-style: normal;
-    font-weight: normal;
+    font-weight: 300;
 }
 
 .highlight{ 
@@ -110,6 +119,8 @@ strong {
 
 .katex {
     color: #356aaf;
+    font-size: 18pt;
+    
 }
 
 .black-slide .katex, .black-slide h1 {
@@ -196,6 +207,17 @@ td {
 
 .dashed {
   border-style: dashed;
+}
+
+.avatars {
+    position: absolute;
+    right: 1em;
+    top: 1em;
+}
+
+.avatars img {
+    width: 2.5em;
+    border-radius: 50%;
 }
 
 .footnote {
@@ -431,12 +453,12 @@ td {
 .title-slide:after {
     content: '';
     background: url("../assets/logo_ulg.png") no-repeat;
-    background-size: 100% 100%;
+    background-size: 75% 75%;
     width: 150px;
     height: 73px;
     position: absolute;
-    bottom: 2em;
-    left: 3.3em;
+    bottom: -0.5em;
+    left: 0.5em;
     display: inline-block;
 }
 
@@ -445,7 +467,7 @@ td {
 }
 
 .end-slide {
-    background-color: #1452a3;
+    background-color: #356aaf;
     color: white;
     vertical-align: middle;
 }
@@ -460,4 +482,9 @@ td {
     background-color: red;
     color: white;
     border-top: solid 0px;
+}
+
+.shadow {
+    background-color: rgba(0,0,0,0.75);
+    padding: 10px;
 }

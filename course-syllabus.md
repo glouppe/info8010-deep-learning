@@ -2,7 +2,7 @@ class: middle, center, title-slide
 
 # Deep Learning
 
-Spring 2023
+Spring 2024
 
 <br><br>
 Prof. Gilles Louppe<br>
@@ -10,32 +10,13 @@ Prof. Gilles Louppe<br>
 
 ???
 
-R: add that they should participate. Dont be shy! (have candies for each answer?)
-R: low-level / closer to hardware / gpu / software stack (from code to execution)
 R: paper https://t.co/wVg6xUmt7d
-R: check https://www.eecs.yorku.ca/~kosta/Courses/EECS6322/
-
----
-
-# Philosophy
-
-## Thorough and detailed
-- Understand the foundations and the landscape of deep learning.
-- Be able to write from scratch, debug and run (some) deep learning algorithms.
-
-## State-of-the-art
-- Introduction to materials new from research ($\leq$ 5 years old).
-- Understand some of the open questions and challenges in the field.
-
-## Practical
-- Fun and challenging course project.
 
 ---
 
 # Us
 
-This course is given by:
-- Theory: Gilles Louppe ([g.louppe@uliege.be](mailto:g.louppe@uliege.be))
+- Instructor: Gilles Louppe ([g.louppe@uliege.be](mailto:g.louppe@uliege.be))
 - Projects and guidance: 
   - Arnaud Delaunoy
   - François Rozet
@@ -56,7 +37,9 @@ This course is given by:
 
 # Course hub
 
-All important information about the course is available on the course web page [github.com/glouppe/info8010-deep-learning](https://github.com/glouppe/info8010-deep-learning):
+All important information about the course is maintained on the course hub at [github.com/glouppe/info8010-deep-learning](https://github.com/glouppe/info8010-deep-learning):
+
+
 - Schedule
 - Slides and materials
 - Homeworks and project
@@ -67,23 +50,38 @@ All important information about the course is available on the course web page [
 
 class: middle
 
-## Videos
+## Discord
 
-Videos from Spring 2021 are available at [https://bit.ly/3roQmea](https://bit.ly/3roQmea).
+We have a Discord server for the course at [https://discord.gg/5yZqTZhXFW](https://discord.gg/5yZqTZhXFW). Ask questions, share resources, and chat with your peers and the teaching team.
 
-.center.width-70[![](figures/course-syllabus/youtube.png)]
+.center.width-70[![](figures/course-syllabus/discord.png)]
 
 ---
 
 class: middle
 
+.grid[
+.kol-2-3[
+
 ## Textbook
 
-None!
+We recommend .italic[Understanding Deep Learning], by Simon J.D. Prince, for a comprehensive introduction to the field.
 
-But we would recommend "Dive into Deep Learning" ([d2l.ai](https://d2l.ai/)) for a comprehensive and practical introduction to the field.
+The book is freely available at [https://udlbook.github.io/udlbook/](https://udlbook.github.io/udlbook/).
 
-.center.width-60[![](figures/course-syllabus/book.png)]
+]
+.kol-1-3.width-100[![](figures/course-syllabus/UDLCoverSmall.jpg)]
+]
+
+---
+
+class: middle
+
+## Videos
+
+Videos from Spring 2021 are available at [https://bit.ly/3roQmea](https://bit.ly/3roQmea), but they are not up-to-date with the current materials.
+
+.center.width-70[![](figures/course-syllabus/youtube.png)]
 
 ---
 

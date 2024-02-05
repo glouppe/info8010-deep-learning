@@ -20,11 +20,11 @@ class: middle
 
 ## My mission .green[&#10004;]
 
-By the end of this course, you will have acquired a solid and detailed understanding of the field of deep learning. 
+By the end of this course, you will have a strong and comprehensive understanding of deep learning. 
 
-You will have learned how to design deep neural networks for a wide range of advanced probabilistic inference tasks and how to train them.
+You will learn how to design deep neural networks for various advanced probabilistic inference tasks and how to train them.
 
-These models seen in the course apply to a wide variety of artificial intelligence problems, with plenty of applications in engineering and science.
+The models covered in this course have broad applications in artificial intelligence, engineering, and science.
 
 ---
 

@@ -53,8 +53,6 @@ In most cases, x is a vector, but it could be an image, a piece of text or a sam
 
 class: middle
 
-## Inference
-
 Supervised learning is usually concerned with the two following inference problems:
 - **Classification**:
 Given $(\mathbf{x}\_i, y\_i) \in \mathcal{X}\times\mathcal{Y} = \mathbb{R}^p \times \bigtriangleup^C$, for $i=1, ..., N$,
@@ -88,9 +86,13 @@ Regression aims at estimating relationships among (usually continuous) variables
 
 class: middle
 
-Or more generally, inference is concerned with the estimation of the conditional 
+## Probabilistic perspective
+
+Supervised learning can be framed as probabilistic inference, where the goal is to estimate the conditional distribution
 $$p(Y=y|X=\mathbf{x})$$
 for any new $(\mathbf{x},y)$.
+
+This is the framing we will adopt in this course.
 
 ---
 
