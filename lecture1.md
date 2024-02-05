@@ -92,7 +92,7 @@ Supervised learning can be framed as probabilistic inference, where the goal is 
 $$p(Y=y|X=\mathbf{x})$$
 for any new $(\mathbf{x},y)$.
 
-This is the framing we will adopt in this course.
+This is the framing we will adopt in this course (starting from Lecture 2).
 
 ---
 
