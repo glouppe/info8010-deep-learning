@@ -8,6 +8,10 @@ Lecture 3: Automatic differentiation
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+HydroGym (AI4science burnton)
+
 ---
 
 # Today

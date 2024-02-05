@@ -8,6 +8,10 @@ Lecture 7: Attention and transformers
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+Do we need attention? https://www.youtube.com/watch?v=dKJEpOtVgXc
+
 ---
 
 # Today

@@ -17,6 +17,8 @@ R: revise according to lec 7 and lec 9
 R: more on the blackboard
 R: add checklist questions at the end of the lecture
 
+R: CNN explainer (wow!) https://poloclub.github.io/cnn-explainer/
+
 ---
 
 class: middle

@@ -14,6 +14,10 @@ Good references:
 - https://arxiv.org/pdf/2208.11970.pdf
 - https://cvpr2022-tutorial-diffusion-models.github.io/
 - Understanding Deep Learning book
+- Continuous : infinite noise levels https://www.youtube.com/watch?v=wMmqCMwuM2Q (build some intuition first)
+
+Check SSI2023 talk for updates
+Give more intuition about the score function and about the annealing schedule
 
 ---
 

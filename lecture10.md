@@ -13,6 +13,8 @@ Prof. Gilles Louppe<br>
 R: better glue Normalizing Flows with the rest of the lecture -> if p(y|x) is complex, then it would require many mixture components to approximate it. We need a stronger class of density estimators.
 R: NFs are introduced as a way to estimate p(x) -> revise the notation to make it clear it can similarly be used to estimate p(y|x).
 
+Check SSI2023 talk (NFs part)
+
 ---
 
 class: middle
