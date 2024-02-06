@@ -98,6 +98,8 @@ This is the framing we will adopt in this course (starting from Lecture 2).
 
 # Empirical risk minimization
 
+The traditional perspective on supervised learning is empirical risk minimization.
+
 Consider a function $f : \mathcal{X} \to \mathcal{Y}$ produced by some learning algorithm. The predictions
 of this function can be evaluated through a loss
 $$\ell : \mathcal{Y} \times  \mathcal{Y} \to \mathbb{R},$$
@@ -312,6 +314,12 @@ $f\_3(x) = \sum\_{j=0}^{10^4} w\_j x^j$
 ]
 ]
 
+???
+
+In this course, we will argue for $f_3$. 
+
+Large parameter spaces are not a problem, as long as the capacity of the hypothesis space is controlled. For example, by using stochastic gradient descent, we can optimize $f_3$ without overfitting.
+
 ---
 
 class: middle
@@ -401,6 +409,10 @@ In practice, capacity can be controlled through hyper-parameters of the learning
 - The number of layers in a neural network;
 - The number of training iterations;
 - Regularization terms.
+
+???
+
+We talk about the capacity of the hypothesis space induced by the learning algorithm (parametric model + optimization algorithm). This is different from the capacity of the model itself.
 
 ---
 
@@ -599,6 +611,12 @@ class: middle
 .width-100[![](figures/lec1/double-descent.png)]
 
 .footnote[Credits: [Belkin et al, 2018](https://arxiv.org/abs/1812.11118).]
+
+???
+
+This plot is known as the "double descent" curve. It shows that the test error can decrease as the number of parameters increases, even after the model has enough capacity to fit the training data.
+
+The x-axis is misleading, as the number of parameters is not the same as the capacity. 
 
 ---
 

@@ -8,13 +8,6 @@ Lecture 0: Introduction
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-AI in medecine https://www.youtube.com/watch?v=AbdVsi1VjQY
-
-Solving tasks
-Solving new problems
-
 ---
 
 # Today
