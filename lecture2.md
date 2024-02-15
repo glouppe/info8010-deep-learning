@@ -8,10 +8,6 @@ Lecture 2: Multi-layer perceptron
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-Check https://www.eecs.yorku.ca/~kosta/Courses/EECS6322/
-
 ---
 
 # Today
@@ -36,18 +32,12 @@ class: middle
 
 .grid[
 .kol-3-5[
-The Threshold Logic Unit (McCulloch and Pitts, 1943) was the first mathematical model for a **neuron**.
+The Threshold Logic Unit (McCulloch and Pitts, 1943) $$f(\mathbf{x}) = 1_{\\{\sum_i w\_i x_i + b \geq 0\\}},$$ with Boolean inputs $x_i$, weights $w_i$ and bias $b$, was the first mathematical model for a **neuron**.
 
-
-Assuming Boolean inputs and outputs, it is defined as
-
-$$f(\mathbf{x}) = 1_{\\{\sum_i w\_i x_i + b \geq 0\\}}$$
-
-This unit can implement:
-
-- $\text{or}(a,b) = 1\_{\\\{a+b - 0.5 \geq 0\\\}}$
-- $\text{and}(a,b) = 1\_{\\\{a+b - 1.5 \geq 0\\\}}$
-- $\text{not}(a) = 1\_{\\\{-a + 0.5 \geq 0\\\}}$
+This unit can implement
+- $\text{or}(a,b) = 1\_{\\\{a+b - 0.5 \geq 0\\\}}$,
+- $\text{and}(a,b) = 1\_{\\\{a+b - 1.5 \geq 0\\\}}$,
+- $\text{not}(a) = 1\_{\\\{-a + 0.5 \geq 0\\\}}$.
 
 Therefore, any Boolean function can be built with such units.
 ]
@@ -60,12 +50,12 @@ Therefore, any Boolean function can be built with such units.
 
 # Perceptron
 
-The perceptron (Rosenblatt, 1957) is very similar, except that the inputs are real:
-
+The perceptron (Rosenblatt, 1957) 
 $$f(\mathbf{x}) = \begin{cases}
    1 &\text{if } \sum_i w_i x_i + b \geq 0  \\\\
    0 &\text{otherwise}
 \end{cases}$$
+is very similar, except that the inputs are real.
 
 This model was originally motivated by biology, with $w_i$ being synaptic weights and $x_i$ and $f$ firing rates.
 .center.width-65[![](figures/lec2/perceptron.jpg)]

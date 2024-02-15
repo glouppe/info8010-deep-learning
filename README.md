@@ -1,6 +1,6 @@
 # INFO8010 - Deep Learning
 
-Lectures for INFO8010 - Deep Learning, ULiège, Spring 2024.
+Lectures for INFO8010 Deep Learning, ULiège, Spring 2024.
 
 - Instructor: Gilles Louppe
 - Teaching assistants: Arnaud Delaunoy, François Rozet, Yann Claes, Victor Dachet
