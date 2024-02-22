@@ -11,6 +11,7 @@ Prof. Gilles Louppe<br>
 ???
 
 HydroGym (AI4science burnton)
+GradSim
 
 ---
 
@@ -59,7 +60,7 @@ class: middle
 
 ## Programs as differentiable functions
 
-A program is defined as a composition of primitive operations that we know how to derive individually.
+A program is defined as a composition of primitive operations that we know how to differentiate individually.
 
 ```python
 import jax.numpy as jnp
@@ -503,9 +504,9 @@ You should be using automatic differentiation (Ryan Adams, 2016)
 
 class: middle, center, black-slide
 
-<iframe width="600" height="450" src="https://www.youtube.com/embed/1ohtSlux9EQ?start=3440" frameborder="0" allowfullscreen></iframe>
+<iframe width="600" height="450" src="https://www.youtube.com/embed/YuVdk1b0TVw" frameborder="0" allowfullscreen></iframe>
 
-Learning protein structure with a differentiable simulator (Ingraham et al, 2019)
+Differentiable simulation for system identification and visuomotor control<br> (Murthy Jatavallabhula et al, 2021)
 
 ---
 
