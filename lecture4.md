@@ -52,6 +52,7 @@ A first step towards understanding, debugging and optimizing neural networks is 
 
 ---
 
+exclude: True
 class: middle
 
 .center.width-90[![](figures/lec4/tensorboard.png)]
@@ -62,9 +63,9 @@ class: middle
 
 class: middle
 
-.width-95[![](figures/lec4/wandb.jpg)]
+.width-95[![](figures/lec4/wandb.png)]
 
-.center[Weights & Biases]
+.center[Weights & Biases ([wandb.ai](https://wandb.ai/))]
 
 ---
 
@@ -344,8 +345,6 @@ class: middle, black-slide
 
 class: middle
 
-
-
 An improvement to gradient descent is to use **momentum** to add inertia in the choice of the step direction, that is
 
 $$\begin{aligned}
@@ -432,7 +431,6 @@ Vanilla gradient descent assumes the isotropy of the curvature, so that the same
 Isotropic vs. Anistropic
 ]
 
-
 ---
 
 class: middle
@@ -494,7 +492,6 @@ r\_t  &=  \rho\_2 r\_{t-1} + (1-\rho\_2) g\_t \odot g\_t \\\\
 - Good defaults are $\rho\_1=0.9$ and $\rho\_2=0.999$.
 - Adam is one of the **default optimizers** in deep learning, along with SGD with momentum.
 
-
 ---
 
 .center[
@@ -530,7 +527,17 @@ Training without (left) and with (right) weight decay.
 
 ---
 
-# Scheduling
+# Learning rate
+
+<br>
+
+.center[![](figures/lec4/lr-tweet.png)]
+
+---
+
+class: middle
+
+## Scheduling
 
 Despite per-parameter adaptive learning rate methods, it is usually helpful to **anneal the learning rate** $\gamma$ over time.
 
@@ -736,8 +743,7 @@ class: middle
 
 ## Data normalization
 
-Previous weight initialization strategies rely on preserving the activation variance constant across layers, under the initial assumption that the **input feature variances are the same**.
-
+Previous weight initialization strategies rely on preserving the activation variance constant across layers, under the assumption that the input feature variances are the same.
 That is,
 $$\mathbb{V}\left[x\_i\right] = \mathbb{V}\left[x\_j\right] \triangleq \mathbb{V}\left[x\right]$$
 for all pairs of features $i,j$.
@@ -782,18 +788,6 @@ This constraint can be enforced explicitly during the forward pass by re-normali
 
 class: middle
 
-During training, batch normalization shifts and rescales according to the mean and variance estimated on the batch.
-
-During test, it shifts and rescales according to the empirical moments estimated during training.
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-
-.center.width-50[![](figures/lec4/bn.svg)]
-
 Let us consider a minibatch of samples at training, for which $\mathbf{u}\_b \in \mathbb{R}^q$, $b=1, ..., B$, are intermediate values computed at some location in the computational graph.
 
 In batch normalization following the node $\mathbf{u}$, the per-component mean and variance are first computed on the batch
@@ -808,6 +802,8 @@ $$
 $$
 where $\gamma, \beta \in \mathbb{R}^q$ are parameters to optimize.
 
+During testing, the mean and variance computed on the entire training set and used to standardize the activations.
+
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
 ???
@@ -818,18 +814,18 @@ Exercise: How does batch normalization combine with backpropagation?
 
 class: middle
 
-During inference, batch normalization shifts and rescales each component according to the empirical moments estimated during training:
-$$\mathbf{u}' = \gamma \odot (\mathbf{u} - \hat{\mu}) \odot \frac{1}{\hat{\sigma}} + \beta.$$
+.center.width-100[![](figures/lec4/bn-results.png)]
 
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+.footnote[Credits: Ioffe and Szegedy, [Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift](https://arxiv.org/abs/1502.03167), 2015.]
 
 ---
 
 class: middle
 
-.center.width-100[![](figures/lec4/bn-results.png)]
+## Layer normalization
 
-.footnote[Credits: Ioffe and Szegedy, [Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift](https://arxiv.org/abs/1502.03167), 2015.]
+**Layer normalization** is a variant of batch normalization that normalizes the activations across the features of each sample, rather than across the samples of each feature:
+$$\mathbf{u}' = \gamma\odot (\mathbf{u} - \hat{\mu}\_\text{layer}) \odot \frac{1}{\hat{\sigma}\_\text{layer} + \epsilon} + \beta.$$
 
 ---
 
