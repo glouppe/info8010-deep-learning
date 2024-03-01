@@ -13,8 +13,8 @@ Some general potential problems could be the following:
 
 ### Agenda
 
-- Project proposal, due by **March 20, 2023**.
-- Project code and report, due by **May 19, 2023**.
+- Project proposal, due by **March 18, 2024**.
+- Project code and report, due by **May 17, 2024**.
 
 Projects should be submitted on Gradescope.
 
