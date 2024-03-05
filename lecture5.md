@@ -8,19 +8,9 @@ Lecture 5: Convolutional networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-R: trim down 10~ slides
-R: compare *visually* against FC, to be later compared against attention
-R: formulate convolution in a way which is then consistent with attention and FC
-R: revise according to lec 7 and lec 9
-R: more on the blackboard
-R: add checklist questions at the end of the lecture
-
-R: CNN explainer (wow!) https://poloclub.github.io/cnn-explainer/
-
 ---
 
+count: false
 class: middle
 
 .center.width-60[![](figures/lec0/map.png)]
@@ -65,20 +55,6 @@ class: middle, black-slide
 
 ]
 
-.center[Hubel and Wiesel]
-
----
-
-class: middle, black-slide
-
-.center[
-
-<iframe width="640" height="480" src="https://www.youtube.com/embed/y_l4kQ5wjiw?&loop=1&start=97" frameborder="0" volume="0" allowfullscreen></iframe>
-
-]
-
-.center[Hubel and Wiesel]
-
 ???
 
 During their recordings, they noticed a few interesting things:
@@ -88,19 +64,13 @@ During their recordings, they noticed a few interesting things:
 
 ---
 
-class: middle
+class: middle, black-slide
 
-.width-100.center[![](figures/lec5/hw-simple.png)]
+.center[
 
-.footnote[Credits: Hubel and Wiesel, [Receptive fields, binocular interaction and functional architecture in the cat's visual cortex](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1359523/), 1962.]
+<iframe width="640" height="480" src="https://www.youtube.com/embed/OGxVfKJqX5E?&loop=1" frameborder="0" volume="0" allowfullscreen></iframe>
 
----
-
-class: middle
-
-.width-100.center[![](figures/lec5/hw-complex.png)]
-
-.footnote[Credits: Hubel and Wiesel, [Receptive fields, binocular interaction and functional architecture in the cat's visual cortex](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1359523/), 1962.]
+]
 
 ---
 
@@ -138,7 +108,7 @@ class: middle
 
 ## Convolutional networks 
 
-In 1990, LeCun trains a convolutional network by backpropagation.
+In the 1980-90s, LeCun trains a convolutional network by backpropagation.
 He advocates for end-to-end feature learning in image classification.
 
 <br>
@@ -148,18 +118,6 @@ He advocates for end-to-end feature learning in image classification.
 
 ---
 
-class: middle, black-slide
-
-.center[
-
-<iframe width="640" height="480" src="https://www.youtube.com/embed/FwFduRA_L6Q?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
-
-]
-
-.center[LeNet-1 (LeCun et al, 1993)]
-
----
-
 class: middle
 
 # Convolutions
@@ -168,35 +126,30 @@ class: middle
 
 class: middle
 
-.center.width-80[![](figures/lec5/mlp-image1.png)]
+.center.width-100[![](figures/lec5/ConvEquiInv.svg)]
 
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL; Michael Bronstein, [Geometric Deep Learning](https://drive.google.com/file/d/14H8KXBpkJBlqINTLOTvlTRMh-WLkGo4-/view), 2020.]
+.center[Invariance and equivariance for translation.]
 
----
-
-count: false
-class: middle
-
-.center.width-80[![](figures/lec5/mlp-image2.png)]
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL; Michael Bronstein, [Geometric Deep Learning](https://drive.google.com/file/d/14H8KXBpkJBlqINTLOTvlTRMh-WLkGo4-/view), 2020.]
+.footnote[Credits: Simon J.D. Prince, [Understanding Deep Learning](https://udlbook.github.io/udlbook/), 2023.]
 
 ---
 
-class: middle
+class: middle 
 
-If they were handled as normal "unstructured" vectors, high-dimensional signals such as sound samples or images would require models of intractable size.
+Formally, a function $f$ is 
+- .bold[invariant] to $g$ if $f(g(\mathbf{x})) = f(\mathbf{x})$ 
+- .bold[equivariant] to $g$ if $f(g(\mathbf{x})) = g(f(\mathbf{x}))$.
 
-Large signals have some "invariance in translation". A representation meaningful at a certain location **should be used everywhere**.
+How can we enforce these properties in a neural network?
 
 ---
 
-# Convolutions
+# Convolutional layers
 
-A convolution layer applies the same linear transformation locally everywhere while preserving the signal structure.
+A convolutional layer applies the same linear transformation locally everywhere while preserving the signal structure.
 
 <br>
-.center[![](figures/lec5/1d-conv.gif)]
+.center.width-65[![](figures/lec5/1d-conv.gif)]
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
@@ -208,12 +161,11 @@ Draw on tablet, but vertically.
 
 class: middle
 
-## 1D convolution
+## 1d convolution
 
-For one-dimensional tensors, given an input vector $\mathbf{x} \in \mathbb{R}^W$ and a convolutional kernel $\mathbf{u} \in \mathbb{R}^w$,
-the discrete **convolution** $\mathbf{x} \circledast \mathbf{u}$ is a vector of size $W - w + 1$ such that
+For the one-dimensional input $\mathbf{x} \in \mathbb{R}^W$ and the convolutional kernel $\mathbf{u} \in \mathbb{R}^w$, the discrete **convolution** $\mathbf{x} \circledast \mathbf{u}$ is a vector of size $W - w + 1$ such that
 $$\begin{aligned}
-(\mathbf{x} \circledast \mathbf{u})[i] &= \sum\_{m=0}^{w-1} x\_{m+i}  u\_m .
+(\mathbf{x} \circledast \mathbf{u})[i] &= \sum\_{m=0}^{w-1} \mathbf{x}\_{m+i}  \mathbf{u}\_m .
 \end{aligned}
 $$
 
@@ -230,21 +182,42 @@ Convolutions can implement differential operators:
 $$(0,0,0,0,1,2,3,4,4,4,4) \circledast (-1,1) = (0,0,0,1,1,1,1,0,0,0) $$
 .center.width-100[![](figures/lec5/conv-op1.png)]
 or crude template matchers:
+$$(0, 0, 3, 0, 0, 0, 0, 0, 3, 0, 3, 0, 0, 0) \circledast (1, 0, 1) = (3, 0, 3, 0, 0, 0, 3, 0, 6, 0, 3, 0)$$
 .center.width-100[![](figures/lec5/conv-op2.png)]
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
 
 ---
 
 class: middle
 
-## n-D convolution
+## 2d convolution
 
-Convolutions generalize to multi-dimensional tensors:
-- In its most usual form, a convolution takes as input a 3D tensor $\mathbf{x} \in \mathbb{R}^{C \times H \times W}$, called the **input feature map**, where $C$ is the number of input channels.
-- A kernel $\mathbf{u} \in \mathbb{R}^{C \times h \times w}$ slides across the input feature map, along its height and width. The size $h \times w$ is the size of the *receptive field*.
-- At each location,  the element-wise product between the kernel and the input elements it overlaps is computed and the results are summed up.
+For the 2d input tensor $\mathbf{x} \in \mathbb{R}^{H \times W}$ and the 2d convolutional kernel $\mathbf{u} \in \mathbb{R}^{h \times w}$, the discrete **convolution** $\mathbf{x} \circledast \mathbf{u}$ is a matrix of size $(H-h+1) \times (W-w+1)$ such that
+$$(\mathbf{x} \circledast \mathbf{u})[j,i] = \sum\_{n=0}^{h-1} \sum\_{m=0}^{w-1}    \mathbf{x}\_{n+j,m+i} \mathbf{u}\_{n,m}$$
+
+???
+
+Draw: Explain the intuition behind the sum of element-wise products which reduces to an inner product between the kernel and a region of the input.
+
+---
+
+class: middle
+
+## Channels
+
+The 2d convolution can be extended to tensors with multiple channels.
+
+For the 3d input tensor $\mathbf{x} \in \mathbb{R}^{C \times H \times W}$ and the 3d convolutional kernel $\mathbf{u} \in \mathbb{R}^{C \times h \times w}$, the discrete **convolution** $\mathbf{x} \circledast \mathbf{u}$ is a tensor of size $(H-h+1) \times (W-w+1)$ such that
+$$(\mathbf{x} \circledast \mathbf{u})[j,i] = \sum\_{c=0}^{C-1}\sum\_{n=0}^{h-1} \sum\_{m=0}^{w-1}    \mathbf{x}\_{c,n+j,m+i} \mathbf{u}\_{c,n,m}$$
+
+---
+
+class: middle
+
+## Convolutional layers
+
+A convolutional layer is defined by a set of $K$ kernels $\mathbf{u}$ of size $C \times h \times w$. It applies the 2d convolution operation to the input tensor $\mathbf{x}$ of size $C \times H \times W$ to produce a set of $K$ feature maps $\mathbf{o}$.
 
 ---
 
@@ -253,23 +226,6 @@ class: middle
 .center[![](figures/lec5/3d-conv.gif)]
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-
-- The final output $\mathbf{o}$ is a 2D tensor of size $(H-h+1) \times (W-w+1)$ called the **output feature map** and such that:
-$$\begin{aligned}
-\mathbf{o}\_{j,i} &= \sum\_{c=0}^{C-1} (\mathbf{x}\_c \circledast \mathbf{u}\_c)[j,i] = \sum\_{c=0}^{C-1}  \sum\_{n=0}^{h-1} \sum\_{m=0}^{w-1}    \mathbf{x}\_{c,n+j,m+i} \mathbf{u}\_{c,n,m}
-\end{aligned}$$
-where $\mathbf{u}$ is a shared parameter to learn.
-- $D$ convolutions can be applied in the same way to produce a $D \times (H-h+1) \times (W-w+1)$ feature map,
-where $D$ is the number of output channels.
-- Swiping across channels with a 3D convolution usually makes no sense, unless the channel index has some metric meaning.
-
-???
-
-Draw: Explain the intuition behind the sum of element-wise products which reduces to an inner product between the kernel and a region of the input.
 
 ---
 
@@ -312,7 +268,6 @@ Stride is useful to reduce the spatial dimension of the feature map by a constan
 
 .footnote[Credits: Dumoulin and Visin, [A guide to convolution arithmetic for deep learning](https://arxiv.org/abs/1603.07285), 2016.]
 
-
 ---
 
 class: middle 
@@ -331,21 +286,19 @@ Having a dilation coefficient greater than one increases the units receptive fie
 
 ---
 
-# Equivariance
+class: middle
 
-A function $f$ is **equivariant** to $g$ if $f(g(\mathbf{x})) = g(f(\mathbf{x}))$.
-- Parameter sharing used in a convolutional layer causes the layer to be equivariant to translation.
-- If $g$ is any function that translates the input, the convolution function is equivariant to $g$.
+## Equivariance
 
-.center.width-50[![](figures/lec5/atrans.gif)]
+Parameter sharing used in a convolutional layer causes the layer to be equivariant to translation.
+
+.center.width-75[![](figures/lec5/atrans.gif)]
 
 .caption[If an object moves in the input image, its representation will move the same amount in the output.]
 
 .footnote[Credits: LeCun et al, Gradient-based learning applied to document recognition, 1998.]
 
----
-
-class: middle
+???
 
 - Equivariance is useful when we know some local function is useful everywhere (e.g., edge detectors).
 - Convolution is not equivariant to other operations such as change in scale or rotation.
@@ -425,13 +378,13 @@ Insist on how inductive biases are enforced through architecture:
 
 ---
 
-class: middle, center
+class: middle
 
-![](figures/lec5/convolution.svg)
+.center.width-100[![](figures/lec5/Conv2a.svg)]
 
-$$\Leftrightarrow$$
+.center[Fully connected vs convolutional layers.]
 
-![](figures/lec5/convolution-linear.svg)
+.footnote[Credits: Simon J.D. Prince, [Understanding Deep Learning](https://udlbook.github.io/udlbook/), 2023.]
 
 ---
 
@@ -450,7 +403,7 @@ preserving its global structure, in a way similar to a down-scaling operation.
 
 # Pooling
 
-Consider a pooling area of size $h \times w$ and a 3D input tensor $\mathbf{x} \in \mathbb{R}^{C\times(rh)\times(sw)}$.
+Consider a pooling area of size $h \times w$ and a 3d input tensor $\mathbf{x} \in \mathbb{R}^{C\times(rh)\times(sw)}$.
 - Max-pooling produces a tensor $\mathbf{o} \in \mathbb{R}^{C \times r \times s}$
 such that
 $$\mathbf{o}\_{c,j,i} = \max\_{n < h, m < w} \mathbf{x}_{c,rj+n,si+m}.$$
@@ -469,16 +422,19 @@ class: middle
 
 ---
 
-# Invariance
+class: middle
 
-A function $f$ is **invariant** to $g$ if $f(g(\mathbf{x})) = f(\mathbf{x})$.
-- Pooling layers provide invariance to any permutation inside one cell.
-- It results in (pseudo-)invariance to local translations.
-- This helpful if we care more about the presence of a pattern rather than its exact position.
+## Invariance
+
+Pooling layers provide invariance to any permutation inside one cell, which results in (pseudo-)invariance to local translations.
 
 .center.width-60[![](figures/lec5/pooling-invariance.png)]
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+???
+
+This helpful if we care more about the presence of a pattern rather than its exact position.
 
 ---
 
@@ -535,11 +491,15 @@ class: middle, center
 
 (demo)
 
+???
+
+Notebook and https://poloclub.github.io/cnn-explainer/
+
 ---
 
-class: middle
+# Common architectures
 
-.center.width-80[![](figures/lec5/zoo.png)]
+.center.width-70[![](figures/lec5/zoo.png)]
 
 .footnote[Credits: [Bianco et al](https://arxiv.org/abs/1810.00736), 2018.]
 
@@ -554,6 +514,18 @@ Composition of two $\texttt{CONV}+\texttt{POOL}$ layers, followed by a block of 
 .center.width-110[![](figures/lec5/lenet.svg)]
 
 .footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
+
+---
+
+class: middle, black-slide
+
+.center[
+
+<iframe width="640" height="480" src="https://www.youtube.com/embed/FwFduRA_L6Q?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
+
+]
+
+.center[LeNet-1 (LeCun et al, 1993)]
 
 ---
 
@@ -601,14 +573,21 @@ The network depth increased up to 19 layers, while the kernel sizes reduced to 3
 
 class: middle
 
-.center.width-60[![](figures/lec5/effective-receptive-field.png)]
-
-The **effective receptive field** is the part of the visual input that affects a given unit indirectly through previous convolutional layers. It grows linearly with depth. 
-
-E.g., a stack of two $3 \times 3$ kernels of stride $1$ has the same effective receptive field as a single $5 \times 5$ kernel, but fewer parameters.
+The .bold[effective receptive field] is the part of the visual input that affects a given unit indirectly through previous convolutional layers. 
+- It grows linearly with depth when chaining convolutional layers.
+- It grows exponentially with depth when pooling layers (or strided convolutions) are interleaved with convolutional layers.
 
 ---
 
+class: middle
+
+.center.width-75[![](figures/lec5/ConvNetworkRF.svg)]
+
+.footnote[Credits: Simon J.D. Prince, [Understanding Deep Learning](https://udlbook.github.io/udlbook/), 2023.]
+
+---
+
+exclude: true
 class: middle
 
 .grid[
@@ -636,7 +615,7 @@ class: middle
 
 ## ResNet (He et al, 2015)
 
-Composition of first layers similar to GoogLeNet, a stack of 4 residual blocks, and a global average pooling layer. Extensions consider more residual blocks, up to a total of 152 layers (ResNet-152).
+Composition of convolutional and pooling layers organized in a stack of residual blocks. Extensions consider more residual blocks, up to a total of 152 layers (ResNet-152).
 
 .center.width-80[![](figures/lec5/resnet-block.svg)]
 .center.caption[Regular ResNet block vs. ResNet block with $1\times 1$ convolution.]
@@ -650,7 +629,7 @@ Composition of first layers similar to GoogLeNet, a stack of 4 residual blocks, 
 
 class: middle
 
-Training networks of this depth is made possible because of the **skip connections** in the residual blocks. They allow the gradients to shortcut the layers and pass through without vanishing.
+Training networks of this depth is made possible because of the .bold[skip connections] $\mathbf{h} = \mathbf{x} + f(\mathbf{x})$ in the residual blocks. They allow the gradients to shortcut the layers and pass through without vanishing.
 
 .center.width-60[![](figures/lec5/residual-block.svg)]
 
@@ -694,6 +673,7 @@ rather than conventional single-dimension scaling
 
 ---
 
+exclude: true
 class: middle
 
 .center.width-100[![](figures/lec5/scaling.png)]
@@ -884,13 +864,14 @@ count: false
 
 The end.
 
----
+???
 
-count: false
-
-# References
-
-- Francois Fleuret, Deep Learning Course, [4.4. Convolutions](https://fleuret.org/ee559/ee559-slides-4-4-convolutions.pdf), EPFL, 2018.
-- Yannis Avrithis, Deep Learning for Vision, [Lecture 1: Introduction](https://sif-dlv.github.io/slides/intro.pdf), University of Rennes 1, 2018.
-- Yannis Avrithis, Deep Learning for Vision, [Lecture 7: Convolution and network architectures ](https://sif-dlv.github.io/slides/conv.pdf), University of Rennes 1, 2018.
-- Olivier Grisel and Charles Ollion, Deep Learning, [Lecture 4: Convolutional Neural Networks for Image Classification ](https://m2dsupsdlclass.github.io/lectures-labs/slides/04_conv_nets/index.html#1), Université Paris-Saclay, 2018.
+Checklist: You want to classify cats and dogs. 
+- What kind of network would you use?
+- What architecture would you use? (list of layers, output size, etc)
+- What size of kernels would you use? How many kernels per layer?
+- What kind of pooling would you use?
+- What kind of activation function would you use?
+- What loss function would you use?
+- How would you initialize the weights?
+- How would you train the network?
