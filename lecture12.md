@@ -16,8 +16,9 @@ Good references:
 - Understanding Deep Learning book
 - Continuous : infinite noise levels https://www.youtube.com/watch?v=wMmqCMwuM2Q (build some intuition first)
 
-Check SSI2023 talk for updates
-Give more intuition about the score function and about the annealing schedule
+- Check SSI2023 talk for updates
+- Rewrite to better match the sidenotes
+- Give more intuition about the score function and about the annealing schedule
 
 ---
 

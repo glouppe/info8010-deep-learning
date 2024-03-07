@@ -10,7 +10,7 @@ Prof. Gilles Louppe<br>
 
 ???
 
-R: Rewrite to better match the sidenotes.
+R: Rewrite to better match the sidenotes.!!!
 
 ---
 

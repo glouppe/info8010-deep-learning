@@ -25,7 +25,6 @@ How to **make neural networks see**?
 - Convolutions
 - Pooling
 - Convolutional networks
-- Under the hood
 
 ---
 
@@ -78,9 +77,24 @@ class: middle, black-slide
 
 Can we equip neural networks with **inductive biases** tailored for vision?
 
-- Locality
-- Invariance to translation
-- Hierarchical compositionality
+- Locality (as in simple cells)
+- Invariance translation (as in complex cells)
+- Hierarchical compositionality (as in hypercomplex cells)
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec5/ConvEquiInv.svg)]
+
+.center[Invariance and equivariance to translation.]
+
+.footnote[Credits: Simon J.D. Prince, [Understanding Deep Learning](https://udlbook.github.io/udlbook/), 2023.]
+
+???
+
+- The classification of the shifted image should be the same as the classification of the original image. 
+- The segmentation of the shifted image should be the shifted segmentation of the original image.
 
 ---
 
@@ -124,26 +138,6 @@ class: middle
 
 ---
 
-class: middle
-
-.center.width-100[![](figures/lec5/ConvEquiInv.svg)]
-
-.center[Invariance and equivariance for translation.]
-
-.footnote[Credits: Simon J.D. Prince, [Understanding Deep Learning](https://udlbook.github.io/udlbook/), 2023.]
-
----
-
-class: middle 
-
-Formally, a function $f$ is 
-- .bold[invariant] to $g$ if $f(g(\mathbf{x})) = f(\mathbf{x})$ 
-- .bold[equivariant] to $g$ if $f(g(\mathbf{x})) = g(f(\mathbf{x}))$.
-
-How can we enforce these properties in a neural network?
-
----
-
 # Convolutional layers
 
 A convolutional layer applies the same linear transformation locally everywhere while preserving the signal structure.
@@ -155,7 +149,7 @@ A convolutional layer applies the same linear transformation locally everywhere 
 
 ???
 
-Draw on tablet, but vertically.
+Draw vertically.
 
 ---
 
@@ -217,7 +211,7 @@ class: middle
 
 ## Convolutional layers
 
-A convolutional layer is defined by a set of $K$ kernels $\mathbf{u}$ of size $C \times h \times w$. It applies the 2d convolution operation to the input tensor $\mathbf{x}$ of size $C \times H \times W$ to produce a set of $K$ feature maps $\mathbf{o}$.
+A convolutional layer is defined by a set of $K$ kernels $\mathbf{u}\_k$ of size $C \times h \times w$. It applies the 2d convolution operation to the input tensor $\mathbf{x}$ of size $C \times H \times W$ to produce a set of $K$ feature maps $\mathbf{o}\_k$.
 
 ---
 
@@ -289,6 +283,9 @@ Having a dilation coefficient greater than one increases the units receptive fie
 class: middle
 
 ## Equivariance
+
+
+Formally, a function $f$ is equivariant to $g$ if $f(g(\mathbf{x})) = g(f(\mathbf{x}))$.
 
 Parameter sharing used in a convolutional layer causes the layer to be equivariant to translation.
 
@@ -426,6 +423,8 @@ class: middle
 
 ## Invariance
 
+Formally, a function $f$ is invariant to $g$ if $f(g(\mathbf{x})) = f(\mathbf{x})$.
+
 Pooling layers provide invariance to any permutation inside one cell, which results in (pseudo-)invariance to local translations.
 
 .center.width-60[![](figures/lec5/pooling-invariance.png)]
@@ -493,11 +492,13 @@ class: middle, center
 
 ???
 
-Notebook and https://poloclub.github.io/cnn-explainer/
+https://poloclub.github.io/cnn-explainer/
+
+Notebook `lec5`.
 
 ---
 
-# Common architectures
+# Architectures (some)
 
 .center.width-70[![](figures/lec5/zoo.png)]
 
@@ -734,20 +735,25 @@ AlexNet's first convolutional layer, first 20 filters.
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
-
-
 ---
 
 # Maximum response samples
 
-Convolutional networks can be inspected by looking for synthetic input images $\mathbf{x}$ that maximize the activation $\mathbf{h}\_{\ell,d}(\mathbf{x})$ of a chosen convolutional kernel $\mathbf{u}$ at layer $\ell$ and index $d$ in the layer filter bank.
+
+Convolutional networks can be inspected by looking for synthetic input images $\mathbf{x}$ that maximize the activation $\mathbf{h}_{\ell,d}(\mathbf{x})$ of a chosen convolutional kernel $\mathbf{u}$ at layer $\ell$ and index $d$ in the layer filter bank.
 
 These samples can be found by gradient ascent on the input space:
-$$\begin{aligned}
+
+$$
+\begin{aligned}
 \mathcal{L}\_{\ell,d}(\mathbf{x}) &= ||\mathbf{h}\_{\ell,d}(\mathbf{x})||\_2\\\\
 \mathbf{x}\_0 &\sim U[0,1]^{C \times H \times W } \\\\
 \mathbf{x}\_{t+1} &= \mathbf{x}\_t + \gamma \nabla\_{\mathbf{x}} \mathcal{L}\_{\ell,d}(\mathbf{x}\_t)
-\end{aligned}$$
+\end{aligned}
+$$
+
+Here, $\mathcal{L}\_{\ell,d}(\mathbf{x})$ represents the L2 norm of the activation $\mathbf{h}\_{\ell,d}(\mathbf{x})$, $\mathbf{x}\_0$ is the initial random input, $\mathbf{x}\_{t+1}$ is the updated input at iteration $t+1$, and $\gamma$ is the learning rate.
+
 
 ---
 
@@ -762,6 +768,7 @@ class: middle
 ---
 
 class: middle
+count: false
 
 .width-100[![](figures/lec5/vgg16-conv2.jpg)]
 
@@ -772,6 +779,7 @@ class: middle
 ---
 
 class: middle
+count: false
 
 .width-100[![](figures/lec5/vgg16-conv3.jpg)]
 
@@ -782,6 +790,7 @@ class: middle
 ---
 
 class: middle
+count: false
 
 .width-100[![](figures/lec5/vgg16-conv4.jpg)]
 
@@ -792,6 +801,7 @@ class: middle
 ---
 
 class: middle
+count: false
 
 .width-100[![](figures/lec5/vgg16-conv5.jpg)]
 
@@ -803,16 +813,16 @@ class: middle
 
 class: middle
 
-Some observations:
-- The first layers appear to encode direction and color.
-- The direction and color filters get combined into grid and spot textures.
-- These textures gradually get combined into increasingly complex patterns.
+The network appears to learn a hierarchical composition of patterns:
+- The first layers of the network seem to encode basic features such as direction and color.
+- These basic features are then combined to form more complex textures, such as grids and spots.
+- Finally, these textures are further combined to create increasingly intricate patterns.
 
-The network appears to learn a .bold[hierarchical composition of patterns].
-
-.width-70.center[![](figures/lec5/lecun-filters.png)]
+.width-50.center[![](figures/lec5/lecun-filters.png)]
 
 ---
+
+exclude: true
 
 <br><br><br>
 
@@ -820,6 +830,7 @@ What if we build images that maximize the activation of a chosen class output?
 
 --
 
+exclude: true
 count: false
 
 The left image is predicted **with 99.9% confidence** as a magpie!
@@ -833,6 +844,7 @@ The left image is predicted **with 99.9% confidence** as a magpie!
 
 ---
 
+exclude: true
 class: middle, black-slide
 
 .center[
