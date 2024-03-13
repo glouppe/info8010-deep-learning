@@ -11,6 +11,8 @@ Prof. Gilles Louppe<br>
 ???
 
 Do we need attention? https://www.youtube.com/watch?v=dKJEpOtVgXc
+ViT
+SAM (decoder produces a sequence of masks, boxes, etc)
 
 ---
 

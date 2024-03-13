@@ -101,11 +101,15 @@ strong {
     background-color: #FFFF00; 
 }
 
-.smaller {
+.smaller, .smaller .katex {
     font-size: 1.2em;
 }
 
-.smaller-x {
+.smaller2, .smaller2 .katex {
+    font-size: 1.0em;
+}
+
+.smaller-x, .smaller-x .katex{
     font-size: 0.8em;
 }
 
@@ -120,7 +124,6 @@ strong {
 .katex {
     color: #356aaf;
     font-size: 18pt;
-    
 }
 
 .black-slide .katex, .black-slide h1 {

@@ -8,6 +8,12 @@ Lecture 5: Convolutional networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+R: Put back the slide on the hierarchical composition of patterns
+R: At the same time, explain why we typically increase the number of filters as we go deeper in the network.
+R: use figure 10.21 of udl for model vs performance on imagenet
+
 ---
 
 count: false
@@ -54,13 +60,6 @@ class: middle, black-slide
 
 ]
 
-???
-
-During their recordings, they noticed a few interesting things:
-1. the neurons fired only when the line was in a particular place on the retina,
-2. the activity of these neurons changed depending on the orientation of the line, and
-3. sometimes the neurons fired only when the line was moving in a particular direction.
-
 ---
 
 class: middle, black-slide
@@ -70,6 +69,13 @@ class: middle, black-slide
 <iframe width="640" height="480" src="https://www.youtube.com/embed/OGxVfKJqX5E?&loop=1" frameborder="0" volume="0" allowfullscreen></iframe>
 
 ]
+
+???
+
+During their recordings, they noticed a few interesting things:
+1. the neurons fired only when the line was in a particular place on the retina,
+2. the activity of these neurons changed depending on the orientation of the line, and
+3. sometimes the neurons fired only when the line was moving in a particular direction.
 
 ---
 
@@ -372,6 +378,10 @@ connected layer: $$\mathbf{h} = \mathbf{x} \circledast \mathbf{u} \Leftrightarro
 Insist on how inductive biases are enforced through architecture:
 - locality is enforced through sparsity and band structure
 - equivariance is enforced through replication and weight sharing
+
+Training:
+- The backward pass is not implemented naively as the backward pass of a fully connected layer.
+- The backward pass is also a convolution! 
 
 ---
 

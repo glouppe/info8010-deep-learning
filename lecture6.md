@@ -11,25 +11,30 @@ Prof. Gilles Louppe<br>
 ???
 
 R: YOLOv8 https://twitter.com/LearnOpenCV/status/1613177011048189952
+R: panoptic segmentation
+R: more on une, check udl
+R: demo with sam or better model
 
 ---
 
 # Today 
 
-Advanced deep neural networks for (some) computer vision tasks:
+How to build neural networks for advanced computer vision tasks.
 - Classification
 - Object detection
-- Semantic segmentation
+- Segmentation
 
 ---
 
 class: middle
 
-.width-80.center[![](figures/lec6/tasks.jpg)]
-
-.caption[Some of the main computer vision tasks.<br> Each of them requires a different neural network architecture.]
+.width-90.center[![](figures/lec6/tasks.jpg)]
 
 .footnote[Credits: [Aurélien Géron](https://www.oreilly.com/content/introducing-capsule-networks/), 2018.]
+
+???
+
+Each of these tasks requires a different neural network architecture.
 
 ---
 
@@ -75,15 +80,8 @@ The lack of data is the biggest limit to the performance of deep learning models
 
 class: middle
 
-.center.width-100[![](figures/lec6/augmentation.png)]
-
-.footnote[Credits: [DeepAugment](https://github.com/barisozmen/deepaugment), 2020.]
-
----
-
-class: middle
-
-.center.width-100[![](figures/lec6/deepaugment.png)]
+.center.width-80[![](figures/lec6/augmentation.png)]
+.center.width-85[![](figures/lec6/deepaugment.png)]
 
 .footnote[Credits: [DeepAugment](https://github.com/barisozmen/deepaugment), 2020.]
 
@@ -93,8 +91,8 @@ class: middle
 
 ## Pre-trained models
 
-- Training a model on natural images, from scratch, takes **days or weeks**.
-- Many models trained on ImageNet are publicly available for download. These models can be used as *feature extractors* or for smart *initialization*.
+- Training a model on natural images, from scratch, takes days or weeks.
+- Many models pre-trained on large datasets are publicly available for download. These models can be used as *feature extractors* or for smart **initialization**.
 - The models themselves should be considered as generic and re-usable assets.
 
 ---
@@ -120,8 +118,8 @@ class: middle
 
 ## Fine-tuning
 
-- Same as for transfer learning, but also *fine-tune* the weights of the pre-trained network by continuing backpropagation.
-- All or only some of the layers can be tuned.
+Same as for transfer learning, but also *fine-tune* the weights of the pre-trained network by continuing backpropagation.
+All or only some of the layers can be tuned.
 
 .footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
 
@@ -153,6 +151,7 @@ The simplest strategy to move from image classification to object detection is t
 
 ---
 
+exclude: true
 class: middle
 
 ## Intersection over Union (IoU)
@@ -167,6 +166,7 @@ $$\text{IoU}(B,\hat{B}) = \frac{\text{area}(B \cap \hat{B})}{\text{area}(B \cup 
 
 ---
 
+exclude: true
 class: middle 
 
 ## Mean Average Precision (mAP)
@@ -193,7 +193,7 @@ class: middle
 
 The sliding window approach evaluates a classifier at a large number of locations and scales. 
 
-This approach is usually **very computationally expensive** as performance directly depends on the resolution and number of the windows fed to the classifier (the more the better, but also the more costly). 
+This approach is usually .bold[computationally expensive] as performance directly depends on the resolution and number of the windows fed to the classifier (the more the better, but also the more costly). 
 
 ---
 
@@ -202,9 +202,8 @@ This approach is usually **very computationally expensive** as performance direc
 .grid[
 .kol-2-3[
 
-The complexity of the sliding window approach was mitigated in the pioneer OverFeat network (Sermanet et al, 2013) by adding a **regression head** to predict the object *bounding box* $(x,y,w,h)$.
+The complexity of the sliding window approach was mitigated in the pioneer OverFeat network (Sermanet et al, 2013) by adding a **regression head** to predict the object bounding box $(x,y,w,h)$.
 
-For training, the convolutional layers are fixed and the regression network is trained using an $\ell\_2$ loss between the predicted and the true bounding box.
 ]
 .kol-1-3[.center.width-100[![](figures/lec6/overfeat.png)]]
 ]
@@ -215,19 +214,12 @@ For training, the convolutional layers are fixed and the regression network is t
 
 class: middle
 
-.center.width-80[![](figures/lec6/overfeat-grid.png)]
+.center[.width-45[![](figures/lec6/overfeat-grid.png)] .width-45[![](figures/lec6/overfeat-predictions.png)]]
 
-The classifier head outputs a class and a confidence for each location and scale pre-defined from a .bold[coarse] grid. Each window is resized to fit with the input dimensions of the classifier.
+For each location and scale pre-defined from a .bold[coarse] grid,
+- the classifier head outputs a class and a confidence (left);
+- the regression head predicts the location of the object (right).
 
-.footnote[Credits: Sermanet et al, 2013.]
-
----
-
-class: middle
-
-.center.width-80[![](figures/lec6/overfeat-predictions.png)]
-
-The regression head predicts the location of the object for each location and scale.
 
 .footnote[Credits: Sermanet et al, 2013.]
 
@@ -237,7 +229,7 @@ class: middle
 
 .center.width-60[![](figures/lec6/overfeat-merge.png)]
 
-These bounding boxes are finally merged by *Non-Maximum Suppression* to produce the final predictions over a small number of objects.
+These bounding boxes are finally merged by .bold[Non-Maximum Suppression] to produce the final predictions over a small number of objects.
 
 .footnote[Credits: Sermanet et al, 2013.]
 
@@ -256,7 +248,7 @@ The OverFeat architecture comes with several **drawbacks**:
 
 .center.width-65[![](figures/lec6/yolo-model.png)]
 
-YOLO (You Only Look Once; Redmon et al, 2015) models detection as a regression problem. 
+YOLO (Redmon et al, 2015) models detection as a regression problem. 
 
 The image is divided into an $S\times S$ grid and for each grid cell predicts $B$ bounding boxes, confidence for those boxes, and $C$ class probabilities. These predictions are encoded as an $S \times S \times (5B + C)$ tensor.
 
@@ -301,7 +293,7 @@ During training, YOLO makes the assumptions that any of the $S\times S$ cells co
 class: middle
 
 The training procedure first computes on each image the value of the $\mathbb{1}\_{i,j}^\text{obj}$'s and $c\_{i,j}$, and then does one step to minimize the multi-part loss function
-.smaller-x[
+.smaller2[
 $$
 \begin{aligned}
 & \lambda\_\text{coord} \sum\_{i=1}^{S \times S} \sum\_{j=1}^B \mathbb{1}\_{i,j}^\text{obj} \left( (x\_i - \hat{x}\_{i,j})^2 + (y\_i - \hat{y}\_{i,j})^2 + (\sqrt{w\_i} - \sqrt{\hat{w}\_{i,j}})^2 + (\sqrt{h\_i} - \sqrt{\hat{h}\_{i,j}})^2\right)\\\\
@@ -319,8 +311,7 @@ where $\hat{p}\_{i,c}$, $\hat{x}\_{i,j}$, $\hat{y}\_{i,j}$, $\hat{w}\_{i,j}$, $\
 
 class: middle 
 
-Training YOLO relies on many engineering choices that illustrate well how involved is deep learning in practice:
-
+Training YOLO relies on .bold[many engineering choices] that illustrate well how involved is deep learning in practice:
 - pre-train the 20 first convolutional layers on ImageNet classification;
 - use $448 \times 448$ input for detection, instead of $224 \times 224$;
 - use Leaky ReLUs for all layers;
@@ -339,10 +330,11 @@ class: middle, center, black-slide
 
 <iframe width="600" height="450" src="https://www.youtube.com/embed/YmbhRxQkLMg" frameborder="0" allowfullscreen></iframe>
 
-Redmon, 2017.
+YOLO (Redmon, 2017).
 
 ---
 
+exclude: true
 class: middle
 
 ## SSD
@@ -357,7 +349,7 @@ The Single Shot Multi-box Detector (SSD; Liu et al, 2015) improves upon YOLO by 
 
 # Region-based CNNs
 
-An alternative strategy to having a huge predefined set of box proposals, as in OverFeat or YOLO, is to rely on *region proposals* first extracted from the image.
+An alternative strategy to having a huge predefined set of box proposals is to rely on *region proposals* first extracted from the image.
 
 The main family of architectures following this principle are **region-based** convolutional neural networks:
 - (Slow) R-CNN (Girshick et al, 2014)
@@ -387,7 +379,7 @@ class: middle
 
 .center.width-80[![](figures/lec6/selective-search.png)]
 
-Selective search (Uijlings et al, 2013) looks at the image through windows of different sizes, and for each size tries to group together adjacent pixels that are similar by texture, color or intensity.
+Selective search (Uijlings et al, 2013) groups adjacent pixels of similar texture, color, or intensity by analyzing windows of different sizes in the image.
 
 ---
 
@@ -415,7 +407,7 @@ class: middle
 
 class: middle
 
-.center.width-75[![](figures/lec6/faster-rcnn.svg)]
+.center.width-70[![](figures/lec6/faster-rcnn.svg)]
 
 ## Faster R-CNN
 
@@ -466,28 +458,20 @@ class: middle
 
 class: middle
 
-.center.width-70[![](figures/lec6/segmentation.svg)]
+.center.width-70[![](figures/lec6/segmentation.png)]
 
-Semantic **segmentation** partitions an image into regions of different semantic categories. 
-These semantic regions label and predict objects at the pixel level.
+Segmentation is the task of partitioning an image, at the pixel level, into regions:
+- .bold[Semantic segmentation]: All pixels in an image are labeled with their class (e.g., car, pedestrian, road).
+- .bold[Instance segmentation]: Pixels of detected objects are labeled with an instance ID (e.g., car 1, car 2, pedestrian 1).
+- Panoptic segmentation: Combines semantic and instance segmentation. All pixels in an image are labeled with a class and an instance ID (if applicable).
 
 .footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
 
-???
-
-The historical approach to image segmentation was to define a measure of
-similarity between pixels, and to cluster groups of similar pixels. Such
-approaches account poorly for semantic content.
-
 ---
 
-# Fully convolutional networks
+class: middle
 
-The deep-learning approach casts semantic segmentation as pixel
-classification, and re-uses networks trained for image classification by making
-them **fully convolutional** (FCNs).
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+The deep learning approach casts semantic segmentation as pixel classification. Convolutional networks can be used for that purpose, but with a few adaptations.
 
 ---
 
@@ -505,15 +489,11 @@ class: middle
 
 .footnote[Credits: [CS231n, Lecture 11](http://cs231n.stanford.edu/slides/2018/cs231n_2018_lecture11.pdf), 2018.]
 
----
-
-class: middle
+???
 
 Convolution and pooling layers reduce the input width and height, or keep them unchanged.
 
 Semantic segmentation requires to predict values for each pixel, and therefore needs to increase input width and height.
-
-???
 
 Fully connected layers could be used for that purpose but would face the same limitations as before (spatial specialization, too many parameters).
 
@@ -522,7 +502,9 @@ Ideally, we would like layers that implement the inverse of convolutional
 
 ---
 
-# Transposed convolution
+class: middle
+
+## Transposed convolution
 
 A **transposed convolution** is a convolution where the implementation of the forward and backward passes
 are swapped.
@@ -530,9 +512,6 @@ are swapped.
 Given a convolutional kernel $\mathbf{u}$,
 - the forward pass is implemented as $v(\mathbf{h}) = \mathbf{U}^T v(\mathbf{x})$ with appropriate reshaping, thereby effectively up-sampling an input $v(\mathbf{x})$ into a larger one;
 - the backward pass is computed by multiplying the loss by $\mathbf{U}$ instead of $\mathbf{U}^T$.
-
-<br>
-.center.width-70[![](figures/lec6/transposed-convolution.svg)]
 
 ???
 
@@ -599,11 +578,16 @@ $$
 
 ---
 
-# FCNs for segmentation
+class: middle
+
+## Fully convolutional networks (FCNs)
 
 .grid[
 .kol-3-4[
-The simplest design of a fully convolutional network for semantic segmentation consists in:
+
+A fully convolutional network (FCN) is a convolutional network that replaces the fully connected layers with convolutional layers and transposed convolutional layers. 
+
+For semantic segmentation, the simplest design of a fully convolutional network consists in:
 - using a (pre-trained) convolutional network for downsampling and extracting image features;
 - replacing the dense layers with a  $1 \times 1$ convolution layer to  transform the number of channels into the number of categories;
 - upsampling the feature map to the size of the input image by using one (or several) transposed convolution layer(s).
@@ -619,6 +603,7 @@ Contrary to fully connected networks, the dimensions of the output of a fully co
 
 ---
 
+exclude: true
 class: middle
 
 .center.width-100[![](figures/lec6/fcn-convdeconv.png)]
@@ -629,15 +614,27 @@ class: middle
 
 class: middle
 
+.center.width-100[![](figures/lec6/ConvSemSeg.svg)]
+
+The previous .bold[encoder-decoder architecture] is a simple and effective way to perform semantic segmentation. 
+
+However, the low-resolution representation in the middle of the network can be a bottleneck for the segmentation performance, as it must retain enough information to reconstruct the high-resolution segmentation map.
+
+.footnote[Credits: Simon J.D. Prince, [Understanding Deep Learning](https://udlbook.github.io/udlbook/), 2023.]
+
+---
+
+class: middle
+
 ## UNet
 
-The UNet architecture builds upon the previous FCN architecture. 
+The .bold[UNet] architecture is an encoder-decoder architecture with skip connections (usually concatenations) that directly connect the encoder and decoder layers at the same resolution. In this way, the decoder can use both
+- the corresponding high-resolution features from the encoder, and
+- the lower-resolution features from the previous layers.
 
-It consists in symmetric contraction and expansion paths, along with a concatenation of high resolution features from the contracting path to the unsampled features from the expanding path. These connections allow for localization.
+.center.width-80[![](figures/lec6/ResidualUNet.svg)]
 
-.center.width-80[![](figures/lec6/unet.png)]
-
-.footnote[Credits: [Ronneberger et al](https://arxiv.org/abs/1505.04597), 2015.]
+.footnote[Credits: Simon J.D. Prince, [Understanding Deep Learning](https://udlbook.github.io/udlbook/), 2023.]
 
 ???
 
@@ -647,14 +644,31 @@ Take the time to explain that that same architecture can be used for image to im
 
 class: middle
 
-.center.width-50[![](figures/lec6/mask-rcnn.svg)]
+.center.width-100[![](figures/lec6/ResidualUNetResults.svg)]
+
+.center[3d segmentation results using a UNet architecture.<br> (a) Slices of a 3d volume of a mouse cortex, (b) A UNet is used to classify voxels as either inside or outside neutrites. Connected regions are shown with different colors, (c) 5-member ensemble of UNets.]
+
+
+.footnote[Credits: Simon J.D. Prince, [Understanding Deep Learning](https://udlbook.github.io/udlbook/), 2023.]
+
+---
+
+class: middle
 
 ## Mask R-CNN
 
-Mask R-CNN extends the Faster R-CNN model for semantic segmentation. 
+.grid[
+.kol-1-2[
+
+Segmentation is a natural extension of object detection. For example, Mask R-CNN extends the Faster R-CNN model for semantic segmentation: 
 - The RoI pooling layer is replaced with an RoI alignment layer. 
-- It branches off to an FCN for predicting a segmentation mask.
+- It branches off to an FCN for predicting a semantic segmentation mask.
 - Object detection combined with mask prediction enables *instance segmentation*.
+
+
+]
+.kol-1-2[.center.width-95[![](figures/lec6/mask-rcnn.svg)]]
+]
 
 .footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
 
@@ -676,7 +690,7 @@ class: middle, center, black-slide
 
 class: middle
 
-It is noteworthy that for detection and semantic segmentation, there is an heavy
+It is noteworthy that for detection and segmentation, there is an heavy
 re-use of large networks trained for classification.
 
 .bold[The models themselves, as much as the source code of the algorithm that
