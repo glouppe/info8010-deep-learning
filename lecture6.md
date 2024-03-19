@@ -10,16 +10,13 @@ Prof. Gilles Louppe<br>
 
 ???
 
-R: YOLOv8 https://twitter.com/LearnOpenCV/status/1613177011048189952
-R: panoptic segmentation
-R: more on une, check udl
-R: demo with sam or better model
+R: add a tiny unet code example, this would make things more concrete than discussing over too many architectures. It is also a good example to show the transposed convolution.
 
 ---
 
 # Today 
 
-How to build neural networks for advanced computer vision tasks.
+How to build neural networks for (some) advanced computer vision tasks.
 - Classification
 - Object detection
 - Segmentation
@@ -95,6 +92,10 @@ class: middle
 - Many models pre-trained on large datasets are publicly available for download. These models can be used as *feature extractors* or for smart **initialization**.
 - The models themselves should be considered as generic and re-usable assets.
 
+???
+
+Insist that this is becoming a standard practice in deep learning. Very few people train from scratch. Even fewer now with the rise of foundation models.
+
 ---
 
 class: middle
@@ -161,7 +162,6 @@ $$\text{IoU}(B,\hat{B}) = \frac{\text{area}(B \cap \hat{B})}{\text{area}(B \cup 
 
 .center.width-45[![](figures/lec6/iou.png)]
 
-
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
 ---
@@ -220,7 +220,6 @@ For each location and scale pre-defined from a .bold[coarse] grid,
 - the classifier head outputs a class and a confidence (left);
 - the regression head predicts the location of the object (right).
 
-
 .footnote[Credits: Sermanet et al, 2013.]
 
 ---
@@ -241,6 +240,10 @@ The OverFeat architecture comes with several **drawbacks**:
 - it is a disjoint system (2 disjoint heads with their respective losses, ad-hoc merging procedure);
 - it optimizes for localization rather than detection;
 - it cannot reason about global context and thus requires significant post-processing to produce coherent detections.
+
+???
+
+Localization is the task of predicting the bounding box of an object that is known to be present in the image, while detection is the task of predicting the bounding box of an object that may or may not be present in the image.
 
 ---
 
@@ -391,7 +394,7 @@ class: middle
 
 ## Fast R-CNN
 
-- The main performance bottleneck of an R-CNN model is the need to independently extract features for each proposed region.
+- The main performance bottleneck of R-CNN is the need to independently extract features for each proposed region.
 - Fast R-CNN uses the entire image as input to the CNN for feature extraction, rather than each proposed region.
 - Fast R-CNN introduces RoI pooling for producing feature vectors of fixed size from region proposals of different sizes.
 
@@ -639,6 +642,10 @@ The .bold[UNet] architecture is an encoder-decoder architecture with skip connec
 ???
 
 Take the time to explain that that same architecture can be used for image to image mappings, as in some of their projects.
+
+Insist once again on the increasing number of kernels (=out_channels) in the encoder and the decreasing number of kernels in the decoder.
+
+Mention the final 1x1 convolution to reduce the number of channels to the number of classes.
 
 ---
 

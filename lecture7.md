@@ -8,12 +8,6 @@ Lecture 7: Attention and transformers
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-Do we need attention? https://www.youtube.com/watch?v=dKJEpOtVgXc
-ViT
-SAM (decoder produces a sequence of masks, boxes, etc)
-
 ---
 
 # Today
@@ -23,7 +17,6 @@ Attention is all you need!
 - Bahdanau attention
 - Attention layers
 - Transformers
-- Applications
 
 ???
 
@@ -96,6 +89,8 @@ When the input is a sequence $\mathbf{x} \in S(\mathbb{R}^p)$ of variable length
 
 .center.width-85[![](figures/lec7/encoder-decoder.svg)]
 
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai), 2023.]
+
 ---
 
 class: middle
@@ -109,7 +104,7 @@ v &= \mathbf{h}\_{T} \\\\
 \mathbf{y}\_{i} &\sim p(\cdot | \mathbf{y}\_{1:i-1}, v).
 \end{aligned}$$
 
-.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai).]
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai), 2023.]
 
 ???
 
@@ -123,8 +118,6 @@ Blackboard: translate to French the following sentence.
 
 Imitate how the RNN would translate this sentence.
 
-
-
 ---
 
 class: middle
@@ -136,6 +129,8 @@ This architecture assumes that the sole vector $v$ carries enough information to
 ???
 
 There are not direct "channels" to transport local information from the input sequence to the place where it is useful in the resulting sequence.
+
+The problem is similar as last time with FCN without skip connections: the information is bottlenecked in the single vector $v$.
 
 ---
 
@@ -157,7 +152,11 @@ class: middle
 
 Using the nonvolitional cue based on saliency (red cup, non-paper), attention is involuntarily directed to the coffee.
 
-.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai).]
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai), 2023.]
+
+???
+
+Volitional: Related to the faculty or power of using one's will.
 
 ---
 
@@ -167,7 +166,7 @@ class: middle
 
 Using the volitional cue (want to read a book) that is task-dependent, attention is directed to the book under volitional control.
 
-.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai).]
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai), 2023.]
 
 ---
 
@@ -175,7 +174,7 @@ class: middle
 
 .center.width-100[![](figures/lec7/qkv.svg)]
 
-.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai).]
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai), 2023.]
 
 ---
 
@@ -205,7 +204,7 @@ class: middle
 
 .center.width-90[![](figures/lec7/seq2seq-attention-details.svg)]
 
-.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai).]
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai), 2023.]
 
 ---
 
@@ -215,7 +214,7 @@ Following Bahdanau et al. (2014), the encoder is specified as a bidirectional re
 $$\mathbf{h}\_j = (\overrightarrow{\mathbf{h}}\_j, \overleftarrow{\mathbf{h}}\_j)$$
 for $j = 1, \ldots, T$, where $\overrightarrow{\mathbf{h}}\_j$ and $\overleftarrow{\mathbf{h}}\_j$ respectively denote the forward and backward hidden recurrent states of the bidirectional RNN.
 
-From this, they compute a new process $\mathbf{s}\_i$, $i=1, \ldots, T'$, which looks at weighted averages of the $\mathbf{h}\_j$ where the __weights are functions of the signal__.
+From this, they compute a new process $\mathbf{s}\_i$, $i=1, \ldots, T'$, which looks at weighted averages of the $\mathbf{h}\_j$ where the .bold[weights are functions of the signal].
 
 .footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
@@ -225,7 +224,7 @@ class: middle
 
 Given $\mathbf{y}\_1, \ldots, \mathbf{y}\_{i-1}$ and $\mathbf{s}\_1, \ldots, \mathbf{s}\_{i-1}$, first compute an attention vector
 $$\mathbf{\alpha}\_{i,j} = \text{softmax}\_j(a(\mathbf{s}\_{i-1}, \mathbf{h}\_j))$$
-for $j=1, \ldots, T$, whered $a$ is an *attention scoring function*, here specified as a one hidden layer $\text{tanh}$ MLP.
+for $j=1, \ldots, T$, whered $a$ is an .bold[attention scoring function], here specified as a one hidden layer $\text{tanh}$ MLP.
 
 Then, compute the context vector from the weighted $\mathbf{h}\_j$'s,
 $$\mathbf{c}\_i = \sum\_{j=1}^T \alpha\_{i, j} \mathbf{h}\_j.$$
@@ -283,7 +282,7 @@ class: middle
 
 .center.width-100[![](figures/lec7/attention-output.svg)]
 
-.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai).]
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai), 2023.]
 
 ---
 
@@ -369,7 +368,7 @@ class: middle
 
 .center.width-80[![](figures/lec7/cnn-rnn-self-attention.svg)]
 
-.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai).]
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai), 2023.]
 
 ???
 
@@ -464,8 +463,7 @@ class: middle
 
 class: middle
 
-
-Vaswani et al. (2017) proposed to go one step further: instead of using attention mechanisms as a supplement to standard convolutional and recurrent layers, they designed a model, the **transformer**, combining only attention layers.
+Vaswani et al. (2017) proposed to go one step further: instead of using attention mechanisms as a supplement to standard convolutional and recurrent layers, they designed a model, the .bold[transformer], combining only attention layers.
 
 The transformer was designed for a sequence-to-sequence translation task, but it is currently key to state-of-the-art approaches across NLP tasks.
 
@@ -499,7 +497,7 @@ $$
 with
 $$\mathbf{W}\_i^Q \in \mathbb{R}^{d\_\text{model} \times d\_k}, \mathbf{W}\_i^K \in \mathbb{R}^{d\_\text{model} \times d\_k}, \mathbf{W}\_i^V \in \mathbb{R}^{d\_\text{model} \times d\_v}, \mathbf{W}\_i^O \in \mathbb{R}^{hd\_v \times d\_\text{model}}$$
 
-.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai).]
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai), 2023.]
 
 ---
 
@@ -517,7 +515,7 @@ class: middle
 
 .center.width-60[![](figures/lec7/transformer.svg)]
 
-.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai).]
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai), 2023.]
 
 ---
 
@@ -525,9 +523,13 @@ class: middle
 
 .center.width-90[![](figures/lec7/transformer-decoding-1.gif)]
 
-The encoders start by processing the input sequence. The output of the top encoder is then transformed into a set of attention vectors $\mathbf{K}$ and $\mathbf{V}$ that will help the decoders focus on appropriate places in the input sequence.
+The encoders start by processing the input sequence. The output of the top encoder is then transformed into a set of attention vectors $\mathbf{K}$ and $\mathbf{V}$ passed to the decoders.
 
 .footnote[Credits: Jay Alammar, [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/).]
+
+???
+
+R: Check UDL
 
 ---
 
@@ -535,11 +537,15 @@ class: middle
 
 .center.width-90[![](figures/lec7/transformer-decoding-2.gif)]
 
-Each step in the decoding phase produces an output token, until a special symbol is reached indicating the transformer decoder has completed its output.
+Each step in the decoding phase produces an output token, until a special symbol is reached indicating the completion of the transformer decoder's output.
 
 The output of each step is fed to the bottom decoder in the next time step, and the decoders bubble up their decoding results just like the encoders did. 
 
 .footnote[Credits: Jay Alammar, [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/).]
+
+???
+
+R: Check UDL
 
 ---
 
@@ -550,7 +556,7 @@ In the decoder:
 - The second multi-head attention sub-module works just like multi-head self-attention, except it creates its query matrix from the layer below it, and takes the keys and values matrices from the output of the encoder stack.
 
 .footnote[Credits: Jay Alammar, [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/).]
-  
+
 ---
 
 class: middle
@@ -581,7 +587,7 @@ class: middle
 
 .width-100[![](figures/lec7/positional-encoding.png)]
 
-.center[128-dimensional positonal encoding for a sentence with the maximum lenght of 50. Each row represents the embedding vector.]
+.center[128-dimensional positonal encoding for a sentence with the maximum length of 50. Each row represents the embedding vector.]
 
 ---
 
@@ -590,16 +596,6 @@ class: middle
 ## Machine translation
 
 The transformer architecture was first designed for machine translation and tested on English-to-German and English-to-French translation tasks.
-
-- English-to-German: 4.5M sentence pairs, 37k tokens vocabulary.
-- English-to-French: 36M sentence pairs, 32k tokens vocabulary.
-- 8 P100 GPUs (150 TFlops, FP16), 0.5 day for the small model, 3.5 days for the large one.
-
-.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
-
----
-
-class: middle
 
 .center[
 
@@ -629,19 +625,23 @@ Attention maps extracted from the multi-head attention modules<br> show how inpu
 
 class: middle
 
-## Language pre-training
+## Decoder-only transformers
 
-Similar to pre-training computer vision models on ImageNet, language models can be pre-trained for tasks in natural language processing.
+The decoder-only transformer has become the de facto architecture for large language models $p(\mathbf{x}\_t | \mathbf{x}\_{1:t-1})$.
 
-Notably, the models can be pre-trained in a **unsupervised manner** from very large datasets and then fine-tuned on supervised tasks with small data-sets.
+These models are trained with self-supervised learning, where the target sequence is the same as the input sequence, but shifted by one token to the right.
 
+.center.width-80[![](./figures/lec7/gpt-decoder-only.svg)]
+
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai), 2023.]
+  
 ---
 
 class: middle
 
-.width-100[![](figures/lec7/gpt.png)]
+Historically, GPT-1 was first pre-trained and then fine-tuned on downstream tasks.
 
-.center[GPT, Radford et al. (2018)]
+.width-100[![](figures/lec7/gpt.png)]
 
 .footnote[Credits: Radford et al., [Improving Language Understanding by Generative Pre-Training](https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf), 2018.]
 
@@ -649,86 +649,78 @@ class: middle
 
 class: middle
 
-Increasing the training data and the model size leads to significant improvement of transformer language models. These models are now .bold[the largest in deep learning].
+## Scaling laws
 
-.center.width-80[![](figures/lec7/plot-size.png)]
+Transformer language model performance improves smoothly as we increase the model size, the dataset size, and amount of compute used for training. 
+
+For optimal performance, all three factors must be scaled up in tandem. Empirical performance has a power-law relationship with each individual factor when not bottlenecked by the other two.
+
+.center.width-100[![](./figures/lec7/scaling-power-law.png)]
+
+.footnote[Credits: [Kaplan et al](https://arxiv.org/pdf/2001.08361.pdf), 2020.]
+
+---
+
+class: middle
+
+Large models also enjoy better sample efficiency than small models.
+- Larger models require less data to achieve the same performance.
+- The optimal model size shows to grow smoothly with the amount of compute available for training.
+
+<br>
+.center.width-100[![](./figures/lec7/scaling-sample-conv.png)]
+
+.footnote[Credits: [Kaplan et al](https://arxiv.org/pdf/2001.08361.pdf), 2020.]
 
 ---
 
 class: middle
 count: false
 
-# Applications
+# Transformers for images
 
 ---
 
 class: middle
 
-.center[
+The transformer architecture was first designed for sequences, but it can be adapted to process images.
 
-.width-80[![](figures/lec7/chatgpt.png)]
-
-ChatGPT generates text samples in response to arbitrary inputs.
-
-]
+The key idea is to reshape the input image into a sequence of patches, which are then processed by a transformer encoder. This architecture is known as the .bold[vision transformer] (ViT).
 
 ---
 
 class: middle
 
-.center[
+.center.width-80[![](./figures/lec7/vit.svg)]
 
-.width-100[![](figures/lec7/clip.png)]
-
-CLIP: connecting text and images for zero-shot classification (see [demo](https://huggingface.co/spaces/Datatrooper/zero-shot-image-classification)).
-
-]
-
-.footnote[Credits: [Radford et al.](https://arxiv.org/abs/2103.00020), 2021.]
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai), 2023.]
 
 ---
 
 class: middle
 
-.center.width-90[![](figures/lec7/ViT.gif)]
-.center[Vision transformers (ViTs)]
-
-.footnote[Credits: [Dosovitskiy et al](https://arxiv.org/abs/2010.11929), 2020.]
-
----
-
-class: middle
-
-.center.width-85[![](figures/lec7/vit-performance.jpg)]
+- The input image is divided into non-overlapping patches, which are then linearly embedded into a sequence of vectors.
+- The sequence of vectors is then processed by a transformer encoder, which outputs a sequence of vectors.
+- Training the vision transformer can be done with supervised or self-supervised learning.
 
 ---
 
 class: middle
 
-.center[
+Just like text transformers, vision transformers learn representations of the input image that can be used for various tasks, such as image classification, object detection, and image generation. 
 
-.width-100[![](figures/lec7/alphafold.webp)]
 
-AlphaFold: Highly accurate protein structure prediction.
-
-]
-
-.footnote[Credits: [Jumper et al.](https://doi.org/10.1038/s41586-021-03819-2), 2021.]
 
 ---
 
 class: middle
 
-.center[
+.center.width-100[![](./figures/lec7/sam1.png)]
 
-.width-100[![](figures/lec7/decision-transformer.gif)]
+.center.width-100[![](./figures/lec7/sam2.png)]
 
-Decision Transformer: Reinforcement Learning via Sequence Modeling.
-
-]
-
-.footnote[Credits: [Chen et al.](https://arxiv.org/abs/2106.01345), 2021.]
-
+.center[Segment anything (Kirillov et al., 2024) combines a vision transformer with a prompt encoder to produce masks with a transformer-based decoder.]
+  
 ---
 
 class: end-slide, center
