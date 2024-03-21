@@ -260,6 +260,11 @@ class: middle
 
 .center.width-100[![](figures/lec7/translation-attention.png)]
 
+???
+
+- Source = English
+- Target = French
+
 ---
 
 class: middle
@@ -397,18 +402,13 @@ or $O(logk(n))$ in the case of dilated convolutions [18], increasing the length 
 between any two positions in the network. Convolutional layers are generally more expensive than
 recurrent layers, by a factor of $k$. 
 
-As side benefit, self-attention could yield more interpretable models. We inspect attention distributions
-from our models and present and discuss examples in the appendix. Not only do individual attention
-heads clearly learn to perform different tasks, many appear to exhibit behavior related to the syntactic
-and semantic structure of the sentences.
-
 ---
 
 class: middle
 
 ## A toy example
 
-To illustrate the behavior of the attention mechanism, we consider a toy problem with 1D sequences composed of two triangular and two rectangular patterns. The target sequence averages the heights in each pair of shapes.
+To illustrate the behavior of the attention mechanism, we consider a toy problem with 1d sequences composed of two triangular and two rectangular patterns. The target sequence averages the heights in each pair of shapes.
 
 .center.width-100[![](figures/lec7/toy1.png)]
 
@@ -442,6 +442,8 @@ $$\begin{aligned}
 &= \sum\_{i=1}^m \text{softmax}\_{i}\left(\frac{\mathbf{q}^T{\mathbf{K}^T\_{\sigma(i)}}}{\sqrt{d}}\right) \mathbf{V}\_{\sigma(i)}
 \end{aligned}$$
 for any permutation $\sigma$ of the key-value pairs.
+
+(It is also permutation-equivariant with permutation $\sigma$ of the queries.)
 
 ---
 
@@ -527,10 +529,6 @@ The encoders start by processing the input sequence. The output of the top encod
 
 .footnote[Credits: Jay Alammar, [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/).]
 
-???
-
-R: Check UDL
-
 ---
 
 class: middle
@@ -542,10 +540,6 @@ Each step in the decoding phase produces an output token, until a special symbol
 The output of each step is fed to the bottom decoder in the next time step, and the decoders bubble up their decoding results just like the encoders did. 
 
 .footnote[Credits: Jay Alammar, [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/).]
-
-???
-
-R: Check UDL
 
 ---
 
@@ -675,6 +669,16 @@ Large models also enjoy better sample efficiency than small models.
 ---
 
 class: middle
+
+## Conversational agents
+
+.center.width-70[![](./figures/lec7/chatgpt.png)]
+
+All modern conversational agents are based on the same transformer models, scaled up to billions of parameters, trillions of training tokens, and thousands of petaflop/s-days of compute.
+
+---
+
+class: middle
 count: false
 
 # Transformers for images
@@ -709,8 +713,6 @@ class: middle
 
 Just like text transformers, vision transformers learn representations of the input image that can be used for various tasks, such as image classification, object detection, and image generation. 
 
-
-
 ---
 
 class: middle
@@ -719,7 +721,15 @@ class: middle
 
 .center.width-100[![](./figures/lec7/sam2.png)]
 
-.center[Segment anything (Kirillov et al., 2024) combines a vision transformer with a prompt encoder to produce masks with a transformer-based decoder.]
+.center[Segment anything (Kirillov et al., 2023) combines a vision transformer with a prompt encoder to produce masks with a transformer-based decoder.]
+
+---
+
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/oYUcl_cqKcs" frameborder="0" allowfullscreen></iframe>
+
+Segment anything (Kirillov et al., 2023)
   
 ---
 
