@@ -8,10 +8,6 @@ Lecture 9: Graph neural networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-R: Check slides of https://web.stanford.edu/class/cs224w/
-
 ---
 
 # Today
@@ -28,11 +24,11 @@ class: middle
 ## Motivation
 
 Many real-world problems do not fit into the tabular format of machine learning. Instead, many problems involve data that is naturally represented as .italic[graphs]:
-
-- social networks
-- traffic networks
-- biomolecular graphs
-- scene graphs
+- (bio)molecular structures,
+- traffic networks,
+- scene graphs,
+- social networks,
+- computer programs,
 - ... [and many more](https://arxiv.org/abs/1901.00596)!
 
 ---
@@ -41,7 +37,7 @@ class: middle
 
 ## The case of molecules
 
-Molecules are naturally represented as graphs, where nodes represent atoms and edges represent bonds.
+Molecules are naturally represented as graphs, where nodes are atoms and edges are bonds.
 
 Features can be associated with each node and edge, e.g. the atomic number, the number of bonds, etc.
 
@@ -53,13 +49,19 @@ Features can be associated with each node and edge, e.g. the atomic number, the 
 
 class: middle
 
-An interesting problem is to predict whether a molecule is a potent drug or not.
-- Binary classification on whether the drug will inhibit bacterial growth (E. coli).
-- Train a graph neural network (GNN) on a curated dataset $O(10^4)$ of known drugs.
+An interesting problem is to predict whether a molecule is a potent drug. 
+This can be formulated as a binary classification problem, where 
+- the input is a graph representation of the molecule and 
+- the output is a binary label (e.g., whether the drug will inhibit bacterial growth).
 
 .center.width-100[![](figures/lec9/molecules2.png)]
 
 .footnote[Credits: Petar Veličković, [CST Wednesday Seminar](https://petar-v.com/talks/GNN-Wednesday.pdf), 2021.]
+
+???
+
+- Binary classification on whether the drug will inhibit bacterial growth (E. coli).
+- Train a graph neural network (GNN) on a curated dataset $O(10^4)$ of known drugs.
 
 ---
 
@@ -144,7 +146,16 @@ class: middle
 
 Given a graph $\mathcal{G} = (\mathcal{V}, \mathcal{E})$ and its $(\mathbf{X}, \mathbf{A})$ representation, we want to make
 - graph-level predictions $y \in \mathcal{Y}$, using graph-level functions $f(\mathbf{X}, \mathbf{A})$,
-- nodel-level predictions $\mathbf{y} \in \mathcal{Y}^{|\mathcal{V}|}$, using node-level functions $\mathbf{F}(\mathbf{X}, \mathbf{A})$.
+- node-level predictions $\mathbf{y} \in \mathcal{Y}^{|\mathcal{V}|}$, using node-level functions $\mathbf{F}(\mathbf{X}, \mathbf{A})$.
+- edge-level predictions $\mathbf{y} \in \mathcal{Y}^{|\mathcal{E}|}$, using edge-level functions $\mathbf{F}(\mathbf{X}, \mathbf{A})$.
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec9/GraphProblems.svg)]
+
+.footnote[Credits: Simon J.D. Prince, [Understanding Deep Learning](https://udlbook.github.io/udlbook/), 2023.]
 
 ---
 

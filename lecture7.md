@@ -206,6 +206,10 @@ class: middle
 
 .footnote[Credits: [Dive Into Deep Learning](https://d2l.ai), 2023.]
 
+???
+
+Same RNN-based encoder-decoder architecture, but with an attention mechanism in between.
+
 ---
 
 class: middle
