@@ -8,6 +8,10 @@ Lecture 9: Graph neural networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+R: since the lecture is short, add a code example at the end. Check UDL
+
 ---
 
 # Today
@@ -137,6 +141,10 @@ i & j\end{bmatrix}\\\\
 
 ]
 ]
+
+???
+
+Draw on the blackboard, nodes, edges and their features.
 
 ---
 
@@ -292,6 +300,8 @@ where $g$ is an arbitrary function, $\phi$ is a .italic[shared] permutation inva
 
 Illustrate on the board.
 
+New feature vectors $\mathbf{h}\_i$ are computed for each node $i$ by applying a shared function $\phi$ to the node's feature vector $\mathbf{x}\_i$ and the entire feature matrix $\mathbf{X}$.
+
 ---
 
 class: middle
@@ -408,6 +418,10 @@ This is the most generic form of GNN layers.
 
 .footnote[Image credits: Bronstein et al., [Geometric Deep Learning](https://arxiv.org/abs/2104.13478.pdf), 2021.]
 
+???
+
+Illustrate on the board, with a larger graph.
+
 ---
 
 class: middle
@@ -419,6 +433,10 @@ $$\begin{aligned}\mathbf{H} &= \text{concat}(\mathbf{H}\_{1}, ..., \mathbf{H}\_{
 \mathbf{H}\_{k} &= \mathbf{F}\_{k}(\mathbf{X}, \mathbf{A})\end{aligned}.$$
 
 This is similar to having multiple kernels in a convolutional layer or multiple attention heads in an attention layer.
+
+???
+
+Draw a full architecture on the blackboard, stopping at the parallel composition.
 
 ---
 
@@ -435,22 +453,20 @@ class: middle
 ## Sequential composition
 
 Layers can be stacked in series to form deep graph neural networks:
-
 $$\begin{aligned}\mathbf{H}\_0 &= \mathbf{X} \\\\
 \mathbf{H}\_1 &= \mathbf{F}\_1(\mathbf{H}\_0, \mathbf{A}) \\\\
 ... & \\\\
-\mathbf{H}\_L &= \mathbf{F}\_L(\mathbf{H}\_{L-1}, \mathbf{A}) \\\\
+\mathbf{H}\_L &= \mathbf{F}\_L(\mathbf{H}\_{L-1}, \mathbf{A}) 
 \end{aligned}$$
+This is similar to stacking convolutional layers in a convolutional neural network or stacking transformer blocks in a transformer.
 
 ???
 
-Draw a full architecture on the blackboard.
+Continue the drawing on the blackboard, by stacking layers in series.
 
 Elaborate on the propagation of information across the graph. 
 - The effective neighborhood of a node grows with the depth of the network
 - Similar to CNNs in which the effective receptive field grows with the depth of the network.
-
-Comment on unrolling a shared layer vs stacking distinct layers.
 
 ---
 

@@ -23,15 +23,6 @@ class: middle
 
 ---
 
-# Today
-
-How to model *uncertainty* in deep learning?
-- Uncertainty
-- Aleatoric uncertainty
-- Epistemic uncertainty
-
----
-
 class: middle
 
 .center.circle.width-30[![](figures/lec10/carl.jpg)]
@@ -49,6 +40,16 @@ Uncertainty is how much we trust this construct.
 
 ---
 
+# Today
+
+How to estimate uncertainty with and in neural networks?
+
+- Uncertainty
+- Aleatoric uncertainty
+- Epistemic uncertainty
+
+---
+
 class: middle
 
 # Uncertainty
@@ -57,17 +58,9 @@ class: middle
 
 class: middle
 
-Uncertainty refers to epistemic situations involving imperfect or unknown information. It applies to predictions of future events, to physical measurements that are already made, or to the unknown. 
+Uncertainty refers to situations where there is imperfect or unknown information. It can arise in predictions of future events, in physical measurements, or in situations where information is unknown. 
 
-Uncertainty arises in partially observable or stochastic environments, as well as due to ignorance, indolence, or both.
-
-.footnote[Credits: [Wikipedia](https://en.wikipedia.org/wiki/Uncertainty), 2023.]
-
-???
-
-## Why is uncertainty important?
-
-Accounting for uncertainty leads to optimal decisions. Not accounting for uncertainty leads to suboptimal, wrong, or even catastrophic decisions.
+Accounting for uncertainty is necessary for making optimal decisions. Not accounting for uncertainty can lead to suboptimal, wrong, or even catastrophic decisions.
 
 ---
 
@@ -105,7 +98,7 @@ class: middle
 
 class: middle
 
-If these systems had assigned a high level of uncertainty to their erroneous predictions, then they might have been capable of making better decisions, and likely averting disaster.
+.alert[The systems that made these errors were likely confident in their predictions. They did not account for uncertainty.]
 
 ---
 
@@ -117,22 +110,19 @@ class: middle
 
 class: middle
 
-**Aleatoric** uncertainty captures noise inherent in the observations. For example, sensor noise or motion noise result in uncertainty.
+Aleatoric uncertainty refers to the uncertainty arising from the inherent stochasticity of the true data generating process. This uncertainty .bold[cannot be reduced] with more data.
 
-This uncertainty *cannot be reduced* with more data.
-However, aleatoric uncertainty could be reduced with better measurements.
+A common example is observational noise due to the limitations of the measurement devices. Collecting more data will not reduce the noise.
 
-???
-
-It arises from the true data generating process being stochastic.
 
 ---
 
 class: middle
 
-Aleatoric uncertainty can further be categorized into:
-- Homoscedastic uncertainty, which relates to the uncertainty that a particular task might cause. It stays constant for different inputs.
-- Heteroscedastic uncertainty, which depends on the inputs to the model, with some inputs potentially having more noisy outputs than others.
+Assumptions about the data generating process can help in distinguishing between different types of aleatoric uncertainty:
+
+- Homoscedastic uncertainty, which is constant across the input space.
+- Heteroscedastic uncertainty, which varies across the input space.
 
 <br>
 .center.width-90[![](figures/lec10/homo-vs-hetero.png)]
@@ -225,7 +215,7 @@ class: middle
 
 ## Gaussian mixture model
 
-A **Gaussian mixture model** (GMM) defines instead $p(y|\mathbf{x})$ as a mixture of $K$ Gaussian components,
+A Gaussian mixture model (GMM) defines instead $p(y|\mathbf{x})$ as a mixture of $K$ Gaussian components,
 $$p(y|\mathbf{x}) = \sum\_{k=1}^K \pi\_k \mathcal{N}(y;\mu\_k, \sigma\_k^2),$$
 where $0 \leq \pi\_k \leq 1$ for all $k$ and $\sum\_{k=1}^K \pi\_k = 1$.
 
@@ -235,7 +225,7 @@ where $0 \leq \pi\_k \leq 1$ for all $k$ and $\sum\_{k=1}^K \pi\_k = 1$.
 
 class: middle
 
-A **mixture density network** (MDN) is a neural network implementation of the Gaussian mixture model.
+A .bold[mixture density network] (MDN) is a neural network implementation of the Gaussian mixture model.
 
 .center.width-100[![](figures/lec10/mdn.svg)]
 
@@ -298,12 +288,23 @@ A mixture density network models the data correctly, as it predicts for each inp
 
 # Normalizing flows
 
+Gaussian mixture models are a flexible way to model multimodal distributions, but they are limited by the number of components $K$. 
+
+In practice, $K$ must be large to model complex distributions, which makes inference difficult.
+
+Normalizing flows are a more flexible way to model complex distributions.
+
+---
+
+class: middle
+
+## Change of variables
+
 .center.width-80[![](figures/lec10/cubes.png)]
 
 Assume $p(\mathbf{z})$ is a uniformly distributed unit cube in $\mathbb{R}^3$ and $\mathbf{x} = f(\mathbf{z}) = 2\mathbf{z}$.
-
 Since the total probability mass must be conserved, 
-$$p(\mathbf{x}=f(\mathbf{z})) = p(\mathbf{z})\frac{V\_\mathbf{z}}{V\_\mathbf{x}}=p(\mathbf{z}) \frac{1}{8},$$
+$$p(\mathbf{x})=p(\mathbf{x}=f(\mathbf{z})) = p(\mathbf{z})\frac{V\_\mathbf{z}}{V\_\mathbf{x}}=p(\mathbf{z}) \frac{1}{8},$$
 where $\frac{1}{8} = \left| \det \left( \begin{matrix}
 2 & 0 & 0 \\\\ 
 0 & 2 & 0 \\\\
@@ -347,28 +348,6 @@ The determinant of the Jacobian matrix of f at z has a geometric interpretation 
 
 ---
 
-class: middle 
-
-## Normalizing flows
-
-A normalizing flow is a change of variable $f$ that transforms a base distribution $p(\mathbf{z})$ into $p(\mathbf{x})$ by a series of invertible transformations.
-
-.center.width-100[![](figures/lec10/normalizing-flow.png)]
-
----
-
-class: middle
-
-Formally, 
-- $f$ is a composition $f=f\_K \circ ... \circ f\_1$, where each $f\_k$ is an invertible neural transformation;
-- $g_k = f^{-1}_k$;
-- $\mathbf{z}\_k = f\_k(\mathbf{z}_{k-1})$, with $\mathbf{z}\_0 = \mathbf{z}$ and $\mathbf{z}\_K = \mathbf{x}$;
-- $p(\mathbf{z}\_k) = p(\mathbf{z}\_{k-1} = g\_k(\mathbf{z}\_k)) \left| \det J\_{g\_k}(\mathbf{z}\_k) \right|$.
-
-.footnote[Image credits: [Lilian Weng](https://lilianweng.github.io/lil-log/2018/10/13/flow-based-deep-generative-models), 2018.]
-
----
-
 class: middle
 
 ## Example: coupling layers 
@@ -386,13 +365,41 @@ where $s$ and $t$ are arbitrary neural networks.
 class: middle
 
 For $\mathbf{x} = (\mathbf{x}\_a, \mathbf{x}\_b)$, the log-likelihood is
-$$\begin{aligned}\log p(\mathbf{x}) &= \log p(\mathbf{z} = g(\mathbf{x})) \left| \det J\_g(\mathbf{x}) \right|\end{aligned}$$
-where the Jacobian $J\_g(\mathbf{x}) = \frac{\partial \mathbf{z}}{\partial \mathbf{x}}$ is a lower triangular matrix $$\left( \begin{matrix}
+$$\begin{aligned}\log p(\mathbf{x}) &= \log p(\mathbf{z}) \left| \det J\_f(\mathbf{z}) \right|^{-1}\end{aligned}$$
+where the Jacobian $J\_f(\mathbf{z}) = \frac{\partial \mathbf{x}}{\partial \mathbf{z}}$ is a lower triangular matrix $$\left( \begin{matrix}
 \mathbf{I} & 0 \\\\
-\frac{\partial \mathbf{z}\_b}{\partial \mathbf{x}\_a} & \text{diag}(\exp(-s(\mathbf{x}\_a))) \end{matrix} \right),$$
-such that $\left| \det J\_g(\mathbf{x}) \right| = \prod\_i \exp(-s(\mathbf{x}\_a))\_i = \exp(-\sum\_i s(\mathbf{x}\_a)\_i)$.
+\frac{\partial \mathbf{x}\_b}{\partial \mathbf{z}\_a} & \text{diag}(\exp(s(\mathbf{z}\_a))) \end{matrix} \right),$$
+such that $\left| \det J\_f(\mathbf{z}) \right| = \prod\_i \exp(s(\mathbf{z}\_a))\_i = \exp(\sum\_i s(\mathbf{z}\_a)\_i)$.
 
-Therefore, the log-likelihood is $$\log p(\mathbf{x}) = \log p(\mathbf{z} = g(\mathbf{x})) -\sum\_i s(\mathbf{x}\_a)\_i.$$
+Therefore, the log-likelihood is
+$$\begin{aligned}\log p(\mathbf{x}) &= \log p(\mathbf{z}) - \sum\_i s(\mathbf{z}\_a)\_i\end{aligned}$$
+
+---
+
+class: middle 
+
+## Normalizing flows
+
+A normalizing flow is a change of variable $f$ that transforms a base distribution $p(\mathbf{z})$ into $p(\mathbf{x})$ through a discrete sequence of invertible transformations.
+
+<br>
+.center.width-100[![](figures/lec10/FlowTransformLayers.svg)]
+
+.footnote[Image credits: Simon J.D. Prince, [Understanding Deep Learning](https://udlbook.github.io/udlbook/), 2023.]
+
+---
+
+class: middle
+
+Formally, 
+$$\begin{aligned}
+&\mathbf{z}\_0 \sim p(\mathbf{z}) \\\\
+&\mathbf{z}\_k = f\_k(\mathbf{z}\_{k-1}), \quad k=1,...,K \\\\
+&\mathbf{x} = \mathbf{z}\_K = f\_K \circ ... \circ f\_1(\mathbf{z}\_0).
+\end{aligned}$$
+
+The change of variable theorem yields
+$$\log p(\mathbf{x}) = \log p(\mathbf{z}\_0) - \sum\_{k=1}^K \log \left| \det J\_{f\_k}(\mathbf{z}\_{k-1}) \right|.$$
 
 ---
 
@@ -408,16 +415,62 @@ class: middle
 
 class: middle
 
+## Conditional normalizing flows
+
+Normalizing flows can also estimate densities $p(\mathbf{x} | c)$ conditioned on a context $c$.
+
+- Transformations are made conditional by taking $c$ as an additional input. For example, in a coupling layer, the networks can be upgraded to $s(\mathbf{z}, c)$ and $t(\mathbf{z}, c)$.
+- Optionally, the base distribution $p(\mathbf{z})$ can also be made conditional on $c$.
+
+(Accordingly, aleatoric uncertainty of some output $y$ conditioned on an input $\mathbf{x}$ can be modelled by a conditional normalizing flow $p(y|\mathbf{x})$ where the context $c$ is the input $\mathbf{x}$.)
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec10/cnf-sr.png)]
+
+.footnote[Image credits: [Winkler et al](https://arxiv.org/abs/1912.00042), 2019.]
+
+---
+
+class: middle
+
+## Continuous-time normalizing flows
+
+.grid[
+.kol-1-2[
+Replace the discrete sequence of transformations with a neural ODE with reversible dynamics such that
+$$\begin{aligned}
+&\mathbf{z}\_0 \sim p(\mathbf{z})\\\\
+&\frac{d\mathbf{z}(t)}{dt} = f(\mathbf{z}(t), t, \theta)\\\\
+&\mathbf{x} = \mathbf{z}(1) = \mathbf{z}\_0 + \int\_0^1 f(\mathbf{z}(t), t) dt.
+\end{aligned}$$
+]
+.kol-1-2.center[
+<video autoplay muted loop width="80%">
+     <source src="./figures/lec10/ffjord.mp4" type="video/mp4">
+</video>
+]
+]
+
+The instantaneous change of variable yields
+$$\log p(\mathbf{x}) = \log p(\mathbf{z}(0)) - \int\_0^1 \text{Tr} \left( \frac{\partial f(\mathbf{z}(t), t, \theta)}{\partial \mathbf{z}(t)} \right) dt.$$
+
+.footnote[Image credits: [Grathwohl et al](https://arxiv.org/abs/1810.01367), 2018.]
+
+---
+
+class: middle
+
 # Epistemic uncertainty
 
 ---
 
 class: middle
 
-**Epistemic** uncertainty accounts for uncertainty in the model or in its parameters.
-It captures our *ignorance* about which model can best explain the collected data.
-
-It can be explained away given enough data.
+Epistemic uncertainty accounts for uncertainty in the model or in its parameters.
+It captures our ignorance about which model can best explain the collected data. It .bold[can be explained away] given enough data.
 
 .footnote[Credits: Kendall and Gal, [What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?](https://papers.nips.cc/paper/7141-what-uncertainties-do-we-need-in-bayesian-deep-learning-for-computer-vision.pdf), 2017.]
 
@@ -430,9 +483,7 @@ Once we have decided on a model of the true data generating process, we face unc
 
 # Bayesian neural networks
 
-To capture epistemic uncertainty in a neural network, we model our ignorance with a prior distribution $p(\mathbf{\omega})$ over its weights.
-
-Then we invoke Bayes for making predictions.
+To capture epistemic uncertainty in a neural network, we model our ignorance with a prior distribution $p(\mathbf{\omega})$ over its weights and estimate the posterior distribution $p(\mathbf{\omega}|\mathbf{d})$ given the training set $\mathbf{d}$.
 
 <br><br>
 .center[
@@ -457,7 +508,7 @@ $$p(y|\mathbf{x},\mathbf{d}) = \int p(y|\mathbf{x}, \mathbf{\omega}) p(\mathbf{\
 
 class: middle
 
-Bayesian neural networks are *easy to formulate*,  but notoriously **difficult** to perform inference in.
+Bayesian neural networks are easy to formulate,  but notoriously .bold[difficult] to perform inference in.
 
 $p(\mathbf{d})$ is intractable to evaluate, which results in the posterior $p(\mathbf{\omega}|\mathbf{d})$ not being tractable either.
 
@@ -494,9 +545,9 @@ In the context of Bayesian neural networks, this procedure is also known as **Ba
 
 # Dropout
 
-Dropout is an **empirical** technique that was first proposed to avoid overfitting in neural networks.
+Dropout is an empirical technique that was first proposed to avoid overfitting in neural networks.
 
-At *each training step* (i.e., for each sample within a mini-batch):
+At each training step:
 - Remove each node in the network with a probability $p$.
 - Update the weights of the remaining nodes with backpropagation.
 

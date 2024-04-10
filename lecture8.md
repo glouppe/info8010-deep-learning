@@ -8,6 +8,10 @@ Lecture 8: GPT and Large Language Models
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+R: refresh with Foundation Models
+
 ---
 
 # Today
