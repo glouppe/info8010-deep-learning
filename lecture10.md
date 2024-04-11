@@ -8,13 +8,6 @@ Lecture 10: Uncertainty
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-R: better glue Normalizing Flows with the rest of the lecture -> if p(y|x) is complex, then it would require many mixture components to approximate it. We need a stronger class of density estimators.
-R: NFs are introduced as a way to estimate p(x) -> revise the notation to make it clear it can similarly be used to estimate p(y|x).
-
-Check SSI2023 talk (NFs part)
-
 ---
 
 class: middle
@@ -42,7 +35,7 @@ Uncertainty is how much we trust this construct.
 
 # Today
 
-How to estimate uncertainty with and in neural networks?
+How to estimate uncertainty with and of neural networks?
 
 - Uncertainty
 - Aleatoric uncertainty
@@ -58,7 +51,7 @@ class: middle
 
 class: middle
 
-Uncertainty refers to situations where there is imperfect or unknown information. It can arise in predictions of future events, in physical measurements, or in situations where information is unknown. 
+Uncertainty refers to situations where there is .bold[imperfect or unknown information]. It can arise in predictions of future events, in physical measurements, or in situations where information is unknown. 
 
 Accounting for uncertainty is necessary for making optimal decisions. Not accounting for uncertainty can lead to suboptimal, wrong, or even catastrophic decisions.
 
@@ -82,7 +75,6 @@ class: middle, center
 .center[<video controls autoplay loop muted preload="auto" height="500" width="640">
   <source src="./figures/lec10/tesla.mp4" type="video/mp4">
 </video>]
-
 
 ---
 
@@ -137,7 +129,7 @@ Consider training data $(\mathbf{x}, y) \sim p(\mathbf{x}, y)$, with
 
 We do not wish to learn a function $\hat{y} = f(\mathbf{x})$, which would only produce point estimates. 
 
-Instead we want to learn the full conditional density $$p(y|\mathbf{x}).$$
+Instead we want to learn the full conditional density $$p(y|\mathbf{x}).$$ 
 
 ---
 
@@ -288,9 +280,7 @@ A mixture density network models the data correctly, as it predicts for each inp
 
 # Normalizing flows
 
-Gaussian mixture models are a flexible way to model multimodal distributions, but they are limited by the number of components $K$. 
-
-In practice, $K$ must be large to model complex distributions, which makes inference difficult.
+Gaussian mixture models are a flexible way to model multimodal distributions, but they are limited by the number of components $K$, which must be large to model complex distributions. 
 
 Normalizing flows are a more flexible way to model complex distributions.
 
