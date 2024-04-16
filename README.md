@@ -46,7 +46,7 @@ See instructions in [`project.md`](https://github.com/glouppe/info8010-deep-lear
 
 ## Reading assignment
 
-TBD.
+As agreed in class, no reading assignment will be given this year.
 
 ## Archives
 
