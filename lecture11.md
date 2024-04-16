@@ -8,10 +8,6 @@ Lecture 11: Auto-encoders and variational auto-encoders
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-R: Rewrite to better match the sidenotes.!!!
-
 ---
 
 # Today
@@ -21,8 +17,6 @@ Learn a model of the data.
 - Auto-encoders
 - Variational inference
 - Variational auto-encoders
-
-.alert[Caution: See also the side notes derived in class.]
 
 ---
 
@@ -57,10 +51,10 @@ class: middle
 
 ## Deep unsupervised learning
 
-Deep unsupervised learning is about capturing rich patterns in raw data with deep networks in a **label-free** way.
+Deep unsupervised learning is about learning a model of the data, explicitly or implicitly, without requiring labels.
 
-- Generative models: recreate the raw data distribution (e.g., the distribution of natural images).
-- Self-supervised learning: solve puzzle tasks that require semantic understanding (e.g., predict a missing word in a sequence).
+- *Generative models*: recreate the raw data distribution (e.g., the distribution of natural images).
+- **Self-supervised learning**: solve puzzle tasks that require semantic understanding (e.g., predict a missing word in a sequence).
 
 ---
 
@@ -68,10 +62,11 @@ class: middle
 
 ## Generative models
 
-A **generative model** is a probabilistic model $p$ that can be used as *a simulator of the data*.
-Its purpose is to generate synthetic but realistic high-dimensional data
-$$\mathbf{x} \sim p\_\theta(\mathbf{x}),$$
-that is as close as possible from the unknown data distribution $p(\mathbf{x})$, but for which we have empirical samples.
+A (deep) **generative model** is a probabilistic model $p\_\theta$ that can be used as a simulator of the data. 
+
+Formally, a generative model defines a probability distribution $p\_\theta(\mathbf{x})$ over the data $\mathbf{x} \in \mathcal{X}$, where the parameters $\theta$ are learned to match the (unknown) data distribution $p(\mathbf{x})$.
+
+.center.width-60[![](figures/lec11/distribution.png)]
 
 ???
 
@@ -79,20 +74,68 @@ This is conceptually identical to what we already did in Lecture 10 when we want
 
 ---
 
-class: middle
+class: middle, black-slide
 
-.center.width-100[![](figures/lec11/moore-of-gm.jpg)]
+.grid[
+.kol-1-2.center[
+.width-80[![](figures/lec11/vae-faces.png)]
+]
+.kol-1-2.center[
+<br>
+.width-75[![](figures/lec12/pope.jpg)]
+]
+]
+.grid[
+.kol-1-2.center[
+
+Variational auto-encoders<br> (Kingma and Welling, 2013)
+
+]
+.kol-1-2.center[
+
+Diffusion models<br>
+(Midjourney, 2023)
+
+]
+]
+
+---
+
+class: black-slide
+background-image: url(./figures/lec11/landscape.png)
+background-size: contain
+
+.footnote[Credits: [Karsten et al](https://cvpr2022-tutorial-diffusion-models.github.io/), 2022; [Siddharth Mishra-Sharma](https://smsharma.io/iaifi-summer-school-2023/), 2023.]
 
 ---
 
 class: middle
 
-## Immediate applications
+## What can we do with generative models?
 
-.center[
-.width-100[![](figures/lec11/why-gm.png)]
+.grid[
+.kol-1-3.center[
+
+Produce samples $$\mathbf{x} \sim p(\mathbf{x} | \theta)$$
+
 ]
-.caption[Generative models have a role in many important problems]
+.kol-1-3.center[
+Evaluate densities $$p(\mathbf{x}|\theta)$$ $$p(\theta | \mathbf{x}) = \frac{p(\mathbf{x} | \theta) p(\theta)}{p(\mathbf{x})}$$
+
+]
+.kol-1-3.center[
+Encode complex priors $$p(\mathbf{x})$$
+
+]
+]
+
+.grid[
+.kol-1-3.center[.width-100[![](figures/lec11/uses1.png)]]
+.kol-1-3.center[.width-100[![](figures/lec11/uses2.png)]]
+.kol-1-3.center[.width-90[![](figures/lec11/uses3.png)]]
+]
+
+.footnote[Credits: [Siddharth Mishra-Sharma](https://smsharma.io/iaifi-summer-school-2023/), 2023.]
 
 ---
 
@@ -232,8 +275,7 @@ class: middle
 # Denoising auto-encoders
 
 Besides dimension reduction, auto-encoders can capture dependencies between signal components to restore degraded or noisy signals. 
-
-In this case, the composition $$h = g \circ f : \mathcal{X} \to \mathcal{X}$$ is referred to as a **denoising** auto-encoder.
+In this case, the composition $$h = g \circ f : \mathcal{X} \to \mathcal{X}$$ is a **denoising** auto-encoder.
 
 The goal is to optimize $h$ such that a perturbation $\tilde{\mathbf{x}}$ of the signal $\mathbf{x}$ is restored to $\mathbf{x}$, hence $$h(\tilde{\mathbf{x}}) \approx \mathbf{x}.$$
 
@@ -346,6 +388,9 @@ class: middle
 
 Consider for now a **prescribed latent variable model** that relates a set of observable variables $\mathbf{x} \in \mathcal{X}$ to a set of unobserved variables $\mathbf{z} \in \mathcal{Z}$.
 
+The probabilistic model defines a joint probability distribution $p\_\theta(\mathbf{x}, \mathbf{z})$, which decomposes as
+$$p\_\theta(\mathbf{x}, \mathbf{z}) = p\_\theta(\mathbf{x}|\mathbf{z}) p(\mathbf{z}).$$
+
 ???
 
 The probabilistic model is given and motivated by domain knowledge assumptions.
@@ -364,78 +409,68 @@ class: middle, black-slide
   <source src="./figures/lec11/galton.mp4" type="video/mp4">
 </video>]
 
----
-
-class: middle
-
-The probabilistic model defines a joint probability distribution $p(\mathbf{x}, \mathbf{z})$, which decomposes as
-$$p(\mathbf{x}, \mathbf{z}) = p(\mathbf{x}|\mathbf{z}) p(\mathbf{z}).$$
-If we interpret $\mathbf{z}$ as causal factors for the high-dimension representations $\mathbf{x}$, then
-sampling from $p(\mathbf{x}|\mathbf{z})$ can be interpreted as **a stochastic generating process** from $\mathcal{Z}$ to $\mathcal{X}$.
-
-For a given model $p(\mathbf{x}, \mathbf{z})$, inference consists in computing the posterior
-$$p(\mathbf{z}|\mathbf{x}) = \frac{p(\mathbf{x}|\mathbf{z}) p(\mathbf{z})}{p(\mathbf{x})}.$$
-
-For most interesting cases, this is usually intractable since it requires evaluating the evidence
-$$p(\mathbf{x}) = \int p(\mathbf{x}|\mathbf{z})p(\mathbf{z}) d\mathbf{z}.$$
-
 ???
 
-Switch to iPad.
+If we interpret $\mathbf{z}$ as causal factors for the high-dimension representations $\mathbf{x}$, then
+sampling from $p\_\theta(\mathbf{x}|\mathbf{z})$ can be interpreted as **a stochastic generating process** from $\mathcal{Z}$ to $\mathcal{X}$.
 
 ---
 
-# Variational inference
+<br><br><br>
 
-.center.width-80[![](figures/lec11/vi.png)]
+## How to fit a latent variable model?
 
-**Variational inference** turns posterior inference into an optimization problem.
-- Consider a family of distributions $q\_\nu(\mathbf{z}|\mathbf{x})$ that approximate the posterior $p(\mathbf{z}|\mathbf{x})$, where the
-variational parameters $\nu$ index the family of distributions.
-- The parameters $\nu$ are fit to minimize the KL divergence between the approximation $q\_\nu(\mathbf{z}|\mathbf{x})$ and the posterior  $p(\mathbf{z}|\mathbf{x})$.
-
----
-
-class: middle
-
-Formally, we want to solve
 $$\begin{aligned}
-&\arg\min\_\nu \text{KL}(q\_\nu(\mathbf{z}|\mathbf{x}) || p(\mathbf{z}|\mathbf{x})) \\\\
-=& \arg\min\_\nu  \mathbb{E}\_{q\_\nu(\mathbf{z}|\mathbf{x})}\left[\log \frac{q\_\nu(\mathbf{z}|\mathbf{x})}{p(\mathbf{z}|\mathbf{x})}\right] \\\\
-=& \arg\min\_\nu  \mathbb{E}\_{q\_\nu(\mathbf{z}|\mathbf{x})}\left[ \log q\_\nu(\mathbf{z}|\mathbf{x}) - \log p(\mathbf{x},\mathbf{z}) \right] + \log p(\mathbf{x}).
+\theta^{\*} &= \arg \max\_\theta p\_\theta(\mathbf{x}) \\\\
+&= \arg \max\_\theta \int p\_\theta(\mathbf{x}|\mathbf{z}) p(\mathbf{z}) d\mathbf{z}\\\\
+&= \arg \max\_\theta \mathbb{E}\_{p(\mathbf{z})}\left[ p\_\theta(\mathbf{x}|\mathbf{z}) \right] d\mathbf{z}\\\\
+&\approx \arg \max\_\theta \frac{1}{N} \sum\_{i=1}^N p\_\theta(\mathbf{x}|\mathbf{z}\_i) 
 \end{aligned}$$
-For the same reason as before, the KL divergence cannot be directly minimized because
-of the $\log p(\mathbf{x})$ term.
+
+--
+
+count: false
+
+.alert[The curse of dimensionality will lead to poor estimates of the expectation.]
 
 ---
 
 class: middle
 
-However, we can write
+## Variational inference
+
+Let us instead consider a variational approach to fit the model parameters $\theta$.
+
+Using a **variational distribution** $q\_\phi(\mathbf{z})$ over the latent variables $\mathbf{z}$, we have
 $$\begin{aligned}
-&\arg\min\_\nu \text{KL}(q\_\nu(\mathbf{z}|\mathbf{x}) || p(\mathbf{z}|\mathbf{x})) \\\\
-=& \arg\min\_\nu  \mathbb{E}\_{q\_\nu(\mathbf{z}|\mathbf{x})}\left[ \log q\_\nu(\mathbf{z}|\mathbf{x}) - \log p(\mathbf{x},\mathbf{z}) \right] + \log p(\mathbf{x})\\\\
-=&\arg\max\_\nu \underbrace{\mathbb{E}\_{q\_\nu(\mathbf{z}|\mathbf{x})}\left[ \log p(\mathbf{x},\mathbf{z}) - \log q\_\nu(\mathbf{z}|\mathbf{x}) \right]}\_{\text{ELBO}(\mathbf{x};\nu)}
-\end{aligned}
-$$
-where $\text{ELBO}(\mathbf{x};\nu)$ is called the **evidence lower bound objective**.
-
-- Since $\log p(\mathbf{x})$ does not depend on $\nu$, it can be considered as a constant, and minimizing the KL divergence is equivalent to maximizing the evidence lower bound, while being computationally tractable.
-- Given a dataset $\mathbf{d} = \\\{\mathbf{x}\_i|i=1, ..., N\\\}$, the final objective is the sum $\sum\_{\\\{\mathbf{x}\_i \in \mathbf{d}\\\}} \text{ELBO}(\mathbf{x}\_i;\nu)$.
-
----
-
-class: middle
-
-Remark that
-$$\begin{aligned}
-\text{ELBO}(\mathbf{x};\nu) &= \mathbb{E}\_{q(\mathbf{z};|\mathbf{x}\nu)}\left[ \log p(\mathbf{x},\mathbf{z}) - \log q\_\nu(\mathbf{z}|\mathbf{x}) \right] \\\\
-&= \mathbb{E}\_{q\_\nu(\mathbf{z}|\mathbf{x})}\left[ \log p(\mathbf{x}|\mathbf{z}) p(\mathbf{z}) - \log q\_\nu(\mathbf{z}|\mathbf{x}) \right] \\\\
-&= \mathbb{E}\_{q\_\nu(\mathbf{z}|\mathbf{x})}\left[ \log p(\mathbf{x}|\mathbf{z})\right] - \text{KL}(q\_\nu(\mathbf{z}|\mathbf{x}) || p(\mathbf{z}))
+\log p\_\theta(\mathbf{x}) &= \log \mathbb{E}\_{p(\mathbf{z})}\left[ p\_\theta(\mathbf{x}|\mathbf{z}) \right]  \\\\
+&= \log \mathbb{E}\_{q\_\phi(\mathbf{z})}\left[ \frac{p\_\theta(\mathbf{x}|\mathbf{z})  p(\mathbf{z})}{q\_\phi(\mathbf{z})} \right] \\\\
+&\geq \mathbb{E}\_{q\_\phi(\mathbf{z})}\left[ \log \frac{p\_\theta(\mathbf{x}|\mathbf{z}) p(\mathbf{z})}{q\_\phi(\mathbf{z})}  \right] \quad (\text{ELBO}(\mathbf{x};\theta, \phi)) \\\\
+&= \mathbb{E}\_{q\_\phi(\mathbf{z})}\left[ \log p\_\theta(\mathbf{x}|\mathbf{z}) \right] - \text{KL}(q\_\phi(\mathbf{z}) || p(\mathbf{z}))
 \end{aligned}$$
-Therefore, maximizing the ELBO
-- encourages distributions to place their mass on configurations of latent variables that explain the observed data (first term);
-- encourages distributions close to the prior (second term).
+
+---
+
+class: middle
+
+Using the Bayes rule, we can also write
+$$\begin{aligned}
+\text{ELBO}(\mathbf{x};\theta, \phi) &= \mathbb{E}\_{q\_\phi(\mathbf{z})}\left[ \log \frac{p\_\theta(\mathbf{x}|\mathbf{z}) p(\mathbf{z})}{q\_\phi(\mathbf{z})} \right] \\\\
+&= \mathbb{E}\_{q\_\phi(\mathbf{z})}\left[ \log \frac{p\_\theta(\mathbf{x}|\mathbf{z}) p(\mathbf{z})}{q\_\phi(\mathbf{z})} \frac{p\_\theta(\mathbf{x})}{p\_\theta(\mathbf{x})} \right] \\\\
+&= \mathbb{E}\_{q\_\phi(\mathbf{z})}\left[ \log \frac{p\_\theta(\mathbf{z}|\mathbf{x})}{q\_\phi(\mathbf{z})} p\_\theta(\mathbf{x}) \right] \\\\
+&= \log p\_\theta(\mathbf{x}) - \text{KL}(q\_\phi(\mathbf{z}) || p\_\theta(\mathbf{z}|\mathbf{x})).
+\end{aligned}$$
+
+Therefore, $\log p\_\theta(\mathbf{x}) = \text{ELBO}(\mathbf{x};\theta, \phi) + \text{KL}(q\_\phi(\mathbf{z}) || p\_\theta(\mathbf{z}|\mathbf{x}))$.
+
+---
+
+class: middle
+
+.center.width-70[![](figures/lec11/elbo.png)]
+
+Provided the KL gap remains small, the model parameters can now be optimized by maximizing the ELBO,
+$$\theta^{\*}, \phi^{\*} = \arg \max\_{\theta,\phi} \text{ELBO}(\mathbf{x};\theta,\phi).$$
 
 ---
 
@@ -444,13 +479,12 @@ class: middle
 ## Optimization
 
 $$\begin{aligned}
-\nu^{\*} &= \arg \max\_\nu \text{ELBO}(\mathbf{x};\nu).
+\theta^{\*}, \phi^{\*} &= \arg \max\_{\theta, \phi} \text{ELBO}(\mathbf{x};\theta, \phi).
 \end{aligned}$$
 
-We can proceed by gradient ascent, provided we can evaluate $\nabla\_\nu \text{ELBO}(\mathbf{x};\nu)$.
+We can proceed by gradient ascent, provided we can evaluate $\nabla\_\theta \text{ELBO}(\mathbf{x};\theta, \phi)$ and $\nabla\_\phi \text{ELBO}(\mathbf{x};\theta, \phi)$.
 
-In general,
-this gradient is difficult to compute because the expectation is unknown and the parameters $\nu$ are parameters of the distribution $q\_\nu(\mathbf{z}|\mathbf{x})$ we integrate over.
+In general, the gradient of the ELBO is intractable to compute, but we can estimate it with Monte Carlo integration.
 
 ---
 
@@ -463,14 +497,26 @@ count: false
 
 class: middle
 
+class: middle
+
+.center[![](figures/lec12/diagram-vae.svg)]
+
 So far we assumed a prescribed probabilistic model motivated by domain knowledge.
-We will now directly learn a stochastic generating process with a neural network.
+We will now directly learn a stochastic generating process $p\_\theta(\mathbf{x}|\mathbf{z})$ with a neural network.
+
+We will also amortize the inference process by learning a second neural network $q\_\phi(\mathbf{z}|\mathbf{x})$ approximating the posterior, conditionally on the observed data $\mathbf{x}$.
 
 ---
 
 class: middle
 
 ## Variational auto-encoders
+
+.center.width-100[![](figures/lec11/vae-architecture.png)]
+
+---
+
+class: middle
 
 A variational auto-encoder is a deep latent variable model where:
 - The prior $p(\mathbf{z})$ is prescribed, and usually chosen to be Gaussian.
@@ -481,7 +527,7 @@ $$\begin{aligned}
 p\_\theta(\mathbf{x}|\mathbf{z}) &= \mathcal{N}(\mathbf{x}; \mu, \sigma^2\mathbf{I})
 \end{aligned}$$
 - The approximate posterior $q\_\phi(\mathbf{z}|\mathbf{x})$ is parameterized
-with an **inference network** $\text{NN}\_\phi$ (or encoder) that takes as input $\mathbf{x}$ and
+with an *inference network* $\text{NN}\_\phi$ (or encoder) that takes as input $\mathbf{x}$ and
 outputs parameters $\nu = \text{NN}\_\phi(\mathbf{x})$ to the approximate posterior. E.g.,
 $$\begin{aligned}
 \mu, \sigma &= \text{NN}\_\phi(\mathbf{x}) \\\\
@@ -492,31 +538,23 @@ q\_\phi(\mathbf{z}|\mathbf{x}) &= \mathcal{N}(\mathbf{z}; \mu, \sigma^2\mathbf{I
 
 class: middle
 
-.center.width-80[![](figures/lec11/vae.png)]
-
-.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
-
----
-
-class: middle
-
-As before, we can use variational inference, but to jointly optimize the generative and the inference networks parameters $\theta$ and $\phi$.
-
-We want
+As before, we can use variational inference to jointly optimize the encoder and decoder networks parameters $\phi$ and $\theta$, but now in expectation over the data distribution $p(\mathbf{x})$:
 $$\begin{aligned}
-\theta^{\*}, \phi^{\*} &= \arg \max\_{\theta,\phi} \text{ELBO}(\mathbf{x};\theta,\phi) \\\\
-&= \arg \max\_{\theta,\phi} \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})}\left[ \log p\_\theta(\mathbf{x}|\mathbf{z})\right] - \text{KL}(q\_\phi(\mathbf{z}|\mathbf{x}) || p(\mathbf{z})).
+\theta^{\*}, \phi^{\*} &= \arg \max\_{\theta,\phi} \mathbb{E}\_{p(\mathbf{x})} \left[ \text{ELBO}(\mathbf{x};\theta,\phi) \right] \\\\
+&= \arg \max\_{\theta,\phi} \mathbb{E}\_{p(\mathbf{x})}\left[ \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})} [ \log \frac{p\_\theta(\mathbf{x}|\mathbf{z}) p(\mathbf{z})}{q\_\phi(\mathbf{z}|\mathbf{x})} ] \right] \\\\
+&= \arg \max\_{\theta,\phi} \mathbb{E}\_{p(\mathbf{x})}\left[ \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})}\left[ \log p\_\theta(\mathbf{x}|\mathbf{z})\right] - \text{KL}(q\_\phi(\mathbf{z}|\mathbf{x}) || p(\mathbf{z})) \right].
 \end{aligned}$$
 
-- Given some generative network $\theta$, we want to put the mass of the latent variables, by adjusting $\phi$, such that they explain the observed data, while remaining close to the prior.
-- Given some inference network $\phi$, we want to put the mass of the observed variables, by adjusting $\theta$, such that
+Interpretation:
+- Given some decoder network set at $\theta$, we want to put the mass of the latent variables, by adjusting $\phi$, such that they explain the observed data, while remaining close to the prior.
+- Given some encoder network set at $\phi$, we want to put the mass of the observed variables, by adjusting $\theta$, such that
 they are well explained by the latent variables.
 
 ---
 
 class: middle
 
-Unbiased gradients of the ELBO with respect to the generative model parameters $\theta$ are simple to obtain:
+Unbiased gradients of the ELBO with respect to the generative model parameters $\theta$ are simple to obtain, as
 $$\begin{aligned}
 \nabla\_\theta \text{ELBO}(\mathbf{x};\theta,\phi) &= \nabla\_\theta \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})}\left[ \log p\_\theta(\mathbf{x},\mathbf{z}) - \log q\_\phi(\mathbf{z}|\mathbf{x})\right] \\\\
 &= \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})}\left[ \nabla\_\theta ( \log p\_\theta(\mathbf{x},\mathbf{z}) - \log q\_\phi(\mathbf{z}|\mathbf{x}) ) \right] \\\\
@@ -525,28 +563,11 @@ $$\begin{aligned}
 which can be estimated with Monte Carlo integration.
 
 However, gradients with respect to the inference model parameters $\phi$ are
-more difficult to obtain:
+more difficult to obtain since
 $$\begin{aligned}
 \nabla\_\phi \text{ELBO}(\mathbf{x};\theta,\phi) &= \nabla\_\phi \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})}\left[ \log p\_\theta(\mathbf{x},\mathbf{z}) - \log q\_\phi(\mathbf{z}|\mathbf{x})\right] \\\\
-&\neq \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})}\left[ \nabla\_\phi ( \log p\_\theta(\mathbf{x},\mathbf{z}) - \log q\_\phi(\mathbf{z}|\mathbf{x}) ) \right]
+&\neq \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})}\left[ \nabla\_\phi ( \log p\_\theta(\mathbf{x},\mathbf{z}) - \log q\_\phi(\mathbf{z}|\mathbf{x}) ) \right].
 \end{aligned}$$
-
----
-
-class: middle
-
-Let us abbreviate
-$$\begin{aligned}
-\text{ELBO}(\mathbf{x};\theta,\phi) &= \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})}\left[ \log p\_\theta(\mathbf{x},\mathbf{z}) - \log q\_\phi(\mathbf{z}|\mathbf{x})\right] \\\\
-&= \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})}\left[ f(\mathbf{x}, \mathbf{z}; \phi) \right].
-\end{aligned}$$
-We have
-.grid[
-.kol-1-5[]
-.kol-4-5[.center.width-90[![](figures/lec11/reparam-original.svg)]]
-]
-
-We cannot backpropagate through the stochastic node $\mathbf{z}$ to compute $\nabla\_\phi f$!
 
 ---
 
@@ -554,7 +575,24 @@ class: middle
 
 ## Reparameterization trick
 
-The .italic[reparameterization trick] consists in re-expressing the variable $$\mathbf{z} \sim q\_\phi(\mathbf{z}|\mathbf{x})$$ as some differentiable and invertible transformation
+Let us abbreviate
+$$\begin{aligned}
+\text{ELBO}(\mathbf{x};\theta,\phi) &= \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})}\left[ \log p\_\theta(\mathbf{x},\mathbf{z}) - \log q\_\phi(\mathbf{z}|\mathbf{x})\right] \\\\
+&= \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})}\left[ f(\mathbf{x}, \mathbf{z}; \phi) \right].
+\end{aligned}$$
+The computational graph of a Monte Carlo estimate of the ELBO would look like
+.grid[
+.kol-1-5[]
+.kol-4-5[.center.width-75[![](figures/lec11/reparam-original.svg)]]
+]
+
+Issue: We cannot backpropagate through the stochastic node $\mathbf{z}$ to compute $\nabla\_\phi f$!
+
+---
+
+class: middle
+
+The reparameterization trick consists in re-expressing the variable $$\mathbf{z} \sim q\_\phi(\mathbf{z}|\mathbf{x})$$ as some differentiable and invertible transformation
 of another random variable $\epsilon$ given $\mathbf{x}$ and $\phi$,
 $$\mathbf{z} = g(\phi, \mathbf{x}, \epsilon),$$
 such that the distribution of $\epsilon$ is independent of $\mathbf{x}$ or $\phi$.
@@ -565,43 +603,56 @@ class: middle
 
 .grid[
 .kol-1-5[]
-.kol-4-5[.center.width-90[![](figures/lec11/reparam-reparam.svg)]]
+.kol-4-5[.center.width-70[![](figures/lec11/reparam-reparam.svg)]]
 ]
 
-For example, if $q\_\phi(\mathbf{z}|\mathbf{x}) = \mathcal{N}(\mathbf{z}; \mu(\mathbf{x};\phi), \sigma^2(\mathbf{x};\phi))$, where $\mu(\mathbf{x};\phi)$ and $\sigma^2(\mathbf{x};\phi)$
-are the outputs of the inference network $NN\_\phi$, then a common reparameterization is:
+If $q\_\phi(\mathbf{z}|\mathbf{x}) = \mathcal{N}(\mathbf{z}; \mu(\mathbf{x};\phi), \sigma^2(\mathbf{x};\phi))$, where $\mu(\mathbf{x};\phi)$ and $\sigma^2(\mathbf{x};\phi)$
+are the outputs of the inference network $NN\_\phi$, then a common reparameterization is
 $$\begin{aligned}
 p(\epsilon) &= \mathcal{N}(\epsilon; \mathbf{0}, \mathbf{I}) \\\\
-\mathbf{z} &= \mu(\mathbf{x};\phi) + \sigma(\mathbf{x};\phi) \odot \epsilon
+\mathbf{z} &= \mu(\mathbf{x};\phi) + \sigma(\mathbf{x};\phi) \odot \epsilon.
 \end{aligned}$$
 
 ---
 
 class: middle
 
-Given such a change of variable, the ELBO can be rewritten as:
+Given this change of variable, the ELBO can be rewritten as
 $$\begin{aligned}
 \text{ELBO}(\mathbf{x};\theta,\phi) &= \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})}\left[ f(\mathbf{x}, \mathbf{z}; \phi) \right]\\\\
-&= \mathbb{E}\_{p(\epsilon)} \left[ f(\mathbf{x}, g(\phi,\mathbf{x},\epsilon); \phi) \right]
+&= \mathbb{E}\_{p(\epsilon)} \left[ f(\mathbf{x}, g(\phi,\mathbf{x},\epsilon); \phi) \right].
 \end{aligned}$$
-Therefore,
+Therefore estimating the gradient of the ELBO with respect to $\phi$ is now easy, as
 $$\begin{aligned}
 \nabla\_\phi \text{ELBO}(\mathbf{x};\theta,\phi) &= \nabla\_\phi \mathbb{E}\_{p(\epsilon)} \left[  f(\mathbf{x}, g(\phi,\mathbf{x},\epsilon); \phi) \right] \\\\
 &= \mathbb{E}\_{p(\epsilon)} \left[ \nabla\_\phi  f(\mathbf{x}, g(\phi,\mathbf{x},\epsilon); \phi) \right],
 \end{aligned}$$
 which we can now estimate with Monte Carlo integration.
 
-The last required ingredient is the evaluation of the approximate posterior $q\_\phi(\mathbf{z}|\mathbf{x})$ given the change of variable $g$. As long as $g$ is invertible, we have:
+The last required ingredient is the evaluation of the approximate posterior $q\_\phi(\mathbf{z}|\mathbf{x})$ given the change of variable $g$. As long as $g$ is invertible, we have
 $$\log q\_\phi(\mathbf{z}|\mathbf{x}) = \log p(\epsilon) - \log \left| \det\left( \frac{\partial \mathbf{z}}{\partial \epsilon} \right) \right|.$$
 
 ---
 
 class: middle
 
-## Example
+## Step-by-step example
 
-Consider the following setup:
-- Generative model:
+Consider as data $\mathbf{d}$ the MNIST digit dataset:
+
+.center.width-80[![](figures/lec11/mnist.png)]
+
+---
+
+class: middle
+
+.center.width-90[![](figures/lec11/vae-architecture-mnist.png)]
+
+---
+
+class: middle
+
+- Decoder $p\_\theta(\mathbf{x}|\mathbf{z})$:
 $$\begin{aligned}
 \mathbf{z} &\in \mathbb{R}^d \\\\
 p(\mathbf{z}) &= \mathcal{N}(\mathbf{z}; \mathbf{0},\mathbf{I})\\\\
@@ -616,7 +667,7 @@ p\_\theta(\mathbf{x}|\mathbf{z}) &= \mathcal{N}(\mathbf{x};\mu(\mathbf{z};\theta
 
 class: middle
 
-- Inference model:
+- Encoder $q\_\phi(\mathbf{z}|\mathbf{x})$:
 $$\begin{aligned}
 q\_\phi(\mathbf{z}|\mathbf{x}) &=  \mathcal{N}(\mathbf{z};\mu(\mathbf{x};\phi), \sigma^2(\mathbf{x};\phi)\mathbf{I}) \\\\
 p(\epsilon) &= \mathcal{N}(\epsilon; \mathbf{0}, \mathbf{I}) \\\\
@@ -627,17 +678,17 @@ p(\epsilon) &= \mathcal{N}(\epsilon; \mathbf{0}, \mathbf{I}) \\\\
 \phi &= \\\{ \mathbf{W}\_4, \mathbf{b}\_4, \mathbf{W}\_5, \mathbf{b}\_5, \mathbf{W}\_6, \mathbf{b}\_6 \\\}
 \end{aligned}$$
 
-Note that there is no restriction on the generative and inference network architectures.
+Note that there is no restriction on the encoder and decoder network architectures.
 They could as well be arbitrarily complex convolutional networks.
 
 ---
 
 class: middle
 
-Plugging everything together, the objective can be expressed as:
+Plugging everything together, the objective can be expressed as
 $$\begin{aligned}
 \text{ELBO}(\mathbf{x};\theta,\phi) &= \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})} \left[ \log p\_\theta(\mathbf{x}|\mathbf{z}) \right] - \text{KL}(q\_\phi(\mathbf{z}|\mathbf{x}) || p(\mathbf{z})) \\\\
-&= \mathbb{E}\_{p(\epsilon)} \left[  \log p(\mathbf{x}|\mathbf{z}=g(\phi,\mathbf{x},\epsilon);\theta) \right] - \text{KL}(q\_\phi(\mathbf{z}|\mathbf{x}) || p(\mathbf{z}))
+&= \mathbb{E}\_{p(\epsilon)} \left[  \log p(\mathbf{x}|\mathbf{z}=g(\phi,\mathbf{x},\epsilon);\theta) \right] - \text{KL}(q\_\phi(\mathbf{z}|\mathbf{x}) || p(\mathbf{z})),
 \end{aligned}
 $$
 where the negative KL divergence can be expressed  analytically as
@@ -648,29 +699,33 @@ which allows to evaluate its derivative without approximation.
 
 class: middle
 
-Consider as data $\mathbf{d}$ the MNIST digit dataset:
+.center.width-100[![](figures/lec11/vae-samples.png)]
 
-.center.width-100[![](figures/lec11/mnist.png)]
-
----
-
-class: middle, center
-
-.width-100[![](figures/lec11/vae-samples.png)]
-
-(Kingma and Welling, 2013)
+.footnote[Credits: [Kingma and Welling](https://arxiv.org/abs/1312.6114), 2013.]
 
 ---
 
-class: middle, center
+class: middle
 
-.width-95[![](figures/lec11/vae-interpolation.png)]
+.center.width-95[![](figures/lec11/vae-interpolation.png)]
 
-(Kingma and Welling, 2013)
+.footnote[Credits: [Kingma and Welling](https://arxiv.org/abs/1312.6114), 2013.]
 
 ---
 
-# Applications
+class: middle
+
+## A semantically meaningful latent space
+
+The prior-matching term $\text{KL}(q\_\phi(\mathbf{z}|\mathbf{x}) || p(\mathbf{z}))$ enforces simplicity in the latent space, encouraging learned semantic structure and disentanglement.
+
+.center.width-100[![](figures/lec11/latent-space.png)]
+
+.footnote[Credits: [Siddharth Mishra-Sharma](https://smsharma.io/iaifi-summer-school-2023/), 2023.]
+
+---
+
+# Some selected applications
 
 <br>
 
@@ -682,6 +737,7 @@ Hierarchical .bold[compression of images and other data],<br> e.g., in video con
 
 ---
 
+exclude: true
 class: middle
 
 .center[
@@ -711,6 +767,7 @@ class: middle
 
 ---
 
+exclude: true
 class: middle
 
 .center[

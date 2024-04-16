@@ -8,6 +8,11 @@ Lecture 10: Uncertainty
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+R: Code the GMM example
+R: Code the NF with coupling layers and visualize the transformations
+
 ---
 
 class: middle
@@ -299,7 +304,7 @@ where $\frac{1}{8} = \left| \det \left( \begin{matrix}
 2 & 0 & 0 \\\\ 
 0 & 2 & 0 \\\\
 0 & 0 & 2
-\end{matrix} \right)\right|^{-1}$ represents the inverse determinant of the linear transformation $f$.
+\end{matrix} \right)\right|^{-1}$ represents the inverse determinant of the Jacobian of the linear transformation $f$.
 
 ???
 
@@ -349,6 +354,10 @@ $$\mathbf{x}\_a = \mathbf{z}\_a, \quad \mathbf{x}\_b = \mathbf{z}\_b \odot \exp(
 $$\mathbf{z}\_a = \mathbf{x}\_a, \quad \mathbf{z}\_b = (\mathbf{x}\_b - t(\mathbf{x}\_a)) \odot \exp(-s(\mathbf{x}\_a)),$$
 
 where $s$ and $t$ are arbitrary neural networks.
+
+???
+
+Draw the coupling layer on the blackboard.
 
 ---
 
@@ -537,7 +546,7 @@ In the context of Bayesian neural networks, this procedure is also known as **Ba
 
 Dropout is an empirical technique that was first proposed to avoid overfitting in neural networks.
 
-At each training step:
+At each *training step*:
 - Remove each node in the network with a probability $p$.
 - Update the weights of the remaining nodes with backpropagation.
 

@@ -10,6 +10,7 @@ Prof. Gilles Louppe<br>
 
 ???
 
+R: prepare a new demo with Lucie's kitchen set. Old code does not seem to work so well anymore.
 R: add a tiny unet code example, this would make things more concrete than discussing over too many architectures. It is also a good example to show the transposed convolution.
 
 ---
