@@ -580,13 +580,12 @@ $$\begin{aligned}
 \text{ELBO}(\mathbf{x};\theta,\phi) &= \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})}\left[ \log p\_\theta(\mathbf{x},\mathbf{z}) - \log q\_\phi(\mathbf{z}|\mathbf{x})\right] \\\\
 &= \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})}\left[ f(\mathbf{x}, \mathbf{z}; \phi) \right].
 \end{aligned}$$
-The computational graph of a Monte Carlo estimate of the ELBO would look like
-.grid[
+The computational graph of a Monte Carlo estimate of the ELBO would look like .grid[
 .kol-1-5[]
 .kol-4-5[.center.width-75[![](figures/lec11/reparam-original.svg)]]
 ]
 
-Issue: We cannot backpropagate through the stochastic node $\mathbf{z}$ to compute $\nabla\_\phi f$!
+Issue: We **cannot backpropagate** through the stochastic node $\mathbf{z}$ to compute $\nabla\_\phi f$!
 
 ---
 
@@ -631,6 +630,12 @@ which we can now estimate with Monte Carlo integration.
 
 The last required ingredient is the evaluation of the approximate posterior $q\_\phi(\mathbf{z}|\mathbf{x})$ given the change of variable $g$. As long as $g$ is invertible, we have
 $$\log q\_\phi(\mathbf{z}|\mathbf{x}) = \log p(\epsilon) - \log \left| \det\left( \frac{\partial \mathbf{z}}{\partial \epsilon} \right) \right|.$$
+
+---
+
+class: middle, center
+
+(demo)
 
 ---
 

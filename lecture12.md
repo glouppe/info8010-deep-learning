@@ -16,7 +16,6 @@ Good references:
 - Understanding Deep Learning book
 - Continuous : infinite noise levels https://www.youtube.com/watch?v=wMmqCMwuM2Q (build some intuition first)
 
-- Check SSI2023 talk for updates
 - Rewrite to better match the sidenotes
 - Give more intuition about the score function and about the annealing schedule
 
@@ -175,9 +174,10 @@ The prior $p(\mathbf{z})$ is itself a VAE, and recursively so for its own hyper-
 
 class: middle
 
-Similarly to VAEs, training is done by maximizing the ELBO.
-
-(See side notes.)
+Similarly to VAEs, training is done by maximizing the ELBO, using a variational distribution $q\_\phi(\mathbf{z}\_{1:T} | \mathbf{x})$ over all levels of latent variables:
+$$\begin{aligned}
+\log p\_\theta(\mathbf{x}) &\geq \mathbb{E}\_{q\_\phi(\mathbf{z}\_{1:T} | \mathbf{x})}\left[ \log \frac{p(\mathbf{x},\mathbf{z}\_{1:T})}{q\_\phi(\mathbf{z}\_{1:T}|\mathbf{x})} \right] 
+\end{aligned}$$
 
 ???
 
@@ -416,8 +416,6 @@ $$\begin{aligned}
 
 class: middle
 
-## Algorithms
-
 .center.width-100[![](figures/lec12/algorithms.png)]
 
 ???
@@ -430,7 +428,7 @@ class: middle
 
 ## Network architectures
 
-Diffusion models often use U-Net architectures with ResNet blocks and self-attention layers to represent $\epsilon\_\theta(\mathbf{x}\_t, t)$.
+Diffusion models often use U-Net architectures with ResNet blocks and self-attention layers to represent $\hat{\mathbf{x}}\_\theta(\mathbf{x}\_t, t)$ or $\epsilon\_\theta(\mathbf{x}\_t, t)$.
 
 <br>
 
@@ -448,9 +446,7 @@ class: middle
 
 class: middle
 
-## The score function
-
-The score function $\nabla\_{\mathbf{x}\_0} \log q(\mathbf{x}\_0)$ is a vector field that points in the direction of the highest density of the data distribution $q(\mathbf{x}\_0)$.
+The .bold[score function] $\nabla\_{\mathbf{x}\_0} \log q(\mathbf{x}\_0)$ is a vector field that points in the direction of the highest density of the data distribution $q(\mathbf{x}\_0)$.
 
 It can be used to find modes of the data distribution or to generate samples by Langevin dynamics.
 
@@ -501,6 +497,7 @@ $$s\_\theta(\mathbf{x}\_t, t) \approx \nabla\_{\mathbf{x}\_t} \log q(\mathbf{x}\
 
 ---
 
+exclude: true
 class: middle
 
 ## Ancestral sampling
@@ -549,7 +546,7 @@ $$\begin{aligned}
 
 class: middle
 
-In the limit of many small steps, i.e. as $\Delta\_t \rightarrow 0$, we can further rewrite the forward process as
+When $\Delta\_t \rightarrow 0$, we can further rewrite the forward process as
 $$\begin{aligned}
 \mathbf{x}\_t &= \sqrt{1 - {\beta}(t)\Delta\_t} \mathbf{x}\_{t-1} + \sqrt{ {\beta}(t)\Delta\_t} \mathcal{N}(\mathbf{0}, \mathbf{I}) \\\\
 &\approx \mathbf{x}\_{t-1} - \frac{\beta(t)\Delta\_t}{2} \mathbf{x}\_{t-1} + \sqrt{ {\beta}(t)\Delta\_t} \mathcal{N}(\mathbf{0}, \mathbf{I}) 
@@ -559,13 +556,7 @@ This last update rule corresponds to the Euler-Maruyama discretization of the st
 $$\text{d}\mathbf{x}\_t = -\frac{1}{2}\beta(t)\mathbf{x}\_t \text{d}t + \sqrt{\beta(t)} \text{d}\mathbf{w}\_t$$
 describing the diffusion in the infinitesimal limit.
 
----
-
-class: middle
-
 .center.width-80[![](figures/lec12/perturb_vp.gif)]
-
-.footnote[Credits: [Song](https://yang-song.net/blog/2021/score/), 2021.]
 
 ---
 
@@ -573,10 +564,6 @@ class: middle
 
 The reverse process satisfies a reverse-time SDE that can be derived analytically from the forward-time SDE and the score of the marginal distribution $q(\mathbf{x}\_t)$, as
 $$\text{d}\mathbf{x}\_t = \left[ -\frac{1}{2}\beta(t)\mathbf{x}\_t - \beta(t)\nabla\_{\mathbf{x}\_t} \log q(\mathbf{x}\_t) \right] \text{d}t + \sqrt{\beta(t)} \text{d}\mathbf{w}\_t.$$
-
----
-
-class: middle
 
 .center.width-80[![](figures/lec12/denoise_vp.gif)]
 
@@ -591,6 +578,23 @@ $$\arg \min\_\theta \mathbb{E}\_{q(\mathbf{x}\_0)} \mathbb{E}\_{t\sim U[0,T]} \m
 which will result in $s\_\theta(\mathbf{x}\_t, t) \approx \nabla\_{\mathbf{x}\_t} \log q(\mathbf{x}\_t)$ because of the outer expectation over $q(\mathbf{x}\_0)$.
 
 .success[This is just the .bold[same objective] as for VDMs! (See Interpretation 3)]
+
+---
+
+class: middle
+
+## Probability flow ODE
+
+For any diffusion process, there exists a corresponding deterministic process 
+$$\text{d}\mathbf{x}\_t = \left[ \mathbf{f}(t, \mathbf{x}\_t) - \frac{1}{2} g^2(t) \nabla\_{\mathbf{x}\_t} \log p(\mathbf{x}\_t) \right] \text{d}t$$
+whose trajectories share the same marginal densities $p(\mathbf{x}\_t)$.
+
+Therefore, when $\nabla\_{\mathbf{x}\_t} \log p(\mathbf{x}\_t)$ is replaced by its approximation $s\_\theta(\mathbf{x}\_t, t)$, the probability flow ODE becomes a special case of a neural ODE. In particular, it is an example of continuous-time normalizing flows!
+
+.center.width-80[![](figures/lec12/flow-ode.jpg)]
+
+.footnote[Credits: [Song](https://yang-song.net/blog/2021/score/), 2021.]
+
 
 ---
 
