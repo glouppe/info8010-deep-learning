@@ -148,6 +148,15 @@ count: false
 
 class: middle
 
+.center.width-90[![](figures/lec11/embedding0.png)]
+
+.footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
+
+---
+
+class: middle
+count: false
+
 .center.width-90[![](figures/lec11/embedding1.png)]
 
 .footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
@@ -558,7 +567,8 @@ Unbiased gradients of the ELBO with respect to the generative model parameters $
 $$\begin{aligned}
 \nabla\_\theta \text{ELBO}(\mathbf{x};\theta,\phi) &= \nabla\_\theta \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})}\left[ \log p\_\theta(\mathbf{x},\mathbf{z}) - \log q\_\phi(\mathbf{z}|\mathbf{x})\right] \\\\
 &= \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})}\left[ \nabla\_\theta ( \log p\_\theta(\mathbf{x},\mathbf{z}) - \log q\_\phi(\mathbf{z}|\mathbf{x}) ) \right] \\\\
-&= \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})}\left[ \nabla\_\theta \log p\_\theta(\mathbf{x},\mathbf{z}) \right],
+&= \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})}\left[ \nabla\_\theta \log p\_\theta(\mathbf{x},\mathbf{z}) \right] \\\\
+&= \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})}\left[ \nabla\_\theta \log p\_\theta(\mathbf{x} | \mathbf{z}) \right],
 \end{aligned}$$
 which can be estimated with Monte Carlo integration.
 

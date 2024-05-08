@@ -12,6 +12,9 @@ Prof. Gilles Louppe<br>
 
 R: paper https://t.co/wVg6xUmt7d
 
+Q&A: ask me anything (during the course, on any topic, questions collected on a platform)
+Give examples more related to engineering and science. Focus on people rather than technology.
+
 ---
 
 # Us

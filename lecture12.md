@@ -8,17 +8,6 @@ Lecture 12: Diffusion models
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-Good references:
-- https://arxiv.org/pdf/2208.11970.pdf
-- https://cvpr2022-tutorial-diffusion-models.github.io/
-- Understanding Deep Learning book
-- Continuous : infinite noise levels https://www.youtube.com/watch?v=wMmqCMwuM2Q (build some intuition first)
-
-- Rewrite to better match the sidenotes
-- Give more intuition about the score function and about the annealing schedule
-
 ---
 
 # Today
@@ -113,6 +102,16 @@ class: middle
 
 class: middle
 
+## Data assimilation in ocean models
+
+.center.width-65[![](./figures/lec12/sda-qg.png)]
+
+.footnote[Credits: [Rozet and Louppe](https://arxiv.org/pdf/2306.10574.pdf), 2023.]
+
+---
+
+class: middle
+
 # VAEs
 
 A short recap.
@@ -141,24 +140,20 @@ $$\begin{aligned}
 &= \arg \max\_{\theta,\phi} \mathbb{E}\_{p(\mathbf{x})} \left[ \mathbb{E}\_{q\_\phi(\mathbf{z}|\mathbf{x})}\left[ \log p\_\theta(\mathbf{x}|\mathbf{z})\right] - \text{KL}(q\_\phi(\mathbf{z}|\mathbf{x}) || p(\mathbf{z})) \right].
 \end{aligned}$$
 
----
-
-class: middle
-
-The prior matching term limits the expressivity of the model.
-
-Solution: Make $p(\mathbf{z})$ a learnable distribution.
-
-???
-
-Explain the maths on the black board, taking the expectation wrt $p(\mathbf{x})$ of the ELBO and consider the expected KL terms.
+.alert[Issue: The prior matching term limits the expressivity of the model.]
 
 ---
 
 class: middle, black-slide, center
 count: false
 
+ Solution: Make $p(\mathbf{z})$ a learnable distribution.
+
 .width-80[![](figures/lec12/deeper.jpg)]
+
+???
+
+Explain the maths on the black board, taking the expectation wrt $p(\mathbf{x})$ of the ELBO and consider the expected KL terms.
 
 ---
 
@@ -262,6 +257,12 @@ class: middle
 
 .center.width-100[![](figures/lec12/diffusion-kernel-1.png)]
 
+.center[
+     
+Diffusion kernel $q(\mathbf{x}\_t | \mathbf{x}\_{0})$ for different noise levels $t$.
+
+]
+
 .footnote[Credits: [Simon J.D. Prince](https://udlbook.github.io/udlbook/), 2023.]
 
 ---
@@ -269,6 +270,12 @@ class: middle
 class: middle
 
 .center.width-100[![](figures/lec12/diffusion-kernel-2.png)]
+
+.center[
+
+Marginal distribution $q(\mathbf{x}\_t)$.
+
+]
 
 .footnote[Credits: [Simon J.D. Prince](https://udlbook.github.io/udlbook/), 2023.]
 
@@ -416,6 +423,8 @@ $$\begin{aligned}
 
 class: middle
 
+In summary, training and sampling thus eventually boils down to:
+
 .center.width-100[![](figures/lec12/algorithms.png)]
 
 ???
@@ -428,7 +437,7 @@ class: middle
 
 ## Network architectures
 
-Diffusion models often use U-Net architectures with ResNet blocks and self-attention layers to represent $\hat{\mathbf{x}}\_\theta(\mathbf{x}\_t, t)$ or $\epsilon\_\theta(\mathbf{x}\_t, t)$.
+Diffusion models often use U-Net architectures (at least for image data)  with ResNet blocks and self-attention layers to represent $\hat{\mathbf{x}}\_\theta(\mathbf{x}\_t, t)$ or $\epsilon\_\theta(\mathbf{x}\_t, t)$.
 
 <br>
 
@@ -446,11 +455,71 @@ class: middle
 
 class: middle
 
-The .bold[score function] $\nabla\_{\mathbf{x}\_0} \log q(\mathbf{x}\_0)$ is a vector field that points in the direction of the highest density of the data distribution $q(\mathbf{x}\_0)$.
+## Score-based models
 
-It can be used to find modes of the data distribution or to generate samples by Langevin dynamics.
+Maximum likelihood estimation for energy-based probabilistic models $$p\_{\theta}(\mathbf{x}) = \frac{1}{Z\_{\theta}} \exp(-f\_{\theta}(\mathbf{x}))$$ can be intractable when the partition function $Z\_{\theta}$ is unknown.
+We can sidestep this issue with a score-based model $$s\_\theta(\mathbf{x}) \approx \nabla\_{\mathbf{x}} \log p(\mathbf{x})$$ that approximates the (Stein) .bold[score function] of the data distribution. If we parameterize the score-based model with an energy-based model, then we have $$s\_\theta(\mathbf{x}) = \nabla\_{\mathbf{x}} \log p\_{\theta}(\mathbf{x}) = -\nabla\_{\mathbf{x}} f\_{\theta}(\mathbf{x}) - \nabla\_{\mathbf{x}} \log Z\_{\theta} = -\nabla\_{\mathbf{x}} f\_{\theta}(\mathbf{x}),$$
+which discards the intractable partition function and expands the family of models that can be used.
 
-.center.width-40[![](figures/lec12/langevin.gif)]
+---
+
+class: middle
+
+The score function points in the direction of the highest density of the data distribution. 
+It can be used to find modes of the data distribution or to generate samples by .bold[Langevin dynamics] by iterating the following sampling rule
+$$\mathbf{x}\_{i+1} = \mathbf{x}\_i + \epsilon \nabla\_{\mathbf{x}\_i} \log p(\mathbf{x}\_i) + \sqrt{2\epsilon} \mathbf{z}\_i,$$
+where $\epsilon$ is the step size and $\mathbf{z}\_i \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$. When $\epsilon$ is small, Langevin dynamics will converge to the data distribution $p(\mathbf{x})$.
+
+.center.width-30[![](figures/lec12/langevin.gif)]
+
+.footnote[Credits: [Song](https://yang-song.net/blog/2021/score/), 2021.]
+
+---
+
+class: middle
+
+Similarly to likelihood-based models, score-based models can be trained by minimizing the .bold[Fisher divergence] between the data distribution $p(\mathbf{x})$ and the model distribution $p\_\theta(\mathbf{x})$ as
+$$\mathbb{E}\_{p(\mathbf{x})} \left[ || \nabla\_{\mathbf{x}} \log p(\mathbf{x}) - s\_\theta(\mathbf{x}) ||\_2^2 \right].$$
+
+---
+
+class: middle
+
+Unfortunately, the explicit score matching objective leads to inaccurate estimates in low-density regions, where few data points are available to constrain the score. 
+
+Since initial sample points are likely to be in low-density regions in high-dimensional spaces, the inaccurate score-based model will derail the Langevin dynamics and lead to poor sample quality.
+
+.center.width-100[![](figures/lec12/pitfalls.jpg)]
+
+.footnote[Credits: [Song](https://yang-song.net/blog/2021/score/), 2021.]
+
+---
+
+class: middle
+
+To address this issue, .bold[denoising score matching] can be used to train the score-based model to predict the score of increasingly noisified data points.
+
+For each noise level $t$, the score-based model $s\_\theta(\mathbf{x}\_t, t)$ is trained to predict the score of the noisified data point $\mathbf{x}\_t$ as
+$$s\_\theta(\mathbf{x}\_t, t) \approx \nabla\_{\mathbf{x}\_t} \log p\_{t} (\mathbf{x}\_t)$$
+where $p\_{t} (\mathbf{x}\_t)$ is the noise-perturbed data distribution 
+$$p\_{t} (\mathbf{x}\_t) = \int p(\mathbf{x}\_0) \mathcal{N}(\mathbf{x}\_t ; \mathbf{x}\_0, \sigma^2\_t \mathbf{I}) d\mathbf{x}\_0$$
+and $\sigma^2\_t$ is an increasing sequence of noise levels.
+
+---
+
+class: middle
+
+The training objective for $s\_\theta(\mathbf{x}\_t, t)$ is then a weighted sum of Fisher divergences for all noise levels $t$, 
+$$\sum\_{t=1}^T \lambda(t) \mathbb{E}\_{p\_{t}(\mathbf{x}\_t)} \left[ || \nabla\_{\mathbf{x}\_t} \log p\_{t}(\mathbf{x}\_t) - s\_\theta(\mathbf{x}\_t, t) ||\_2^2 \right]$$
+where $\lambda(t)$ is a weighting function that increases with $t$ to give more importance to the noisier samples.
+
+---
+
+class: middle
+
+Finally, annealed Langevin dynamics can be used to sample from the score-based model by running Langevin dynamics with decreasing noise levels $t=T, ..., 1$.
+
+.center.width-100[![](figures/lec12/ald.gif)]
 
 .footnote[Credits: [Song](https://yang-song.net/blog/2021/score/), 2021.]
 

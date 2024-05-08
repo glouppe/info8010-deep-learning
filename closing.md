@@ -30,6 +30,12 @@ The models covered in this course have broad applications in artificial intellig
 
 class: middle
 
+The field of deep learning is evolving rapidly. What you have learned in this course is just the beginning!
+
+---
+
+class: middle
+
 ## Exam
 
 - 1 question on the fundamentals of deep learning (lectures 1 to 4)  
@@ -73,7 +79,7 @@ class: black-slide, middle
 - Deep Learning is more than feedforward networks.
 - It is a .bold[methodology]:
   - assemble networks of parameterized functional blocks 
-  - train them from examples using some form of gradient-based optimisation.
+  - train them from data using some form of gradient-based optimisation.
 - Bricks are simple, but their nested composition can be arbitrarily complicated.
 - Think like an architect: make cathedrals!
 ]
