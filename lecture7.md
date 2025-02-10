@@ -8,6 +8,10 @@ Lecture 7: Attention and transformers
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+- Add https://poloclub.github.io/transformer-explainer/
+
 ---
 
 # Today

@@ -13,6 +13,7 @@ Prof. Gilles Louppe<br>
 R: it takes 2h30 to cover the first part (up to score-based models, excluded).
 => Stop there, show a code example instead, but keep the rest of the slides for reference.
 R: the applications are pretty cool but their presentation is too superficial. Go in more details and explain where/how the diffusion models are used in each case. Drop a few examples if needed.
+R: check Francis Bach's slides on diffusion models without diffusion
 
 ---
 
