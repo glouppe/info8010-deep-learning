@@ -11,6 +11,7 @@ Prof. Gilles Louppe<br>
 ???
 
 R: since the lecture is short, add a code example at the end. Check UDL
+R: paper https://t.co/wVg6xUmt7d
 
 ---
 

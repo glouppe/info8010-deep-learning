@@ -2,15 +2,13 @@ class: middle, center, title-slide
 
 # Deep Learning
 
-Spring 2024
+Spring 2025
 
 <br><br>
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](g.louppe@uliege.be)
 
 ???
-
-R: paper https://t.co/wVg6xUmt7d
 
 Q&A: ask me anything (during the course, on any topic, questions collected on a platform)
 Give examples more related to engineering and science. Focus on people rather than technology.
@@ -21,7 +19,6 @@ Give examples more related to engineering and science. Focus on people rather th
 
 - Instructor: Gilles Louppe ([g.louppe@uliege.be](mailto:g.louppe@uliege.be))
 - Projects and guidance: 
-  - Arnaud Delaunoy
   - François Rozet
   - Yann Claes
   - Victor Dachet
@@ -30,7 +27,6 @@ Give examples more related to engineering and science. Focus on people rather th
 
 .center[
 .circle.width-15[![](figures/course-syllabus/gilles.jpg)] &nbsp;
-.circle.width-15[![](figures/course-syllabus/arnaud.jpg)] &nbsp;
 .circle.width-15[![](figures/course-syllabus/francois.jpg)] &nbsp;
 .circle.width-15[![](figures/course-syllabus/yann.jpg)] &nbsp;
 .circle.width-15[![](figures/course-syllabus/victor.jpg)] 
@@ -84,45 +80,32 @@ class: middle
 
 Videos from Spring 2021 are available at [https://bit.ly/3roQmea](https://bit.ly/3roQmea), but they are not up-to-date with the current materials.
 
+New videos will be recorded this year throughout the course.
+
 .center.width-70[![](figures/course-syllabus/youtube.png)]
 
 ---
 
 # Projects
 
-## Reading assignment
-
-Read, summarize and criticize a major scientific paper in deep learning. Details to be announced soon.
-
-.center.width-60[![](figures/course-syllabus/alphago-paper.png)]
-
----
-
-class: middle
-
 ## Homeworks
 
 Short exercises to get you started with the practicals of deep learning.
 
----
-
-class: middle
-
 ## Project
 
-Project of your choosing. Details to be announced soon.
+Programming project of your choosing to apply deep learning to a problem of your interest.
 
 ---
 
 # Evaluation
 
 - Oral exam (50%)
-- Reading assignment (10%)
-- Projects (40%)
+- Projects (50%)
   - Homeworks (10%) (optional)
-  - Programming project (30% or 40%)
+  - Programming project (40% or 50%)
 
-The reading assignment and the projects are **mandatory** for presenting the exam.
+The programming project is **mandatory** for presenting the exam.
 
 ---
 

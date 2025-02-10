@@ -271,22 +271,6 @@ These applications however, are often deeply embedded in the tools used by healt
 
 ---
 
-class: middle, center, black-slide
-
-<iframe width="600" height="450" src="https://www.youtube.com/embed/oYUcl_cqKcs" frameborder="0" allowfullscreen></iframe>
-
-Object detection, pose estimation, segmentation (Meta AI, 2023)
-
----
-
-class: middle, center, black-slide
-
-<iframe width="600" height="450" src="https://www.youtube.com/embed/hA_-MkU0Nfw" frameborder="0" allowfullscreen></iframe>
-
-Building autonomous cars (Waymo, 2022)
-
----
-
 class: middle, black-slide, center
 
 <iframe width="600" height="450" src="https://www.youtube.com/embed/zrcxLZmOyNA" frameborder="0" allowfullscreen></iframe>
@@ -303,59 +287,61 @@ How AI is advancing medicine (Google, 2023)
 
 ---
 
+class: middle, center, black-slide
+
+<iframe width="600" height="450" src="https://www.youtube.com/embed/hA_-MkU0Nfw" frameborder="0" allowfullscreen></iframe>
+
+Building autonomous cars (Waymo, 2022)
+
+---
+
 class: middle
 
+## The breakthrough
+
 .grid[
-.kol-2-5.center.width-100[![](./figures/lec0/transformer.svg)]
-.kol-3-5.center.width-100[<br>![](./figures/lec0/scaling.png)]
+.kol-1-2.center[.width-100[<br>![](./figures/lec0/attention.png) 
+
+Vaswani et al., 2017.]]
+.kol-1-2[.width-100[![](./figures/lec0/transformer.svg)]]
 ]
 
-## From large to enormous
+---
+
+class: middle
+
+.width-100[![](./figures/lec0/scaling-power-law.png)]
+
+A brutal simplicity: 
+- The more data, the better the model.
+- The more parameters, the better the model.
+- The more compute, the better the model.
 
 Scaling up further to gigantic models, datasets, and compute resources keeps pushing the boundaries of what is possible, .bold[with no sign of slowing down].
 
-???
+---
 
-Meanwhile, research in deep learning has continued at a fast pace, with the development of new models, new algorithms, and new applications.
+class: middle, center, black-slide
 
-One of the most important developments in recent years has been the introduction of the transformer architecture.
+<iframe width="600" height="450" src="https://www.youtube.com/embed/-dWfl7Dhb0o" frameborder="0" allowfullscreen></iframe>
 
-This architecture has been key to scaling up the size of our models and the amount of data we can use to train them. Today, the largest models count up to hundreds of billions of parameters, and are trained on datasets with hundreds of terabytes of data.
-
-To our surprise, these gigantic models keep pushing the boundaries of what is possible, with no sign of slowing down. Make them bigger, train them on more data, and they keep getting better.
+Conversational AI assistants (Anthropic, 2024)
 
 ---
 
-class: middle, center
-background-color: #343541
+class: middle, center, black-slide
 
-<video src="./figures/lec0/chatgpt.webm" controls loop muted width=640 height=640></video>
+<iframe width="600" height="450" src="https://www.youtube.com/embed/o5uvDZ8srHA" frameborder="0" allowfullscreen></iframe>
 
-???
-
-The pinnacle of this scaling up has been the development of conversational and generative AI systems. The most famous and successful example being of course OpenAI's ChatGPT.
-
-[play video]
-
-These systems are trained to generate human-like text, and can be used to answer questions, write stories, or even have a conversation with a human.
-
-For example, here is a short conversation with ChatGPT about hematology and what I should know about it, as a non-professional.
-
-These systems keep getting better, the pace of progress is really fast and impressive. For example, the latest versions of those systems are multi-modal, meaning that they can generate not only text, but also images and sounds.
+Code assistants (Cursor, 2024)
 
 ---
 
-class: middle, center
+class: middle, black-slide, center
 
-.center.width-50[![](./figures/lec0/medpalm2.gif)]
+<iframe width="600" height="450" src="https://www.youtube.com/embed/fWWCdqyYRPI" frameborder="0" allowfullscreen></iframe>
 
-.center[Med-PaLM 2 (Google) is a large language model tuned for the medical domain. It reaches 85%+ accuracy on US Medical Licensing Examination-style questions.] 
-
-???
-
-What makes these AI systems really different is that they offer a new interface. AI is no longer embedded in tools but in direct contact with us, humans.
-
-For example, Med-PaLM 2 is a large language model tuned for the medical domain. It can be interacted with using natural language, as if you were talking to a medical expert. You do not need to know how to write code or how to define these mathematical models. You just ask a question, and it will give you an answer.
+Not just text, but also images and sounds.
 
 ---
 
@@ -422,20 +408,9 @@ In a sense, they can serve as a virtual laboratory that can be used to pre-scree
 
 class: middle
 
-## Predicting cardiovascular risks from retinal images
+## GraphCast: fast and accurate weather forecasts
 
-.grid[
-.kol-1-2.center.width-100[![](./figures/lec0/retina1.jpg)]
-.kol-1-2.center.width-100[![](./figures/lec0/retina2.png)]
-]
-
-???
-
-Finally, a third example is the use of deep learning to predict cardiovascular risks from retinal images.
-
-As I understand it, predicting cardiovascular risks and other factors from retinal fundus photographs was previously considered impossible because no relevant features were believed to be visible in these images. However, a few years ago, a team of researchers from Google showed that it was possible to predict cardiovascular risks from retinal images with high accuracy, using a deep neural network.
-
-Not only this is interesting from a medical perspective, but it also points to the fact that deep neural networks can be used to make discoveries in unexpected places, because of their ability to pick up complex and latent patterns from data that are difficult to understand for humans.
+.center.width-75[![](./figures/lec0/graphcast.jpg)]
 
 ---
 
