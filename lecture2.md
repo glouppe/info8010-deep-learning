@@ -320,97 +320,97 @@ class: middle
 
 ## Expressiveness
 
-Let us consider the 1-hidden layer MLP $$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$ This model can approximate .bold[any] smooth 1D function, provided enough hidden units.
+Let us consider the 1-hidden layer MLP $$f(x) = \sum w\_i \text{sign}(x + b_i).$$ This model can approximate .bold[any] smooth 1D function, provided enough hidden units.
 
 ---
 
 class: middle
 
-.center[![](figures/lec2/ua-0.png)]
-
----
-
-class: middle
-count: false
-
-.center[![](figures/lec2/ua-1.png)]
+.center[![](figures/lec2/ua-heavyside-0.png)]
 
 ---
 
 class: middle
 count: false
 
-.center[![](figures/lec2/ua-2.png)]
+.center[![](figures/lec2/ua-heavyside-1.png)]
 
 ---
 
 class: middle
 count: false
 
-.center[![](figures/lec2/ua-3.png)]
+.center[![](figures/lec2/ua-heavyside-2.png)]
 
 ---
 
 class: middle
 count: false
 
-.center[![](figures/lec2/ua-4.png)]
+.center[![](figures/lec2/ua-heavyside-3.png)]
 
 ---
 
 class: middle
 count: false
 
-.center[![](figures/lec2/ua-5.png)]
+.center[![](figures/lec2/ua-heavyside-4.png)]
 
 ---
 
 class: middle
 count: false
 
-.center[![](figures/lec2/ua-6.png)]
+.center[![](figures/lec2/ua-heavyside-5.png)]
 
 ---
 
 class: middle
 count: false
 
-.center[![](figures/lec2/ua-7.png)]
+.center[![](figures/lec2/ua-heavyside-6.png)]
 
 ---
 
 class: middle
 count: false
 
-.center[![](figures/lec2/ua-8.png)]
+.center[![](figures/lec2/ua-heavyside-7.png)]
 
 ---
 
 class: middle
 count: false
 
-.center[![](figures/lec2/ua-9.png)]
+.center[![](figures/lec2/ua-heavyside-8.png)]
 
 ---
 
 class: middle
 count: false
 
-.center[![](figures/lec2/ua-10.png)]
+.center[![](figures/lec2/ua-heavyside-9.png)]
 
 ---
 
 class: middle
 count: false
 
-.center[![](figures/lec2/ua-11.png)]
+.center[![](figures/lec2/ua-heavyside-10.png)]
 
 ---
 
 class: middle
 count: false
 
-.center[![](figures/lec2/ua-12.png)]
+.center[![](figures/lec2/ua-heavyside-11.png)]
+
+---
+
+class: middle
+count: false
+
+.center[![](figures/lec2/ua-heavyside-12.png)]
 
 ---
 
