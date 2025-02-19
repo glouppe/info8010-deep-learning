@@ -28,37 +28,11 @@ class: middle
 
 ---
 
-# Threshold Logic Unit
-
-.grid[
-.kol-3-5[
-The Threshold Logic Unit (McCulloch and Pitts, 1943) $$f(\mathbf{x}) = 1_{\\{\sum_i w\_i x_i + b \geq 0\\}},$$ with Boolean inputs $x_i$, weights $w_i$ and bias $b$, was the first mathematical model for a **neuron**.
-
-This unit can implement
-- $\text{or}(a,b) = 1\_{\\\{a+b - 0.5 \geq 0\\\}}$,
-- $\text{and}(a,b) = 1\_{\\\{a+b - 1.5 \geq 0\\\}}$,
-- $\text{not}(a) = 1\_{\\\{-a + 0.5 \geq 0\\\}}$.
-
-Therefore, any Boolean function can be built with such units.
-]
-.kol-2-5.width-100[![](figures/lec2/tlu.png)]
-]
-
-.footnote[Credits: McCulloch and Pitts, [A logical calculus of ideas immanent in nervous activity](http://www.cse.chalmers.se/~coquand/AUTOMATA/mcp.pdf), 1943.]
-
----
-
 # Perceptron
 
-The perceptron (Rosenblatt, 1957) 
-$$f(\mathbf{x}) = \begin{cases}
-   1 &\text{if } \sum_i w_i x_i + b \geq 0  \\\\
-   0 &\text{otherwise}
-\end{cases}$$
-is very similar, except that the inputs are real.
+The Mark I Perceptron (Rosenblatt, 1960) is one of the earliest instances of a neural network.
 
-This model was originally motivated by biology, with $w_i$ being synaptic weights and $x_i$ and $f$ firing rates.
-.center.width-65[![](figures/lec2/perceptron.jpg)]
+.center.width-80[![](figures/lec2/perceptron.jpg)]
 
 .footnote[Credits: Frank Rosenblatt, [Mark I Perceptron operators' manual](https://apps.dtic.mil/dtic/tr/fulltext/u2/236965.pdf), 1960.]
 
@@ -87,7 +61,7 @@ class: middle, center, black-slide
 .kol-1-2[<br><br>.width-100[![](figures/lec2/perceptron3.jpg)]]
 ]
 
-The Mark I Percetron (Frank Rosenblatt).
+The Mark I Percetron (Rosenblatt, 1960).
 
 ---
 
@@ -97,21 +71,31 @@ class: middle, center, black-slide
 
 The Perceptron
 
+---
+
+class: middle 
+
+The Mark I Perceptron is composed of association and response units, each acting as a binary classifier that computes a linear combination of its inputs and applies a step function to the result.
+
+Formally, given an input vector $\mathbf{x} \in \mathbb{R}^p$, each unit computes its output as
+$$f(\mathbf{x}) = \begin{cases}
+   1 &\text{if } \sum_i w_i x_i + b \geq 0  \\\\
+   0 &\text{otherwise}
+\end{cases}$$
 
 ---
 
 class: middle
 
-Let us define the (non-linear) **activation** function:
-
+The classification rule can be rewritten as
+$$f(\mathbf{x}) = \text{sign}(\sum\_i w\_i x\_i  + b)$$
+where $\text{sign}(x)$ is the non-linear **activation** function
 $$\text{sign}(x) = \begin{cases}
    1 &\text{if } x \geq 0  \\\\
    0 &\text{otherwise}
 \end{cases}$$
-.center[![](figures/lec2/activation-sign.png)]
 
-The perceptron classification rule can be rewritten as
-$$f(\mathbf{x}) = \text{sign}(\sum\_i w\_i x\_i  + b).$$
+.center[![](figures/lec2/activation-sign.png)]
 
 ---
 
@@ -275,14 +259,6 @@ This loss is an instance of the **cross-entropy** $$H(p,q) = \mathbb{E}\_p[-\log
 
 ---
 
-class: middle
-
-When $Y$ takes values in $\\{-1,1\\}$, a similar derivation yields the **logistic loss** $$\mathcal{L}(\mathbf{w}, b) = -\sum_{\mathbf{x}\_i, y\_i \in \mathbf{d}} \log \sigma\left(y\_i (\mathbf{w}^T \mathbf{x}\_i + b))\right).$$
-
-.center[![](figures/lec2/logistic_loss.png)]
-
----
-
 # Multi-layer perceptron
 
 So far we considered the logistic unit $h=\sigma\left(\mathbf{w}^T \mathbf{x} + b\right)$, where $h \in \mathbb{R}$, $\mathbf{x} \in \mathbb{R}^p$, $\mathbf{w} \in \mathbb{R}^p$ and $b \in \mathbb{R}$.
@@ -323,64 +299,40 @@ Draw the NN diagram.
 
 class: middle, center
 
-.width-100[![](figures/lec2/graphs/mlp.svg)]
+(demo)
 
 ---
 
 class: middle
 
-## Output layer 
+## Output layers
 
-- For binary classification, the width $q$ of the last layer $L$ is set to $1$, which results in a single output $h\_L \in [0,1]$ that models the probability $p(y=1|\mathbf{x})$.
+- For binary classification, the width $q$ of the last layer $L$ is set to $1$ and the activation function is the sigmoid $\sigma(\cdot) = \frac{1}{1 + \exp(-\cdot)}$, which results in a single output $h\_L \in [0,1]$ that models the probability $p(y=1|\mathbf{x})$.
 - For multi-class classification, the sigmoid activation $\sigma$ in the last layer can be generalized to produce a vector $\mathbf{h}\_L \in \bigtriangleup^C$ of probability estimates $p(y=i|\mathbf{x})$.
-<br><br>
 This activation is the $\text{Softmax}$ function, where its $i$-th output is defined as
 $$\text{Softmax}(\mathbf{z})\_i = \frac{\exp(z\_i)}{\sum\_{j=1}^C \exp(z\_j)},$$
 for $i=1, ..., C$.
-
-
----
-
-# Regression
-
-For regression problems, one usually starts with the assumption that
-$$p(y|\mathbf{x}) = \mathcal{N}(y; \mu=f(\mathbf{x}; \theta), \sigma^2=1),$$
-where $f$ is parameterized with a neural network which last layer does not contain any final activation.
-
----
-
-class: middle
-
-We have,
-$$\begin{aligned}
-&\arg \max\_{\theta} p(\mathbf{d}|\theta) \\\\
-&= \arg \max\_{\theta} \prod\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} p(y=y\_i|\mathbf{x}\_i, \theta) \\\\
-&= \arg \min\_{\theta} -\sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} \log p(y=y\_i|\mathbf{x}\_i, \theta) \\\\
-&= \arg \min\_{\theta} -\sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} \log\left( \frac{1}{\sqrt{2\pi}} \exp\(-\frac{1}{2}(y\_i - f(\mathbf{x};\theta))^2\) \right)\\\\
-&= \arg \min\_{\theta} \sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} (y\_i - f(\mathbf{x};\theta))^2,
-\end{aligned}$$
-which recovers the common **squared error** loss $\ell(y, \hat{y}) = (y-\hat{y})^2$.
-
----
-
-class: middle, center
-
-(demo)
+- For regression, the width $q$ of the last layer $L$ is set to the dimensionality of the output $d\_\text{out}$ and the activation function is the identity $\sigma(\cdot) = \cdot$, which results in a vector $\mathbf{h}\_L \in \mathbb{R}^{d\_\text{out}}$.
 
 ---
 
 # Training neural networks
 
-- In general, the loss functions do not admit a minimizer that can be expressed analytically in closed form.
-- However, a minimizer can be found numerically, using a general minimization technique such as **gradient descent**.
+The parameters (e.g., $\mathbf{W}\_k$ and $\mathbf{b}\_k$ for each layer $k$ of $f(\mathbf{x}; \theta)$ are learned by minimizing a loss function $\mathcal{L}(\theta)$ over a dataset $\mathbf{d} = \\\{ (\mathbf{x}\_j, \mathbf{y}\_j) \\\}$ of input-output pairs.
+
+The loss function is derived from the likelihood: 
+- For classification, assuming a categorical likelihood, the loss is the cross-entropy $\mathcal{L}(\theta) = -\frac{1}{N} \sum\_{(\mathbf{x}\_j, \mathbf{y}\_j) \in \mathbf{d}} \sum\_{i=1}^C y\_{ji} \log f\_{i}(\mathbf{x}\_j; \theta)$.
+- For regression, assuming a Gaussian likelihood, the loss is the mean squared error $\mathcal{L}(\theta) = \frac{1}{N} \sum\_{(\mathbf{x}\_j, \mathbf{y}\_j) \in \mathbf{d}} (\mathbf{y}\_j - f(\mathbf{x}\_j; \theta))^2$.
+
+???
+
+Switch to blackboard.
 
 ---
 
 class: middle
 
 ## Gradient descent
-
-Let $\mathcal{L}(\theta)$ denote a loss function defined over model parameters $\theta$ (e.g., $\mathbf{w}$ and $b$).
 
 To minimize $\mathcal{L}(\theta)$, **gradient descent** uses local linear information to iteratively move towards a (local) minimum.
 
@@ -608,7 +560,9 @@ Example 3: Divergence due to a too large learning rate
 
 ---
 
-# Stochastic gradient descent
+class: middle
+
+## Stochastic gradient descent
 
 In the empirical risk minimization setup, $\mathcal{L}(\theta)$ and its gradient decompose as
 $$\begin{aligned}
@@ -720,7 +674,7 @@ class: middle
 - Since a neural network is a **composition of differentiable functions**, the total
 derivatives of the loss can be evaluated backward, by applying the chain rule
 recursively over its computational graph.
-- The implementation of this procedure is called reverse *automatic differentiation* or **backpropagation**.
+- The implementation of this procedure is called reverse *automatic differentiation* (or backpropagation in the context of neural networks).
 
 ---
 
@@ -833,11 +787,9 @@ Hence the vanishing gradient problem.
 
 ---
 
-# Rectified linear units
+# Activation functions
 
-Instead of the sigmoid activation function, modern neural networks
-are for most based on **rectified linear units** (ReLU) (Glorot et al, 2011):
-
+Instead of the sigmoid activation function, modern neural networks use the **rectified linear unit** (ReLU) activation function, defined as
 $$\text{ReLU}(x) = \max(0, x)$$
 
 .center[![](figures/lec2/activation-relu.png)]
@@ -873,23 +825,13 @@ Note that:
 
 ---
 
-# Activation functions
+class: middle
 
-<br>
+Beyond preventing vanishing gradients, the choice of the activation function $\sigma$ is critical for the expressiveness of the network. 
 
-.center[
-![](figures/lec2/af-Sigmoid.png)
-![](figures/lec2/af-Tanh.png)
-![](figures/lec2/af-ReLU.png)
-![](figures/lec2/af-LeakyReLU.png)
+.center.width-100[![](figures/lec2/ShallowActivations.svg)]
 
-<br>
-
-![](figures/lec2/af-ELU.png)
-![](figures/lec2/af-SELU.png)
-![](figures/lec2/af-Softplus.png)
-![](figures/lec2/af-Swish.png)
-]
+.footnote[Credits: [Simon J.D. Prince](https://udlbook.github.io/udlbook/), 2023.]
 
 ---
 
@@ -1017,14 +959,6 @@ $$\sup\_{x \in I\_p} |f(x) - F(x)| < \epsilon.$$
 
 ---
 
-# LEGO® Deep Learning 
-
-<br><br><br><br>
-
-.center.width-50[![](figures/lec2/lego-box.jpg)]
-
----
-
 class: middle
 
 .center.circle.width-30[![](figures/lec2/lecun.jpg)]
@@ -1037,65 +971,7 @@ People are now building a new kind of software by .bold[assembling networks of p
 
 ---
 
-class: middle
-
-## DL as an architectural language
-
-.width-100[![](figures/lec2/lego-composition.png)]
-
----
-
-class: middle
-
-.center[
-<video preload="auto" height="400" width="750" autoplay loop>
-  <source src="./figures/lec2/toolbox.mp4" type="video/mp4">
-</video>
-
-The toolbox
-]
-
-.footnote[Credits: [Oriol Vinyals](https://twitter.com/OriolVinyalsML/status/1212422497339105280), 2020.]
-
----
-
-class: black-slide
-
-# LEGO® Creator Expert 
-
-.center[
-.width-60[![](figures/lec2/unnamed.gif)]
-.width-60[![](figures/lec2/alphastar.png)]
-
-AlphaStar, DeepMind 2019.
-]
-
-.footnote[Credits: [Vinyals et al, 2019](https://www.nature.com/articles/s41586-019-1724-z).]
-
----
-
-class: black-slide, middle
-
-.center[
-<iframe width="600" height="450" src="https://www.youtube.com/embed/j0z4FweCy4M?start=4279" frameborder="0" allowfullscreen></iframe>
-
-HydraNet, Tesla 2021.
-]
-
-
----
-
 class: end-slide, center
 count: false
 
 The end.
-
----
-
-count: false
-
-# References
-
-- Rosenblatt, F. (1958). The perceptron: a probabilistic model for information storage and organization in the brain. Psychological review, 65(6), 386.
-- Bottou, L., & Bousquet, O. (2008). The tradeoffs of large scale learning. In Advances in neural information processing systems (pp. 161-168).
-- Rumelhart, D. E., Hinton, G. E., & Williams, R. J. (1986). Learning representations by back-propagating errors. nature, 323(6088), 533.

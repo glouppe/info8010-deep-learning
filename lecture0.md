@@ -362,15 +362,19 @@ The report classifies risks associated with general-purpose AI into three catego
 2. Risks from .bold[malfunctions] (hallucinations, biases, loss of control)
 3. .bold[Systemic] risks (labour market risks, global R&D divide, power concentration)
 
+.footnote[Credits: [Bengio et al.](https://arxiv.org/abs/2501.17805), 2025 (arXiv:2501.17805).]
+
 ---
 
 class: middle
 
-.center.width-50[![](./figures/lec0/energy.png)]
+.center.width-55[![](./figures/lec0/energy.png)]
 
 ## Environmental impacts
 
 "AI is a moderate but rapidly growing contributor to global environmental impacts through energy use and greenhouse gas (GHG) emissions. Current estimates indicate that .bold[data centres and data transmission account for an estimated 1% of global energy-related GHG emissions, with AI consuming 10–28% of data centre energy capacity]. AI energy demand is expected to grow substantially [...]"
+
+.footnote[Credits: [Bengio et al.](https://arxiv.org/abs/2501.17805), 2025 (arXiv:2501.17805).]
 
 ---
 
@@ -380,7 +384,7 @@ class: middle
 
 ## Dumb and dumber
 
-"When people rely on generative AI, .bold[their effort shifts toward verifying that an AI’s response is good enough to use, instead of using higher-order critical thinking skills like creating], evaluating, and analyzing information. If humans only intervene when AI responses are insufficient then workers are deprived of routine opportunities to practice their judgment and strengthen their cognitive musculature, .bold[leaving them atrophied and unprepared] when the exceptions do arise."
+"When people rely on generative AI, .bold[their effort shifts toward verifying that an AI’s response is good enough to use, instead of using higher-order critical thinking skills] like creating, evaluating, and analyzing information. If humans only intervene when AI responses are insufficient then workers are deprived of routine opportunities to practice their judgment and strengthen their cognitive musculature, .bold[leaving them atrophied and unprepared] [...]."
 
 ---
 
