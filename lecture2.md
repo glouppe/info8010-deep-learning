@@ -297,12 +297,6 @@ Draw the NN diagram.
 
 ---
 
-class: middle, center
-
-(demo)
-
----
-
 class: middle
 
 ## Output layers
@@ -316,7 +310,133 @@ for $i=1, ..., C$.
 
 ---
 
-# Training neural networks
+class: middle, center
+
+(demo)
+
+---
+
+class: middle
+
+## Expressiveness
+
+Let us consider the 1-hidden layer MLP $$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$ This model can approximate .bold[any] smooth 1D function, provided enough hidden units.
+
+---
+
+class: middle
+
+.center[![](figures/lec2/ua-0.png)]
+
+---
+
+class: middle
+count: false
+
+.center[![](figures/lec2/ua-1.png)]
+
+---
+
+class: middle
+count: false
+
+.center[![](figures/lec2/ua-2.png)]
+
+---
+
+class: middle
+count: false
+
+.center[![](figures/lec2/ua-3.png)]
+
+---
+
+class: middle
+count: false
+
+.center[![](figures/lec2/ua-4.png)]
+
+---
+
+class: middle
+count: false
+
+.center[![](figures/lec2/ua-5.png)]
+
+---
+
+class: middle
+count: false
+
+.center[![](figures/lec2/ua-6.png)]
+
+---
+
+class: middle
+count: false
+
+.center[![](figures/lec2/ua-7.png)]
+
+---
+
+class: middle
+count: false
+
+.center[![](figures/lec2/ua-8.png)]
+
+---
+
+class: middle
+count: false
+
+.center[![](figures/lec2/ua-9.png)]
+
+---
+
+class: middle
+count: false
+
+.center[![](figures/lec2/ua-10.png)]
+
+---
+
+class: middle
+count: false
+
+.center[![](figures/lec2/ua-11.png)]
+
+---
+
+class: middle
+count: false
+
+.center[![](figures/lec2/ua-12.png)]
+
+---
+
+class: middle
+
+.bold[Universal approximation theorem.] (Cybenko 1989; Hornik et al, 1991) Let $\sigma(\cdot)$ be a
+bounded, non-constant continuous function. Let $I\_p$ denote the $p$-dimensional hypercube, and
+$C(I\_p)$ denote the space of continuous functions on $I\_p$. Given any $f \in C(I\_p)$ and $\epsilon > 0$, there exists $q > 0$ and $v\_i, w\_i, b\_i, i=1, ..., q$ such that
+$$F(x) = \sum\_{i \leq q} v\_i \sigma(w\_i^T x + b\_i)$$
+satisfies
+$$\sup\_{x \in I\_p} |f(x) - F(x)| < \epsilon.$$
+
+- It guarantees that even a single hidden-layer network can represent any classification
+  problem in which the boundary is locally linear (smooth);
+- It does not inform about good/bad architectures, nor how they relate to the optimization procedure.
+- The universal approximation theorem generalizes to any non-polynomial (possibly unbounded) activation function, including the ReLU (Leshno, 1993).
+
+---
+
+class: middle
+
+# Training 
+
+---
+
+# Loss functions
 
 The parameters (e.g., $\mathbf{W}\_k$ and $\mathbf{b}\_k$ for each layer $k$ of $f(\mathbf{x}; \theta)$ are learned by minimizing a loss function $\mathcal{L}(\theta)$ over a dataset $\mathbf{d} = \\\{ (\mathbf{x}\_j, \mathbf{y}\_j) \\\}$ of input-output pairs.
 
@@ -330,9 +450,7 @@ Switch to blackboard.
 
 ---
 
-class: middle
-
-## Gradient descent
+# Gradient descent
 
 To minimize $\mathcal{L}(\theta)$, **gradient descent** uses local linear information to iteratively move towards a (local) minimum.
 
@@ -842,120 +960,6 @@ class: middle, center
 ???
 
 Don't forget the magic trick!
-
----
-
-# Universal approximation 
-
-Let us consider the 1-hidden layer MLP
-$$f(x) = \sum w\_i \text{ReLU}(x + b_i).$$  
-This model can approximate *any* smooth 1D function, provided enough hidden units.
-
----
-
-class: middle
-
-.center[![](figures/lec2/ua-0.png)]
-
----
-
-class: middle
-count: false
-
-.center[![](figures/lec2/ua-1.png)]
-
----
-
-class: middle
-count: false
-
-.center[![](figures/lec2/ua-2.png)]
-
----
-
-class: middle
-count: false
-
-.center[![](figures/lec2/ua-3.png)]
-
----
-
-class: middle
-count: false
-
-.center[![](figures/lec2/ua-4.png)]
-
----
-
-class: middle
-count: false
-
-.center[![](figures/lec2/ua-5.png)]
-
----
-
-class: middle
-count: false
-
-.center[![](figures/lec2/ua-6.png)]
-
----
-
-class: middle
-count: false
-
-.center[![](figures/lec2/ua-7.png)]
-
----
-
-class: middle
-count: false
-
-.center[![](figures/lec2/ua-8.png)]
-
----
-
-class: middle
-count: false
-
-.center[![](figures/lec2/ua-9.png)]
-
----
-
-class: middle
-count: false
-
-.center[![](figures/lec2/ua-10.png)]
-
----
-
-class: middle
-count: false
-
-.center[![](figures/lec2/ua-11.png)]
-
----
-
-class: middle
-count: false
-
-.center[![](figures/lec2/ua-12.png)]
-
----
-
-class: middle
-
-.bold[Universal approximation theorem.] (Cybenko 1989; Hornik et al, 1991) Let $\sigma(\cdot)$ be a
-bounded, non-constant continuous function. Let $I\_p$ denote the $p$-dimensional hypercube, and
-$C(I\_p)$ denote the space of continuous functions on $I\_p$. Given any $f \in C(I\_p)$ and $\epsilon > 0$, there exists $q > 0$ and $v\_i, w\_i, b\_i, i=1, ..., q$ such that
-$$F(x) = \sum\_{i \leq q} v\_i \sigma(w\_i^T x + b\_i)$$
-satisfies
-$$\sup\_{x \in I\_p} |f(x) - F(x)| < \epsilon.$$
-
-- It guarantees that even a single hidden-layer network can represent any classification
-  problem in which the boundary is locally linear (smooth);
-- It does not inform about good/bad architectures, nor how they relate to the optimization procedure.
-- The universal approximation theorem generalizes to any non-polynomial (possibly unbounded) activation function, including the ReLU (Leshno, 1993).
 
 ---
 
