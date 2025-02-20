@@ -61,7 +61,7 @@ class: middle, center, black-slide
 .kol-1-2[<br><br>.width-100[![](figures/lec2/perceptron3.jpg)]]
 ]
 
-The Mark I Percetron (Rosenblatt, 1960).
+The Mark I Percetron was implemented in hardware.
 
 ---
 
@@ -69,15 +69,15 @@ class: middle, center, black-slide
 
 <iframe width="600" height="450" src="https://www.youtube.com/embed/cNxadbrN_aI" frameborder="0" allowfullscreen></iframe>
 
-The Perceptron
+The machine could classify simple images.
 
 ---
 
 class: middle 
 
-The Mark I Perceptron is composed of association and response units, each acting as a binary classifier that computes a linear combination of its inputs and applies a step function to the result.
+The Mark I Perceptron is composed of association and response units (or "perceptrons"), each acting as a binary classifier that computes a linear combination of its inputs and applies a step function to the result.
 
-Formally, given an input vector $\mathbf{x} \in \mathbb{R}^p$, each unit computes its output as
+In the modern sense, given an input $\mathbf{x} \in \mathbb{R}^p$, each unit computes its output as
 $$f(\mathbf{x}) = \begin{cases}
    1 &\text{if } \sum_i w_i x_i + b \geq 0  \\\\
    0 &\text{otherwise}
@@ -308,6 +308,10 @@ $$\text{Softmax}(\mathbf{z})\_i = \frac{\exp(z\_i)}{\sum\_{j=1}^C \exp(z\_j)},$$
 for $i=1, ..., C$.
 - For regression, the width $q$ of the last layer $L$ is set to the dimensionality of the output $d\_\text{out}$ and the activation function is the identity $\sigma(\cdot) = \cdot$, which results in a vector $\mathbf{h}\_L \in \mathbb{R}^{d\_\text{out}}$.
 
+???
+
+Draw each.
+
 ---
 
 class: middle, center
@@ -320,7 +324,7 @@ class: middle
 
 ## Expressiveness
 
-Let us consider the 1-hidden layer MLP $$f(x) = \sum w\_i \text{sign}(x + b_i).$$ This model can approximate .bold[any] smooth 1D function, provided enough hidden units.
+Let us consider the 1-hidden layer MLP $$f(x) = \sum w\_i \text{sign}(x + b_i).$$ This model can approximate any smooth 1D function to arbitrary precision, provided enough hidden units.
 
 ---
 
@@ -431,7 +435,7 @@ class: middle
 
 # Loss functions
 
-The parameters (e.g., $\mathbf{W}\_k$ and $\mathbf{b}\_k$ for each layer $k$ of $f(\mathbf{x}; \theta)$ are learned by minimizing a loss function $\mathcal{L}(\theta)$ over a dataset $\mathbf{d} = \\\{ (\mathbf{x}\_j, \mathbf{y}\_j) \\\}$ of input-output pairs.
+The parameters (e.g., $\mathbf{W}\_k$ and $\mathbf{b}\_k$ for each layer $k$) of an MLP $f(\mathbf{x}; \theta)$ are learned by minimizing a loss function $\mathcal{L}(\theta)$ over a dataset $\mathbf{d} = \\\{ (\mathbf{x}\_j, \mathbf{y}\_j) \\\}$ of input-output pairs.
 
 The loss function is derived from the likelihood: 
 - For classification, assuming a categorical likelihood, the loss is the cross-entropy $\mathcal{L}(\theta) = -\frac{1}{N} \sum\_{(\mathbf{x}\_j, \mathbf{y}\_j) \in \mathbf{d}} \sum\_{i=1}^C y\_{ji} \log f\_{i}(\mathbf{x}\_j; \theta)$.
@@ -718,13 +722,13 @@ Why is stochastic gradient descent still a good idea?
 - Informally, averaging the update
 $$\theta\_{t+1} = \theta\_t - \gamma \nabla \ell(y\_{i(t+1)}, f(\mathbf{x}\_{i(t+1)}; \theta\_t)) $$
 over all choices $i(t+1)$  restores batch gradient descent.
-- Formally, if the gradient estimate is **unbiased**, e.g., if
+- Formally, if the gradient estimate is **unbiased**, that is, if
 $$\begin{aligned}
 \mathbb{E}\_{i(t+1)}[\nabla \ell(y\_{i(t+1)}, f(\mathbf{x}\_{i(t+1)}; \theta\_t))] &= \frac{1}{N} \sum\_{\mathbf{x}\_i, y\_i \in \mathbf{d}} \nabla \ell(y\_i, f(\mathbf{x}\_i; \theta\_t)) \\\\
 &= \nabla \mathcal{L}(\theta\_t)
 \end{aligned}$$
-then the formal convergence of SGD can be proved, under appropriate assumptions (see references).
-- If training is limited to single pass over the data, then SGD directly minimizes the **expected** risk.
+then the formal convergence of SGD can be proved, under appropriate assumptions.
+- If training is limited to a single pass over the data, then SGD directly minimizes the **expected** risk.
 
 ---
 
@@ -745,7 +749,7 @@ where
 
 class: middle
 
-A fundamental result due to Bottou and Bousquet (2011) states that stochastic optimization algorithms (e.g., SGD) yield the best generalization performance (in terms of excess error) despite being the worst optimization algorithms for minimizing the empirical risk.
+A fundamental result due to Bottou and Bousquet (2011) states that stochastic optimization algorithms (e.g., SGD) yield strong generalization performance (in terms of excess error) despite being poor optimization algorithms for minimizing the empirical risk.
 
 ---
 
@@ -770,18 +774,13 @@ These derivatives can be evaluated automatically from the *computational graph* 
 
 class: middle
 
-In Leibniz notations, the **chain rule** states that
+## Backpropagation
+
+- In Leibniz notations, the **chain rule** states that
 $$
 \begin{aligned}
 \frac{\partial \ell}{\partial \theta\_i} &= \sum\_{k \in \text{parents}(\ell)} \frac{\partial \ell}{\partial u\_k} \underbrace{\frac{\partial u\_k}{\partial \theta\_i}}\_{\text{recursive case}}
 \end{aligned}$$
-
----
-
-class: middle
-
-## Backpropagation
-
 - Since a neural network is a **composition of differentiable functions**, the total
 derivatives of the loss can be evaluated backward, by applying the chain rule
 recursively over its computational graph.
