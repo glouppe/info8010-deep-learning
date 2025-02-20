@@ -408,13 +408,6 @@ count: false
 ---
 
 class: middle
-count: false
-
-.center[![](figures/lec2/ua-heavyside-12.png)]
-
----
-
-class: middle
 
 .bold[Universal approximation theorem.] (Cybenko 1989; Hornik et al, 1991) Let $\sigma(\cdot)$ be a
 bounded, non-constant continuous function. Let $I\_p$ denote the $p$-dimensional hypercube, and
