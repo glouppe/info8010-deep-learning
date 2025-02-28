@@ -69,7 +69,7 @@ class: middle, center, black-slide
 
 <iframe width="600" height="450" src="https://www.youtube.com/embed/cNxadbrN_aI" frameborder="0" allowfullscreen></iframe>
 
-The machine could classify simple images.
+The machine could learn to classify simple images.
 
 ---
 
@@ -766,7 +766,6 @@ $$\nabla \mathcal{\ell}(\theta) =
 \end{bmatrix} 
 $$
 i.e., a vector that gathers the partial derivatives of the loss for each model parameter $\theta\_k$ for $k=0, \ldots, K-1$.
-
 
 These derivatives can be evaluated automatically from the *computational graph* of $\ell$ using **automatic differentiation**.
 

@@ -201,7 +201,7 @@ class: middle
 
 Let us assume a function $\mathbf{f} : \mathbb{R}^n \to \mathbb{R}^m$ that decomposes as a chain composition
 $$\mathbf{f} = \mathbf{f}\_t \circ \mathbf{f}\_{t-1} \circ \ldots \circ \mathbf{f}\_1,$$
-for functions $\mathbf{f}\_k : \mathbb{R}^{n\_{k-1}} \times \mathbb{R}^{n\_k}$, for $k=1, \ldots, t$.
+for functions $\mathbf{f}\_k : \mathbb{R}^{n\_{k-1}} \to \mathbb{R}^{n\_k}$, for $k=1, \ldots, t$.
 
 ---
 
@@ -445,7 +445,6 @@ $$\frac{\partial \mathbf{x}\_t}{\partial \mathbf{x}\_k} = \underbrace{\frac{\par
 The Jacobian $\left[ \frac{\partial \mathbf{x}\_m}{\partial \mathbf{x}\_k} \right]$ is never explicitly built. It is usually simpler, faster, and more memory efficient to compute the VJP directly.
 - Most reverse mode AD systems compose VJPs backward to compute $\frac{\partial \mathbf{x}\_t}{\partial \mathbf{x}\_1}$.
 
-
 ---
 
 class: middle
@@ -455,6 +454,31 @@ class: middle
 Similarly, when $n\_1 = 1$, the forward recursive update
 $$\frac{\partial \mathbf{x}\_k}{\partial \mathbf{x}\_1} = \underbrace{\left[ \frac{\partial \mathbf{x}\_k}{\partial \mathbf{x}\_l} \right]}\_{n\_k \times n\_l} \underbrace{\frac{\partial \mathbf{x}\_l}{\partial \mathbf{x}\_1}}\_{n\_l \times 1}$$
 is usually implemented in terms of **Jacobian-vector products** (JVP) locally defined at each primitive.
+
+---
+
+class: middle
+
+## Checkpointing
+
+Checkpointing consists in marking intermediate variables for which the forward values are not stored in memory. These are recomputed during the backward pass, which can save memory at the cost of recomputation.
+
+```python
+class MLP(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.layer1 = nn.Linear(100, 200)
+        self.relu = nn.ReLU()
+        self.layer2 = nn.Linear(200, 10)
+    
+    def forward(self, x):
+        x = checkpoint(self.layer1, x) # x is not stored 
+                                       # it will be recomputed 
+                                       # during the backward pass
+        x = self.relu(x)
+        x = self.layer2(x)
+        return x
+```
 
 ---
 
@@ -515,14 +539,6 @@ Optimizing a wing (Sam Greydanus, 2020)
 
 [[Run in browser](https://bit.ly/2H5r401)]
 ]
-
----
-
-class: middle, center
-
-.width-75[![](figures/lec3/tweet.png)]
-
-... and plenty of other applications! (See this [thread](https://twitter.com/glouppe/status/1361941266901131265))
 
 ---
 
