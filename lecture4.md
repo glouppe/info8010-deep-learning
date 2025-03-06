@@ -8,6 +8,10 @@ Lecture 4: Training neural networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+XXX 2nd order methods (soap)
+
 ---
 
 # Today
