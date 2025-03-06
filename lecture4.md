@@ -8,10 +8,6 @@ Lecture 4: Training neural networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-XXX 2nd order methods (soap)
-
 ---
 
 # Today
@@ -183,7 +179,7 @@ class: middle
 
 ## Limitations
 
-The gradient descent method makes strong assumptions about
+Gradient descent makes strong assumptions about
 - the magnitude of the local curvature to set the step size,
 - the isotropy of the curvature, so that the same step size $\gamma$ makes sense in all directions.
 
@@ -329,10 +325,6 @@ class: middle
 
 In the situation of small but consistent gradients, as through valley floors, gradient descent moves **very slowly**.
 
-???
-
-Hint: the optimization process is like a ball that we keep pushing in the direction of the gradient.
-
 ---
 
 class: middle, black-slide
@@ -344,6 +336,15 @@ class: middle, black-slide
 ]
 
 .footnote[Image credits: Kosta Derpanis, [Deep Learning in Computer Vision](https://www.cs.ryerson.ca/~kosta/CP8309-F2018/index.html), 2018]
+
+???
+
+With momentum, we're essentially treating the optimization process like a physical system where a particle is moving through the parameter space, subject to both:
+
+- A force pushing it in the direction of the negative gradient
+- Inertia that causes it to continue moving in its current direction
+
+You can visualize momentum as a ball rolling down a hill - it builds up speed in consistent downward directions while resisting rapid changes in its trajectory when encountering small bumps.
 
 ---
 
