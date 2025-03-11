@@ -8,12 +8,6 @@ Lecture 5: Convolutional networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-R: Put back the slide on the hierarchical composition of patterns
-R: At the same time, explain why we typically increase the number of filters as we go deeper in the network.
-R: use figure 10.21 of udl for model vs performance on imagenet
-
 ---
 
 count: false
@@ -232,57 +226,31 @@ class: middle
 class: middle
 
 Convolutions have three additional parameters:
-- The padding specifies the size of a zeroed frame added arount the input.
-- The stride specifies a step size when moving the kernel across the signal.
-- The dilation modulates the expansion of the filter without adding weights.
+- The .bold[padding] specifies the size of a zeroed frame added arount the input.
+- The .bold[stride] specifies a step size when moving the kernel across the signal.
+- The .bold[dilation] modulates the expansion of the filter without adding weights.
+
+.grid[
+.kol-1-3.center[.width-100[![](figures/lec5/same_padding_no_strides.gif)]]
+.kol-1-3.center[.width-100[![](figures/lec5/no_padding_strides.gif)]]
+.kol-1-3.center[.width-100[![](figures/lec5/dilation.gif)]]
+]
+
+.grid[
+.kol-1-3.center[Padding=1]
+.kol-1-3.center[Stride=2]
+.kol-1-3.center[Dilation=2]
+]
+
+
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
 
----
+???
 
-class: middle
-
-## Padding
-
-Padding is useful to control the spatial dimension of the output feature map, for example to keep it constant across layers.
-
-.center[
-.width-45[![](figures/lec5/same_padding_no_strides.gif)]
-.width-45[![](figures/lec5/full_padding_no_strides.gif)]
-]
-
-.footnote[Credits: Dumoulin and Visin, [A guide to convolution arithmetic for deep learning](https://arxiv.org/abs/1603.07285), 2016.]
-
----
-
-class: middle
-
-## Strides
-
-Stride is useful to reduce the spatial dimension of the feature map by a constant factor.
-
-.center[
-.width-45[![](figures/lec5/no_padding_strides.gif)]
-]
-
-
-.footnote[Credits: Dumoulin and Visin, [A guide to convolution arithmetic for deep learning](https://arxiv.org/abs/1603.07285), 2016.]
-
----
-
-class: middle 
-
-## Dilation
-
-The dilation modulates the expansion of the kernel support by adding rows and columns of zeros between coefficients. 
-
-Having a dilation coefficient greater than one increases the units receptive field size without increasing the number of parameters. 
-
-.center[
-.width-45[![](figures/lec5/dilation.gif)]
-]
-
-.footnote[Credits: Dumoulin and Visin, [A guide to convolution arithmetic for deep learning](https://arxiv.org/abs/1603.07285), 2016.]
+- Padding is useful to control the spatial dimension of the output feature map, for example to keep it constant across layers.
+- Stride is useful to reduce the spatial dimension of the feature map by a constant factor.
+- Dilation modulates the expansion of the kernel support by adding rows and columns of zeros between coefficients. Having a dilation coefficient greater than one increases the units receptive field size without increasing the number of parameters.
 
 ---
 
@@ -823,12 +791,12 @@ count: false
 
 class: middle
 
-The network appears to learn a hierarchical composition of patterns:
-- The first layers of the network seem to encode basic features such as direction and color.
+The network appears to learn a .bold[hierarchical composition] of patterns:
+- The first layers seem to encode basic features such as direction and color.
 - These basic features are then combined to form more complex textures, such as grids and spots.
 - Finally, these textures are further combined to create increasingly intricate patterns.
 
-.width-50.center[![](figures/lec5/lecun-filters.png)]
+.width-60.center[![](figures/lec5/lecun-filters.png)]
 
 ---
 
