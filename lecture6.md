@@ -10,7 +10,6 @@ Prof. Gilles Louppe<br>
 
 ???
 
-R: prepare a new demo with Lucie's kitchen set. Old code does not seem to work so well anymore.
 R: add a tiny unet code example, this would make things more concrete than discussing over too many architectures. It is also a good example to show the transposed convolution.
 
 ---
@@ -120,8 +119,7 @@ class: middle
 
 ## Fine-tuning
 
-Same as for transfer learning, but also *fine-tune* the weights of the pre-trained network by continuing backpropagation.
-All or only some of the layers can be tuned.
+Same as for transfer learning, but also *fine-tune* the weights of the pre-trained network by training the whole network on the new task.
 
 .footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
 
@@ -232,6 +230,19 @@ class: middle
 These bounding boxes are finally merged by .bold[Non-Maximum Suppression] to produce the final predictions over a small number of objects.
 
 .footnote[Credits: Sermanet et al, 2013.]
+
+???
+
+NMS:
+1. Start with all detection boxes, each with a confidence score
+2. Sort all boxes by confidence score (highest to lowest)
+3. Select the box with highest confidence score, add it to the final detection list
+4. Calculate Io between this box and all remaining boxes
+5. Discard boxes with IoU greater than a predefined threshold (typically 0.5-0.7)
+6. Repeat steps 3-5 until no boxes remain
+
+IoU = Area of Intersection / Area of Union
+(range from 0 (no overlap) to 1 (perfect overlap))
 
 ---
 
@@ -443,7 +454,7 @@ class: middle
 
 class: middle, center
 
-([demo](https://colab.research.google.com/drive/1xdjyBiY75MAVRSjgmiqI7pbRLn58VrbE?usp=sharing#scrollTo=TwfFDhs5TMhi))
+([demo](https://colab.research.google.com/gist/kirisakow/325a557d89262e8d6a4f2918917e82b4/real-time-object-detection-in-webcam-video-stream-using-ultralytics-yolov8.ipynb))
 
 ???
 
@@ -658,6 +669,12 @@ class: middle
 
 
 .footnote[Credits: Simon J.D. Prince, [Understanding Deep Learning](https://udlbook.github.io/udlbook/), 2023.]
+
+---
+
+class: middle
+
+.center[(demo)]
 
 ---
 
