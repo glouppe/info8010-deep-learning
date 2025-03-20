@@ -8,10 +8,6 @@ Lecture 6: Computer vision
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-R: add a tiny unet code example, this would make things more concrete than discussing over too many architectures. It is also a good example to show the transposed convolution.
-
 ---
 
 # Today 
