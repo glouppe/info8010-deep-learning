@@ -44,7 +44,7 @@ class: middle
 ## Convolutional neural networks
 
 - Convolutional neural networks combine convolution, pooling and fully connected layers.
-- They achieve state-of-the-art results for **spatially structured** data, such as images, sound or text.
+- They achieve (or used to) state-of-the-art results for **spatially structured** data, such as images, sound or text. 
 
 .center.width-110[![](figures/lec5/lenet.svg)]
 

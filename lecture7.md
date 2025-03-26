@@ -8,10 +8,6 @@ Lecture 7: Attention and transformers
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-- Add https://poloclub.github.io/transformer-explainer/
-
 ---
 
 # Today
@@ -49,7 +45,7 @@ Many real-world problems require to process a signal with a **sequence** structu
 - Sequence-to-sequence translation:
     - speech recognition
     - text translation
-    - part-of-speech tagging
+    - time series forecasting
 
 .footnote[Credits: Francois Fleuret, [14x050/EE559 Deep Learning](https://fleuret.org/dlc/), EPFL.]
 
@@ -160,7 +156,7 @@ Using the nonvolitional cue based on saliency (red cup, non-paper), attention is
 
 ???
 
-Volitional: Related to the faculty or power of using one's will.
+Volitional: "Volitional" means relating to or resulting from a conscious act of will or choice. It describes actions or decisions that are made deliberately and intentionally, rather than those that happen involuntarily or by chance.
 
 ---
 
@@ -179,6 +175,10 @@ class: middle
 .center.width-100[![](figures/lec7/qkv.svg)]
 
 .footnote[Credits: [Dive Into Deep Learning](https://d2l.ai), 2023.]
+
+???
+
+In the end, the sensory inputs are restricted to a small subset of the information available in the environment. This is the essence of attention.
 
 ---
 
@@ -387,6 +387,21 @@ class: middle
 
 Compare visually on the blackboard and show the similarities and differences.
 
+CNNs:
+- Strengths: Parallel processing, efficient for shorter sequences
+- Limitations: Limited context window defined by kernel size
+- Key point: O(log_k(n)) path length (with pooling) means information flows through fewer transformations than RNNs
+
+RNNs:
+- Strengths: Natural handling of sequential data, memory-efficient
+- Limitations: Sequential processing creates bottlenecks
+- Key point: O(n) path length means information decay over long sequences
+
+Self-Attention:
+- Strengths: Direct connectivity between any positions, O(1) path length
+- Limitations: O(n²) complexity becomes prohibitive for very long sequences
+- Key point: This quadratic complexity is the price we pay for the rich representational power
+
 ---
 
 class: middle
@@ -565,8 +580,6 @@ class: middle
 
 ## Positional encoding
 
-As each word in a sentence .italic[simultaneously] flows through the encoder/decoder stack, the model itself does not have any sense of position/order for each word.
-
 Positional information is provided through an **additive** positional encoding of the same dimension $d\_\text{model}$ as the internal representation and is of the form
 $$
 \begin{aligned}
@@ -577,11 +590,11 @@ $$
 
 After adding the positional encoding, words will be closer to each other based on the similarity of their meaning and their relative position in the sentence, in the $d\_\text{model}$-dimensional space.
 
+Alternatively, the model can also learn the positional encoding.
+
 ???
 
-All words of input sequence are fed to the network with no special order or position; in contrast, in RNN architecture, 𝑛-th word is fed at step 𝑛, and in ConvNet, it is fed to specific input indices. Therefore, proposed model has no idea how the words are ordered.
-
-Draw https://datascience.stackexchange.com/questions/51065/what-is-the-positional-encoding-in-the-transformer-model on black board.
+All words of input sequence are fed to the network with no special order or position; in contrast, in an RNN, the 𝑛-th word is fed at step 𝑛, and in a CNN, it is fed to specific input indices. 
 
 ---
 
@@ -637,6 +650,12 @@ These models are trained with self-supervised learning, where the target sequenc
 
 .footnote[Credits: [Dive Into Deep Learning](https://d2l.ai), 2023.]
   
+---
+
+class: middle, center
+
+([demo](https://poloclub.github.io/transformer-explainer/))
+
 ---
 
 class: middle
