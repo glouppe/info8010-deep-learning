@@ -490,7 +490,7 @@ class: middle
 
 Vaswani et al. (2017) proposed to go one step further: instead of using attention mechanisms as a supplement to standard convolutional and recurrent layers, they designed a model, the .bold[transformer], combining only attention layers.
 
-The transformer was designed for a sequence-to-sequence translation task, but it is currently key to state-of-the-art approaches across NLP tasks.
+The transformer was designed for a sequence-to-sequence translation task, but it is currently key to state-of-the-art approaches for most tasks involving sets or sequences.
 
 .footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
@@ -733,30 +733,6 @@ class: middle
 - The input image is divided into non-overlapping patches, which are then linearly embedded into a sequence of vectors.
 - The sequence of vectors is then processed by a transformer encoder, which outputs a sequence of vectors.
 - Training the vision transformer can be done with supervised or self-supervised learning.
-
----
-
-class: middle
-
-Just like text transformers, vision transformers learn representations of the input image that can be used for various tasks, such as image classification, object detection, and image generation. 
-
----
-
-class: middle
-
-.center.width-100[![](./figures/lec7/sam1.png)]
-
-.center.width-100[![](./figures/lec7/sam2.png)]
-
-.center[Segment anything (Kirillov et al., 2023) combines a vision transformer with a prompt encoder to produce masks with a transformer-based decoder.]
-
----
-
-class: middle, center, black-slide
-
-<iframe width="600" height="450" src="https://www.youtube.com/embed/oYUcl_cqKcs" frameborder="0" allowfullscreen></iframe>
-
-Segment anything (Kirillov et al., 2023)
   
 ---
 
