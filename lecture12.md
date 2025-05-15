@@ -8,13 +8,6 @@ Lecture 12: Diffusion models
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-R: it takes 2h30 to cover the first part (up to score-based models, excluded).
-=> Stop there, show a code example instead, but keep the rest of the slides for reference.
-R: the applications are pretty cool but their presentation is too superficial. Go in more details and explain where/how the diffusion models are used in each case. Drop a few examples if needed.
-R: check Francis Bach's slides on diffusion models without diffusion
-
 ---
 
 # Today
@@ -37,83 +30,93 @@ A few motivating examples.
 
 class: middle
 
-## Content generation
+## Image generation
 
-.center[.width-45[![](./figures/lec12/content-generation-1.png)] .width-45[![](./figures/lec12/content-generation-2.png)]]
+.center[.width-49[![](./figures/lec12/content-generation-1.png)] .width-49[![](./figures/lec12/content-generation-2.png)]]
 
 .center[Diffusion models have emerged as powerful generative models, beating previous state-of-the-art models (such as GANs) on a variety of tasks.]
 
 .footnote[Credits: [Dhariwal and Nichol](https://arxiv.org/pdf/2105.05233.pdf), 2021; [Ho et al](https://arxiv.org/pdf/2106.15282.pdf), 2021.]
 
+???
+
+Task: Learn $p(\mathbf{x})$ from a training set of images $\mathcal{D} = \{\mathbf{x}\_1, ..., \mathbf{x}\_N\}$.
+
 ---
 
 class: middle
 
-## Image super-resolution
+.width-100[![](./figures/lec12/content-generation-conditional.png)]
+
+.center[Generation can also be made .bold[conditional] on text, style, or class labels.]
+
+???
+
+Variations: $p(\mathbf{x} | \text{text})$, $p(\mathbf{x} | \text{style})$, $p(\mathbf{x} | \text{class})$, etc.
+
+---
+
+class: middle
+
+## Solving inverse problems
+
+.width-100.center[![](figures/lec12/inverse.png)]
+
+.center[Diffusion models can be used to solve .bold[inverse problems], <br> such as inpainting, super-resolution, and denoising.]
+
+.footnote[Credits: [Chung et al](https://arxiv.org/abs/2209.14687), 2022 (arXiv:2209.14687).]
+
+
+???
+
+Task: Estimate $p(\mathbf{x} | \mathbf{y})$.
+
+---
+
+class: middle
+
+## Beyond images
+
+.width-100.center[![](figures/lec12/bi-video.png)]
+
+.center[.width-49[![](./figures/lec12/bi-3d.png)] .width-49[![](./figures/lec12/bi-mol.png)]]
+
+.center[Diffusion models can also be used for .bold[video] generation, .bold[3D] shape generation, .bold[molecule] generation, and more.]
+
+???
+
+Video, 3d, text, molecule, perception, etc.
+
+---
+
+class: middle
+
+## Weather modeling
+
+.width-100.center[![](figures/lec12/appa.png)]
+
+.footnote[Credits: [Andry et al](https://arxiv.org/abs/2504.18720), 2025 (arXiv:2504.18720).]
+
+???
+
+Task: $p(\mathbf{x}\_{1:L} | \mathbf{y}\_{1:T})$, where $\mathbf{x}\_{1:L}$ are atmospheric states and $\mathbf{y}\_{1:T}$ measurements thereof.
+
+---
+
+class: middle
 
 .center[
-
-<video autoplay muted loop width="720" height="420">
-     <source src="./figures/lec12/super-resolution.m4v" type="video/mp4">
+<video poster="" id="video" controls="" muted="" loop="" width="80%">
+        <source src="https://montefiore-sail.github.io/appa/static/videos/reanalysis/reanalysis_1week.mp4" type="video/mp4">
 </video>
-
 ]
 
-.footnote[Credits: [Saharia et al](https://arxiv.org/abs/2104.07636), 2021.]
+.footnote[Credits: [Andry et al](https://arxiv.org/abs/2504.18720), 2025 (arXiv:2504.18720).]
 
----
 
-class: middle
+???
 
-## Text-to-image generation
 
-.center[
-
-.width-50[![](./figures/lec12/text-to-image.png)]
-
-.italic[A group of teddy bears in suite in a corporate office celebrating<br> the birthday of their friend. There is a pizza cake on the desk.]
-
-]
-
-.footnote[Credits: [Saharia et al](https://arxiv.org/abs/2205.11487), 2022.]
-
----
-
-class: middle, black-slide
-
-.center.width-50[![](./figures/lec12/pope.jpg)]
-
-.center[... or deepfakes.]
-
----
-
-class: middle
-
-## Artistic tools and image editing
-
-.center.width-100[![](./figures/lec12/sde-edit.jpg)]
-
-.footnote[Credits: [Meng et al](https://arxiv.org/abs/2108.01073), 2021.]
-
----
-
-class: middle
-
-## Inverse problems in medical imaging
-
-.center.width-100[![](./figures/lec12/inverse-problems.png)]
-
-.footnote[Credits: [Song et al](https://arxiv.org/pdf/2111.08005.pdf), 2021.]
-
----
-
-class: middle
-
-## Data assimilation in ocean models
-
-.center.width-65[![](./figures/lec12/sda-qg.png)]
-
-.footnote[Credits: [Rozet and Louppe](https://arxiv.org/pdf/2306.10574.pdf), 2023.]
 
 ---
 
@@ -458,6 +461,10 @@ class: middle
 
 # Score-based generative models
 
+???
+
+Skip and flash a few slides only.
+
 ---
 
 class: middle
@@ -601,7 +608,7 @@ With a score-based model however, we can use the Bayes rule and notice that
 $$\nabla\_{\mathbf{x}\_t} \log p(\mathbf{x}\_t | y) = \nabla\_{\mathbf{x}\_t} \log p(\mathbf{x}\_t) + \nabla\_{\mathbf{x}\_t} \log p(y | \mathbf{x}\_t),$$
 where we leverage the fact that the gradient of $\log p(y)$ with respect to $\mathbf{x}\_t$ is zero.
 
-In other words, controllable generation can be achieved by adding a conditioning signal during sampling, without having to retrain the model. E.g., train an extra classifier $p(y | \mathbf{x}\_t)$ and use it to control the sampling process by adding its gradient to the score.
+In other words, .bold[zero-shot posterior sampling] can be achieved by adding a conditioning signal during sampling, .bold[without having to retrain the model]! 
 
 ---
 

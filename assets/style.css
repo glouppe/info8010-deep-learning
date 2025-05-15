@@ -322,6 +322,14 @@ td {
     width: 45%;
 }
 
+.width-48 * {
+    width: 48%;
+}
+
+.width-49 * {
+    width: 49%;
+}
+
 .width-50 * {
     width: 50%;
 }

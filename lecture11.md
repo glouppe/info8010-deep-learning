@@ -32,6 +32,14 @@ place we can get $10^5$ dimensions of constraint per second."]
 
 .pull-right[Geoffrey Hinton, 2014.]
 
+???
+
+For a long time, the main paradigm in machine learning was supervised learning, where we learn a model from labeled data.
+
+However, the amount of labeled data is limited and expensive to obtain.
+
+It is also in disconnect with the way we (seem) to learn from unlabeled data by perceiving the world around us.
+
 ---
 
 class: middle

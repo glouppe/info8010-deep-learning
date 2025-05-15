@@ -8,11 +8,6 @@ Lecture 10: Uncertainty
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-R: Code the GMM example
-R: Code the NF with coupling layers and visualize the transformations
-
 ---
 
 class: middle
