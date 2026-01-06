@@ -9,8 +9,6 @@
 [class*='grid'],
 [class*='kol-'],
 .grid:after {
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
@@ -109,7 +107,7 @@
 }
 
 .kol-1-12 {
-	width: 8.33%
+	width: 8.33%;
 }
 
 .kol-3-8 {
@@ -123,7 +121,7 @@
 /* Layout Columns */
 
 .kol-11-12 {
-	width: 91.66%
+	width: 91.66%;
 }
 
 .kol-10-12 {
@@ -201,5 +199,5 @@
 }
 
 .push-1-12 {
-	margin-left: 8.33%
+	margin-left: 8.33%;
 }
