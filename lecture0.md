@@ -388,6 +388,14 @@ class: middle
 
 ---
 
+class: middle
+
+.center.width-70[![](./figures/lec0/skill-formation.png)]
+
+"Our main finding is that .bold[using AI to complete tasks that require a new skill (i.e., knowledge of a new Python library) reduces skill formation]. [...] workers acquiring new skills should be mindful of their reliance on AI during the learning process."
+
+---
+
 class: middle, center
 
 Deep learning can also .bold[solve problems that no one could solve before].

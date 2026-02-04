@@ -2,7 +2,7 @@ class: middle, center, title-slide
 
 # Deep Learning
 
-Spring 2025
+Spring 2026
 
 <br><br>
 Prof. Gilles Louppe<br>
@@ -19,17 +19,18 @@ Give examples more related to engineering and science. Focus on people rather th
 
 - Instructor: Gilles Louppe ([g.louppe@uliege.be](mailto:g.louppe@uliege.be))
 - Projects and guidance: 
-  - François Rozet
-  - Yann Claes
-  - Victor Dachet
+  - Fanny Bodart
+  - Elise Faulx
+  - Julien Brandoit
+  - Sacha Peters
 
 <br>
 
 .center[
-.circle.width-15[![](figures/course-syllabus/gilles.jpg)] &nbsp;
-.circle.width-15[![](figures/course-syllabus/francois.jpg)] &nbsp;
-.circle.width-15[![](figures/course-syllabus/yann.jpg)] &nbsp;
-.circle.width-15[![](figures/course-syllabus/victor.jpg)] 
+.circle.width-20[![](figures/course-syllabus/fanny.jpg)] &nbsp;
+.circle.width-20[![](figures/course-syllabus/elise.jpg)] &nbsp;
+.circle.width-20[![](figures/course-syllabus/julien.jpg)] &nbsp;
+.circle.width-20[![](figures/course-syllabus/sacha-peters.jpg)] 
 ]
 
 ---
@@ -78,9 +79,9 @@ class: middle
 
 ## Videos
 
-Videos from Spring 2021 are available at [https://bit.ly/3roQmea](https://bit.ly/3roQmea), but they are not up-to-date with the current materials.
+Videos from Spring 2025 are available [myUnicast](https://my.unicast.uliege.be/).
 
-New videos will be recorded this year throughout the course.
+Videos from Spring 2021 are available at [Youtube](https://bit.ly/3roQmea), but they are not up-to-date with the current materials.
 
 .center.width-70[![](figures/course-syllabus/youtube.png)]
 
