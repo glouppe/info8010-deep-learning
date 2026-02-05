@@ -629,7 +629,7 @@ class: middle
 
 ## Effective hypothesis space 
 
-Because of the way they are trained, the .bold[effective] hypothesis space of deep neural networks has a much lower capacity than what could be expected from the number of parameters alone.
+Because of the way they are trained, the .bold[effective] hypothesis spaces of deep neural networks have a much lower capacity than what could be expected from the number of parameters alone.
 
 - The optimization algorithm (e.g., SGD) introduces an implicit bias towards "simpler" models within the large hypothesis space defined by the neural network architecture. Not all functions that can be represented by the network are equally likely to be found by the optimization process!
 - Regularization techniques (e.g., dropout, weight decay) further constrain the effective hypothesis space.
