@@ -117,7 +117,7 @@ such that $\ell(y, f(\mathbf{x})) \geq 0$ measures how close the prediction $f(\
 
 class: middle
 
-Let $\mathcal{F}$ denote the hypothesis space, i.e. the set of all functions $f$ than can be produced by the chosen learning algorithm.
+Let $\mathcal{F}$ denote the hypothesis space, i.e. the set of all functions $f$ that could be produced by the learning algorithm (e.g., the set of all neural networks with a given architecture).
 
 We are looking for a function $f \in \mathcal{F}$ with a small **expected risk** (or generalization error)
 $$R(f) = \mathbb{E}\_{(\mathbf{x},y)\sim p\_{X,Y}}\left[ \ell(y, f(\mathbf{x})) \right].$$
@@ -385,6 +385,8 @@ Why shouldn't we pick the largest $d$?
 
 class: middle
 
+## The Bayes optimal model
+
 Let $\mathcal{Y}^{\mathcal X}$ be the set of all functions $f : \mathcal{X} \to \mathcal{Y}$.
 
 We define the **Bayes risk** as the minimal expected risk over all possible functions,
@@ -397,18 +399,9 @@ No model $f$ can perform better than $f\_B$.
 
 class: middle
 
-The **capacity** of an hypothesis space induced by a learning algorithm intuitively represents the ability to
-find a good model $f \in \mathcal{F}$ for any function, regardless of its complexity.
+## Capacity of a hypothesis space
 
-In practice, capacity can be controlled through hyper-parameters of the learning algorithm. For example:
-- The degree of the family of polynomials;
-- The number of layers in a neural network;
-- The number of training iterations;
-- Regularization terms.
-
-???
-
-We talk about the capacity of the hypothesis space induced by the learning algorithm (parametric model + optimization algorithm). This is different from the capacity of the model itself.
+The **capacity** (or complexity) of a hypothesis space $\mathcal{F}$ characterizes how well functions in $\mathcal{F}$ can approximate arbitrary functions from $\mathcal{Y}^{\mathcal{X}}$.
 
 ---
 
@@ -604,6 +597,14 @@ class: middle
 
 class: middle
 
+.alert[While classical learning theory suggests that large capacity models should overfit the data, .bold[deep neural networks with millions of parameters often generalize well in practice.]
+
+In fact, increasing the number of parameters can keep decreasing the test error, even after the training error has reached zero!]
+
+---
+
+class: middle
+
 .width-100[![](figures/lec1/double-descent.png)]
 
 .footnote[Credits: [Belkin et al, 2018](https://arxiv.org/abs/1812.11118).]
@@ -621,6 +622,17 @@ class: middle
 .center.width-80[![](figures/lec1/double-descent-mnist.png)]
 
 .footnote[Credits: [Belkin et al, 2018](https://arxiv.org/abs/1812.11118).]
+
+---
+
+class: middle
+
+## Effective hypothesis space 
+
+Because of the way they are trained, the .bold[effective] hypothesis space of deep neural networks has a much lower capacity than what could be expected from the number of parameters alone.
+
+- The optimization algorithm (e.g., SGD) introduces an implicit bias towards "simpler" models within the large hypothesis space defined by the neural network architecture. Not all functions that can be represented by the network are equally likely to be found by the optimization process!
+- Regularization techniques (e.g., dropout, weight decay) further constrain the effective hypothesis space.
 
 ---
 

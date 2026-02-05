@@ -200,8 +200,9 @@ Deep learning .bold[scales up] the statistical and machine learning approaches b
 - using more compute resources.
 
 .grid[
-.kol-3-4.width-70.center[![](./figures/lec0/mlp.png)]
-.kol-1-4.width-90.center[![](./figures/lec0/imagenet.jpeg)<br>![](./figures/lec0/titan.jpg)]
+.kol-1-3.width-90.center[![](./figures/lec0/mlp.png)]
+.kol-1-3.width-90.center[![](./figures/lec0/imagenet.jpeg)]
+.kol-1-3.width-70.center[![](./figures/lec0/gpu.png)]
 ]
 
 ???
