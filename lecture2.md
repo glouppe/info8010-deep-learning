@@ -38,19 +38,13 @@ The Mark I Perceptron (Rosenblatt, 1960) is one of the earliest instances of a n
 
 ???
 
-A perceptron is a signal transmission network
-consisting of sensory units (S units), association units
-(A units), and output or response units (R units). The
-‘retina’ of the perceptron is an array of sensory
-elements (photocells). An S-unit produces a binary
-output depending on whether or not it is excited. A
-randomly selected set of retinal cells is connected to
-the next level of the network, the A units. As originally
-proposed there were extensive connections among the
-A units, the R units, and feedback between the R units
-and the A units.
+A perceptron has three layers: 
+- sensory units (S) that read binary input from a retina, 
+- association units (A) that each respond to one specific input pattern, 
+- a single output unit (R).
 
-In essence an association unit is also an MCP neuron which is 1 if a single specific pattern of inputs is received, and it is 0 for all other possible patterns of  inputs. Each association unit will have a certain number of inputs which are selected from all the inputs to the perceptron.  So the number of inputs to a particular association unit does not have to be the same as the total number of inputs to the perceptron, but clearly the number of inputs to an association unit  must be less than or equal to the total number of inputs to the perceptron.  Each association unit's output then becomes the input to a single MCP neuron, and the output from this single MCP neuron is the output of the perceptron.  So a perceptron consists of a "layer" of MCP neurons, and all of these neurons send their output to a single MCP neuron.
+Each A unit is an MCP neuron connected to a random subset of the S units, it fires (1) for exactly one input pattern and is silent (0) otherwise. All A unit outputs feed into one final MCP neuron, whose output is the perceptron's output.
+So in short: a layer of MCP neurons (the A units) all feeding into a single MCP neuron (the R unit).
 
 ---
 
@@ -316,7 +310,7 @@ Draw each.
 
 class: middle, center
 
-(demo)
+(demo of `code/lec2-space-streching.ipynb`)
 
 ---
 
@@ -733,6 +727,7 @@ then the formal convergence of SGD can be proved, under appropriate assumptions.
 ---
 
 class: middle
+exclude: true
 
 The excess error characterizes the expected risk discrepancy between the Bayes model and the approximate empirical risk minimizer. It can be decomposed as
 $$\begin{aligned}
@@ -749,7 +744,17 @@ where
 
 class: middle
 
-A fundamental result due to Bottou and Bousquet (2011) states that stochastic optimization algorithms (e.g., SGD) yield strong generalization performance (in terms of excess error) despite being poor optimization algorithms for minimizing the empirical risk.
+A fundamental result due to Bottou and Bousquet (2011) states that stochastic optimization algorithms (e.g., SGD) yield the best generalization performance despite being the worst optimization algorithms for minimizing the empirical risk.
+
+That is, .bold[for a fixed computational budget, stochastic optimization algorithms reach a lower test error than more sophisticated algorithms] (2nd order methods, line search algorithms, etc) that would fit the training error too well or would consume too large a part of the computational budget at every step.
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec4/tradeoffs.svg)]
+
+.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
 
 ---
 
@@ -946,7 +951,7 @@ Beyond preventing vanishing gradients, the choice of the activation function $\s
 
 class: middle, center
 
-(demo)
+(demo of `code/lec2-spiral-classification.ipynb`)
 
 ???
 

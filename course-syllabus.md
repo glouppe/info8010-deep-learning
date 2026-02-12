@@ -79,11 +79,11 @@ class: middle
 
 ## Videos
 
-Videos from Spring 2025 are available [myUnicast](https://my.unicast.uliege.be/).
+Videos from Spring 2025 are available on [myUnicast](https://my.unicast.uliege.be/).
 
-Videos from Spring 2021 are available at [Youtube](https://bit.ly/3roQmea), but they are not up-to-date with the current materials.
+Videos from Spring 2021 are available on [Youtube](https://bit.ly/3roQmea), but they are not up-to-date with the current materials.
 
-.center.width-70[![](figures/course-syllabus/youtube.png)]
+.center.width-100[![](figures/course-syllabus/myunicast.png)]
 
 ---
 

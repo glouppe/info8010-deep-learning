@@ -284,7 +284,7 @@ class: middle, black-slide, center
 
 <iframe width="600" height="450" src="https://www.youtube.com/embed/AbdVsi1VjQY" frameborder="0" allowfullscreen></iframe>
 
-How AI is advancing medicine (Google, 2023)
+How AI is advancing medicine (Google, 2018)
 
 ---
 
@@ -343,6 +343,16 @@ class: middle, black-slide, center
 <iframe width="600" height="450" src="https://www.youtube.com/embed/fWWCdqyYRPI" frameborder="0" allowfullscreen></iframe>
 
 Not just text, but also images and sounds.
+
+---
+
+class: middle
+
+.center.width-100[![](./figures/lec0/ccc.png)]
+
+"To stress test it, I tasked 16 agents with writing a Rust-based C compiler, from scratch, capable of compiling the Linux kernel. Over nearly 2,000 Claude Code sessions and $20,000 in API costs, the agent team produced a 100,000-line compiler that can build Linux 6.9 on x86, ARM, and RISC-V."
+
+.footnote[Credits: [Nicholas Carlini](https://www.anthropic.com/engineering/building-c-compiler), 2026.]
 
 ---
 

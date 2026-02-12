@@ -304,9 +304,9 @@ class: middle
 
 ## The tradeoffs of large-scale learning 
 
-A fundamental result due to Bottou and Bousquet (2011) states that stochastic optimization algorithms (e.g., SGD) yield the best generalization performance (in terms of excess error) despite being the worst optimization algorithms for minimizing the empirical risk.
+A fundamental result due to Bottou and Bousquet (2011) states that stochastic optimization algorithms (e.g., SGD) yield the best generalization performance despite being the worst optimization algorithms for minimizing the empirical risk.
 
-That is,  .bold[for a fixed computational budget, stochastic optimization algorithms reach a lower test error than more sophisticated algorithms] (2nd order methods, line search algorithms, etc) that would fit the training error too well or would consume too large a part of the computational budget at every step.
+That is, .bold[for a fixed computational budget, stochastic optimization algorithms reach a lower test error than more sophisticated algorithms] (2nd order methods, line search algorithms, etc) that would fit the training error too well or would consume too large a part of the computational budget at every step.
 
 ---
 
