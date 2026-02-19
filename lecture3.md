@@ -101,7 +101,7 @@ class: middle
 
 ## Automatic differentiation
 
-Automatic differentiation (AD) provides a family of techniques for evaluating the **derivatives** of a function specified *by a computer program*.
+Automatic differentiation (AD) provides a family of algorithms for evaluating the **derivatives** of a function specified *by a computer program*.
 
 - $\neq$ symbolic differentiation, which aims at identifying some human-readable expression of the derivative.
 - $\neq$ numerical differentation (finite differences), which may introduce round-off errors.
@@ -154,6 +154,8 @@ where $\mathbf{e}\_j$ is the $j$-th basis vector.
 ???
 
 Note how each coordinate-wise derivative is a directional derivative in the direction $\mathbf{e}\_j$.
+
+Note that he gradient points in the direction of the steepest ascent of $f$: that is, among directions of unit norm, the gradient direction increases $f$ the most.
 
 ---
 
@@ -215,6 +217,10 @@ $$
 &= \frac{\partial \mathbf{x}\_t}{\partial \mathbf{x}\_{t-1}} \frac{\partial \mathbf{x}\_{t-1}}{\partial \mathbf{x}\_{t-2}} \ldots \frac{\partial \mathbf{x}\_2}{\partial \mathbf{x}\_1} \frac{\partial \mathbf{x}\_1}{\partial \mathbf{x}\_0}
 \end{aligned}
 $$
+
+???
+
+Reminder: $(f \circ g)'(x) = f'(g(x)) g'(x)$. If $g$ is itself a composition of functions, we can apply the chain rule recursively to $g'(x)$.
 
 ---
 
@@ -283,7 +289,7 @@ class: middle
 ## Computer programs as computational graphs
 
 A numerical algorithm is a succession of instructions of the form
-$$\forall k = s+1, \ldots, t, \quad \mathbf{x}\_k = \mathbf{f}\_k(\mathbf{x}\_1, \ldots, \mathbf{x}\_{k-1})$$
+$$\mathbf{x}\_k = \mathbf{f}\_k(\mathbf{x}\_1, \ldots, \mathbf{x}\_{k-1})$$ for $k=s+1, \ldots, t$, and
 where $\mathbf{f}\_k$ is a function which only depends on the previous variables.
 
 ---
@@ -503,7 +509,7 @@ fpp = grad(grad(tanh))    # what sorcery is this?!
 
 class: middle, center
 
-(demo)
+(demo of `code/lec3-autodiff.ipynb`)
 
 ---
 
@@ -535,9 +541,8 @@ class: middle
 
 .width-100[![](figures/lec3/wing.png)]
 
-Optimizing a wing (Sam Greydanus, 2020)
+Optimizing a wing (see `code/lec3-differentiable-fluid.ipynb`)
 
-[[Run in browser](https://bit.ly/2H5r401)]
 ]
 
 ---
