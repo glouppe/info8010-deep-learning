@@ -8,6 +8,10 @@ Lecture 4: Training neural networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+XXX update the normalization slides
+
 ---
 
 # Today
@@ -144,6 +148,10 @@ class: middle
   <source src="./figures/lec4/opt-sgd.mp4" type="video/mp4">
 </video>
 ]
+
+???
+
+Here, for the sake of the illustration, SGD is implemented as GD with randomized gradient estimates (GD gradients + noise). This is not exactly how SGD is implemented in practice, but it captures the main idea of noisy gradient estimates.
 
 ---
 
@@ -328,6 +336,7 @@ In the situation of small but consistent gradients, as through valley floors, gr
 ---
 
 class: middle, black-slide
+exclude: True
 
 .center[
 <video loop controls preload="auto" height="500" width="600">
@@ -494,9 +503,6 @@ r\_t  &=  \rho\_2 r\_{t-1} + (1-\rho\_2) g\_t \odot g\_t \\\\
 \theta\_{t+1} &= \theta\_t - \gamma \frac{\hat{s}\_t}{\delta+\sqrt{\hat{r}\_t}}
 \end{aligned}$$
 
-- Good defaults are $\rho\_1=0.9$ and $\rho\_2=0.999$.
-- Adam is one of the **default optimizers** in deep learning, along with SGD with momentum.
-
 ---
 
 .center[
@@ -516,6 +522,7 @@ class: middle
 $$\ell_\theta + \frac{\lambda}{2} ||\mathbf{\theta}||^2.$$
 - For more complex optimizers, it is equivalent to adding a penalty term to the update rule
 $$\theta_{t+1} = \theta\_t - \gamma \left(g_t + \lambda \theta \right).$$
+- AdamW is a variant of Adam implementing the latter formulation. Modern default for most deep learning workloads.
 
 ---
 
@@ -544,7 +551,7 @@ class: middle
 
 ## Scheduling
 
-Despite per-parameter adaptive learning rate methods, it is usually helpful to **anneal the learning rate** $\gamma$ over time.
+Despite per-parameter adaptive learning rate methods, it is usually helpful to .bold[anneal the learning rate] $\gamma$ over time.
 
 - Step decay: reduce the learning rate by some factor every few epochs
   (e.g, by half every 10 epochs).
@@ -557,18 +564,17 @@ class: middle
 
 .center[
 .width-70[![](figures/lec4/resnet.png)]<br>
-.caption[Step decay scheduling for training ResNets.]
+Step decay scheduling for training ResNets.
 ]
 
 ---
 
 class: middle
 
-## Warmup and cyclical schedules
-
 .center.width-100[![](figures/lec4/warmup_cosine_schedule.png)]
+.center[.width-100[![](figures/lec4/warmup_cosine_warm_restarts_schedule.png)]
 
-.center.width-100[![](figures/lec4/warmup_cosine_warm_restarts_schedule.png)]
+Warmup and cyclical schedules for large models. These schedules are useful to escape from sharp minima and to avoid overfitting.]
 
 ---
 
