@@ -13,28 +13,27 @@ Some general potential problems could be the following:
 
 ### Agenda
 
-- Project proposal, due by **March 30, 2025**.
-- Project code and report, due by **May 16, 2025**.
+- Project proposal, due by **March 29, 2026**.
+- Project code and poster, due by **May 15, 2026**.
 
 Projects should be submitted on Gradescope.
 
 ### Instructions and evaluation guidelines
-
+  
 - Students can work in groups of maximum 3 students.
-- Each group must write a short (1-2 pages) research project proposal. It should include a description of a minimum viable project, the data you will use or collect, the computing resources you think you will need, some nice-to-haves if time allows, and a short review of related work. Project proposals must be approved before working on the project.
-- Towards the end of the class, you will submit a project report (around 8 pages), in the format of a machine learning conference paper which **has** to include the following sections:
-	* Introduction: which states the problem which has been tackled
-	* Related Work: which covers research that is related to the considered problem
-	* Methods: a clear and detailed description of the neural networks (architecture, training-parameters, loss function, data)
-	* Results:
-		* qualitative analysis: could include examples of generated images, correct vs wrong predictions, ...
-		* quantitative analysis: general overview of final performance, loss curves, comparison table with error-bars, ...
-	* Discussion: a critical discussion of the performance of the neural network, analysis of the potential limitations, tips for future work
+- Each group must write a short (1-2 pages) research project proposal. It should include a description of a minimum viable project, the data you will use or collect, the computing resources you think you will need, some nice-to-haves if time allows, and a short review of related work. Project proposals must be approved before working on the project. They should follow the LaTex template [`template-report.tex`](https://glouppe.github.io/info8010-deep-learning/template-report.tex).
+- At the end of their project, each group must create a poster motivating their idea and describing their results, in a poster format typical of a Machine Learning conference (see the [template](https://glouppe.github.io/info8010-deep-learning/poster) folder). The poster may include the following sections:
+	* Abstract: a short summary of your project
+	* Introduction - Problem Statement: stating the problem which has been tackled
+	* Methodology: a description of your dataset, neural network architecture, training procedure (pictorially if possible)
+	* Results: qualitative (e.g. examples of generated images, segmentation boxes…) and quantitative (overview of final performances with metrics, loss curves, etc.)
+
+*Note*: Your poster is NOT a report: select the most important information and avoid overcrowding it with text. A visual poster is always more appealing and interactive. You can obviously modify the template to your liking, or even choose not to follow it.
+- A **poster presentation session** will be held at the end of the course (**May 15, 2026**), where students will have to present their project and answer practical questions justifying their choices, discuss their results, etc.
 - The grade will depend on two main components:
-	* quality and originality of the project (are the contributions of the group to the development of the project well defined? what has been implemented with respect to the original research questions, what has been re-used from existing coding directories?)
-	* presentation of the project (structure of the report, clarity of figures/tables, correctness of the English language)
-- Both the project proposal and the project report should follow the LaTex template [`template-report.tex`](https://glouppe.github.io/info8010-deep-learning/template-report.tex).
-Feel free to change the structure of the latex template if needed.
+	* Quality and originality of the project (Are the group's contributions to the project development well defined? What has been implemented with respect to the original research questions? What has been reused from existing code repositories?)
+	* Presentation of the project (poster structure, clarity of figures/tables, quality of the presentation and answers to questions)
+
 
 ### Honor code
 

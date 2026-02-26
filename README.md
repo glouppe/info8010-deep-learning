@@ -18,8 +18,10 @@ Lectures for INFO8010 Deep Learning, ULiège, Spring 2026.
 | February 27 | Lecture 4: [Training neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture4.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec4.pdf)] [[code 1](https://github.com/glouppe/info8010-deep-learning/blob/master/code/lec4-training.ipynb), [code 2](https://github.com/glouppe/info8010-deep-learning/blob/master/code/lec4-initialization.ipynb)] |
 | March 6 | Lecture 5: [Convolutional neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture5.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec5.pdf)] [[code](https://github.com/glouppe/info8010-deep-learning/blob/master/code/lec5-convnet.ipynb)] |
 | March 13 | Lecture 6: [Computer vision](https://glouppe.github.io/info8010-deep-learning/?p=lecture6.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec6.pdf)] [[code](https://github.com/glouppe/info8010-deep-learning/blob/master/code/lec6-unet.ipynb)] |
+| March 15 | Deadline for Homework 1 |
 | March 20 | Lecture 7: [Attention and transformers](https://glouppe.github.io/info8010-deep-learning/?p=lecture7.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec7.pdf)] |
 | March 27 | Code: [GPT, from scratch!](https://github.com/glouppe/info8010-deep-learning/blob/master/code/gpt/)<br>Lecture 8: [LLMs and foundation models](https://glouppe.github.io/info8010-deep-learning/?p=lecture8.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec8.pdf)] |
+| March 29 | Deadline for Homework 2 <br> Deadline for project proposal|
 | April 3 | Lecture 9: [Graph neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture9.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec9.pdf)] |
 | April 10 | Lecture 10: [Uncertainty](https://glouppe.github.io/info8010-deep-learning/?p=lecture10.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec10.pdf)] |
 | April 17 | Lecture 11: [Auto-encoders and variational auto-encoders](https://glouppe.github.io/info8010-deep-learning/?p=lecture11.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec11.pdf)] [[code](https://github.com/glouppe/info8010-deep-learning/blob/master/code/lec11-vae.ipynb)] |
@@ -31,8 +33,8 @@ The goal of these two assignments is to get you familiar with the PyTorch librar
 Each homework should be done in groups of 2 or 3 (the same as for the project) and must be submitted **before 23:59 on the due date**.
 Homeworks should be submitted on Gradescope.
 
-- [Homework 1](https://github.com/glouppe/info8010-deep-learning/raw/master/homeworks/homework1.ipynb): Tensor operations, `autograd` and `nn`. Due by (TBD).
-- [Homework 2](https://github.com/glouppe/info8010-deep-learning/raw/master/homeworks/homework2.ipynb): Dataset, Dataloader, running on GPU, training a convolutional neural network. Due by (TBD).
+- [Homework 1](https://github.com/glouppe/info8010-deep-learning/raw/master/homeworks/homework1.ipynb): Tensor operations, `autograd` and `nn`. Due by March 15, 2026.
+- [Homework 2](https://github.com/glouppe/info8010-deep-learning/raw/master/homeworks/homework2.ipynb): Dataset, Dataloader, running on GPU, training a convolutional neural network. Due by March 29, 2026.
 
 Homeworks are optional. If submitted, each homework will account for 5% of the final grade.
 
