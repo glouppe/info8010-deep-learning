@@ -22,6 +22,8 @@ How to **optimize parameters** efficiently?
 - Initialization
 - Normalization
 
+.alert[Most of the materials presented here remain an .bold[empirical bag of tricks]. The mathematical understanding of optimization in deep learning is still very limited, and the design of optimizers and hyperparameter tuning often rely on heuristics.]
+
 ---
 
 class: middle
@@ -50,9 +52,9 @@ class: middle
 Training a massive deep neural network is long, complex and sometimes confusing. 
 
 A first step towards understanding, debugging and optimizing neural networks is to make use of visualization tools for
+- looking at predictions and errors,
 - plotting losses and metrics, 
-- visualizing computational graphs,
-- or showing additional data as the network is being trained.
+- or showing additional data as the network is being trained (e.g., intermediate activations, gradients, or feature maps).
 
 ---
 
@@ -177,9 +179,13 @@ $$
 where the order ${n(t,b)}$ to visit the samples can be either sequential or random.
 
 - Increasing the batch size $B$ reduces the variance of the gradient estimates and enables the speed-up of batch processing.
-- The interplay between $B$ and $\gamma$ is still unclear.
+- The interplay between $B$ and $\gamma$ is still unclear.  
 
 .footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+
+???
+
+Intuitively, large $B$ should couple well with large $\gamma$ and small $B$ with small $\gamma$, but how to set those hyper-parameters in practice is still an open question.
 
 ---
 
@@ -383,6 +389,14 @@ u\_t  &= \alpha u\_{t-1} - \gamma g\_t \\\\
 
 ???
 
+Intuitively, the optimization process is like a ball rolling down a landscape defined by the loss function. 
+
+The momentum term allows the ball to build up speed in directions where the gradient consistently points, while also providing inertia that helps it overcome small bumps and avoid getting stuck in local minima.
+
+No momentum would be like a ball that stops immediately when the gradient changes direction, which can lead to slow convergence in narrow valleys.
+
+<br>
+
 Dampening arises because of the accumulation of the gradients, which make them cancel each other.
 
 ---
@@ -502,6 +516,12 @@ r\_t  &=  \rho\_2 r\_{t-1} + (1-\rho\_2) g\_t \odot g\_t \\\\
 \hat{r}\_t &= \frac{r\_t}{1-\rho\_2^t} \\\\
 \theta\_{t+1} &= \theta\_t - \gamma \frac{\hat{s}\_t}{\delta+\sqrt{\hat{r}\_t}}
 \end{aligned}$$
+
+???
+
+Both $\hat{s}\_t$ and $\hat{r}\_t$ are bias-corrected estimates of the first and second moments of the gradients, respectively. 
+
+The bias correction is necessary because $s\_t$ and $r\_t$ are initialized to zero, which would lead to biased estimates, especially in the early stages of training. 
 
 ---
 
@@ -835,8 +855,15 @@ class: middle
 
 ## Layer normalization
 
-**Layer normalization** is a variant of batch normalization that normalizes the activations across the features of each sample, rather than across the samples of each feature:
-$$\mathbf{u}' = \gamma\odot (\mathbf{u} - \hat{\mu}\_\text{layer}) \odot \frac{1}{\hat{\sigma}\_\text{layer} + \epsilon} + \beta.$$
+**Layer normalization** is a variant of batch normalization that normalizes the activations across features (channels) instead of across samples.
+$$\mathbf{u}' = \gamma\odot (\mathbf{u} - \hat{\mu}\_\text{layer}) \odot \frac{1}{\hat{\sigma}\_\text{layer} + \epsilon} + \beta$$
+where
+$$
+\begin{aligned}
+\hat{\mu}\_\text{layer} &= \frac{1}{q} \sum\_{i=1}^q \mathbf{u}\_i \quad\quad\quad \hat{\sigma}^2\_\text{layer} = \frac{1}{q} \sum\_{i=1}^q (\mathbf{u}\_i - \hat{\mu}\_\text{layer})^2
+\end{aligned}$$
+and $q$ is the number of features (channels) in $\mathbf{u}$.
+
 
 ---
 
