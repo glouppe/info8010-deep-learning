@@ -22,7 +22,7 @@ Projects should be submitted on Gradescope.
   
 - Students can work in groups of maximum 3 students.
 - Each group must write a short (1-2 pages) research project proposal. It should include a description of a minimum viable project, the data you will use or collect, the computing resources you think you will need, some nice-to-haves if time allows, and a short review of related work. Project proposals must be approved before working on the project. They should follow the LaTex template [`template-report.tex`](https://glouppe.github.io/info8010-deep-learning/template-report.tex).
-- At the end of their project, each group must create a poster motivating their idea and describing their results, in a poster format typical of a Machine Learning conference (see the [template](https://glouppe.github.io/info8010-deep-learning/poster) folder). The poster may include the following sections:
+- At the end of their project, each group must create a poster motivating their idea and describing their results, in a poster format typical of a Machine Learning conference (see the [template](https://github.com/glouppe/info8010-deep-learning/tree/master/poster) folder). The poster may include the following sections:
 	* Abstract: a short summary of your project
 	* Introduction - Problem Statement: stating the problem which has been tackled
 	* Methodology: a description of your dataset, neural network architecture, training procedure (pictorially if possible)
