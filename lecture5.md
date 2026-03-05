@@ -54,6 +54,15 @@ class: middle, black-slide
 
 ]
 
+???
+
+They recorded the activity of neurons in the visual cortex of cats while showing them different visual stimuli, until they found some neurons that responded to the presence of a line in the visual field. 
+
+During their recordings, they noticed a few interesting things:
+1. the neurons fired only when the line was in a particular place on the retina,
+2. the activity of these neurons changed depending on the orientation of the line, and
+3. sometimes the neurons fired only when the line was moving in a particular direction.
+
 ---
 
 class: middle, black-slide
@@ -66,14 +75,15 @@ class: middle, black-slide
 
 ???
 
-During their recordings, they noticed a few interesting things:
-1. the neurons fired only when the line was in a particular place on the retina,
-2. the activity of these neurons changed depending on the orientation of the line, and
-3. sometimes the neurons fired only when the line was moving in a particular direction.
+Their hypothesis:
+- The visual system is organized in a hierarchical way, where simple features are extracted at the early stages and more complex features are extracted at the later stages.
+- Simple cells are sensitive to the presence of a line in a particular position and orientation in the visual field.
+- Complex cells are sensitive to the presence of a line in a particular orientation, but not to its position.
+- Hierarchies of simple+complex cells can be used to extract more complex features, such as corners, curves, and eventually objects.
 
 ---
 
-# Inductive biases 
+class: middle
 
 Can we equip neural networks with **inductive biases** tailored for vision?
 
@@ -81,13 +91,17 @@ Can we equip neural networks with **inductive biases** tailored for vision?
 - Invariance translation (as in complex cells)
 - Hierarchical compositionality (as in hypercomplex cells)
 
+???
+
+Can we take inspiration from the visual system to design neural network architectures that are better suited for visual perception?
+
 ---
 
 class: middle
 
 .center.width-100[![](figures/lec5/ConvEquiInv.svg)]
 
-.center[Invariance and equivariance to translation.]
+.center[Invariance and equivariance to translation<br> are desirable properties for visual perception.]
 
 .footnote[Credits: Simon J.D. Prince, [Understanding Deep Learning](https://udlbook.github.io/udlbook/), 2023.]
 
@@ -100,56 +114,29 @@ class: middle
 
 class: middle
 
-## Neocognitron 
-
-In 1980, Fukushima proposes a direct neural network implementation of the hierarchy model of the visual nervous system of Hubel and Wiesel.
-
-.grid[
-.kol-2-3.width-90.center[![](figures/lec5/neocognitron1.png)]
-.kol-1-3[
-
-- Built upon **convolutions** and enables the composition of a *feature hierarchy*.
-- Biologically-inspired training algorithm, which proves to be largely **inefficient**.
-
-]
-]
-
-.footnote[Credits: Kunihiko Fukushima, [Neocognitron: A Self-organizing Neural Network Model](https://www.rctn.org/bruno/public/papers/Fukushima1980.pdf), 1980.]
+# Convolutional networks
 
 ---
 
+exclude: true
 class: middle
+background-image: url('figures/lec5/info8006/wally.jpg')
+background-size: contain
+background-position: center
 
-## Convolutional networks 
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+.center[Where's Wally?]
 
-In the 1980-90s, LeCun trains a convolutional network by backpropagation.
-He advocates for end-to-end feature learning in image classification.
-
-<br>
-.center.width-70[![](figures/lec5/lenet-1990.png)]
-
-.footnote[Credits: LeCun et al, [Handwritten Digit Recognition with a Back-Propagation Network](http://yann.lecun.com/exdb/publis/pdf/lecun-90c.pdf), 1990.]
-
----
-
-class: middle
-
-# Convolutions
-
----
-
-# Convolutional layers
-
-A convolutional layer applies the same linear transformation locally everywhere while preserving the signal structure.
-
-<br>
-.center.width-65[![](figures/lec5/1d-conv.gif)]
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+.footnote[Credits: Martin Handford, [Where's Wally?](https://en.wikipedia.org/wiki/Where%27s_Wally%3F) series.]
 
 ???
 
-Draw vertically.
+Highlights:
+- Large image with many pixels. Processing it with a fully connected layer would require a huge number of parameters.
+- Nearby pixels are strongly correlated as they form parts of a same object.
+- Parts combine to form objects: eyes, nose, mouth form a face; arms, legs, torso form a person; trees, people, buildings form a scene.
+- Patterns (people, objects) appear at different locations. Detecting them should not require learning separate parameters for each location.
+- If we slightly move or rotate the image, we should still be able to recognize the objects in it. 
 
 ---
 
@@ -157,9 +144,9 @@ class: middle
 
 ## 1d convolution
 
-For the one-dimensional input $\mathbf{x} \in \mathbb{R}^W$ and the convolutional kernel $\mathbf{u} \in \mathbb{R}^w$, the discrete **convolution** $\mathbf{x} \circledast \mathbf{u}$ is a vector of size $W - w + 1$ such that
+For the one-dimensional input $\mathbf{x} \in \mathbb{R}^W$ and the convolutional kernel $\omega \in \mathbb{R}^w$, the discrete **convolution** $\mathbf{x} \circledast \omega$ is a vector of size $W - w + 1$ such that
 $$\begin{aligned}
-(\mathbf{x} \circledast \mathbf{u})[i] &= \sum\_{m=0}^{w-1} \mathbf{x}\_{m+i}  \mathbf{u}\_m .
+(\mathbf{x} \circledast \omega)[i] &= \sum\_{m=0}^{w-1} \mathbf{x}\_{m+i}  \omega\_m .
 \end{aligned}
 $$
 
@@ -170,16 +157,23 @@ However, most machine learning libraries call it convolution.
 
 ---
 
-class: middle 
+class: middle
 
-Convolutions can implement differential operators:
-$$(0,0,0,0,1,2,3,4,4,4,4) \circledast (-1,1) = (0,0,0,1,1,1,1,0,0,0) $$
-.center.width-100[![](figures/lec5/conv-op1.png)]
-or crude template matchers:
-$$(0, 0, 3, 0, 0, 0, 0, 0, 3, 0, 3, 0, 0, 0) \circledast (1, 0, 1) = (3, 0, 3, 0, 0, 0, 3, 0, 6, 0, 3, 0)$$
-.center.width-100[![](figures/lec5/conv-op2.png)]
+Optionally, 
+- the input $\mathbf{x}$ can be .bold[padded] with $p$ zeros on each side before applying the convolution, resulting in an output of size $W - w + 1 + 2p$. Setting $p = \frac{w-1}{2}$ (for odd $w$) preserves the input size. 
+- the convolution can be applied in a .bold[strided] fashion, skipping $s-1$ elements of the input between each application of the kernel, resulting in an output of size $\lfloor\frac{W - w + 1}{s}\rfloor$. For $s=1$, the convolution is applied at every position of the input. For $s=w$, the convolution is applied at non-overlapping positions of the input.
 
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+---
+
+class: middle
+
+.center.width-100[![](figures/lec5/info8006/Conv1.svg)]
+
+<br>
+.center[1d convolution with a kernel $\omega = (\omega\_1, \omega\_2, \omega\_3)$ applied to the input signal $\mathbf{x}$. <br>
+The output is obtained by sliding the kernel over the input and computing the inner product at each position, optionally with padding.]
+
+.footnote[Credits: [Simon J.D. Prince](https://udlbook.github.io/udlbook/), 2023.]
 
 ---
 
@@ -187,8 +181,9 @@ class: middle
 
 ## 2d convolution
 
-For the 2d input tensor $\mathbf{x} \in \mathbb{R}^{H \times W}$ and the 2d convolutional kernel $\mathbf{u} \in \mathbb{R}^{h \times w}$, the discrete **convolution** $\mathbf{x} \circledast \mathbf{u}$ is a matrix of size $(H-h+1) \times (W-w+1)$ such that
-$$(\mathbf{x} \circledast \mathbf{u})[j,i] = \sum\_{n=0}^{h-1} \sum\_{m=0}^{w-1}    \mathbf{x}\_{n+j,m+i} \mathbf{u}\_{n,m}$$
+For the 2d input tensor $\mathbf{x} \in \mathbb{R}^{H \times W}$ and the 2d convolutional kernel $\omega \in \mathbb{R}^{h \times w}$, the discrete **convolution** $\mathbf{x} \circledast \omega$ is a matrix of size $(H-h+1) \times (W-w+1)$ such that
+$$(\mathbf{x} \circledast \omega)[j,i] = \sum\_{n=0}^{h-1} \sum\_{m=0}^{w-1}    \mathbf{x}\_{n+j,m+i} \omega_{n,m}$$
+As for 1d convolution, padding can be applied to both spatial dimensions of the input to control the output size.
 
 ???
 
@@ -198,90 +193,21 @@ Draw: Explain the intuition behind the sum of element-wise products which reduce
 
 class: middle
 
-## Channels
+.center.width-100[![](figures/lec5/info8006/Conv2D.svg)]
 
-The 2d convolution can be extended to tensors with multiple channels.
+.center[2d convolution with a kernel $\omega  \in \mathbb{R}^{3 \times 3}$ applied to the input signal $\mathbf{x}$.]
 
-For the 3d input tensor $\mathbf{x} \in \mathbb{R}^{C \times H \times W}$ and the 3d convolutional kernel $\mathbf{u} \in \mathbb{R}^{C \times h \times w}$, the discrete **convolution** $\mathbf{x} \circledast \mathbf{u}$ is a tensor of size $(H-h+1) \times (W-w+1)$ such that
-$$(\mathbf{x} \circledast \mathbf{u})[j,i] = \sum\_{c=0}^{C-1}\sum\_{n=0}^{h-1} \sum\_{m=0}^{w-1}    \mathbf{x}\_{c,n+j,m+i} \mathbf{u}\_{c,n,m}$$
-
----
-
-class: middle
-
-## Convolutional layers
-
-A convolutional layer is defined by a set of $K$ kernels $\mathbf{u}\_k$ of size $C \times h \times w$. It applies the 2d convolution operation to the input tensor $\mathbf{x}$ of size $C \times H \times W$ to produce a set of $K$ feature maps $\mathbf{o}\_k$.
+.footnote[Credits: [Simon J.D. Prince](https://udlbook.github.io/udlbook/), 2023.]
 
 ---
 
 class: middle
 
-.center[![](figures/lec5/3d-conv.gif)]
+## Convolution as matrix multiplication
 
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-
-Convolutions have three additional parameters:
-- The .bold[padding] specifies the size of a zeroed frame added arount the input.
-- The .bold[stride] specifies a step size when moving the kernel across the signal.
-- The .bold[dilation] modulates the expansion of the filter without adding weights.
-
-.grid[
-.kol-1-3.center[.width-100[![](figures/lec5/same_padding_no_strides.gif)]]
-.kol-1-3.center[.width-100[![](figures/lec5/no_padding_strides.gif)]]
-.kol-1-3.center[.width-100[![](figures/lec5/dilation.gif)]]
-]
-
-.grid[
-.kol-1-3.center[Padding=1]
-.kol-1-3.center[Stride=2]
-.kol-1-3.center[Dilation=2]
-]
-
-
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
-???
-
-- Padding is useful to control the spatial dimension of the output feature map, for example to keep it constant across layers.
-- Stride is useful to reduce the spatial dimension of the feature map by a constant factor.
-- Dilation modulates the expansion of the kernel support by adding rows and columns of zeros between coefficients. Having a dilation coefficient greater than one increases the units receptive field size without increasing the number of parameters.
-
----
-
-class: middle
-
-## Equivariance
-
-
-Formally, a function $f$ is equivariant to $g$ if $f(g(\mathbf{x})) = g(f(\mathbf{x}))$.
-
-Parameter sharing used in a convolutional layer causes the layer to be equivariant to translation.
-
-.center.width-75[![](figures/lec5/atrans.gif)]
-
-.caption[If an object moves in the input image, its representation will move the same amount in the output.]
-
-.footnote[Credits: LeCun et al, Gradient-based learning applied to document recognition, 1998.]
-
-???
-
-- Equivariance is useful when we know some local function is useful everywhere (e.g., edge detectors).
-- Convolution is not equivariant to other operations such as change in scale or rotation.
-
----
-
-# Convolutions as matrix multiplications
-
-As a guiding example, let us consider the convolution of single-channel tensors $\mathbf{x} \in \mathbb{R}^{4 \times 4}$ and $\mathbf{u} \in \mathbb{R}^{3 \times 3}$:
-
+The convolution operation can be equivalently re-expressed as a linear operation. As a guiding example, let us consider the convolution of tensors $\mathbf{x} \in \mathbb{R}^{4 \times 4}$ and $\omega \in \mathbb{R}^{3 \times 3}$,
 $$
-\mathbf{x} \circledast \mathbf{u} =
+\mathbf{x} \circledast \omega =
 \begin{pmatrix}
 4 & 5 & 8 & 7 \\\\
 1 & 8 & 8 & 8 \\\\
@@ -295,7 +221,7 @@ $$
 \begin{pmatrix}
 122 & 148 \\\\
 126 & 134
-\end{pmatrix}$$
+\end{pmatrix}.$$
 
 ???
 
@@ -305,41 +231,41 @@ Do this on the tablet for 1D convolutions. Draw the MLP and Wx product.
 
 class: middle
 
-The convolution operation can be equivalently re-expressed as a single matrix multiplication:
-- the convolutional kernel $\mathbf{u}$ is rearranged as a **sparse Toeplitz circulant matrix**, called the convolution matrix:
-$$\mathbf{U} = \begin{pmatrix}
+The convolutional kernel $\omega$ is first rearranged as a .bold[sparse Toeplitz circulant matrix], called the convolution matrix,
+$$\mathbf{W^T} = \begin{pmatrix}
 1 & 4 & 1 & 0 & 1 & 4 & 3 & 0 & 3 & 3 & 1 & 0 & 0 & 0 & 0 & 0 \\\\
 0 & 1 & 4 & 1 & 0 & 1 & 4 & 3 & 0 & 3 & 3 & 1 & 0 & 0 & 0 & 0 \\\\
 0 & 0 & 0 & 0 & 1 & 4 & 1 & 0 & 1 & 4 & 3 & 0 & 3 & 3 & 1 & 0 \\\\
 0 & 0 & 0 & 0 & 0 & 1 & 4 & 1 & 0 & 1 & 4 & 3 & 0 & 3 & 3 & 1
-\end{pmatrix}$$
-- the input $\mathbf{x}$ is flattened row by row, from top to bottom:
+\end{pmatrix}.$$
+
+The input $\mathbf{x}$ is flattened row by row, from top to bottom, into a column vector 
 $$v(\mathbf{x}) =
 \begin{pmatrix}
 4 & 5 & 8 & 7 & 1 & 8 & 8 & 8 & 3 & 6 & 6 & 4 & 6 & 5 & 7 & 8
-\end{pmatrix}^T$$
+\end{pmatrix}^T.$$
 
 Then,
-$$\mathbf{U}v(\mathbf{x}) =
+$$\mathbf{W^T}v(\mathbf{x}) =
 \begin{pmatrix}
 122 & 148 & 126 & 134
 \end{pmatrix}^T$$
-which we can reshape to a $2 \times 2$ matrix to obtain $\mathbf{x} \circledast \mathbf{u}$.
+which we can reshape to a $2 \times 2$ matrix to obtain $\mathbf{x} \circledast \omega$.
 
 ---
 
 class: middle
 
-The same procedure generalizes to $\mathbf{x} \in \mathbb{R}^{H \times W}$ and convolutional kernel $\mathbf{u} \in \mathbb{R}^{h \times w}$, such that:
+The same procedure generalizes to $\mathbf{x} \in \mathbb{R}^{H \times W}$ and convolutional kernel $\omega \in \mathbb{R}^{h \times w}$, such that:
 - the convolutional kernel is rearranged as a sparse Toeplitz circulant matrix $\mathbf{U}$ of shape $(H-h+1)(W-w+1) \times HW$ where
     - each row $i$ identifies an element of the output feature map,
     - each column $j$ identifies an element of the input feature map,
-    - the value $\mathbf{U}\_{i,j}$ corresponds to the kernel value the element $j$ is multiplied with in output $i$;
+    - the value $\mathbf{W^T}\_{i,j}$ corresponds to the kernel value the element $j$ is multiplied with in output $i$;
 - the input $\mathbf{x}$ is flattened into a column vector $v(\mathbf{x})$ of shape $HW \times 1$;
-- the output feature map $\mathbf{x} \circledast \mathbf{u}$ is obtained by reshaping the $(H-h+1)(W-w+1) \times 1$ column vector $\mathbf{U}v(\mathbf{x})$ as a $(H-h+1) \times (W-w+1)$ matrix.
+- the output feature map $\mathbf{x} \circledast \omega$ is obtained by reshaping the $(H-h+1)(W-w+1) \times 1$ column vector $\mathbf{W^T}v(\mathbf{x})$ as a $(H-h+1) \times (W-w+1)$ matrix.
 
 Therefore, a convolutional layer is a special case of a fully
-connected layer: $$\mathbf{h} = \mathbf{x} \circledast \mathbf{u} \Leftrightarrow v(\mathbf{h}) = \mathbf{U}v(\mathbf{x}) \Leftrightarrow  v(\mathbf{h}) = \mathbf{W}^T v(\mathbf{x})$$
+connected layer: $$\mathbf{h} = \mathbf{x} \circledast \omega \Leftrightarrow v(\mathbf{h}) = \mathbf{W^T}v(\mathbf{x})$$
 
 ???
 
@@ -363,45 +289,80 @@ class: middle
 
 ---
 
-class: middle 
+class: middle
 
-# Pooling 
+## Channels
+
+The 2d convolution can be extended to tensors with multiple channels.
+
+For the 3d input tensor $\mathbf{x} \in \mathbb{R}^{C \times H \times W}$ and the 3d convolutional kernel $\omega \in \mathbb{R}^{C \times h \times w}$, the discrete 2d convolution $\mathbf{x} \circledast \omega$ is a 2d tensor of size $(H-h+1) \times (W-w+1)$ such that
+$$(\mathbf{x} \circledast \omega)[j,i] = \sum\_{c=0}^{C-1}\sum\_{n=0}^{h-1} \sum\_{m=0}^{w-1}    \mathbf{x}\_{c,n+j,m+i} \omega_{c,n,m}$$
 
 ---
 
 class: middle
 
-When the input volume is large, **pooling layers** can be used to reduce the input dimension while
-preserving its global structure, in a way similar to a down-scaling operation.
+.center.width-100[![](figures/lec5/info8006/ConvImage.svg)]
+
+.center[2d convolution applied to a color image with three channels (R, G, B).]
+
+.footnote[Credits: [Simon J.D. Prince](https://udlbook.github.io/udlbook/), 2023.]
 
 ---
 
-# Pooling
+class: middle
 
-Consider a pooling area of size $h \times w$ and a 3d input tensor $\mathbf{x} \in \mathbb{R}^{C\times(rh)\times(sw)}$.
-- Max-pooling produces a tensor $\mathbf{o} \in \mathbb{R}^{C \times r \times s}$
-such that
+## Convolutional layers
+
+A convolutional layer is defined by a set of $K$ kernels $\omega_k$ of size $C \times h \times w$. It applies the 2d convolution operation to the input tensor $\mathbf{x}$ of size $C \times H \times W$ to produce a set of $K$ feature maps $\mathbf{o}\_k$.
+
+Each kernel $\omega_k$ acts as a feature detector that scans the input tensor and produces a feature map $\mathbf{o}\_k$ specific to that feature. 
+
+---
+
+class: middle
+
+A function $f$ is .bold[equivariant] to $g$ if $f(g(\mathbf{x})) = g(f(\mathbf{x}))$.
+
+Parameter sharing (using the same kernel across all spatial locations) in a convolutional layer causes the layer to be equivariant to translation.
+
+.center.width-75[![](figures/lec5/atrans.gif)]
+
+.caption[If an object moves in the input image, its representation will move the same amount in the output.]
+
+.footnote[Credits: LeCun et al, Gradient-based learning applied to document recognition, 1998.]
+
+???
+
+- Equivariance is useful when we know some local function is useful everywhere (e.g., edge detectors).
+- Convolution is not equivariant to other operations such as change in scale or rotation.
+
+---
+
+class: middle
+
+## Pooling layers
+
+Pooling layers are used to progressively reduce the spatial size of the representation, hence capturing longer-range dependencies between features. 
+
+Considering a pooling area of size $h \times w$ and a 3D input tensor $\mathbf{x} \in \mathbb{R}^{C\times(rh)\times(sw)}$, max-pooling produces a tensor $\mathbf{o} \in \mathbb{R}^{C \times r \times s}$ such that
 $$\mathbf{o}\_{c,j,i} = \max\_{n < h, m < w} \mathbf{x}_{c,rj+n,si+m}.$$
-- Average pooling produces a tensor $\mathbf{o} \in \mathbb{R}^{C \times r \times s}$ such that
-$$\mathbf{o}\_{c,j,i} = \frac{1}{hw} \sum\_{n=0}^{h-1} \sum\_{m=0}^{w-1} \mathbf{x}_{c,rj+n,si+m}.$$
-
-Pooling is very similar in its formulation to convolution.
 
 ---
 
 class: middle
 
-.center[![](figures/lec5/pooling.gif)]
+.center.width-100[![](figures/lec5/info8006/ConvDown.svg)]
 
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+.center[Subsampling, max-pooling and average-pooling with a pooling area of size $2 \times 2$.]
+
+.footnote[Credits: [Simon J.D. Prince](https://udlbook.github.io/udlbook/), 2023.]
 
 ---
 
 class: middle
 
-## Invariance
-
-Formally, a function $f$ is invariant to $g$ if $f(g(\mathbf{x})) = f(\mathbf{x})$.
+A function $f$ is .bold[invariant] to $g$ if $f(g(\mathbf{x})) = f(\mathbf{x})$.
 
 Pooling layers provide invariance to any permutation inside one cell, which results in (pseudo-)invariance to local translations.
 
@@ -417,78 +378,45 @@ This helpful if we care more about the presence of a pattern rather than its exa
 
 class: middle
 
-# Convolutional networks
+## Convolutional neural networks (CNNs)
+
+A convolutional neural network (CNN) is a deep neural network that uses convolutional layers, pooling layers, and fully connected layers to process multi-dimensional inputs such as images.
+
+- Convolutional layers extract local features from the input while preserving spatial relationships.
+- Pooling layers reduce the spatial dimensions of the feature maps, allowing the network to capture more global features.
+- Fully connected layers at the end of the network combine the extracted features to make predictions.
 
 ---
 
 class: middle
 
-A **convolutional network** is generically defined as a composition of convolutional layers ($\texttt{CONV}$), pooling layers ($\texttt{POOL}$), linear rectifiers ($\texttt{ReLU}$) and fully connected layers ($\texttt{FC}$).
+.center.width-100[![](figures/lec5/info8006/convnet-pattern.png)]
 
-.center.width-100[![](figures/lec5/convnet-pattern.png)]
-
----
-
-class: middle
-
-The most common convolutional network architecture follows the pattern:
-
-$$\texttt{INPUT} \to [[\texttt{CONV} \to \texttt{ReLU}]\texttt{\*}N \to \texttt{POOL?}]\texttt{\*}M \to [\texttt{FC} \to \texttt{ReLU}]\texttt{\*}K \to \texttt{FC}$$
-
-where:
-- $\texttt{\*}$ indicates repetition;
-- $\texttt{POOL?}$ indicates an optional pooling layer;
-- $N \geq 0$ (and usually $N \leq 3$), $M \geq 0$, $K \geq 0$ (and usually $K < 3$);
-- the last fully connected layer holds the output (e.g., the class scores).
+.center[Interleaving convolutional and pooling layers enables the network to learn hierarchical features from local to global patterns.]
 
 ---
 
 class: middle
 
-Some common architectures for convolutional networks following this pattern include:
-- $\texttt{INPUT} \to \texttt{FC}$, which implements a linear classifier ($N=M=K=0$).
-- $\texttt{INPUT} \to [\texttt{FC} \to \texttt{ReLU}]{\*K} \to \texttt{FC}$, which implements a $K$-layer MLP.
-- $\texttt{INPUT} \to \texttt{CONV} \to \texttt{ReLU} \to \texttt{FC}$.
-- $\texttt{INPUT} \to [\texttt{CONV} \to \texttt{ReLU} \to \texttt{POOL}]\texttt{\*2} \to \texttt{FC} \to \texttt{ReLU} \to \texttt{FC}$.
-- $\texttt{INPUT} \to [[\texttt{CONV} \to \texttt{ReLU}]\texttt{\*2} \to \texttt{POOL}]\texttt{\*3} \to [\texttt{FC} \to \texttt{ReLU}]\texttt{\*2} \to \texttt{FC}$.
+In 1980, Fukushima proposes the .bold[Neocognitron], a direct neural network implementation of the hierarchy model of the visual nervous system of Hubel and Wiesel.
 
-???
+.grid[
+.kol-2-3.width-90.center[![](figures/lec5/neocognitron1.png)]
+.kol-1-3[
 
-Note that for the last architecture, two $\texttt{CONV}$ layers are stacked before every $\texttt{POOL}$ layer. This is generally a good idea for larger and deeper networks, because multiple stacked $\texttt{CONV}$  layers can develop more complex features of the input volume before the destructive pooling operation.
+- Built upon **convolutions** and enables the composition of a *feature hierarchy*.
+- Biologically-inspired training algorithm, which proves to be largely **inefficient**.
 
----
+]
+]
 
-class: center, middle, black-slide
-
-.width-100[![](figures/lec5/convnet.gif)]
-
----
-
-class: middle, center
-
-(demo)
-
-???
-
-https://poloclub.github.io/cnn-explainer/
-
-Notebook `lec5`.
-
----
-
-# Architectures (some)
-
-.center.width-70[![](figures/lec5/zoo.png)]
-
-.footnote[Credits: [Bianco et al](https://arxiv.org/abs/1810.00736), 2018.]
+.footnote[Credits: Kunihiko Fukushima, [Neocognitron: A Self-organizing Neural Network Model](https://www.rctn.org/bruno/public/papers/Fukushima1980.pdf), 1980.]
 
 ---
 
 class: middle
 
-## LeNet-5 (LeCun et al, 1998)
-
-Composition of two $\texttt{CONV}+\texttt{POOL}$ layers, followed by a block of fully-connected layers.
+In the 1980-90s, LeCun and collaborators propose convolutional network architectures, called .bold[LeNet-1] to .bold[LeNet-5], and show how to train them end-to-end with backpropagation.
 
 .center.width-110[![](figures/lec5/lenet.svg)]
 
@@ -510,51 +438,79 @@ class: middle, black-slide
 
 class: middle
 
-.grid[
-.kol-3-5[
-<br><br><br><br>
+Classic convolutional network architecture have followed the same pattern as LeNet-5, which can be summarized as
+$$\texttt{INPUT} \to [[\texttt{CONV} \to \texttt{ReLU}]\texttt{\*}N \to \texttt{POOL?}]\texttt{\*}M \to [\texttt{FC} \to \texttt{ReLU}]\texttt{\*}K \to \texttt{FC},$$
+where:
+- $\texttt{\*}$ indicates repetition;
+- $\texttt{POOL?}$ indicates an optional pooling layer;
+- $N \geq 0$ (and usually $N \leq 3$), $M \geq 0$, $K \geq 0$ (and usually $K < 3$);
+- the last fully connected layer holds the output (e.g., the class scores).
 
-## AlexNet (Krizhevsky et al, 2012)
+---
 
-Composition of a 8-layer convolutional neural network with a 3-layer MLP.
 
-The original implementation was made of two parts such that it could fit within two GPUs.
-]
-.kol-2-5.center[.width-100[![](figures/lec5/alexnet.svg)]
-.caption[LeNet vs. AlexNet]
-]
-]
+class: center, middle, black-slide
 
-.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
+.width-100[![](figures/lec5/convnet.gif)]
+
+---
+
+class: middle, center
+
+(demo of `code/lec5-convnet.ipynb`)
+
+???
+
+See also https://poloclub.github.io/cnn-explainer/
 
 ---
 
 class: middle
 
-.grid[
-.kol-2-5[
-  <br>
-
-## VGG (Simonyan and Zisserman, 2014)
-
-Composition of 5 VGG blocks consisting of $\texttt{CONV}+\texttt{POOL}$ layers, followed by a block of fully connected layers.
-
-The network depth increased up to 19 layers, while the kernel sizes reduced to 3.
-]
-.kol-3-5.center[.width-100[![](figures/lec5/vgg.svg)]
-.caption[AlexNet vs. VGG]
-]
-]
-
-.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
+# Modern architectures
 
 ---
 
 class: middle
 
-The .bold[effective receptive field] is the part of the visual input that affects a given unit indirectly through previous convolutional layers. 
-- It grows linearly with depth when chaining convolutional layers.
-- It grows exponentially with depth when pooling layers (or strided convolutions) are interleaved with convolutional layers.
+.center.width-70[![](figures/lec5/zoo.png)]
+
+.footnote[Credits: [Bianco et al](https://arxiv.org/abs/1810.00736), 2018.]
+
+---
+
+
+class: middle
+
+.center.width-60[![](figures/lec5/info8006/ConvAlex.svg)]
+
+The .bold[AlexNet] architecture for image classification (Krizhevsky et al., 2012).
+- 8-layer convolutional network with large convolutional kernels (up to $11 \times 11$) and large number of channels (up to 384).
+- The convolutional layers are followed with a 3-layer MLP.
+
+.footnote[Credits: [Simon J.D. Prince](https://udlbook.github.io/udlbook/), 2023.]
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec5/info8006/ConvVGG.svg)]
+
+The .bold[VGG] architecture for image classification (Simonyan and Zisserman, 2014).
+- 5 VGG blocks consisting of convolutional and pooling layers, followed by a block of fully connected layers.
+- The depth increased up to 19 layers, while the kernel sizes reduced to $3 \times 3$.
+
+.footnote[Credits: [Simon J.D. Prince](https://udlbook.github.io/udlbook/), 2023.]
+
+---
+
+class: middle
+
+The reduction of kernel size and the increase in depth allows the network to capture more complex features while keeping the number of parameters manageable.
+
+Indeed, the .bold[effective receptive field] of a unit in the output feature map 
+- grows with linearly with depth when chaining convolutional layers, and
+- grows exponentially with depth when pooling layers (or strided convolutions) are interleaved with convolutional layers.
 
 ---
 
@@ -566,38 +522,17 @@ class: middle
 
 ---
 
-exclude: true
-class: middle
-
-.grid[
-.kol-4-5[
-## GoogLeNet (Szegedy et al, 2014)
-
-Composition of two $\texttt{CONV}+\texttt{POOL}$ layers, a stack of 9 inception blocks, and a global average pooling layer.
-
-Each inception block is itself defined as a convolutional network with 4 parallel paths.
-
-.center.width-80[![](figures/lec5/inception.svg)]
-.caption[Inception block]
-]
-.kol-1-5.center[.width-100[![](figures/lec5/inception-full.svg)]]
-]
-
-.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
-
----
-
 class: middle
 
 .grid[
 .kol-4-5[
 
-## ResNet (He et al, 2015)
+<br>
 
-Composition of convolutional and pooling layers organized in a stack of residual blocks. Extensions consider more residual blocks, up to a total of 152 layers (ResNet-152).
+The .bold[ResNet] architecture for image classification (He et al., 2015) is the first architecture to successfully train very deep convolutional networks (up to 152 layers).
 
 .center.width-80[![](figures/lec5/resnet-block.svg)]
-.center.caption[Regular ResNet block vs. ResNet block with $1\times 1$ convolution.]
+
 ]
 .kol-1-5[.center.width-100[![](figures/lec5/ResNetFull.svg)]]
 ]
@@ -624,40 +559,43 @@ class: middle
 
 class: middle
 
-## The benefits of depth
-
 .center.width-100[![](figures/lec5/imagenet.png)]
 
----
-
-class: middle
-
-## ... and width and resolution (Tan and Le, 2019)
-
-.center.width-100[![](figures/lec5/scale.png)]
-
-.footnote[Credits: [Tan and Le](https://arxiv.org/abs/1905.11946.pdf), 2019.]
-
-???
-
-We empirically observe that different scaling dimensions are
-not independent. Intuitively, for higher resolution images,
-we should increase network depth, such that the larger receptive fields can help capture similar features that include
-more pixels in bigger images. Correspondingly, we should
-also increase network width when resolution is higher, in
-order to capture more fine-grained patterns with more pixels
-in high resolution images. These intuitions suggest that we
-need to coordinate and balance different scaling dimensions
-rather than conventional single-dimension scaling
+.center[ImageNet classification error rates of different convolutional network architectures over time. The deeper the network, the better the performance.]
 
 ---
 
-exclude: true
 class: middle
 
 .center.width-100[![](figures/lec5/scaling.png)]
 
+Later, .bold[EfficientNet] (Tan and Le, 2019) proposed to scale up the depth, width and resolution of convolutional networks in a principled way. 
+
+They empirically found that scaling up all dimensions together leads to better performance than scaling up each dimension independently.
+
 .footnote[Credits: [Tan and Le](https://arxiv.org/abs/1905.11946.pdf), 2019.]
+
+---
+
+class: middle
+
+.center.width-50[![](figures/lec5/convnext.jpg)]
+
+.bold[ConvNeXt] (Liu et al., 2022) improves upon the ResNet architecture by introducing a few modifications inspired by the design of vision transformers:
+- inverted bottleneck blocks with depthwise separable convolutions,
+- larger convolutional kernels (e.g., $7 \times 7$ instead of $3 \times 3$),
+- layer normalization instead of batch normalization,
+- GELU activations instead of ReLU.
+
+???
+
+Note: a depthwise separable convolution is a convolution where each input channel is convolved with a separate kernel, and the outputs are then combined with a pointwise convolution (i.e., a $1 \times 1$ convolution). This reduces the number of parameters and computations compared to a standard convolution that applies a single kernel to all input channels.
+
+---
+
+class: middle, center
+
+(demo of `code/lec5-convnext.ipynb`)
 
 ---
 
@@ -682,11 +620,11 @@ In the case of convolutional neural networks, we can look at:
 
 ---
 
-# Looking at filters
+class: middle 
 
-<br><br><br><br><br>
+## Kernels as images
 
-LeNet's first convolutional layer, all filters.
+LeNet's first convolutional layer, all kernels.
 
 .width-100[![](figures/lec5/filters-lenet1.png)]
 
@@ -697,7 +635,7 @@ LeNet's first convolutional layer, all filters.
 
 class: middle
 
-LeNet's second convolutional layer, first 32 filters.
+LeNet's second convolutional layer, first 32 kernels.
 
 .center.width-70[![](figures/lec5/filters-lenet2.png)]
 
@@ -707,7 +645,7 @@ LeNet's second convolutional layer, first 32 filters.
 
 class: middle
 
-AlexNet's first convolutional layer, first 20 filters.
+AlexNet's first convolutional layer, first 20 kernels.
 
 .center.width-100[![](figures/lec5/filters-alexnet.png)]
 
@@ -715,8 +653,9 @@ AlexNet's first convolutional layer, first 20 filters.
 
 ---
 
-# Maximum response samples
+class: middle
 
+## Maximum response samples
 
 Convolutional networks can be inspected by looking for synthetic input images $\mathbf{x}$ that maximize the activation $\mathbf{h}_{\ell,d}(\mathbf{x})$ of a chosen convolutional kernel $\mathbf{u}$ at layer $\ell$ and index $d$ in the layer filter bank.
 
@@ -731,7 +670,6 @@ $$
 $$
 
 Here, $\mathcal{L}\_{\ell,d}(\mathbf{x})$ represents the L2 norm of the activation $\mathbf{h}\_{\ell,d}(\mathbf{x})$, $\mathbf{x}\_0$ is the initial random input, $\mathbf{x}\_{t+1}$ is the updated input at iteration $t+1$, and $\gamma$ is the learning rate.
-
 
 ---
 
@@ -800,42 +738,9 @@ The network appears to learn a .bold[hierarchical composition] of patterns:
 
 ---
 
-exclude: true
+class: middle
 
-<br><br><br>
-
-What if we build images that maximize the activation of a chosen class output?
-
---
-
-exclude: true
-count: false
-
-The left image is predicted **with 99.9% confidence** as a magpie!
-
-.grid[
-.kol-1-2.center[![](figures/lec5/magpie.jpg)]
-.kol-1-2.center[![](figures/lec5/magpie2.jpg)]
-]
-
-.footnote[Credits: Francois Chollet, [How convolutional neural networks see the world](https://blog.keras.io/how-convolutional-neural-networks-see-the-world.html), 2016.]
-
----
-
-exclude: true
-class: middle, black-slide
-
-.center[
-
-<iframe width="600" height="400" src="https://www.youtube.com/embed/SCE-QeDfXtA?&loop=1&start=0" frameborder="0" volume="0" allowfullscreen></iframe>
-
-]
-
-.bold[Deep Dream.] Start from an image $\mathbf{x}\_t$, offset by a random jitter, enhance some layer activation at multiple scales, zoom in, repeat on the produced image $\mathbf{x}\_{t+1}$.
-
----
-
-# Biological plausibility
+## Biological plausibility
 
 .center.width-80[![](figures/lec5/bio.png)]
 
