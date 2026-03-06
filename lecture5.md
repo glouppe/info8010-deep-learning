@@ -34,9 +34,9 @@ class: middle
 
 ---
 
-# Visual perception 
+class: middle
 
-In 1959-1962, David Hubel and Torsten Wiesel identify the neural basis of information processing in the **visual system**.
+In 1959-1962, David Hubel and Torsten Wiesel identify the neural basis of information processing in the .bold[visual system].
 They are awarded the Nobel Prize of Medicine in 1981 for their discovery.
 
 .grid.center[
@@ -179,6 +179,17 @@ The output is obtained by sliding the kernel over the input and computing the in
 
 class: middle
 
+.center.width-100[![](figures/lec5/Conv1a.svg)]
+
+.center[Strided and dilated convolutions.]
+
+.footnote[Credits: [Simon J.D. Prince](https://udlbook.github.io/udlbook/), 2023.]
+
+
+---
+
+class: middle
+
 ## 2d convolution
 
 For the 2d input tensor $\mathbf{x} \in \mathbb{R}^{H \times W}$ and the 2d convolutional kernel $\omega \in \mathbb{R}^{h \times w}$, the discrete **convolution** $\mathbf{x} \circledast \omega$ is a matrix of size $(H-h+1) \times (W-w+1)$ such that
@@ -231,7 +242,7 @@ Do this on the tablet for 1D convolutions. Draw the MLP and Wx product.
 
 class: middle
 
-The convolutional kernel $\omega$ is first rearranged as a .bold[sparse Toeplitz circulant matrix], called the convolution matrix,
+The convolutional kernel $\omega$ is first rearranged as a sparse Toeplitz circulant matrix, called the .bold[convolution matrix],
 $$\mathbf{W^T} = \begin{pmatrix}
 1 & 4 & 1 & 0 & 1 & 4 & 3 & 0 & 3 & 3 & 1 & 0 & 0 & 0 & 0 & 0 \\\\
 0 & 1 & 4 & 1 & 0 & 1 & 4 & 3 & 0 & 3 & 3 & 1 & 0 & 0 & 0 & 0 \\\\
@@ -257,7 +268,7 @@ which we can reshape to a $2 \times 2$ matrix to obtain $\mathbf{x} \circledast 
 class: middle
 
 The same procedure generalizes to $\mathbf{x} \in \mathbb{R}^{H \times W}$ and convolutional kernel $\omega \in \mathbb{R}^{h \times w}$, such that:
-- the convolutional kernel is rearranged as a sparse Toeplitz circulant matrix $\mathbf{U}$ of shape $(H-h+1)(W-w+1) \times HW$ where
+- the convolutional kernel is rearranged as a sparse Toeplitz circulant matrix $$\mathbf{W^T}$$ of shape $(H-h+1)(W-w+1) \times HW$ where
     - each row $i$ identifies an element of the output feature map,
     - each column $j$ identifies an element of the input feature map,
     - the value $\mathbf{W^T}\_{i,j}$ corresponds to the kernel value the element $j$ is multiplied with in output $i$;
