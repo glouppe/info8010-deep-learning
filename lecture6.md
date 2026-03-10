@@ -43,12 +43,12 @@ class: middle
 
 ## Convolutional neural networks
 
-CNNs combine convolution, pooling and fully connected layers.
-They achieve state-of-the-art results for .bold[spatially structured] data, especially images.
+Recap: CNNs combine convolution, pooling and fully connected layers.
+They achieve state-of-the-art* results for .bold[spatially structured] data, especially images.
 
 .center.width-100[![](figures/lec6/lenet.svg)]
 
-.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
+.footnote[*: ConvNeXT (Liu et al, 2022) is the current state-of-the-art CNN for ImageNet classification, with 87.8% top-1 accuracy. Image credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
 
 ???
 
@@ -59,8 +59,8 @@ Historically also dominant for sound and text, but transformers have largely tak
 class: middle
 
 For classification,
-- the activation in the output layer is a Softmax activation producing a vector $\mathbf{h} \in \bigtriangleup^C$ of probability estimates $\hat{p}\_i = p(y=i|\mathbf{x})$, where $C$ is the number of classes;
-- the loss function is the cross-entropy loss $\ell(\hat{p}, y) = -\log \hat{p}\_y$, where $\hat{p}\_y$ is the predicted probability of the true class $y$.
+- the activation in the output layer is a Softmax activation producing a vector $\mathbf{\hat{p}} \in \bigtriangleup^C$ of probability estimates $\hat{p}\_i = p(y=i|\mathbf{x})$, where $C$ is the number of classes;
+- the loss function is the cross-entropy loss $\ell(\mathbf{\hat{p}}, y) = -\log \hat{p}\_y$, where $\hat{p}\_y$ is the predicted probability of the true class $y$.
 
 ---
 
@@ -94,7 +94,9 @@ class: middle
 
 In recent years, training from scratch has become the .bold[exception], not the rule. Almost all practical vision systems start from a pre-trained backbone.
 
-Many models pre-trained on large datasets are publicly available. These can be used as feature extractors (.italic[transfer learning]) or for smart initialization (.italic[fine-tuning]).
+Many models pre-trained on large datasets are publicly available. These can be used 
+- as feature extractors (.italic[transfer learning]) 
+- or for smart initialization (.italic[fine-tuning]).
 
 ???
 
@@ -106,9 +108,10 @@ class: middle
 
 ## Transfer learning
 
-- Take a pre-trained network, remove the last layer(s) and then treat the rest of the network as a .bold[frozen] feature extractor.
-- Train a new head from these features on the target task.
-- Often outperforms both handcrafted features and training from scratch on limited data.
+Take a pre-trained network, remove the last layer(s) and then treat the rest of the network as a .bold[frozen] feature extractor.
+Train a new head from these features on the target task.
+
+Often outperforms both handcrafted features and training from scratch on limited data.
 
 <br>
 .center.width-100[![](figures/lec6/feature-extractor.png)]
@@ -153,7 +156,7 @@ Taken to its extreme, transfer learning has led to the rise of .bold[foundation 
 
 ???
 
-Don't go deep into architectures here. The point is the paradigm shift: from "find a good ImageNet model and fine-tune" to "pick a foundation model that already understands your domain." Transformer internals are covered in a later lecture.
+The point is the paradigm shift: from "find a good ImageNet model and fine-tune" to "pick a foundation model that already understands your domain." 
 
 DINOv2: self-supervised, no labels needed. Learns from image structure alone.
 CLIP/SigLIP: trained on image-text pairs. Learns visual concepts from natural language supervision.
@@ -312,11 +315,10 @@ class: middle
 
 ## Two-stage detectors
 
-An alternative to single-shot prediction: first propose candidate regions, then classify each one.
-The R-CNN family (Girshick et al, 2014-2017) follows this principle:
-- .bold[R-CNN]: extract ~2000 region proposals (selective search), run a CNN on each. Accurate but slow.
-- .bold[Fast R-CNN]: share CNN computation across proposals using RoI pooling. Much faster.
-- .bold[Faster R-CNN]: replace selective search with a learned region proposal network (RPN). End-to-end trainable.
+An alternative to single-shot prediction is the two-stage approach: first, propose candidate regions that may contain objects, and then detect objects within those regions. This is the principle behind the R-CNN family of detectors (Girshick et al, 2014-2017).
+- .bold[R-CNN]: Extract ~2000 region proposals (selective search), run a CNN on each. Accurate but slow.
+- .bold[Fast R-CNN]: Share CNN computation across proposals using RoI pooling. Much faster.
+- .bold[Faster R-CNN]: Replace selective search with a learned region proposal network (RPN). End-to-end trainable.
 
 ???
 
@@ -338,7 +340,7 @@ class: middle
 
 For a long time, there was a clear accuracy gap between one-stage and two-stage detectors:
 - One-stage (YOLO, SSD, RetinaNet): fast inference, simpler pipeline.
-- Two-stage (Faster R-CNN and variants): traditionally more accurate, especially on small objects.
+- Two-stage (Faster R-CNN and variants): traditionally more accurate, especially on small objects, but slower.
 
 ???
 
@@ -398,7 +400,7 @@ class: middle
 - The .bold[YOLO family] (v8-v11): anchor-free, real-time, production-ready. Still dominant for speed.
 - .bold[DETR] variants (RT-DETR, Co-DETR): match or exceed YOLO accuracy, closing the speed gap.
 
-However, as in classification, the backbone matters more than the detection head.
+However, as in classification, the backbone matters more than the detection head. A strong pre-trained backbone (ConvNeXt, Swin, ViT) can boost performance of both YOLO and DETR.
 
 ???
 
@@ -485,6 +487,8 @@ Given a convolutional kernel $\omega$,
 - the forward pass is implemented as $v(\mathbf{h}) = \mathbf{W} v(\mathbf{x})$ with appropriate reshaping, thereby effectively up-sampling an input $v(\mathbf{x})$ into a larger one;
 - the backward pass is computed by multiplying the loss by $\mathbf{W}^T$ instead of $\mathbf{W}$.
 
+(This transposes the convolution operation, for which the forward pass is $v(\mathbf{h}) = \mathbf{W}^T v(\mathbf{x})$ and the backward pass is computed by multiplying the loss by $\mathbf{W}$.)
+
 ???
 
 In a regular convolution,
@@ -501,7 +505,7 @@ class: middle
 
 a), b) Convolution with kernel $\omega$ of size $k=3$, stride $s=2$ and padding $p=1$.<br> 
 
-c), d) Transposed convolution with the same kernel, stride and padding, which implements the inverse transformation of a) and b).
+c), d) Transposed convolution with the same kernel, stride and padding, which implements the transposed transformation of a) and b).
 
 ---
 
@@ -607,9 +611,7 @@ class: middle
 
 .center.width-100[![](figures/lec6/ConvSemSeg.svg)]
 
-The previous .bold[encoder-decoder architecture] is a simple and effective way to perform semantic segmentation. 
-
-However, the low-resolution representation in the middle of the network can be a bottleneck for the segmentation performance, as it must retain enough information to reconstruct the high-resolution segmentation map.
+.alert[The FCN architecture is simple and effective, but the low-resolution representation in the middle is a .bold[bottleneck] for performance. It must retain enough information to reconstruct the high-resolution segmentation map, which can be challenging.]
 
 .footnote[Credits: Simon J.D. Prince, [Understanding Deep Learning](https://udlbook.github.io/udlbook/), 2023.]
 
@@ -672,6 +674,14 @@ Mask R-CNN extends Faster R-CNN for .bold[instance segmentation]:
 
 .footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
 
+???
+
+Regions of interest (RoIs) are the candidate boxes proposed by the RPN. Both the detection head and the mask head operate on features pooled from these RoIs. Fixed-size feature maps are extracted for each RoI, which are then fed into the respective heads.
+
+RoI pooling: divides the proposal region into a fixed grid and applies max pooling to each grid cell, which can cause misalignments due to quantization.
+
+RoI alignment: uses bilinear interpolation to compute the exact values at the grid points, eliminating quantization issues and improving mask quality.
+
 ---
 
 class: middle
@@ -729,13 +739,17 @@ class: middle
 
 ## The big picture
 
-Across classification, detection, and segmentation, the same evolution:
+Across classification, detection, and segmentation, the same evolution has occurred:
 
 1. Task-specific architectures with hand-designed components.
 2. Pre-trained backbones shared across tasks.
 3. Foundation models that generalize with minimal or no adaptation.
 
-.success[The models themselves, as much as the source code or the training data, are generic and re-usable assets.]
+.success[Common computer vision tasks are considered "solved" in the sense that we have models that perform well on benchmarks and can be applied to real-world problems with little effort.]
+
+???
+
+But challenges remain: domain shift, long-tail distributions, real-time performance on edge devices, video understanding, 3D perception, etc. The field continues to evolve rapidly.
 
 ---
 
