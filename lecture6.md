@@ -35,7 +35,7 @@ class: middle
 
 # Classification
 
-A few tips when using convnets for classifying images.
+Lessons from the field. 
 
 ---
 
@@ -43,20 +43,24 @@ class: middle
 
 ## Convolutional neural networks
 
-- Convolutional neural networks combine convolution, pooling and fully connected layers.
-- They achieve (or used to) state-of-the-art results for **spatially structured** data, such as images, sound or text. 
+CNNs combine convolution, pooling and fully connected layers.
+They achieve state-of-the-art results for .bold[spatially structured] data, especially images.
 
-.center.width-110[![](figures/lec5/lenet.svg)]
+.center.width-100[![](figures/lec6/lenet.svg)]
 
 .footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
+
+???
+
+Historically also dominant for sound and text, but transformers have largely taken over those domains. For images, CNNs remain competitive (ConvNeXt) but vision transformers are now equally common.
 
 ---
 
 class: middle
 
 For classification,
-- the activation in the output layer is a Softmax activation producing a vector $\mathbf{h} \in \bigtriangleup^C$ of probability estimates $P(Y=i|\mathbf{x})$, where $C$ is the number of classes;
-- the loss function is the cross-entropy loss.
+- the activation in the output layer is a Softmax activation producing a vector $\mathbf{h} \in \bigtriangleup^C$ of probability estimates $\hat{p}\_i = p(y=i|\mathbf{x})$, where $C$ is the number of classes;
+- the loss function is the cross-entropy loss $\ell(\hat{p}, y) = -\log \hat{p}\_y$, where $\hat{p}\_y$ is the predicted probability of the true class $y$.
 
 ---
 
@@ -64,17 +68,21 @@ class: middle
 
 ## Image augmentation
 
-The lack of data is the biggest limit to the performance of deep learning models.
-- Collecting more data is usually expensive and laborious.
-- Synthesizing data is complicated and may not represent the true distribution.
-- **Augmenting** the data with base transformations is simple and efficient.
+Training data is the biggest bottleneck for deep learning models: .bold[augmentation] cheaply multiplies the effective dataset size by applying transformations that encode known invariances of the task.
+
+.center.width-80[![](figures/lec6/augmentation.png)]
+
+???
+
+The key insight: augmentation is not just "more data". It tells the model .italic[what shouldn't matter] (position, scale, color jitter, flips, ...).
 
 ---
 
 class: middle
 
-.center.width-80[![](figures/lec6/augmentation.png)]
-.center.width-85[![](figures/lec6/deepaugment.png)]
+.center.width-100[![](figures/lec6/deepaugment.png)]
+
+.center[Because of the gains in performance, augmentation is now standard practice.]
 
 .footnote[Credits: [DeepAugment](https://github.com/barisozmen/deepaugment), 2020.]
 
@@ -84,13 +92,13 @@ class: middle
 
 ## Pre-trained models
 
-- Training a model on natural images, from scratch, takes days or weeks.
-- Many models pre-trained on large datasets are publicly available for download. These models can be used as *feature extractors* or for smart **initialization**.
-- The models themselves should be considered as generic and re-usable assets.
+In recent years, training from scratch has become the .bold[exception], not the rule. Almost all practical vision systems start from a pre-trained backbone.
+
+Many models pre-trained on large datasets are publicly available. These can be used as feature extractors (.italic[transfer learning]) or for smart initialization (.italic[fine-tuning]).
 
 ???
 
-Insist that this is becoming a standard practice in deep learning. Very few people train from scratch. Even fewer now with the rise of foundation models.
+The models themselves should be considered as generic and re-usable assets.
 
 ---
 
@@ -98,9 +106,9 @@ class: middle
 
 ## Transfer learning
 
-- Take a pre-trained network, remove the last layer(s) and then treat the rest of the network as a **fixed** feature extractor.
-- Train a model from these features on a new task.
-- Often better than handcrafted feature extraction for natural images, or better than training from data of the new task only.
+- Take a pre-trained network, remove the last layer(s) and then treat the rest of the network as a .bold[frozen] feature extractor.
+- Train a new head from these features on the target task.
+- Often outperforms both handcrafted features and training from scratch on limited data.
 
 <br>
 .center.width-100[![](figures/lec6/feature-extractor.png)]
@@ -115,7 +123,7 @@ class: middle
 
 ## Fine-tuning
 
-Same as for transfer learning, but also *fine-tune* the weights of the pre-trained network by training the whole network on the new task.
+Same principle, but now also .bold[unfreeze] and update the weights of the pre-trained network. The entire model trains end-to-end on the new task, typically with a smaller learning rate for the pre-trained layers.
 
 .footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
 
@@ -123,11 +131,66 @@ Same as for transfer learning, but also *fine-tune* the weights of the pre-train
 
 class: middle
 
-For models pre-trained on ImageNet, transferred/fine-tuned networks usually work even when the input images are from a different domain (e.g., biomedical images, satellite images or paintings).
+Transferred and fine-tuned networks work even when the input domain differs significantly from the pre-training data (e.g., biomedical images, satellite imagery, paintings).
 
 .center.width-75[![](figures/lec6/fine-tuning-results.png)]
 
 .footnote[Credits: Matthia Sabatelli et al, [Deep Transfer Learning for Art Classification Problems](http://openaccess.thecvf.com/content_ECCVW_2018/papers/11130/Sabatelli_Deep_Transfer_Learning_for_Art_Classification_Problems_ECCVW_2018_paper.pdf), 2018.]
+
+???
+
+This phenomenon has only gotten stronger with larger models trained on more diverse data. Domain gap matters less than it used to.
+
+---
+
+class: middle
+
+## Foundation models
+
+Taken to its extreme, transfer learning has led to the rise of .bold[foundation models] (DINOv2, SigLIP, CLIP, etc):
+- Pre-train a single large model on .bold[internet-scale] data (billions of images, image-text pairs, or both).
+- The resulting representations are so general that they transfer to most downstream tasks with minimal or no adaptation.
+
+???
+
+Don't go deep into architectures here. The point is the paradigm shift: from "find a good ImageNet model and fine-tune" to "pick a foundation model that already understands your domain." Transformer internals are covered in a later lecture.
+
+DINOv2: self-supervised, no labels needed. Learns from image structure alone.
+CLIP/SigLIP: trained on image-text pairs. Learns visual concepts from natural language supervision.
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec6/dinov2.jpg)]
+
+.center[Visualization of the first PCA components of DINOv2 features.<br> The model learns to cluster images by semantic content, without any labels.]
+
+---
+
+class: middle
+
+.center.width-70[![](figures/lec6/zeroshot.webp)]
+
+## Zero-shot classification
+
+Foundation models trained on image-text pairs (CLIP, SigLIP) can classify images without any task-specific training!
+
+Given an image and a set of candidate text labels, the model scores each (image, text) pair by similarity. The highest-scoring label wins.
+
+???
+
+No fine-tuning. No labeled training set. Just a list of class names.
+
+This is a genuine paradigm shift. Classical classification requires collecting labeled data, training a head, validating, etc. Zero-shot classification skips all of that.
+
+Limitations: performance is below fine-tuned models on specialized domains, and the label set must be expressible in natural language. But for prototyping or broad categories, it often works surprisingly well.
+
+---
+
+class: middle, center
+
+(demo)
 
 ---
 
@@ -147,111 +210,11 @@ The simplest strategy to move from image classification to object detection is t
 
 ---
 
-exclude: true
-class: middle
-
-## Intersection over Union (IoU)
-
-A standard performance indicator for object detection is to evaluate the **intersection over union** (IoU) between a predicted bounding box $\hat{B}$ and an annotated bounding box $B$,
-$$\text{IoU}(B,\hat{B}) = \frac{\text{area}(B \cap \hat{B})}{\text{area}(B \cup \hat{B})}.$$
-
-.center.width-45[![](figures/lec6/iou.png)]
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-exclude: true
 class: middle 
 
-## Mean Average Precision (mAP)
+.alert[The sliding window approach is .bold[computationally expensive] and does not reason about global context. Performance depends on the resolution and number of windows, and each is classified independently.]
 
-If $\text{IoU}(B,\hat{B})$ is larger than a fixed threshold (usually $\frac{1}{2}$), then the predicted bounding-box is valid (true positive) and wrong otherwise (false positive).
-
-TP and FP values are accumulated for all thresholds on the predicted confidence.
-The area under the resulting precision-recall curve is the *average precision* for the considered class.
-
-The mean over the classes is the **mean average precision** (mAP).
-
-.center.width-50[![](figures/lec6/interpolated_precision.png)]
-
-.footnote[Credits: [Rafael Padilla](https://github.com/rafaelpadilla/Object-Detection-Metrics), 2018.]
-
-???
-
-- Precision = TP / all detections 
-- Recall = TP / all ground truths
-
----
-
-class: middle 
-
-The sliding window approach evaluates a classifier at a large number of locations and scales. 
-
-This approach is usually .bold[computationally expensive] as performance directly depends on the resolution and number of the windows fed to the classifier (the more the better, but also the more costly). 
-
----
-
-# OverFeat 
-
-.grid[
-.kol-2-3[
-
-The complexity of the sliding window approach was mitigated in the pioneer OverFeat network (Sermanet et al, 2013) by adding a **regression head** to predict the object bounding box $(x,y,w,h)$.
-
-]
-.kol-1-3[.center.width-100[![](figures/lec6/overfeat.png)]]
-]
-
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-class: middle
-
-.center[.width-45[![](figures/lec6/overfeat-grid.png)] .width-45[![](figures/lec6/overfeat-predictions.png)]]
-
-For each location and scale pre-defined from a .bold[coarse] grid,
-- the classifier head outputs a class and a confidence (left);
-- the regression head predicts the location of the object (right).
-
-.footnote[Credits: Sermanet et al, 2013.]
-
----
-
-class: middle
-
-.center.width-60[![](figures/lec6/overfeat-merge.png)]
-
-These bounding boxes are finally merged by .bold[Non-Maximum Suppression] to produce the final predictions over a small number of objects.
-
-.footnote[Credits: Sermanet et al, 2013.]
-
-???
-
-NMS:
-1. Start with all detection boxes, each with a confidence score
-2. Sort all boxes by confidence score (highest to lowest)
-3. Select the box with highest confidence score, add it to the final detection list
-4. Calculate Io between this box and all remaining boxes
-5. Discard boxes with IoU greater than a predefined threshold (typically 0.5-0.7)
-6. Repeat steps 3-5 until no boxes remain
-
-IoU = Area of Intersection / Area of Union
-(range from 0 (no overlap) to 1 (perfect overlap))
-
----
-
-class: middle
-
-The OverFeat architecture comes with several **drawbacks**:
-- it is a disjoint system (2 disjoint heads with their respective losses, ad-hoc merging procedure);
-- it optimizes for localization rather than detection;
-- it cannot reason about global context and thus requires significant post-processing to produce coherent detections.
-
-???
-
-Localization is the task of predicting the bounding box of an object that is known to be present in the image, while detection is the task of predicting the bounding box of an object that may or may not be present in the image.
+.success[What we want instead: a single network that looks at the .bold[whole image once] and predicts all objects jointly.]
 
 ---
 
@@ -345,42 +308,27 @@ YOLO (Redmon, 2017).
 
 ---
 
-exclude: true
 class: middle
 
-## SSD
+## Two-stage detectors
 
-The Single Shot Multi-box Detector (SSD; Liu et al, 2015) improves upon YOLO by using a fully-convolutional architecture and multi-scale maps.
+An alternative to single-shot prediction: first propose candidate regions, then classify each one.
+The R-CNN family (Girshick et al, 2014-2017) follows this principle:
+- .bold[R-CNN]: extract ~2000 region proposals (selective search), run a CNN on each. Accurate but slow.
+- .bold[Fast R-CNN]: share CNN computation across proposals using RoI pooling. Much faster.
+- .bold[Faster R-CNN]: replace selective search with a learned region proposal network (RPN). End-to-end trainable.
 
-.center.width-80[![](figures/lec6/ssd.png)]
+???
 
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
-
----
-
-# Region-based CNNs
-
-An alternative strategy to having a huge predefined set of box proposals is to rely on *region proposals* first extracted from the image.
-
-The main family of architectures following this principle are **region-based** convolutional neural networks:
-- (Slow) R-CNN (Girshick et al, 2014)
-- Fast R-CNN (Girshick et al, 2015)
-- Faster R-CNN (Ren et al, 2015)
-- Mask R-CNN (He et al, 2017)
+The full R-CNN evolution tells an optimization story: each iteration removes a bottleneck from the previous one. R-CNN is slow because it runs the CNN 2000 times. Fast R-CNN shares features but still uses handcrafted proposals. Faster R-CNN learns proposals too.
 
 ---
 
 class: middle
 
-## R-CNN
+.center.width-75[![](figures/lec6/faster-rcnn.svg)]
 
-This architecture is made of four parts:
-1. Selective search is performed on the input image to select multiple high-quality region proposals.
-2. A pre-trained CNN (the **backbone**) is selected and put before the output layer. It resizes each proposed region into the input dimensions required by the network and uses a forward pass to output features for the proposals.
-3. The features are fed to an SVM for predicting the class.
-4. The features are fed to a linear regression model for predicting the bounding-box.
-
-.center.width-90[![](figures/lec6/r-cnn.svg)]
+Faster R-CNN: a region proposal network (RPN) generates candidate boxes, which are then classified and refined by a second stage. The RPN is trained jointly with the detection head, so the whole system learns to propose and classify boxes together.
 
 .footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
 
@@ -388,45 +336,13 @@ This architecture is made of four parts:
 
 class: middle
 
-.center.width-80[![](figures/lec6/selective-search.png)]
+For a long time, there was a clear accuracy gap between one-stage and two-stage detectors:
+- One-stage (YOLO, SSD, RetinaNet): fast inference, simpler pipeline.
+- Two-stage (Faster R-CNN and variants): traditionally more accurate, especially on small objects.
 
-Selective search (Uijlings et al, 2013) groups adjacent pixels of similar texture, color, or intensity by analyzing windows of different sizes in the image.
+???
 
----
-
-class: middle
-
-.grid[
-.kol-3-5[
-<br><br>
-
-## Fast R-CNN
-
-- The main performance bottleneck of R-CNN is the need to independently extract features for each proposed region.
-- Fast R-CNN uses the entire image as input to the CNN for feature extraction, rather than each proposed region.
-- Fast R-CNN introduces RoI pooling for producing feature vectors of fixed size from region proposals of different sizes.
-
-]
-.kol-2-5[.width-100[![](figures/lec6/fast-rcnn.svg)]
-
-.width-100[![](figures/lec6/fast-rcnn.png)]]
-]
-
-.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
-
----
-
-class: middle
-
-.center.width-70[![](figures/lec6/faster-rcnn.svg)]
-
-## Faster R-CNN
-
-- The performance of both R-CNN and Fast R-CNN is tied to the quality of the region proposals from selective search.
-- Faster R-CNN replaces selective search with a region proposal network.
-- This network reduces the number of proposed regions generated, while ensuring precise object detection.
-
-.footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
+RetinaNet (Lin et al, 2017) is worth mentioning: it showed that one-stage detectors can match two-stage accuracy by fixing the class imbalance problem with focal loss. This was a key result that narrowed the accuracy gap.
 
 ---
 
@@ -434,25 +350,70 @@ class: middle, center, black-slide
 
 <iframe width="600" height="450" src="https://www.youtube.com/embed/V4P_ptn2FF4" frameborder="0" allowfullscreen></iframe>
 
-YOLO (v2) vs YOLO 9000 vs SSD vs Faster RCNN
+YOLOv2/YOLO 9000/SSD (one-stage) vs Faster R-CNN (two-stage)
 
 ---
 
 class: middle
 
-## Takeaways
+.width-100.center[![](figures/lec6/anchors.png)]
 
-- One-stage detectors (YOLO, SSD, RetinaNet, etc) are fast for inference but are usually not the most accurate object detectors.
-- Two-stage detectors (Fast R-CNN, Faster R-CNN, R-FCN, Light head R-CNN, etc) are usually slower but are often more accurate.
-- All networks depend on lots of engineering decisions.
+## Beyond anchors
+
+Both one-stage and two-stage detectors traditionally rely on .bold[anchors]: pre-defined box shapes that the network refines by predicting relative offsets. Anchors help with training stability and performance but require careful design and tuning.
+
+Modern detectors drop anchors altogether and predict object centers and sizes directly (FCOS, CenterNet, YOLOv8+).
+
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec6/detr.png)]
+
+## DETR
+
+DETR (Carion et al, 2020) rethinks detection as a .bold[set prediction] problem.
+
+A transformer encoder-decoder attends over the full image and directly outputs a fixed set of predictions. No anchors, no NMS, no region proposals.
+
+.footnote[Credits: Carion et al, [End-to-End Object Detection with Transformers](https://arxiv.org/abs/2005.12872), 2020.]
+
+???
+
+Uses bipartite matching (Hungarian algorithm) to assign predictions to ground truth: each prediction maps to exactly one object or "no object." This replaces anchor assignment and NMS entirely.
+
+The transformer architecture is covered in a later lecture. The key idea here is that attention enables global reasoning about all objects simultaneously.
+
+Compare the YOLO loss (indicator functions, engineering choices) to DETR's clean set prediction loss. The complexity moves into the attention mechanism, which is general-purpose and learned.
+
+Variants: Deformable DETR, DINO-DETR, RT-DETR (real-time).
+
+---
+
+class: middle
+
+## Where things stand
+
+- The .bold[YOLO family] (v8-v11): anchor-free, real-time, production-ready. Still dominant for speed.
+- .bold[DETR] variants (RT-DETR, Co-DETR): match or exceed YOLO accuracy, closing the speed gap.
+
+However, as in classification, the backbone matters more than the detection head.
+
+???
+
+If students want to use a detector today: Ultralytics YOLOv8/v11 or RT-DETR. Both available through the same API.
 
 ---
 
 class: middle, center
 
-([demo](https://colab.research.google.com/gist/kirisakow/325a557d89262e8d6a4f2918917e82b4/real-time-object-detection-in-webcam-video-stream-using-ultralytics-yolov8.ipynb))
+(demo)
 
 ???
+
+Live demo with the CV demo app. Show YOLO in action on webcam.
+Compare YOLOv1-era results with modern detectors if time permits.
 
 Use Lucie's kitchen set.
 - Far vs. near detections
@@ -517,18 +478,18 @@ class: middle
 
 ## Transposed convolution
 
-A **transposed convolution** is a convolution where the implementation of the forward and backward passes
+A transposed convolution is a convolution where the implementation of the forward and backward passes
 are swapped.
 
-Given a convolutional kernel $\mathbf{u}$,
-- the forward pass is implemented as $v(\mathbf{h}) = \mathbf{U}^T v(\mathbf{x})$ with appropriate reshaping, thereby effectively up-sampling an input $v(\mathbf{x})$ into a larger one;
-- the backward pass is computed by multiplying the loss by $\mathbf{U}$ instead of $\mathbf{U}^T$.
+Given a convolutional kernel $\omega$,
+- the forward pass is implemented as $v(\mathbf{h}) = \mathbf{W} v(\mathbf{x})$ with appropriate reshaping, thereby effectively up-sampling an input $v(\mathbf{x})$ into a larger one;
+- the backward pass is computed by multiplying the loss by $\mathbf{W}^T$ instead of $\mathbf{W}$.
 
 ???
 
 In a regular convolution,
-- the forward pass is equivalent to $v(\mathbf{h}) = \mathbf{U} v(\mathbf{x})$;
-- the backward pass is computed by multiplying the loss by $\mathbf{U}^T$.
+- the forward pass is equivalent to $v(\mathbf{h}) = \mathbf{W}^T v(\mathbf{x})$;
+- the backward pass is computed by multiplying the loss by $\mathbf{W}$.
 
 Transposed convolutions are also referred to as fractionally-strided convolutions or deconvolutions (mistakenly).
 
@@ -536,11 +497,22 @@ Transposed convolutions are also referred to as fractionally-strided convolution
 
 class: middle
 
+.center.width-100[![](figures/lec6/ConvTranspose.svg)]
+
+a), b) Convolution with kernel $\omega$ of size $k=3$, stride $s=2$ and padding $p=1$.<br> 
+
+c), d) Transposed convolution with the same kernel, stride and padding, which implements the inverse transformation of a) and b).
+
+---
+
+exclude: true
+class: middle
+
 .pull-right[<br><br>![](figures/lec6/no_padding_no_strides_transposed.gif)]
 
 $$
 \begin{aligned}
-\mathbf{U}^T v(\mathbf{x}) &= v(\mathbf{h}) \\\\
+\mathbf{W} v(\mathbf{x}) &= v(\mathbf{h}) \\\\
 \begin{pmatrix}
 1 & 0 & 0 & 0 \\\\
 4 & 1 & 0 & 0 \\\\
@@ -614,12 +586,20 @@ Contrary to fully connected networks, the dimensions of the output of a fully co
 
 ---
 
-exclude: true
 class: middle
 
-.center.width-100[![](figures/lec6/fcn-convdeconv.png)]
+The most natural loss for segmentation is the .bold[per-pixel cross-entropy]
+$$\ell = -\frac{1}{HW}\sum\_{ji} \log \hat{p}\_{y\_{ji}},$$
+where $\hat{p}\_{y\_{ji}}$ is the predicted probability of the true class $y\_{ji}$ at pixel $(j,i)$.
 
-.footnote[Credits: [Noh et al](https://arxiv.org/abs/1505.04366), 2015.]
+In practice, classes are often highly imbalanced (e.g., a small tumor in a large scan). The .bold[Dice loss] directly optimizes the overlap between predicted and ground truth masks,
+$$\ell\_\text{Dice} = 1 - \frac{2 \sum\_{ji} \hat{p}\_{ji} y\_{ji}}{\sum\_{ji} \hat{p}\_{ji} + \sum\_{ji} y\_{ji}}.$$
+
+???
+
+Dice loss comes from the Dice coefficient (= F1 score for sets). It directly measures mask overlap, so it's less sensitive to class imbalance than cross-entropy.
+
+For multi-class segmentation, Dice is typically computed per class and averaged.
 
 ---
 
@@ -661,7 +641,7 @@ class: middle
 
 .center.width-100[![](figures/lec6/ResidualUNetResults.svg)]
 
-.center[3d segmentation results using a UNet architecture.<br> (a) Slices of a 3d volume of a mouse cortex, (b) A UNet is used to classify voxels as either inside or outside neutrites. Connected regions are shown with different colors, (c) 5-member ensemble of UNets.]
+3d segmentation results using a UNet architecture. (a) Slices of a 3d volume of a mouse cortex, (b) A UNet is used to classify voxels as either inside or outside neutrites. Connected regions are shown with different colors, (c) 5-member ensemble of UNets.
 
 
 .footnote[Credits: Simon J.D. Prince, [Understanding Deep Learning](https://udlbook.github.io/udlbook/), 2023.]
@@ -670,7 +650,7 @@ class: middle
 
 class: middle
 
-.center[(demo)]
+.center[(demo of `code/lec6-unet.ipynb`)]
 
 ---
 
@@ -681,11 +661,10 @@ class: middle
 .grid[
 .kol-1-2[
 
-Segmentation is a natural extension of object detection. For example, Mask R-CNN extends the Faster R-CNN model for semantic segmentation: 
+Mask R-CNN extends Faster R-CNN for .bold[instance segmentation]:
 - The RoI pooling layer is replaced with an RoI alignment layer. 
-- It branches off to an FCN for predicting a semantic segmentation mask.
-- Object detection combined with mask prediction enables *instance segmentation*.
-
+- A parallel FCN branch predicts a segmentation mask for each detected object.
+- Detection + mask prediction gives per-instance pixel labels.
 
 ]
 .kol-1-2[.center.width-95[![](figures/lec6/mask-rcnn.svg)]]
@@ -711,13 +690,52 @@ class: middle, center, black-slide
 
 class: middle
 
-It is noteworthy that for detection and segmentation, there is an heavy
-re-use of large networks trained for classification.
+.center.width-100[![](figures/lec6/sam.webp)]
 
-.bold[The models themselves, as much as the source code of the algorithm that
-produced them, or the training data, are generic and re-usable assets.]
+## SAM
 
-.footnote[Credits: Francois Fleuret, [EE559 Deep Learning](https://fleuret.org/ee559/), EPFL.]
+The Segment Anything Model (Kirillov et al, 2023) is a .bold[foundation model for segmentation].
+
+Given a prompt (point, box, or text), SAM segments the corresponding region. Trained on 1 billion+ masks, it generalizes to unseen objects and domains without fine-tuning.
+
+.footnote[Credits: Kirillov et al, [Segment Anything](https://arxiv.org/abs/2304.02643), 2023.]
+
+???
+
+SAM consists of three components:
+1. An image encoder (ViT) that computes image embeddings once.
+2. A prompt encoder that encodes points, boxes, or text.
+3. A lightweight mask decoder that combines both to produce masks.
+
+The image encoder is expensive but runs once per image. The mask decoder is fast, enabling interactive segmentation in real time.
+
+SAM is to segmentation what CLIP is to classification: a foundation model that works out of the box on nearly anything.
+
+---
+
+class: middle
+
+.center[(demo)]
+
+???
+
+Show SAM in the CV demo: freeze a frame, click to segment objects.
+Show how foreground/background points refine the mask.
+Compare with Mask R-CNN or YOLOv8-seg on the same frame.
+
+---
+
+class: middle
+
+## The big picture
+
+Across classification, detection, and segmentation, the same evolution:
+
+1. Task-specific architectures with hand-designed components.
+2. Pre-trained backbones shared across tasks.
+3. Foundation models that generalize with minimal or no adaptation.
+
+.success[The models themselves, as much as the source code or the training data, are generic and re-usable assets.]
 
 ---
 
@@ -735,3 +753,4 @@ Quiz:
 - Name one architecture for object detection.
 - Name one architecture for semantic segmentation.
 - What kind of layer can you use to upscale a feature map?
+- What is a foundation model? Give an example for each task.
