@@ -29,6 +29,8 @@ class: middle
 
 Each of these tasks requires a different neural network architecture.
 
+... or at least it used to. 
+
 ---
 
 class: middle
@@ -72,6 +74,8 @@ Training data is the biggest bottleneck for deep learning models: .bold[augmenta
 
 .center.width-80[![](figures/lec6/augmentation.png)]
 
+.footnote[Credits: [DeepAugment](https://github.com/barisozmen/deepaugment), 2020.]
+
 ???
 
 The key insight: augmentation is not just "more data". It tells the model .italic[what shouldn't matter] (position, scale, color jitter, flips, ...).
@@ -93,8 +97,9 @@ class: middle
 ## Pre-trained models
 
 In recent years, training from scratch has become the .bold[exception], not the rule. Almost all practical vision systems start from a pre-trained backbone.
+Many models pre-trained on large datasets are publicly available. 
 
-Many models pre-trained on large datasets are publicly available. These can be used 
+Pre-trained models can be used 
 - as feature extractors (.italic[transfer learning]) 
 - or for smart initialization (.italic[fine-tuning]).
 
@@ -150,7 +155,7 @@ class: middle
 
 ## Foundation models
 
-Taken to its extreme, transfer learning has led to the rise of .bold[foundation models] (DINOv2, SigLIP, CLIP, etc):
+Taken to its extreme, transfer learning has led to the rise of .bold[foundation models] (DINO, SigLIP, CLIP, etc):
 - Pre-train a single large model on .bold[internet-scale] data (billions of images, image-text pairs, or both).
 - The resulting representations are so general that they transfer to most downstream tasks with minimal or no adaptation.
 
@@ -158,8 +163,8 @@ Taken to its extreme, transfer learning has led to the rise of .bold[foundation 
 
 The point is the paradigm shift: from "find a good ImageNet model and fine-tune" to "pick a foundation model that already understands your domain." 
 
-DINOv2: self-supervised, no labels needed. Learns from image structure alone.
-CLIP/SigLIP: trained on image-text pairs. Learns visual concepts from natural language supervision.
+- DINOv2: self-supervised, no labels needed. Learns from image structure alone.
+- CLIP/SigLIP: trained on image-text pairs. Learns visual concepts from natural language supervision.
 
 ---
 
@@ -167,7 +172,9 @@ class: middle
 
 .center.width-100[![](figures/lec6/dinov2.jpg)]
 
-.center[Visualization of the first PCA components of DINOv2 features.<br> The model learns to cluster images by semantic content, without any labels.]
+.center[Visualization of the first PCA components of DINOv2 features.<br>These are so rich that they cluster images by semantic content, without any labels.]
+
+.footnote[Credits: [Oquab et al](https://arxiv.org/abs/2304.07193), 2023.]
 
 ---
 
@@ -180,6 +187,8 @@ class: middle
 Foundation models trained on image-text pairs (CLIP, SigLIP) can classify images without any task-specific training!
 
 Given an image and a set of candidate text labels, the model scores each (image, text) pair by similarity. The highest-scoring label wins.
+
+.footnote[Credits: [Radford et al](https://arxiv.org/abs/2103.00020), 2021.]
 
 ???
 
@@ -229,7 +238,7 @@ YOLO (Redmon et al, 2015) models detection as a regression problem.
 
 The image is divided into an $S\times S$ grid and for each grid cell predicts $B$ bounding boxes, confidence for those boxes, and $C$ class probabilities. These predictions are encoded as an $S \times S \times (5B + C)$ tensor.
 
-.footnote[Credits: Redmon et al, 2015.]
+.footnote[Credits: [Redmon et al](https://arxiv.org/abs/1506.02640), 2015.]
 
 ---
 
@@ -307,7 +316,7 @@ class: middle, center, black-slide
 
 <iframe width="600" height="450" src="https://www.youtube.com/embed/YmbhRxQkLMg" frameborder="0" allowfullscreen></iframe>
 
-YOLO (Redmon, 2017).
+YOLO (Redmon, 2015).
 
 ---
 
@@ -315,7 +324,7 @@ class: middle
 
 ## Two-stage detectors
 
-An alternative to single-shot prediction is the two-stage approach: first, propose candidate regions that may contain objects, and then detect objects within those regions. This is the principle behind the R-CNN family of detectors (Girshick et al, 2014-2017).
+An alternative to single-shot prediction is the two-stage approach: first, propose candidate regions that may contain objects, and then detect objects within those regions. This is the principle behind the R-CNN family (Girshick et al, 2014-2017):
 - .bold[R-CNN]: Extract ~2000 region proposals (selective search), run a CNN on each. Accurate but slow.
 - .bold[Fast R-CNN]: Share CNN computation across proposals using RoI pooling. Much faster.
 - .bold[Faster R-CNN]: Replace selective search with a learned region proposal network (RPN). End-to-end trainable.
@@ -395,16 +404,9 @@ Variants: Deformable DETR, DINO-DETR, RT-DETR (real-time).
 
 class: middle
 
-## Where things stand
+.success[The field has evolved rapidly, with many variants of both YOLO and DETR pushing the boundaries of speed and accuracy. The choice of architecture often depends on the specific requirements of the application (e.g., real-time inference, small object detection, etc.).]
 
-- The .bold[YOLO family] (v8-v11): anchor-free, real-time, production-ready. Still dominant for speed.
-- .bold[DETR] variants (RT-DETR, Co-DETR): match or exceed YOLO accuracy, closing the speed gap.
-
-However, as in classification, the backbone matters more than the detection head. A strong pre-trained backbone (ConvNeXt, Swin, ViT) can boost performance of both YOLO and DETR.
-
-???
-
-If students want to use a detector today: Ultralytics YOLOv8/v11 or RT-DETR. Both available through the same API.
+.alert[However, the backbone architecture (ConvNeXt, Swin, ViT) often has a larger impact on performance than the choice of detection head (YOLO vs DETR).]
 
 ---
 
@@ -593,11 +595,11 @@ Contrary to fully connected networks, the dimensions of the output of a fully co
 class: middle
 
 The most natural loss for segmentation is the .bold[per-pixel cross-entropy]
-$$\ell = -\frac{1}{HW}\sum\_{ji} \log \hat{p}\_{y\_{ji}},$$
-where $\hat{p}\_{y\_{ji}}$ is the predicted probability of the true class $y\_{ji}$ at pixel $(j,i)$.
+$$\ell = -\frac{1}{HW}\sum\_{ij} \log \hat{p}\_{y\_{ij}},$$
+where $\hat{p}\_{y\_{ij}}$ is the predicted probability of the true class $y\_{ij}$ at pixel $(i,j)$.
 
 In practice, classes are often highly imbalanced (e.g., a small tumor in a large scan). The .bold[Dice loss] directly optimizes the overlap between predicted and ground truth masks,
-$$\ell\_\text{Dice} = 1 - \frac{2 \sum\_{ji} \hat{p}\_{ji} y\_{ji}}{\sum\_{ji} \hat{p}\_{ji} + \sum\_{ji} y\_{ji}}.$$
+$$\ell\_\text{Dice} = 1 - \frac{2 \sum\_{ij} \hat{p}\_{ij} y\_{ij}}{\sum\_{ij} \hat{p}\_{ij} + \sum\_{ij} y\_{ij}}.$$
 
 ???
 
@@ -708,7 +710,7 @@ The Segment Anything Model (Kirillov et al, 2023) is a .bold[foundation model fo
 
 Given a prompt (point, box, or text), SAM segments the corresponding region. Trained on 1 billion+ masks, it generalizes to unseen objects and domains without fine-tuning.
 
-.footnote[Credits: Kirillov et al, [Segment Anything](https://arxiv.org/abs/2304.02643), 2023.]
+.footnote[Credits: [Kirillov et al](https://arxiv.org/abs/2304.02643), 2023.]
 
 ???
 
@@ -745,7 +747,7 @@ Across classification, detection, and segmentation, the same evolution has occur
 2. Pre-trained backbones shared across tasks.
 3. Foundation models that generalize with minimal or no adaptation.
 
-.success[Common computer vision tasks are considered "solved" in the sense that we have models that perform well on benchmarks and can be applied to real-world problems with little effort.]
+.success[Common computer vision tasks are now considered "solved" in the sense that we have models that perform well on benchmarks and can be applied to real-world problems with little effort.]
 
 ???
 
