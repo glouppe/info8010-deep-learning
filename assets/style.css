@@ -233,6 +233,10 @@ img {
     margin-left: -5.5em;
 }
 
+.footnote .katex {
+    font-size: 1em;
+}
+
 .footnote a {
     color: #0288d1;
 }

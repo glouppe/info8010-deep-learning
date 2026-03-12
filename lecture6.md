@@ -61,8 +61,10 @@ Historically also dominant for sound and text, but transformers have largely tak
 class: middle
 
 For classification,
-- the activation in the output layer is a Softmax activation producing a vector $\mathbf{\hat{p}} \in \bigtriangleup^C$ of probability estimates $\hat{p}\_i = p(y=i|\mathbf{x})$, where $C$ is the number of classes;
-- the loss function is the cross-entropy loss $\ell(\mathbf{\hat{p}}, y) = -\log \hat{p}\_y$, where $\hat{p}\_y$ is the predicted probability of the true class $y$.
+- the activation in the output layer is a Softmax activation producing a vector $\mathbf{\hat{p}} \in \bigtriangleup^C$ of probability estimates $\hat{p}\_i \approx p(y=i|\mathbf{x})$, where $C$ is the number of classes;
+- the loss function is the cross-entropy loss $\ell(\mathbf{\hat{p}}, y) = -\log \hat{p}\_y$, where $\hat{p}\_y$ is the predicted probability of the true class $y \in \\{1, \dots, C\\}$.
+
+.footnote[If instead $y \in \bigtriangleup^C$ is a one-hot vector, then the loss can be written as $\ell(\mathbf{\hat{p}}, y) = -\sum\_{i=1}^C y\_i \log \hat{p}\_i$.]
 
 ---
 
@@ -96,8 +98,7 @@ class: middle
 
 ## Pre-trained models
 
-In recent years, training from scratch has become the .bold[exception], not the rule. Almost all practical vision systems start from a pre-trained backbone.
-Many models pre-trained on large datasets are publicly available. 
+In recent years, training from scratch has become the .bold[exception], not the rule. Almost all practical vision systems start from a pre-trained backbone that has been trained on a large dataset. 
 
 Pre-trained models can be used 
 - as feature extractors (.italic[transfer learning]) 
@@ -343,6 +344,10 @@ Faster R-CNN: a region proposal network (RPN) generates candidate boxes, which a
 
 .footnote[Credits: [Dive Into Deep Learning](https://d2l.ai/), 2020.]
 
+???
+
+The RPN is a fully convolutional network that slides over the feature map and predicts objectness scores and bounding box regressions for a set of anchors at each location. The detection head then classifies the proposals and refines their coordinates.
+
 ---
 
 class: middle
@@ -569,6 +574,16 @@ $$
 
 class: middle
 
+Alternatively, .bold[upsampling] can be implemented 
+- by first upsampling the input with nearest neighbor or bilinear interpolation, 
+- and then applying a regular convolution to the upsampled feature map.
+
+In PyTorch, this is implemented by the `nn.Upsample` layer followed by a `nn.Conv2d` layer instead of a single `nn.ConvTranspose2d` layer.
+
+---
+
+class: middle
+
 ## Fully convolutional networks (FCNs)
 
 .grid[
@@ -594,18 +609,14 @@ Contrary to fully connected networks, the dimensions of the output of a fully co
 
 class: middle
 
-The most natural loss for segmentation is the .bold[per-pixel cross-entropy]
-$$\ell = -\frac{1}{HW}\sum\_{ij} \log \hat{p}\_{y\_{ij}},$$
-where $\hat{p}\_{y\_{ij}}$ is the predicted probability of the true class $y\_{ij}$ at pixel $(i,j)$.
+For semantic segmentation, the .bold[per-pixel cross-entropy] loss $$\ell = -\frac{1}{HW}\sum\_{ij} \log \hat{p}\_{y\_{ij}},$$ where $\hat{p}\_{y\_{ij}}$ is the predicted probability of the true class $y\_{ij}$ at pixel $(i,j)$, is commonly used. 
 
 In practice, classes are often highly imbalanced (e.g., a small tumor in a large scan). The .bold[Dice loss] directly optimizes the overlap between predicted and ground truth masks,
 $$\ell\_\text{Dice} = 1 - \frac{2 \sum\_{ij} \hat{p}\_{ij} y\_{ij}}{\sum\_{ij} \hat{p}\_{ij} + \sum\_{ij} y\_{ij}}.$$
 
 ???
 
-Dice loss comes from the Dice coefficient (= F1 score for sets). It directly measures mask overlap, so it's less sensitive to class imbalance than cross-entropy.
-
-For multi-class segmentation, Dice is typically computed per class and averaged.
+The Dice loss does not suffer from class imbalance as much as cross-entropy because it directly measures the overlap between the predicted and true masks, regardless of how many pixels belong to each class. 
 
 ---
 
