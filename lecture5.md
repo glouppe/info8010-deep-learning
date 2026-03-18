@@ -268,7 +268,7 @@ which we can reshape to a $2 \times 2$ matrix to obtain $\mathbf{x} \circledast 
 class: middle
 
 The same procedure generalizes to $\mathbf{x} \in \mathbb{R}^{H \times W}$ and convolutional kernel $\omega \in \mathbb{R}^{h \times w}$, such that:
-- the convolutional kernel is rearranged as a sparse Toeplitz circulant matrix $$\mathbf{W^T}$$ of shape $(H-h+1)(W-w+1) \times HW$ where
+- the convolutional kernel is rearranged as a sparse Toeplitz circulant matrix $\mathbf{W^T}$ of shape $(H-h+1)(W-w+1) \times HW$ where
     - each row $i$ identifies an element of the output feature map,
     - each column $j$ identifies an element of the input feature map,
     - the value $\mathbf{W^T}\_{i,j}$ corresponds to the kernel value the element $j$ is multiplied with in output $i$;

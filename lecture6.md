@@ -98,7 +98,7 @@ class: middle
 
 ## Pre-trained models
 
-In recent years, training from scratch has become the .bold[exception], not the rule. Almost all practical vision systems start from a pre-trained backbone that has been trained on a large dataset. 
+In recent years, training from scratch has become the .bold[exception], not the rule. Almost all practical vision systems start from a backbone model that has been pre-trained on a large dataset. 
 
 Pre-trained models can be used 
 - as feature extractors (.italic[transfer learning]) 
