@@ -99,6 +99,8 @@ A historical approach for variable-length input sequences $\mathbf{x} \in S(\mat
 
 The problem is similar to FCN without skip connections: the information is bottlenecked in the single vector $v$.
 
+Mimick on the blackboard the architecture of a recurrent encoder-decoder for translating "The animal didn't cross the street because it was too tired." to French.
+
 ---
 
 class: black-slide
@@ -449,6 +451,12 @@ $$\mathbf{X}' = \text{LayerNorm}(\mathbf{X} + \text{SubModule}(\mathbf{X}))$$
 In modern implementations, layer normalization is applied before the sub-module, instead of after.
 $$\mathbf{X}' = \mathbf{X} + \text{SubModule}(\text{LayerNorm}(\mathbf{X}))$$
 
+???
+
+Reminder: Layer normalization is a normalization technique that normalizes the activations of a layer across the feature dimension, for each sample independently. For $m$ tokens $\mathb{x} = (x\_1, \ldots, x\_m)$, each token $x\_i \in \mathbb{R}^d$ is normalized as
+$$\text{LayerNorm}(x\_i) = \frac{x\_i - \mu\_i}{\sigma\_i} \odot \gamma + \beta$$
+where $\mu\_i$ and $\sigma\_i$ are the mean and standard deviation of the features (the $d$ elements) of $x\_i$, and $\gamma$ and $\beta$ are learnable parameters.
+
 ---
 
 class: middle
@@ -517,6 +525,21 @@ Example: a 70B parameter model with 80 layers, 64 heads, d_k=128, at 4096 tokens
 
 class: middle
 
+## Mixture of experts
+
+A mixture of experts (MoE) layer dynamically routes each input token to a subset of $k$ experts, which are typically feedforward networks. 
+
+This mechanism is particularly useful for scaling up transformer models, as it allows to increase the model capacity without increasing the computational cost.
+
+.center.width-100[![](figures/lec7/moe.png)]
+
+.footnote[Credits: [Scaling Vision with Sparse Mixture of Experts](https://research.google/blog/scaling-vision-with-sparse-mixture-of-experts/), 2022.]
+
+---
+
+class: middle
+exclude: true
+
 ## Machine translation
 
 The transformer architecture was first designed for machine translation and tested on English-to-German and English-to-French translation tasks.
@@ -534,6 +557,7 @@ Self-attention layers learned that "it" could refer<br> to different entities, i
 ---
 
 class: middle
+exclude: true
 
 .center[
 
@@ -557,6 +581,10 @@ The decoder-only transformer simplifies the original architecture by using only 
 
 .footnote[Credits: [Dive Into Deep Learning](https://d2l.ai), 2023.]
   
+???
+
+The decoder-only transformer architecture is the basis of all modern large language models.
+
 ---
 
 class: middle, center
@@ -567,17 +595,11 @@ class: middle, center
 
 class: middle
 
-.success[The decoder-only transformer architecture is the basis of all modern large language models.]
-
----
-
-class: middle
-
 ## Scaling laws
 
-Transformer language model performance improves smoothly as we increase the model size, the dataset size, and amount of compute used for training. 
+The performance of transformer language models improves smoothly as we increase the model size, the dataset size, and the amount of compute used for training... .italic[with no signs of saturation yet].
 
-For optimal performance, all three factors must be scaled up in tandem. Empirical performance has a power-law relationship with each individual factor when not bottlenecked by the other two.
+In the last few years, the size of transformer models has increased from millions to trillions of parameters, and the amount of compute used for training has increased by several orders of magnitude.
 
 .center.width-100[![](./figures/lec7/scaling-power-law.png)]
 
@@ -587,12 +609,9 @@ For optimal performance, all three factors must be scaled up in tandem. Empirica
 
 class: middle
 
-Large models also enjoy better sample efficiency than small models.
-- Larger models require less data to achieve the same performance.
-- The optimal model size shows to grow smoothly with the amount of compute available for training.
-
-<br>
 .center.width-100[![](./figures/lec7/scaling-sample-conv.png)]
+
+.center[Large models also enjoy better sample efficiency than small models.]
 
 .footnote[Credits: [Kaplan et al](https://arxiv.org/pdf/2001.08361.pdf), 2020.]
 
@@ -622,11 +641,9 @@ class: middle
 
 class: middle
 
-The image is split into $N = \frac{HW}{P^2}$ non-overlapping patches of size $P \times P$. Each patch is flattened, linearly projected, and augmented with a [CLS] token and position embeddings:
-$$\mathbf{z}\_0 = [\mathbf{x}\_\text{class};\, \mathbf{x}\_1^p \mathbf{E};\, \ldots;\, \mathbf{x}\_N^p \mathbf{E}] + \mathbf{E}\_\text{pos}$$
-where $\mathbf{E} \in \mathbb{R}^{P^2 C \times d}$ and $\mathbf{E}\_\text{pos} \in \mathbb{R}^{(N+1) \times d}$.
+The image is split into $N = \frac{HW}{P^2}$ non-overlapping patches $(x\_1, \ldots, x\_N)$, each patch being a vector of dimension $P^2 C$ obtained by flattening the pixels in the patch, where $H$, $W$ and $C$ are the height, width and number of channels of the input image, and $P$ is the patch size. A linear projection is applied to each patch to obtain a sequence of token embeddings, which are then fed to a standard transformer encoder. 
 
-The sequence of patch embeddings is then processed by a standard transformer encoder, and the output corresponding to the [CLS] token is used for classification.
+A [CLS] token is added to the sequence, and the output corresponding to this token is used for classification.
 
 .footnote[Credits: Dosovitskiy et al., [An Image is Worth 16x16 Words](https://arxiv.org/abs/2010.11929), 2020.]
 
@@ -636,7 +653,7 @@ class: middle
 
 ## CNNs vs. ViTs
 
-CNNs build in strong inductive biases: .bold[locality] (small spatial neighborhoods) and .bold[translation equivariance] (same filter everywhere). ViTs have neither.
+CNNs build in strong inductive biases: .bold[locality] and .bold[translation equivariance]. ViTs have neither.
 
 However, ViTs can learn these properties from data, and thus can be more flexible and powerful than CNNs when trained on large datasets. 
 
