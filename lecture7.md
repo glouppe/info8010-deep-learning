@@ -20,7 +20,7 @@ Attention is all you need!
 
 ???
 
-Mission: learn about a novel and fundamental building block in modern neural networks. This brick can replace both FC and convolutional layers.
+Mission: understand the attention mechanism and how it is used in transformers, the current state-of-the-art architecture for most types of data, including sequences, images and graphs.
 
 ---
 
@@ -84,7 +84,7 @@ In the rest of the slides, we consider only time-indexed signals, although the f
 
 class: middle
 
-A historical approach for variable-length input sequences $\mathbf{x} \in S(\mathbb{R}^d)$ is to use a recurrent encoder that compresses the full input into a single vector $v$, then a decoder that generates the output from $v$.
+The historical approach for variable-length input sequences $\mathbf{x} \in S(\mathbb{R}^d)$ is to use a recurrent encoder that compresses the full input into a single vector $v$, then a decoder that generates the output from $v$.
 
 <br>
 
@@ -96,8 +96,6 @@ A historical approach for variable-length input sequences $\mathbf{x} \in S(\mat
 .footnote[Credits: [Dive Into Deep Learning](https://d2l.ai), 2023.]
 
 ???
-
-The problem is similar to FCN without skip connections: the information is bottlenecked in the single vector $v$.
 
 Mimick on the blackboard the architecture of a recurrent encoder-decoder for translating "The animal didn't cross the street because it was too tired." to French.
 
@@ -120,6 +118,10 @@ Using the nonvolitional cue based on saliency (red cup, non-paper), attention is
 
 .footnote[Credits: [Dive Into Deep Learning](https://d2l.ai), 2023.]
 
+???
+
+Or more simply, stuff that pops out of the environment (e.g., a red cup) attracts our attention, while other stuff (e.g., a white paper) is ignored.
+
 ---
 
 class: middle
@@ -130,13 +132,17 @@ Using the volitional cue (want to read a book) that is task-dependent, attention
 
 .footnote[Credits: [Dive Into Deep Learning](https://d2l.ai), 2023.]
 
+???
+
+On the other hand, we can voluntarily direct our attention to specific parts of the scene (e.g., a book) depending on our task (e.g., reading).
+
 ---
 
 class: middle
 
 .center.width-90[![](figures/lec7/qkv.svg)]
 
-.success[Sensory inputs are restricted to a small subset of the information available in the environment. This is the essence of attention: .bold[selectively focusing on what matters].]
+This mechanism of selectively focusing on specific parts of the input is the essence of attention. It can be implemented as a weighted average of the input, where the weights are given by a similarity function between a query and the input.
 
 .footnote[Credits: [Dive Into Deep Learning](https://d2l.ai), 2023.]
 
@@ -254,6 +260,8 @@ When the queries, keys and values are derived from the same inputs (e.g., when $
 
 Therefore, self-attention can be used as a regular feedforward-kind of layer, similarly to fully-connected or convolutional layers.
 
+.footnote[When $\mathbf{X} \neq \mathbf{X}'$, the attention mechanism is also called cross-attention.]
+
 ---
 
 class: middle 
@@ -295,6 +303,10 @@ To illustrate attention mechanism, we consider a toy problem with 1d sequences c
 
 .footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
+???
+
+Explain the network takes the input sequence and produces, all at once, the output sequence.
+
 ---
 
 class: middle
@@ -310,7 +322,7 @@ class: middle
 We can modify the toy problem to consider targets where the pairs to average are the two right and leftmost shapes.
 
 .center.width-100[![](figures/lec7/toy2.png)]
-.alert[The performance is expected to be poor given the inability of the self-attention layer to take into account absolute or relative positions.]
+.alert[The performance is expected to be poor given the inability of the self-attention layer to take into account absolute or relative positions. The input is indeed actually a .bold[set], and not a sequence, for the self-attention layer.]
 
 .footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
@@ -355,7 +367,7 @@ class: middle
 
 Vaswani et al. (2017) proposed to go one step further: instead of using attention mechanisms (Bahdanau et al., 2014) as a supplement to standard convolutional and recurrent layers, they designed a model, the .bold[transformer], combining only attention layers.
 
-The transformer was designed for a sequence-to-sequence translation task, but it is currently key to state-of-the-art approaches for most tasks involving sets or sequences.
+The transformer was designed for a sequence-to-sequence translation task, but it is currently the state-of-the-art architecture for most types of data, including sequences, images and graphs.
 
 .footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
@@ -427,6 +439,10 @@ In the decoder, the self-attention sub-module must not attend to future position
 $$\text{attention}(\mathbf{Q}, \mathbf{K}, \mathbf{V}) = \text{softmax}\left(\frac{\mathbf{Q}\mathbf{K}^T}{\sqrt{d\_k}} + \mathbf{M}\right) \mathbf{V}$$
 where $\mathbf{M}\_{ij} = 0$ if $i \geq j$ and $\mathbf{M}\_{ij} = -\infty$ otherwise.
 
+???
+
+$i$ and $j$ are the query and key positions, respectively. The mask ensures that the attention weight for any future position is zero, thus preventing the model from attending to future tokens.
+
 ---
 
 class: middle
@@ -453,7 +469,7 @@ $$\mathbf{X}' = \mathbf{X} + \text{SubModule}(\text{LayerNorm}(\mathbf{X}))$$
 
 ???
 
-Reminder: Layer normalization is a normalization technique that normalizes the activations of a layer across the feature dimension, for each sample independently. For $m$ tokens $\mathb{x} = (x\_1, \ldots, x\_m)$, each token $x\_i \in \mathbb{R}^d$ is normalized as
+Reminder: Layer normalization is a normalization technique that normalizes the activations of a layer across the feature dimension, for each sample independently. For $m$ tokens $\mathbf{x} = (x\_1, \ldots, x\_m)$, each token $x\_i \in \mathbb{R}^d$ is normalized as
 $$\text{LayerNorm}(x\_i) = \frac{x\_i - \mu\_i}{\sigma\_i} \odot \gamma + \beta$$
 where $\mu\_i$ and $\sigma\_i$ are the mean and standard deviation of the features (the $d$ elements) of $x\_i$, and $\gamma$ and $\beta$ are learnable parameters.
 
@@ -476,12 +492,12 @@ class: middle
 The original transformer adds a fixed encoding of dimension $d\_\text{model}$ to the token embeddings:
 $$
 \begin{aligned}
-\text{PE}\_{t,2i} &= \sin\left(\frac{t}{10000^{2i/d\_\text{model}}}\right) \\\\
-\text{PE}\_{t,2i+1} &= \cos\left(\frac{t}{10000^{2i/d\_\text{model}}}\right).
+\textbf{E}\_{t,2i} &= \sin\left(\frac{t}{10000^{2i/d\_\text{model}}}\right) \\\\
+\textbf{E}\_{t,2i+1} &= \cos\left(\frac{t}{10000^{2i/d\_\text{model}}}\right).
 \end{aligned}
 $$
 
-Each dimension oscillates at a different frequency. For any fixed offset $k$, $\text{PE}\_{t+k}$ is a linear function of $\text{PE}\_{t}$ (a rotation in each 2D subspace), so the model can learn to attend to .bold[relative positions].
+Each dimension oscillates at a different frequency. For any fixed offset $k$, $\textbf{E}\_{t+k}$ is a linear function of $\textbf{E}\_{t}$ (a rotation in each 2D subspace), so the model can learn to attend to .bold[relative positions].
 
 ---
 
@@ -496,7 +512,7 @@ class: middle
 class: middle
 
 Modern transformer architectures use different types of positional encodings:
-- .bold[Learned positional embeddings.] Learn $\mathbf{E}\_\text{pos} \in \mathbb{R}^{T\_\text{max} \times d\_\text{model}}$ directly (GPT-1/2). Simpler, but cannot generalize beyond $T\_\text{max}$.
+- .bold[Learned positional embeddings.] Learn $\mathbf{E} \in \mathbb{R}^{T\_\text{max} \times d\_\text{model}}$ directly (GPT-1/2). Simpler, but cannot generalize beyond $T\_\text{max}$.
 - .bold[Rotary positional embeddings (RoPE).] Instead of adding position to the input, RoPE (Su et al., 2021) encodes positions in the attention score by rotating queries and keys:
 $$a(\mathbf{q}\_m, \mathbf{k}\_n) = (\mathbf{R}\_m \mathbf{q})^T (\mathbf{R}\_n \mathbf{k}) = \mathbf{q}^T \mathbf{R}\_{n-m} \mathbf{k}$$
 where $\mathbf{R}\_t$ is a block-diagonal rotation matrix with a different frequency per 2D block. The dot product depends only on content and relative distance $m - n$.
