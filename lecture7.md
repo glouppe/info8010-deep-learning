@@ -8,6 +8,10 @@ Lecture 7: Attention and transformers
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+XXX Take the time to explain positional encoding and the meaning of the position vectors. 
+
 ---
 
 # Today
@@ -630,6 +634,16 @@ class: middle
 .center[Large models also enjoy better sample efficiency than small models.]
 
 .footnote[Credits: [Kaplan et al](https://arxiv.org/pdf/2001.08361.pdf), 2020.]
+
+---
+
+class: middle
+
+.center.width-80[![](./figures/lec7/chatgpt.png)]
+
+Large transformer models 
+
+Scaling up transformer models has led to the development of large language models (LLMs) and chatbots. 
 
 ---
 

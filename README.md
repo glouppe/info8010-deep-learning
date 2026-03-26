@@ -20,7 +20,7 @@ Lectures for INFO8010 Deep Learning, ULiège, Spring 2026.
 | March 13 | Lecture 6: [Computer vision](https://glouppe.github.io/info8010-deep-learning/?p=lecture6.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec6.pdf)]<br>Code 6: [UNet](https://github.com/glouppe/info8010-deep-learning/blob/master/code/lec6-unet.ipynb) |
 | March 15 | Deadline for Homework 1 |
 | March 20 | Lecture 7: [Attention and transformers](https://glouppe.github.io/info8010-deep-learning/?p=lecture7.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec7.pdf)]<br>Code: [Vision transformer](https://github.com/glouppe/info8010-deep-learning/blob/master/code/lec7-vit.ipynb) |
-| March 27 | Code: [GPT, from scratch!](https://github.com/glouppe/info8010-deep-learning/blob/master/code/gpt/)<br>Lecture 8: [LLMs and foundation models](https://glouppe.github.io/info8010-deep-learning/?p=lecture8.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec8.pdf)] |
+| March 27 | Lecture 8: [GPT, from scratch!](https://glouppe.github.io/info8010-deep-learning/?p=lecture8.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec8.pdf)]<br>Code: [GPT, from scratch!](https://github.com/glouppe/info8010-deep-learning/blob/master/code/gpt/) |
 | March 29 | Deadline for Homework 2 <br> Deadline for project proposal|
 | April 3 | Lecture 9: [Graph neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture9.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec9.pdf)] |
 | April 10 | Lecture 10: [Uncertainty](https://glouppe.github.io/info8010-deep-learning/?p=lecture10.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec10.pdf)] |
