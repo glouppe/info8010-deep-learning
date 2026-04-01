@@ -8,14 +8,16 @@ Lecture 8: GPT, from scratch!
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+XXX add pointer to miniature
+
 ---
 
 # Today
 
-Build a GPT-like model and its agent-based interface, from scratch!
-
-See `code/gpt/` for the implementation.
-
+- GPT: Build a GPT-like model and its agent-based interface, from scratch! See [`code/gpt/`](https://github.com/glouppe/info8010-deep-learning/tree/master/code/gpt) for the implementation.
+- Agentic AI: Language models in a loop, with a simple agentic interface. See [`https://github.com/glouppe/miniature`](https://github.com/glouppe/miniature) for the implementation.
 ---
 
 class: end-slide, center
