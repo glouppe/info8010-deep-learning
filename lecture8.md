@@ -8,10 +8,6 @@ Lecture 8: GPT, from scratch!
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-XXX add pointer to miniature
-
 ---
 
 # Today

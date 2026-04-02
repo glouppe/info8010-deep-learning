@@ -8,10 +8,6 @@ Lecture 9: Graph neural networks
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-R: since the lecture is short, add a code example at the end
-
 ---
 
 # Today
@@ -77,6 +73,8 @@ Once a GNN can accurately predict whether a molecule is a potent drug, we can us
 - Manually inspect top-100.
 
 --
+
+count: false
 
 This very approach led to the discovery of .italic[Halicin], a previously overlooked compound that is a highly potent antibiotic!
 
@@ -342,7 +340,7 @@ Similarly to regular layers, a GNN layer computes a new representation $$\mathbf
 
 class: middle
 
-GNN layers are usually classified in three spatial flavors depending on how they implement the propagation operator $\phi$:
+GNN layers are usually classified in three flavors depending on how they implement the propagation operator $\phi$:
 - Convolutional
 - Attentional
 - Message-passing
@@ -360,10 +358,6 @@ Features of neighboring nodes are aggregated with fixed coefficients $c\_{ij}$:
 
 $$\mathbf{h}\\\_i = \phi\left( \mathbf{x}\\\_i, \bigoplus\\\_{j \in \mathcal{N}\\\_i} c\\\_{ij} \varphi(\mathbf{x}\\\_j) \right)$$
 
-Example:
-
-$$\mathbf{h}\\\_i = \sigma\left( \sum\\\_{j \in \mathcal{N}\\\_i} \frac{1}{|\mathcal{N}\\\_i|} \mathbf{W}^T \mathbf{x}\\\_j \right)$$
-
 ]
 .kol-1-2[<br>![](figures/lec9/gnn-layer-conv.png)]
 ]
@@ -372,7 +366,19 @@ $$\mathbf{h}\\\_i = \sigma\left( \sum\\\_{j \in \mathcal{N}\\\_i} \frac{1}{|\mat
 
 ???
 
-Illustrate on the board, with a larger graph.
+This layer is "convolutional" in the sense that the features of neighboring nodes are aggregated with fixed coefficients $c\_{ij}$.
+
+---
+
+class: middle
+
+For example, a simple convolutional GNN layer can be defined as
+$$\mathbf{h}\_i = \sigma\left( \sum\_{j \in \mathcal{N}\_i} \frac{1}{|\mathcal{N}\_i|} \mathbf{W}^T \mathbf{x}\_j \right),$$
+where $\phi$ has been instantiated as a non-linear activation $\sigma$ and $\bigoplus$ as the average of the neighboring features $\varphi(\mathbf{x}\_j)=\mathbf{W}^T \mathbf{x}\_j$. 
+
+If $\mathbf{A}$ is the adjacency matrix of the graph (incl. self-loops) and $\mathbf{D}$ is its degree matrix, then this layer can be written in matrix form as
+$$\mathbf{H} = \sigma\left(\mathbf{D}^{-1}\mathbf{A} \mathbf{X} \mathbf{W}\right)$$
+which is a non-linear transformation of the average of the neighboring features.
 
 ---
 
@@ -387,15 +393,29 @@ Features of neighboring nodes are aggregated with implicit weights via an attent
 
 $$\mathbf{h}\\\_i = \phi\left( \mathbf{x}\\\_i, \bigoplus\\\_{j \in \mathcal{N}\\\_i} a(\mathbf{x}\_i, \mathbf{x}\_j) \varphi(\mathbf{x}\\\_j) \right)$$
 
-Example:
-
-$$\mathbf{h}\\\_i = \sigma\left( \sum\\\_{j \in \mathcal{N}\\\_i} \alpha\\\_{ij} \mathbf{W}^T \mathbf{x}\\\_j \right)$$
-
 ]
 .kol-1-2[<br>![](figures/lec9/gnn-layer-attention.png)]
 ]
 
 .footnote[Image credits: Bronstein et al., [Geometric Deep Learning](https://arxiv.org/abs/2104.13478.pdf), 2021.]
+
+---
+
+class: middle
+
+For example, a simple attentional GNN layer can be defined as
+$$\mathbf{h}\_i = \sigma\left( \sum\_{j \in \mathcal{N}\_i} a(\mathbf{x}\_i, \mathbf{x}\_j) \mathbf{W}^T \mathbf{x}\_j \right),$$
+where $\phi$ has been instantiated as a non-linear transformation $\sigma$ and $\bigoplus$ as the attention-weighted average of the neighboring features. The coefficients $c\_{ij}$ are thus implicitly defined by the attention mechanism $a$.
+
+In matrix form, this layer can be written as
+$$\mathbf{H} = \sigma\left(\mathbf{S} \mathbf{X} \mathbf{W}\right)$$
+where $\mathbf{S}$ is the attention matrix with entries $\mathbf{S}\_{ij} = a(\mathbf{x}\_i, \mathbf{x}\_j)$.
+
+---
+
+class: middle
+
+When the attention mechanism is defined as $$a(\mathbf{x}\_i, \mathbf{x}\_j) = \text{softmax}\left(\frac{(\mathbf{W}\_Q^T \mathbf{x}\_i)^T (\mathbf{W}\_K^T \mathbf{x}\_j)}{\sqrt{d}}\right),$$ the attentional GNN layer is equivalent to the self-attention layer of the transformer architecture.
 
 ---
 
@@ -511,6 +531,12 @@ $\bar{\mathbf{h}}$ is then usually passed through a regular MLP $g$ to make the 
 
 class: middle
 
+.center[(demo of `code/lec9-gnn.ipynb`)]
+
+---
+
+class: middle
+
 # Special cases
 
 ---
@@ -572,7 +598,7 @@ class: middle
 
 class: middle
 
-## Graph neural networks for antiobiotic discovery
+## Graph neural networks for antibiotic discovery
 
 .center.width-90[![](figures/lec9/cell.png)]
 
