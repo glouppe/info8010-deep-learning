@@ -12,7 +12,7 @@ Prof. Gilles Louppe<br>
 
 # Today
 
-- GPT: Build a GPT-like model and its agent-based interface, from scratch! See [`code/gpt/`](https://github.com/glouppe/info8010-deep-learning/tree/master/code/gpt) for the implementation.
+- GPT: Build a GPT-like model, from scratch! See [`code/gpt/`](https://github.com/glouppe/info8010-deep-learning/tree/master/code/gpt) for the implementation.
 - Agentic AI: Language models in a loop, with a simple agentic interface. See [`https://github.com/glouppe/miniature`](https://github.com/glouppe/miniature) for the implementation.
 ---
 

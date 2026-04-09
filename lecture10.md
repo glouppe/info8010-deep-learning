@@ -59,7 +59,7 @@ Accounting for uncertainty is necessary for making optimal decisions. Not accoun
 
 class: middle
 
-.italic[Case 1]. First assisted driving fatality in May 2016: Perception system mistook trailer's white side for bright sky.
+.italic[Case 1]. First assisted driving fatality in May 2016: The car's perception system mistook a white truck for the bright sky, and thus did not apply the brakes.
 
 .grid[
 .kol-2-3[.center.width-100[![](figures/lec10/crash.png)]]
@@ -82,7 +82,7 @@ class: middle
 
 .center.width-60[![](figures/lec10/gorillas.png)]
 
-.italic[Case 2]. An image classification system erroneously identifies two African Americans as gorillas, raising concerns of racial discrimination.
+.italic[Case 2]. An image classification system erroneously identifies two African Americans as gorillas, demonstrating racial bias in deep learning models.
 
 .footnote[Credits: Kendall and Gal, [What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?](https://papers.nips.cc/paper/7141-what-uncertainties-do-we-need-in-bayesian-deep-learning-for-computer-vision.pdf), 2017.]
 
@@ -90,7 +90,7 @@ class: middle
 
 class: middle
 
-.alert[The systems that made these errors were likely confident in their predictions. They did not account for uncertainty.]
+.alert[The systems that made these errors were likely not accounting for their own uncertainty. Had they been able to estimate their uncertainty, they could have flagged these cases as uncertain and thus avoided making wrong predictions.]
 
 ---
 
@@ -141,7 +141,7 @@ We can model aleatoric uncertainty in the output by modelling the conditional di
 $$p(y|\mathbf{x}) = \mathcal{N}(y; \mu(\mathbf{x}), \sigma^2(\mathbf{x})),$$
 where $\mu(x)$ and $\sigma^2(\mathbf{x})$ are parametric functions to be learned, such as neural networks.
 
-Note: The Gaussian distribution is a modelling choice. Other parametric distributions can be used.
+Note: The Gaussian distribution is a modelling choice. Other parametric distributions will be discussed later.
 
 ---
 
@@ -195,7 +195,7 @@ Take care of properly parametrizing $\sigma^2(\mathbf{x}\_i)$ to ensure that it 
 
 class: middle
 
-Modelling $p(y|\mathbf{x})$ as a unimodal (Gaussian) distribution can be inadequate since the conditional distribution may be .bold[multimodal].
+.alert[Modeling $p(y|\mathbf{x})$ as a Gaussian distribution is often inadequate since the conditional distribution may be .bold[multimodal].]
 
 ???
 
@@ -278,11 +278,19 @@ A mixture density network models the data correctly, as it predicts for each inp
 
 ---
 
+class: middle
+
+.alert[Gaussian mixture models are a flexible way to model multimodal distributions, but they are limited by the number of components $K$, which must be large to model complex distributions. ]
+
+---
+
 # Normalizing flows
 
-Gaussian mixture models are a flexible way to model multimodal distributions, but they are limited by the number of components $K$, which must be large to model complex distributions. 
+Normalizing flows are a more flexible family of neural density estimators that can model complex multimodal distributions without the need for a large number of components.
 
-Normalizing flows are a more flexible way to model complex distributions.
+???
+
+Motivate that picking a parametric family of distributions is not always easy. We want something more flexible.
 
 ---
 
@@ -303,7 +311,7 @@ where $\frac{1}{8} = \left| \det \left( \begin{matrix}
 
 ???
 
-Motivate that picking a parametric family of distributions is not always easy. We want something more flexible.
+Intuitively, the probability mass in z-space must be conserved in x-space. Since the transformation $f$ expands the volume by a factor of 8, the density at each point must be divided by 8 to conserve the total mass.
 
 ---
 
@@ -314,6 +322,10 @@ What if $f$ is non-linear?
 .center.width-70[![](figures/lec10/cov.png)]
 
 .footnote[Image credits: Simon J.D. Prince, [Understanding Deep Learning](https://udlbook.github.io/udlbook/), 2023.]
+
+???
+
+Demo on the blackboard.
 
 ---
 
@@ -452,6 +464,12 @@ The instantaneous change of variable yields
 $$\log p(\mathbf{x}) = \log p(\mathbf{z}(0)) - \int\_0^1 \text{Tr} \left( \frac{\partial f(\mathbf{z}(t), t, \theta)}{\partial \mathbf{z}(t)} \right) dt.$$
 
 .footnote[Image credits: [Grathwohl et al](https://arxiv.org/abs/1810.01367), 2018.]
+
+---
+
+class: middle
+
+.center[(Demo of `code/lec10-density.ipynb`)]
 
 ---
 
@@ -646,7 +664,7 @@ This is also equivalent to one minimization step of a standard classification or
 
 class: middle
 
-Conversely, this shows that when **training a network with dropout** with a standard classification or regression objective, one *is actually implicitly doing variational inference* to match the posterior distribution of the weights.
+.success[This shows that when .bold[training a network with dropout] with a standard classification or regression objective, one is actually .bold[implicitly doing variational inference] to match the posterior distribution of the weights.]
 
 ---
 

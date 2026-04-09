@@ -302,6 +302,16 @@ New feature vectors $\mathbf{h}\_i$ are computed for each node $i$ by applying a
 
 ---
 
+class: middle 
+
+$\mathbf{F}$ is permutation-equivariant because $\phi$ is both permutation-invariant in $\mathbf{X}$ and shared across all nodes.
+- The permutation-invarance of $\phi$ ensures that permuting the nodes of the graph does not modify the results of $\phi$.
+- The sharing of $\phi$ across all nodes ensures that permuting the nodes of the graph permutes the results of $\phi$ in the same way.
+
+$f$ is permutation-invariant because $\bigoplus$ is a permutation-invariant aggregator.
+
+---
+
 class: middle
 
 ## Locality
@@ -312,7 +322,7 @@ For a node $i \in \mathcal{V}$, we denote its .italic[neighborhood] as $\mathcal
 
 Accordingly, $\phi$ is redefined as a .italic[local] function that is applied to the node $i$ and its neighborhood $\mathcal{N}\_i$ to compute  $\mathbf{h}\_i = \phi(\mathbf{x}\_i, \mathbf{X}\_{\mathcal{N}\_i})$. 
 
-As previously, $\mathbf{F}$ is permutation equivariant if $\phi$ is permutation invariant in $\mathbf{X}\_{\mathcal{N}\_i}$.
+As previously, $\mathbf{F}$ is permutation-equivariant if $\phi$ is permutation-invariant in $\mathbf{X}\_{\mathcal{N}\_i}$.
 
 ---
 
