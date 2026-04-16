@@ -24,7 +24,7 @@ Lectures for INFO8010 Deep Learning, ULiège, Spring 2026.
 | March 29 | Deadline for Homework 2 <br> Deadline for project proposal|
 | April 3 | Lecture 9: [Graph neural networks](https://glouppe.github.io/info8010-deep-learning/?p=lecture9.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec9.pdf)]<br>Code 9: [Graph neural networks](https://github.com/glouppe/info8010-deep-learning/blob/master/code/lec9-gnn.ipynb) |
 | April 10 | Lecture 10: [Uncertainty](https://glouppe.github.io/info8010-deep-learning/?p=lecture10.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec10.pdf)]<br>Code 10: [Density estimation](https://github.com/glouppe/info8010-deep-learning/blob/master/code/lec10-density.ipynb) |
-| April 17 | Lecture 11: [Auto-encoders and variational auto-encoders](https://glouppe.github.io/info8010-deep-learning/?p=lecture11.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec11.pdf)] [[code](https://github.com/glouppe/info8010-deep-learning/blob/master/code/lec11-vae.ipynb)] |
+| April 17 | Lecture 11: [Auto-encoders and variational auto-encoders](https://glouppe.github.io/info8010-deep-learning/?p=lecture11.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec11.pdf)]<br> Code 11: [Variational auto-encoders](https://github.com/glouppe/info8010-deep-learning/blob/master/code/lec11-vae.ipynb) |
 | May 8 | Lecture 12: [Diffusion models](https://glouppe.github.io/info8010-deep-learning/?p=lecture12.md) [[PDF](https://glouppe.github.io/info8010-deep-learning/pdf/lec12.pdf)] |
 
 ## Homeworks

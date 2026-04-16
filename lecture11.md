@@ -294,7 +294,9 @@ class: middle
 Besides dimension reduction, auto-encoders can capture dependencies between signal components to restore degraded or noisy signals. 
 In this case, the composition $$h = g \circ f : \mathcal{X} \to \mathcal{X}$$ is a **denoising** auto-encoder.
 
-The goal is to optimize $h$ such that a perturbation $\tilde{\mathbf{x}}$ of the signal $\mathbf{x}$ is restored to $\mathbf{x}$, hence $$h(\tilde{\mathbf{x}}) \approx \mathbf{x}.$$
+The goal is to optimize $h$ such that a perturbation $\tilde{\mathbf{x}}$ of the signal $\mathbf{x}$ is restored to $\mathbf{x}$. That is,
+$$h^\* = \arg \min\_h \mathbb{E}\_{\mathbf{x} \sim p(\mathbf{x}), \tilde{\mathbf{x}} \sim q(\tilde{\mathbf{x}}|\mathbf{x})} \left[ || \mathbf{x} - h(\tilde{\mathbf{x}}) ||^2 \right],$$
+where $q(\tilde{\mathbf{x}}|\mathbf{x})$ is a corruption process that generates a noisy version $\tilde{\mathbf{x}}$ of the original signal $\mathbf{x}$.
 
 .footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
@@ -378,9 +380,8 @@ class: middle
 
 class: middle
 
-These results are not satisfactory because the density model on the latent space is **too simple and inadequate**.
-
-Building a good model in latent space amounts to our original problem of modeling an empirical distribution, although it may now be in a lower dimension space.
+.alert[These results are not satisfactory because the density model on the latent space is .bold[too simple and inadequate].
+Building a good model in latent space amounts to our original problem of modeling an empirical distribution, although it may now be in a lower dimension space.]
 
 .footnote[Credits: Francois Fleuret, [Deep Learning](https://fleuret.org/dlc/), UNIGE/EPFL.]
 
@@ -403,7 +404,7 @@ class: middle
 
 .center.width-20[![](figures/lec11/latent-model.svg)]
 
-Consider for now a **prescribed latent variable model** that relates a set of observable variables $\mathbf{x} \in \mathcal{X}$ to a set of unobserved variables $\mathbf{z} \in \mathcal{Z}$.
+Consider for now a prescribed .bold[latent variable model] that relates a set of observable variables $\mathbf{x} \in \mathcal{X}$ to a set of unobserved variables $\mathbf{z} \in \mathcal{Z}$.
 
 The probabilistic model defines a joint probability distribution $p\_\theta(\mathbf{x}, \mathbf{z})$, which decomposes as
 $$p\_\theta(\mathbf{x}, \mathbf{z}) = p\_\theta(\mathbf{x}|\mathbf{z}) p(\mathbf{z}).$$
@@ -457,8 +458,7 @@ class: middle
 ## Variational inference
 
 Let us instead consider a variational approach to fit the model parameters $\theta$.
-
-Using a **variational distribution** $q\_\phi(\mathbf{z})$ over the latent variables $\mathbf{z}$, we have
+Using a .italic[variational distribution] $q\_\phi(\mathbf{z})$ over the latent variables $\mathbf{z}$, we have
 $$\begin{aligned}
 \log p\_\theta(\mathbf{x}) &= \log \mathbb{E}\_{p(\mathbf{z})}\left[ p\_\theta(\mathbf{x}|\mathbf{z}) \right]  \\\\
 &= \log \mathbb{E}\_{q\_\phi(\mathbf{z})}\left[ \frac{p\_\theta(\mathbf{x}|\mathbf{z})  p(\mathbf{z})}{q\_\phi(\mathbf{z})} \right] \\\\
@@ -653,7 +653,7 @@ $$\log q\_\phi(\mathbf{z}|\mathbf{x}) = \log p(\epsilon) - \log \left| \det\left
 
 class: middle, center
 
-(demo)
+(Demo of `code/lec11-vae.ipynb`)
 
 ---
 
