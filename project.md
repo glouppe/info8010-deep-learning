@@ -14,7 +14,7 @@ Some general potential problems could be the following:
 ### Agenda
 
 - Project proposal, due by **March 29, 2026**.
-- Project code and poster, due by **May 15, 2026**.
+- Project code and poster, due by **May 14, 2026, 11:59PM**.
 
 Projects should be submitted on Gradescope.
 
