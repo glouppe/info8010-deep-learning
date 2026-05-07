@@ -34,7 +34,7 @@ class: middle
 
 .center[.width-49[![](./figures/lec12/content-generation-1.png)] .width-49[![](./figures/lec12/content-generation-2.png)]]
 
-.center[Diffusion models have emerged as powerful generative models, beating previous state-of-the-art models (such as GANs) on a variety of tasks.]
+.center[Diffusion models have emerged as powerful generative models, beating previous state-of-the-art models on a variety of tasks.]
 
 .footnote[Credits: [Dhariwal and Nichol](https://arxiv.org/pdf/2105.05233.pdf), 2021; [Ho et al](https://arxiv.org/pdf/2106.15282.pdf), 2021.]
 
@@ -113,8 +113,22 @@ class: middle
 
 .footnote[Credits: [Andry et al](https://arxiv.org/abs/2504.18720), 2025 (arXiv:2504.18720).]
 
+---
 
-???
+class: middle
+
+.grid[
+.kol-1-2[
+
+<br><br>
+
+## Ethical and societal implications
+
+Unfortunately, the same technology can be repurposed for malicious use, such as deepfakes and misinformation.
+
+]
+.kol-1-2[.width-100[![](figures/lec12/grok.png)]]
+]
 
 
 
